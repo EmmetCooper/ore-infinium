@@ -1,0 +1,74 @@
+package PacketBuf;
+
+message Packet {
+    optional uint32 type = 1;
+}
+
+message ClientInitialConnection {
+    optional string playerName = 1;
+    optional int32 versionMajor = 2;
+    optional int32 versionMinor = 3;
+}
+
+message ChatMessageFromClient {
+    optional string message = 1;
+}
+
+message ChatMessageFromServer {
+    optional string playerName = 1;
+    optional string message = 2;
+}
+
+message InitialPlayerDataFinishedFromServer {
+
+}
+
+message InitialPlayerDataFromServer {
+    optional uint32 playerID = 1;
+    optional string playerName = 2;
+
+    optional float x = 3;
+    optional float y = 4;
+}
+
+message PlayerDisconnectedFromServer {
+   optional uint32 playerID = 1;
+}
+
+message PlayerMoveFromServer {
+   optional uint32 playerID = 1;
+
+    // new positions
+   optional float x = 2;
+   optional float y = 3;
+}
+
+message PlayerMoveFromClient {
+   optional int32 directionX = 1;
+   optional int32 directionY = 2;
+}
+
+message PlayerMouseStateFromClient {
+    optional uint32 x = 1;
+    optional uint32 y = 2;
+    optional bool leftButtonHeld = 3;
+    optional bool rightButtonHeld = 4;
+}
+
+message PlayerBlockPickRequestFromClient {
+    // x,y (column, row), this player wants to "pick"/break
+    optional uint32 x = 1;
+    optional uint32 y = 2;
+}
+
+message Chunk {
+    optional uint32 startX = 1;
+    optional uint32 endX = 2;
+    optional uint32 startY = 3;
+    optional uint32 endY = 4;
+
+    repeated uint32 meshType = 5;
+    repeated uint32 primitiveType = 6;
+    repeated uint32 wallType = 7;
+}
+
