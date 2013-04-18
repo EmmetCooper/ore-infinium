@@ -1,45 +1,56 @@
-#ifndef __QUADTREE_H__
-#define __QUADTREE_H__
+#ifndef __QUADTREE__
+#define __QUADTREE__
 
-#include <vector>
+#include "src/entity.h"
 
-using namespace std;
-
-class QuadTree;
-class Entity;
-
-class QuadTree
-{
-public:
-    QuadTree(float x, float y, float width, float height, int level);
-    ~QuadTree();
-
-    void insert(Entity* entity);
-
-    vector<Entity*> entitiesInRegion(float x, float y, float width, float height);
-    vector<Entity*> retrieve(vector<Entity*> returnObjects, Entity* entity);
-
-    void clear();
-    void split();
-
-private:
-    const int MAX_OBJECTS = 10;
-    const int MAX_LEVELS = 5;
-
-private:
-    float m_x;
-    float m_y;
-    float m_width;
-    float m_height;
-    int m_level;
-
-    vector<Entity*> m_entities;
-
-//    QuadTree* parent;
-    QuadTree* nodes[4];
-
-//    bool contains(Quadtree* child, Entity* object);
-    int getIndex(Entity* entity);
+struct XY {
+  XY(float _x, float _y) : x(_x), y(_y) {}
+  float x, y;
 };
 
-#endif
+struct AABB {
+  AABB(XY _center, XY _halfDimension) : center(_center), halfDimension(_halfDimension) {}
+
+  bool containsPoint(Item* item) {
+    XY p(item->x, item->y);
+    return ((p.x > center.x - halfDimension.x && p.x <= center.x + halfDimension.x) &&
+            (p.y > center.y - halfDimension.y && p.y <= center.y + halfDimension.y));
+  }
+
+  bool intersectsAABB(AABB other) {
+    return (((other.center.x - other.halfDimension.x > center.x - halfDimension.x && other.center.x - other.halfDimension.x < center.x + halfDimension.x) ||
+             (other.center.x + other.halfDimension.x > center.x - halfDimension.x && other.center.x + other.halfDimension.x < center.x + halfDimension.x)) &&
+            ((other.center.y - other.halfDimension.y > center.y - halfDimension.y && other.center.y - other.halfDimension.y < center.y + halfDimension.y) ||
+             (other.center.y + other.halfDimension.y > center.y - halfDimension.y && other.center.y + other.halfDimension.y < center.y + halfDimension.y)));
+  }
+
+  XY center;
+  XY halfDimension;
+};
+
+class Quadtree {
+ public:
+  Quadtree(XY, XY);
+  Quadtree(XY, XY, int);
+
+  bool insert(Entity *);
+  void subdivide();
+  void queryRange(std::vector<Entity*> &, AABB);
+
+  void clear();
+  bool getCollision(std::vector<Entity*>);
+
+  AABB boundary;
+  int nodeCapacity;
+
+  // leaves
+  Quadtree * NW;
+  Quadtree * NE;
+  Quadtree * SW;
+  Quadtree * SE;
+
+  // data
+  std::vector<Entity*> points;
+};
+
+#endif // __QUADTREE__
