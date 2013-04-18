@@ -31,7 +31,8 @@
 #include <Box2D/Common/b2Math.h>
 #include <sstream>
 
-class Quadtree;
+class QuadTreeRenderer;
+class QuadTree;
 class QueryCallback;
 class ContactListener;
 class b2Body;
@@ -206,7 +207,7 @@ private:
 
     std::vector<Entity*> m_entities;
     std::vector<Torch*> m_torches;
-    Quadtree* m_torchesQuadTree = nullptr;
+    QuadTree* m_torchesQuadTree = nullptr;
 
     Sprite* m_blockPickingCrosshair = nullptr;
 
@@ -216,6 +217,7 @@ private:
 
     TileRenderer* m_tileRenderer = nullptr;
     LightRenderer* m_lightRenderer = nullptr;
+    QuadTreeRenderer* m_quadTreeRenderer = nullptr;
     SpriteSheetRenderer* m_spriteSheetRenderer = nullptr;
 
     /// inclusive of m_mainEntities::Player as well.

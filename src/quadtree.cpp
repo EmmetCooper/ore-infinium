@@ -19,7 +19,7 @@
 
 #include <assert.h>
 
-Quadtree::Quadtree(Quadtree* parent, b2Vec2 _center, b2Vec2 _halfDimension)
+QuadTree::QuadTree(QuadTree* parent, b2Vec2 _center, b2Vec2 _halfDimension)
     : m_boundary(_center, _halfDimension),
       m_nodeCapacity(4),
       m_parent(parent)
@@ -28,7 +28,7 @@ Quadtree::Quadtree(Quadtree* parent, b2Vec2 _center, b2Vec2 _halfDimension)
     m_points.reserve(m_nodeCapacity);
 }
 
-Quadtree::Quadtree(Quadtree* parent, b2Vec2 _center, b2Vec2 _halfDimension, int _nodeCapacity)
+QuadTree::QuadTree(QuadTree* parent, b2Vec2 _center, b2Vec2 _halfDimension, int _nodeCapacity)
     : m_boundary(_center, _halfDimension),
       m_nodeCapacity(_nodeCapacity),
       m_parent(parent)
@@ -37,7 +37,7 @@ Quadtree::Quadtree(Quadtree* parent, b2Vec2 _center, b2Vec2 _halfDimension, int 
     m_points.reserve(m_nodeCapacity);
 }
 
-bool Quadtree::insert(Entity * a)
+bool QuadTree::insert(Entity * a)
 {
     if (!m_boundary.containsPoint(a)) {
         return false;
@@ -72,17 +72,17 @@ bool Quadtree::insert(Entity * a)
     return false; // should never happen
 }
 
-void Quadtree::subdivide() {
+void QuadTree::subdivide() {
     b2Vec2 center = m_boundary.center;
     b2Vec2 newDim(m_boundary.halfDimension.x / 2, m_boundary.halfDimension.y / 2);
 
-    NW = new Quadtree(this, b2Vec2(center.x - newDim.x, center.y - newDim.y), newDim);
-    NE = new Quadtree(this, b2Vec2(center.x + newDim.x, center.y - newDim.y), newDim);
-    SW = new Quadtree(this, b2Vec2(center.x - newDim.x, center.y + newDim.y), newDim);
-    SE = new Quadtree(this, b2Vec2(center.x + newDim.x, center.y + newDim.y), newDim);
+    NW = new QuadTree(this, b2Vec2(center.x - newDim.x, center.y - newDim.y), newDim);
+    NE = new QuadTree(this, b2Vec2(center.x + newDim.x, center.y - newDim.y), newDim);
+    SW = new QuadTree(this, b2Vec2(center.x - newDim.x, center.y + newDim.y), newDim);
+    SE = new QuadTree(this, b2Vec2(center.x + newDim.x, center.y + newDim.y), newDim);
 }
 
-void Quadtree::queryRange(std::vector<Entity*> & list, AABB range) {
+void QuadTree::queryRange(std::vector<Entity*> & list, AABB range) {
     if (!m_boundary.intersectsAABB(range)) {
         return ; // list is empty
     }
@@ -104,7 +104,7 @@ void Quadtree::queryRange(std::vector<Entity*> & list, AABB range) {
 }
 
 // scan the tree and remove all node/Item*
-void Quadtree::clear() {
+void QuadTree::clear() {
     if (this == nullptr) {
         return ;
     }

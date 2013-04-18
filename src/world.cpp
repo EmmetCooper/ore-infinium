@@ -33,6 +33,7 @@
 #include "tilerenderer.h"
 #include "lightrenderer.h"
 #include "physicsdebugrenderer.h"
+#include "quadtreerenderer.h"
 
 //HACK #include "sky.h"
 #include "settings/settings.h"
@@ -76,11 +77,15 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         m_camera = new Camera();
         m_spriteSheetRenderer = new SpriteSheetRenderer(m_camera);
 //FIXME:        m_spriteSheetRenderer->registerSprite(m_uselessEntity);
+
         b2Vec2 halfWorld(Block::BLOCK_SIZE * WORLD_COLUMNCOUNT * 0.5f, Block::BLOCK_SIZE * WORLD_ROWCOUNT * 0.5f);
-        m_torchesQuadTree = new Quadtree(nullptr, halfWorld, halfWorld);
+        m_torchesQuadTree = new QuadTree(nullptr, halfWorld, halfWorld);
         for (auto* t :m_torches) {
-        m_torchesQuadTree->insert(t);
+            m_torchesQuadTree->insert(t);
         }
+
+        m_quadTreeRenderer = new QuadTreeRenderer(m_camera);
+
 
         m_tileRenderer = new TileRenderer(this, m_camera, m_mainPlayer);
 

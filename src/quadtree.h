@@ -42,10 +42,10 @@ struct AABB {
     b2Vec2 halfDimension;
 };
 
-class Quadtree {
+class QuadTree {
 public:
-    Quadtree(Quadtree* parent, b2Vec2 center, b2Vec2 halfDimension);
-    Quadtree(Quadtree* parent, b2Vec2 center, b2Vec2 halfDimension, int nodeCapacity);
+    QuadTree(QuadTree* parent, b2Vec2 center, b2Vec2 halfDimension);
+    QuadTree(QuadTree* parent, b2Vec2 center, b2Vec2 halfDimension, int nodeCapacity);
 
     bool insert(Entity *);
     void subdivide();
@@ -57,12 +57,12 @@ public:
     int m_nodeCapacity;
 
     // leaves
-    Quadtree* NW = nullptr;
-    Quadtree* NE = nullptr;
-    Quadtree* SW = nullptr;
-    Quadtree* SE = nullptr;
+    QuadTree* NW = nullptr;
+    QuadTree* NE = nullptr;
+    QuadTree* SW = nullptr;
+    QuadTree* SE = nullptr;
 
-    Quadtree *m_parent = nullptr;
+    QuadTree *m_parent = nullptr;
 
     // data
     std::vector<Entity*> m_points;
