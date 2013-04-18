@@ -28,14 +28,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/swizzle.hpp>
 
+class QuadTree;
+
 class QuadTreeRenderer
 {
 public:
     QuadTreeRenderer(Camera* camera);
     ~QuadTreeRenderer();
 
-    virtual void DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color);
-    virtual void DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color);
 
     void setCamera(Camera* camera);
 
@@ -44,8 +44,7 @@ public:
 private:
     void initGL();
 
-    void renderSolidPolygons();
-    void renderPolygons();
+    void addQuadTree(QuadTree* tree);
 
     /* Each vertex is:
      * two floats for the 2d coordinate
@@ -57,16 +56,16 @@ private:
     };
 
 private:
+    std::vector<QuadTree*> m_trees;
 
     ////////////////////////////////////////////////////////////////////// NON SOLID POLYGONS
-    GLuint m_iboPolygons; // index buffer object
-    GLuint m_vaoPolygons; // vertex array object
-    GLuint m_vboPolygons; // vertex buffer object
+    GLuint m_ebo; // index buffer object
+    GLuint m_vao; // vertex array object
+    GLuint m_vbo; // vertex buffer object
 
-    std::vector<Vertex> m_verticesPolygons;
-    std::vector<uint16_t> m_indicesPolygons;
-    size_t m_maxVBOSizePolygons = 0;
-    size_t m_highestIBOSizePolygons = 0;
+    //std::vector<uint16_t> m_indicesPolygons;
+    size_t m_maxVBOSize = 0;
+    //size_t m_highestIBOSizePolygons = 0;
     /////////////////////////////////////////////////////////////////////
 
     glm::mat4 m_ortho;
