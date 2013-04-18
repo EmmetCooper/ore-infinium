@@ -23,13 +23,14 @@
 #include "chunk.h"
 
 #include <stdlib.h>
+#include <list>
+#include <sstream>
 
 #include <GL/glew.h>
-#include <GL/gl.h>
 #include <SDL2/SDL_events.h>
-#include <list>
+
 #include <Box2D/Common/b2Math.h>
-#include <sstream>
+
 class QueryCallback;
 class ContactListener;
 class b2Body;

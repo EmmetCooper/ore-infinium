@@ -19,7 +19,6 @@
 #define IMAGE_H
 
 #include <GL/glew.h>
-#include <GL/gl.h>
 
 #include <string>
 #include <FreeImage.h>

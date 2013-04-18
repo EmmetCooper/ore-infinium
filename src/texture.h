@@ -19,7 +19,6 @@
 #define TEXTURE_H
 
 #include <GL/glew.h>
-#include <GL/gl.h>
 
 #include <string>
 

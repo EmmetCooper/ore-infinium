@@ -19,7 +19,6 @@
 #define SHADER_H
 
 #include <GL/glew.h>
-#include <GL/gl.h>
 
 /**
 * Represents the vertex, fragment shader handles,
