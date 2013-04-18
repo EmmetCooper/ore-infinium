@@ -166,10 +166,10 @@ void QuadTreeRenderer::uploadVertices(QuadTree *tree)
     // copy color to the buffer
     for (size_t i = 0; i < sizeof(vertices) / sizeof(*vertices); i++) {
         //        *colorp = color.bgra;
-        uint8_t red = 120;
+        uint8_t red = 255;
         uint8_t green = 0;
         uint8_t blue = 0;
-        uint8_t alpha = 80;
+        uint8_t alpha = 10;
         int32_t color = red | (green << 8) | (blue << 16) | (alpha << 24);
         vertices[i].color = color;
     }
@@ -212,11 +212,15 @@ void QuadTreeRenderer::render()
 
     Debug::checkGLError();
 
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
     glDrawElements(
         GL_TRIANGLES,
         6 * (m_index + 1), // 6 indices per 2 triangles
                    GL_UNSIGNED_INT,
                    (const GLvoid*)0);
+
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     m_shader->unbindProgram();
     glBindVertexArray(0);
