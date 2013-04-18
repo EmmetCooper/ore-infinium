@@ -692,7 +692,6 @@ void World::attemptItemPlacement(Entities::Player* player)
         Torch* newTorch = dynamic_cast<Torch*>(torch->duplicate());
         newTorch->setStackSize(1);
         m_torches.push_back(newTorch);
-        m_torchesQuadTree->insert(newTorch);
 
         //send the new inventory item count to this player's client.
         m_server->sendQuickBarInventoryItemCountChanged(player, inventory->equippedIndex(), torch->stackSize());
@@ -720,6 +719,7 @@ void World::spawnItem(Item* item)
 
         //FIXME: HACK;
         m_torches.push_back(torch);
+        m_torchesQuadTree->insert(torch);
         break;
     }
 
