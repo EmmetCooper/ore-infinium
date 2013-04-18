@@ -196,6 +196,7 @@ void QuadTreeRenderer::render()
     for (QuadTree* tree : m_trees) {
         uploadVertices(tree);
     }
+    Debug::log(Debug::ClientRendererArea) << "tree index count: " << m_index;
 
     ////////////////////////////////FINALLY RENDER IT ALL //////////////////////////////////////////
     glEnable(GL_BLEND);

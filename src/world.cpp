@@ -638,9 +638,9 @@ void World::itemSecondaryActivated(Entities::Player* player, Item* item)
 void World::handlePlayerLeftMouse(Entities::Player* player)
 {
     //TODO: HANDLE INVENTORY AND TAKE THAT INTO ACCOUNT
-     performBlockAttack(player);
+ //    performBlockAttack(player);
      //FIXME:
-    return;
+//    return;
 
     // FIXME: HACK: perform the action based on what type of thing is equipped.
     // if it's a sword we attack shit, if it's a pickaxe we attack blocks. for now, lets
@@ -692,6 +692,7 @@ void World::attemptItemPlacement(Entities::Player* player)
         Torch* newTorch = dynamic_cast<Torch*>(torch->duplicate());
         newTorch->setStackSize(1);
         m_torches.push_back(newTorch);
+        m_torchesQuadTree->insert(newTorch);
 
         //send the new inventory item count to this player's client.
         m_server->sendQuickBarInventoryItemCountChanged(player, inventory->equippedIndex(), torch->stackSize());
