@@ -167,7 +167,7 @@ void Client::initSDL()
     glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, 0, GL_TRUE);
 #endif
 
-    Debug::fatal(enet_initialize() != 0, Debug::Area::StartupArea, "An error occurred during ENet init (network init failure");
+    Debug::fatal(enet_initialize() == 0, Debug::Area::StartupArea, "An error occurred during ENet init (network init failure");
 
     glClearColor(0.f, .5f, 0.f, 1.0f);
 
