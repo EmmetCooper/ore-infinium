@@ -111,46 +111,35 @@ void Client::initSDL()
         Debug::checkSDLError();
     }
 
-    Debug::checkGLError();
 //    glewExperimental = GL_TRUE;
-    Debug::checkGLError();
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
-    Debug::checkGLError();
     SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
-    Debug::checkGLError();
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
-    Debug::checkGLError();
 
     // Request opengl 3.3 context.
     // FIXME: i *want 3.2, but Mesa 9 only has 3.0.. :(
-    Debug::checkGLError();
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    Debug::checkGLError();
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
-    Debug::checkGLError();
 
     /* Turn on double buffering with a 24bit Z buffer.
      * You may need to change this to 16 or 32 for your system */
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    Debug::checkGLError();
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-    Debug::checkGLError();
 
-//FIXME: doesn't do shit
-    SDL_GL_SetSwapInterval(1);
-    Debug::checkGLError();
 
     //TODO: we'll probably need some extension at some point in time..
     //SDL_GL_ExtensionSupported();
 
-    Debug::checkGLError();
     m_GLcontext = SDL_GL_CreateContext(m_window);
+
+//FIXME: doesn't do shit
+    SDL_GL_SetSwapInterval(1);
+
     Debug::checkSDLError();
     Debug::checkGLError();
 
     SDL_ShowCursor(0);
-    Debug::checkGLError();
 
     Debug::checkSDLError();
     Debug::checkGLError();
@@ -178,7 +167,7 @@ void Client::initSDL()
     glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, 0, GL_TRUE);
 #endif
 
-    Debug::fatal(enet_initialize != 0, Debug::Area::StartupArea, "An error occurred during ENet init (network init failure");
+    Debug::fatal(enet_initialize() != 0, Debug::Area::StartupArea, "An error occurred during ENet init (network init failure");
 
     glClearColor(0.f, .5f, 0.f, 1.0f);
 
