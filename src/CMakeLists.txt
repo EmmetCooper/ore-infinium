@@ -25,6 +25,7 @@ world.cpp
 item.cpp
 quickbarinventory.cpp
 timer.cpp
+quadtree.cpp
 
 #cloudsystem.cpp
 #sky.cpp

@@ -20,16 +20,13 @@
 
 #include "src/entity.h"
 
-struct XY {
-    XY(float _x, float _y) : x(_x), y(_y) {}
-    float x, y;
-};
+#include <Box2D/Box2D.h>
 
 struct AABB {
-    AABB(XY _center, XY _halfDimension) : center(_center), halfDimension(_halfDimension) {}
+    AABB(b2Vec2 _center, b2Vec2 _halfDimension) : center(_center), halfDimension(_halfDimension) {}
 
-    bool containsPoint(Item* item) {
-        XY p(item->x, item->y);
+    bool containsPoint(Entity* entity) {
+        b2Vec2 p(entity->position().x, entity->position().y);
         return ((p.x > center.x - halfDimension.x && p.x <= center.x + halfDimension.x) &&
                 (p.y > center.y - halfDimension.y && p.y <= center.y + halfDimension.y));
     }
@@ -41,14 +38,14 @@ struct AABB {
                  (other.center.y + other.halfDimension.y > center.y - halfDimension.y && other.center.y + other.halfDimension.y < center.y + halfDimension.y)));
     }
 
-    XY center;
-    XY halfDimension;
+    b2Vec2 center;
+    b2Vec2 halfDimension;
 };
 
 class Quadtree {
 public:
-    Quadtree(XY, XY);
-    Quadtree(XY, XY, int);
+    Quadtree(b2Vec2, b2Vec2);
+    Quadtree(b2Vec2, b2Vec2, int);
 
     bool insert(Entity *);
     void subdivide();

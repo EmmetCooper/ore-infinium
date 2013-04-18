@@ -19,7 +19,7 @@
 
 #include <assert.h>
 
-Quadtree::Quadtree(XY _center, XY _halfDimension)
+Quadtree::Quadtree(b2Vec2 _center, b2Vec2 _halfDimension)
     : boundary(_center, _halfDimension),
       nodeCapacity(4)
 {
@@ -27,7 +27,7 @@ Quadtree::Quadtree(XY _center, XY _halfDimension)
     points.reserve(nodeCapacity);
 }
 
-Quadtree::Quadtree(XY _center, XY _halfDimension, int _nodeCapacity)
+Quadtree::Quadtree(b2Vec2 _center, b2Vec2 _halfDimension, int _nodeCapacity)
     : boundary(_center, _halfDimension),
       nodeCapacity(_nodeCapacity)
 {
@@ -35,7 +35,7 @@ Quadtree::Quadtree(XY _center, XY _halfDimension, int _nodeCapacity)
     points.reserve(nodeCapacity);
 }
 
-bool Quadtree::insert(Item * a)
+bool Quadtree::insert(Entity * a)
 {
     if (!boundary.containsPoint(a)) {
         return false;
@@ -71,16 +71,16 @@ bool Quadtree::insert(Item * a)
 }
 
 void Quadtree::subdivide() {
-    XY center = boundary.center;
-    XY newDim(boundary.halfDimension.x / 2, boundary.halfDimension.y / 2);
+    b2Vec2 center = boundary.center;
+    b2Vec2 newDim(boundary.halfDimension.x / 2, boundary.halfDimension.y / 2);
 
-    NW = new Quadtree(XY(center.x - newDim.x, center.y - newDim.y), newDim);
-    NE = new Quadtree(XY(center.x + newDim.x, center.y - newDim.y), newDim);
-    SW = new Quadtree(XY(center.x - newDim.x, center.y + newDim.y), newDim);
-    SE = new Quadtree(XY(center.x + newDim.x, center.y + newDim.y), newDim);
+    NW = new Quadtree(b2Vec2(center.x - newDim.x, center.y - newDim.y), newDim);
+    NE = new Quadtree(b2Vec2(center.x + newDim.x, center.y - newDim.y), newDim);
+    SW = new Quadtree(b2Vec2(center.x - newDim.x, center.y + newDim.y), newDim);
+    SE = new Quadtree(b2Vec2(center.x + newDim.x, center.y + newDim.y), newDim);
 }
 
-void Quadtree::queryRange(std::vector<Item*> & list, AABB range) {
+void Quadtree::queryRange(std::vector<Entity*> & list, AABB range) {
     if (!boundary.intersectsAABB(range)) {
         return ; // list is empty
     }
