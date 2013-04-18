@@ -19,30 +19,32 @@
 
 #include <assert.h>
 
-Quadtree::Quadtree(b2Vec2 _center, b2Vec2 _halfDimension)
-    : boundary(_center, _halfDimension),
-      nodeCapacity(4)
+Quadtree::Quadtree(Quadtree* parent, b2Vec2 _center, b2Vec2 _halfDimension)
+    : m_boundary(_center, _halfDimension),
+      m_nodeCapacity(4),
+      m_parent(parent)
 {
     NW = NE = SW = SE = nullptr;
-    points.reserve(nodeCapacity);
+    m_points.reserve(m_nodeCapacity);
 }
 
-Quadtree::Quadtree(b2Vec2 _center, b2Vec2 _halfDimension, int _nodeCapacity)
-    : boundary(_center, _halfDimension),
-      nodeCapacity(_nodeCapacity)
+Quadtree::Quadtree(Quadtree* parent, b2Vec2 _center, b2Vec2 _halfDimension, int _nodeCapacity)
+    : m_boundary(_center, _halfDimension),
+      m_nodeCapacity(_nodeCapacity),
+      m_parent(parent)
 {
     NW = NE = SW = SE = nullptr;
-    points.reserve(nodeCapacity);
+    m_points.reserve(m_nodeCapacity);
 }
 
 bool Quadtree::insert(Entity * a)
 {
-    if (!boundary.containsPoint(a)) {
+    if (!m_boundary.containsPoint(a)) {
         return false;
     }
 
-    if (points.size() < nodeCapacity) {
-        points.push_back(a);
+    if (m_points.size() < m_nodeCapacity) {
+        m_points.push_back(a);
         return true;
     }
 
@@ -71,23 +73,23 @@ bool Quadtree::insert(Entity * a)
 }
 
 void Quadtree::subdivide() {
-    b2Vec2 center = boundary.center;
-    b2Vec2 newDim(boundary.halfDimension.x / 2, boundary.halfDimension.y / 2);
+    b2Vec2 center = m_boundary.center;
+    b2Vec2 newDim(m_boundary.halfDimension.x / 2, m_boundary.halfDimension.y / 2);
 
-    NW = new Quadtree(b2Vec2(center.x - newDim.x, center.y - newDim.y), newDim);
-    NE = new Quadtree(b2Vec2(center.x + newDim.x, center.y - newDim.y), newDim);
-    SW = new Quadtree(b2Vec2(center.x - newDim.x, center.y + newDim.y), newDim);
-    SE = new Quadtree(b2Vec2(center.x + newDim.x, center.y + newDim.y), newDim);
+    NW = new Quadtree(this, b2Vec2(center.x - newDim.x, center.y - newDim.y), newDim);
+    NE = new Quadtree(this, b2Vec2(center.x + newDim.x, center.y - newDim.y), newDim);
+    SW = new Quadtree(this, b2Vec2(center.x - newDim.x, center.y + newDim.y), newDim);
+    SE = new Quadtree(this, b2Vec2(center.x + newDim.x, center.y + newDim.y), newDim);
 }
 
 void Quadtree::queryRange(std::vector<Entity*> & list, AABB range) {
-    if (!boundary.intersectsAABB(range)) {
+    if (!m_boundary.intersectsAABB(range)) {
         return ; // list is empty
     }
 
-    for (int i = 0; i < points.size(); ++i) {
-        if (range.containsPoint(points[i])) {
-            list.push_back(points[i]);
+    for (int i = 0; i < m_points.size(); ++i) {
+        if (range.containsPoint(m_points[i])) {
+            list.push_back(m_points[i]);
         }
     }
 
@@ -107,7 +109,7 @@ void Quadtree::clear() {
         return ;
     }
 
-    points.clear();
+    m_points.clear();
 
     NW->clear();
     delete NW;

@@ -44,27 +44,28 @@ struct AABB {
 
 class Quadtree {
 public:
-    Quadtree(b2Vec2, b2Vec2);
-    Quadtree(b2Vec2, b2Vec2, int);
+    Quadtree(Quadtree* parent, b2Vec2 center, b2Vec2 halfDimension);
+    Quadtree(Quadtree* parent, b2Vec2 center, b2Vec2 halfDimension, int nodeCapacity);
 
     bool insert(Entity *);
     void subdivide();
     void queryRange(std::vector<Entity*> &, AABB);
 
     void clear();
-    bool getCollision(std::vector<Entity*>);
 
-    AABB boundary;
-    int nodeCapacity;
+    AABB m_boundary;
+    int m_nodeCapacity;
 
     // leaves
-    Quadtree * NW;
-    Quadtree * NE;
-    Quadtree * SW;
-    Quadtree * SE;
+    Quadtree* NW = nullptr;
+    Quadtree* NE = nullptr;
+    Quadtree* SW = nullptr;
+    Quadtree* SE = nullptr;
+
+    Quadtree *m_parent = nullptr;
 
     // data
-    std::vector<Entity*> points;
+    std::vector<Entity*> m_points;
 };
 
 #endif // __QUADTREE__
