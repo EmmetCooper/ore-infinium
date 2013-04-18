@@ -121,7 +121,7 @@ void QuadTreeRenderer::initGL()
     Debug::checkGLError();
 }
 
-void QuadTreeRenderer::addQuad(const b2Vec2 vertices, int32 vertexCount, const b2Color& color)
+void QuadTreeRenderer::addQuadTree(QuadTree* tree)
 {
 
 }
@@ -130,6 +130,7 @@ void QuadTreeRenderer::render()
 {
     ////////////////////////////////FINALLY RENDER IT ALL //////////////////////////////////////////
 
+    uint32_t index = 0;
     for (QuadTree* tree : m_trees) {
         // vertices that will be uploaded.
         Vertex vertices[4];

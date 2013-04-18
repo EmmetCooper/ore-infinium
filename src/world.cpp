@@ -86,7 +86,6 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
         m_quadTreeRenderer = new QuadTreeRenderer(m_camera);
 
-
         m_tileRenderer = new TileRenderer(this, m_camera, m_mainPlayer);
 
         Torch* torch = new Torch(glm::vec2(2400 / PIXELS_PER_METER, 1420 / PIXELS_PER_METER));

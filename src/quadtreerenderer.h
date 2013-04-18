@@ -36,7 +36,6 @@ public:
     QuadTreeRenderer(Camera* camera);
     ~QuadTreeRenderer();
 
-
     void setCamera(Camera* camera);
 
     void render();
