@@ -123,68 +123,78 @@ void QuadTreeRenderer::initGL()
 
 void QuadTreeRenderer::addQuadTree(QuadTree* tree)
 {
+    m_trees.push_back(tree);
+}
 
+void QuadTreeRenderer::uploadVertices(QuadTree *tree)
+{
+    if (tree == nullptr) {
+        return;
+    }
+
+    // vertices that will be uploaded.
+    Vertex vertices[4];
+
+    // vertices[n][0] -> X, and [1] -> Y
+    // vertices[0] -> top left
+    // vertices[1] -> bottom left
+    // vertices[2] -> bottom right
+    // vertices[3] -> top right
+
+    glm::vec2 spritePosition(tree->m_boundary.center.x - tree->m_boundary.halfDimension.x, tree->m_boundary.center.y - tree->m_boundary.halfDimension.y);
+
+    glm::vec4 rect = glm::vec4(spritePosition.x - (tree->m_boundary.halfDimension.x * 2.0f), spritePosition.y - (tree->m_boundary.halfDimension.x * 2.0f), spritePosition.x + (tree->m_boundary.halfDimension.x * 2.0f), spritePosition.y + (tree->m_boundary.halfDimension.y * 2.0f));
+
+    float x = rect.x;
+    float width = rect.z;
+    float y = rect.y;
+    float height = rect.w;
+
+    vertices[0].x = x; // top left X
+    vertices[0].y = y; //top left Y
+
+    vertices[1].x = x; // bottom left X
+    vertices[1].y = height; // bottom left Y
+
+    vertices[2].x = width; // bottom right X
+    vertices[2].y = height; //bottom right Y
+
+    vertices[3].x = width; // top right X
+    vertices[3].y = y; // top right Y
+
+    Debug::checkGLError();
+    // copy color to the buffer
+    for (size_t i = 0; i < sizeof(vertices) / sizeof(*vertices); i++) {
+        //        *colorp = color.bgra;
+        uint8_t red = 120;
+        uint8_t green = 0;
+        uint8_t blue = 0;
+        uint8_t alpha = 80;
+        int32_t color = red | (green << 8) | (blue << 16) | (alpha << 24);
+        vertices[i].color = color;
+    }
+
+    // finally upload everything to the actual vbo
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glBufferSubData(
+        GL_ARRAY_BUFFER,
+        sizeof(vertices) * m_index,
+                    sizeof(vertices),
+                    vertices);
+
+    ++m_index;
+
+    uploadVertices(tree->NE);
+    uploadVertices(tree->NW);
+    uploadVertices(tree->SE);
+    uploadVertices(tree->SW);
 }
 
 void QuadTreeRenderer::render()
 {
-    ////////////////////////////////FINALLY RENDER IT ALL //////////////////////////////////////////
-
-    uint32_t index = 0;
+    m_index = 0;
     for (QuadTree* tree : m_trees) {
-        // vertices that will be uploaded.
-        Vertex vertices[4];
-
-        // vertices[n][0] -> X, and [1] -> Y
-        // vertices[0] -> top left
-        // vertices[1] -> bottom left
-        // vertices[2] -> bottom right
-        // vertices[3] -> top right
-
-        glm::vec2 spritePosition ;//= sprite->position();
-
-        glm::vec2 spriteSize ;//= sprite->sizeMeters();
-
-        glm::vec4 rect = glm::vec4(spritePosition.x - (spriteSize.x * 0.5f), spritePosition.y - (spriteSize.x * 0.5f), spritePosition.x + (spriteSize.x * 0.5f), spritePosition.y + (spriteSize.y * 0.5f));
-
-        float x = rect.x;
-        float width = rect.z;
-        float y = rect.y;
-        float height = rect.w;
-
-        vertices[0].x = x; // top left X
-        vertices[0].y = y; //top left Y
-
-        vertices[1].x = x; // bottom left X
-        vertices[1].y = height; // bottom left Y
-
-        vertices[2].x = width; // bottom right X
-        vertices[2].y = height; //bottom right Y
-
-        vertices[3].x = width; // top right X
-        vertices[3].y = y; // top right Y
-
-        Debug::checkGLError();
-        // copy color to the buffer
-        for (size_t i = 0; i < sizeof(vertices) / sizeof(*vertices); i++) {
-            //        *colorp = color.bgra;
-            uint8_t red = 255;
-            uint8_t green = 255;
-            uint8_t blue = 255;
-            uint8_t alpha = 255;
-            int32_t color = red | (green << 8) | (blue << 16) | (alpha << 24);
-            vertices[i].color = color;
-        }
-
-        // finally upload everything to the actual vbo
-        glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-        glBufferSubData(
-            GL_ARRAY_BUFFER,
-            sizeof(vertices) * index,
-                        sizeof(vertices),
-                        vertices);
-
-        ++index;
+        uploadVertices(tree);
     }
 
     ////////////////////////////////FINALLY RENDER IT ALL //////////////////////////////////////////
@@ -203,7 +213,7 @@ void QuadTreeRenderer::render()
 
     glDrawElements(
         GL_TRIANGLES,
-        6 * (m_trees.size()), // 6 indices per 2 triangles
+        6 * (m_index + 1), // 6 indices per 2 triangles
                    GL_UNSIGNED_INT,
                    (const GLvoid*)0);
 

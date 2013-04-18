@@ -38,12 +38,14 @@ public:
 
     void setCamera(Camera* camera);
 
+    void addQuadTree(QuadTree* tree);
+
     void render();
 
 private:
     void initGL();
 
-    void addQuadTree(QuadTree* tree);
+    void uploadVertices(QuadTree* tree);
 
     /* Each vertex is:
      * two floats for the 2d coordinate
@@ -62,8 +64,13 @@ private:
     GLuint m_vao; // vertex array object
     GLuint m_vbo; // vertex buffer object
 
-    //std::vector<uint16_t> m_indicesPolygons;
-    size_t m_maxVBOSize = 0;
+    struct Quad {
+        Vertex vertices[4];
+    };
+
+    uint32_t m_index = 0;
+    std::vector<Quad> m_vertices;
+    size_t m_maxVBOSize = 4000;
     //size_t m_highestIBOSizePolygons = 0;
     /////////////////////////////////////////////////////////////////////
 

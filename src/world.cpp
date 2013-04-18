@@ -85,6 +85,7 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         }
 
         m_quadTreeRenderer = new QuadTreeRenderer(m_camera);
+        m_quadTreeRenderer->addQuadTree(m_torchesQuadTree);
 
         m_tileRenderer = new TileRenderer(this, m_camera, m_mainPlayer);
 
@@ -302,6 +303,8 @@ void World::render()
     //HACK    m_window->setView(m_window->getDefaultView());
     m_spriteSheetRenderer->renderEntities();
     m_spriteSheetRenderer->renderCharacters();
+
+    m_quadTreeRenderer->render();
 
     renderCrosshair();
 }
