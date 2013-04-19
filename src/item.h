@@ -37,6 +37,8 @@ class Item : public Entity
 {
 public:
     Item(const std::string& frameName);
+    Item(const Item& item);
+
     ~Item();
 
     enum ItemProperties {

@@ -27,6 +27,17 @@ Item::Item(const std::string& frameName) : Entity(frameName, SpriteSheetRenderer
 
 }
 
+Item::Item(const Item& item) : Entity(item)
+{
+    m_maximumStackSize = item.m_maximumStackSize;
+    m_player = item.m_player;
+    m_properties = item.m_properties;
+    m_stackSize = item.m_stackSize;
+    m_state = item.m_state;
+    m_type = item.m_type;
+    m_world = item.m_world;
+}
+
 Item::~Item()
 {
 

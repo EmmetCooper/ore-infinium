@@ -34,6 +34,8 @@ public:
      * texture loading is handled automatically via textureManager.
      */
     Entity(const std::string& frameName, SpriteSheetRenderer::SpriteSheetType spriteSheetType);
+    Entity(const Entity& entity);
+
     ~Entity();
 
     virtual void update(double elapsedTime, World* world);

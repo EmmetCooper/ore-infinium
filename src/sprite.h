@@ -36,6 +36,9 @@ public:
      * @see setOrigin origin
      */
     explicit Sprite(const std::string& frameName, SpriteSheetRenderer::SpriteSheetType spriteSheetType);
+
+    Sprite(const Sprite& sprite);
+
     virtual ~Sprite();
 
     /**

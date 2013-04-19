@@ -33,6 +33,13 @@ Entity::Entity(const std::string& frameName, SpriteSheetRenderer::SpriteSheetTyp
 
 }
 
+Entity::Entity(const Entity& entity) : Sprite(entity)
+{
+    Entity::m_name = entity.name();
+    Entity::m_details = entity.details();
+    Entity::m_velocity = entity.m_velocity;
+}
+
 Entity::~Entity()
 {
 

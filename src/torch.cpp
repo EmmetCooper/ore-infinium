@@ -28,16 +28,10 @@ Torch::Torch(const glm::vec2& position) : Item("torch1Ground1")
     Item::m_properties = Item::ItemProperties::Placeable;
 }
 
-Torch::Torch(const Torch& torch) : Item(torch.frameName())
+Torch::Torch(const Torch& torch) : Item(torch)
 {
-    Item::setPosition(torch.position());
-    Item::setName(torch.name());
-    Item::setDetails(torch.details());
-    Item::m_maximumStackSize = torch.maximumStackSize();
-    Item::m_type = Item::ItemType::Torch;
-    Item::m_properties = Item::ItemProperties::Placeable;
+    m_radius = torch.m_radius;
 }
-
 
 Torch::~Torch()
 {
