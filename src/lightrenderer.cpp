@@ -389,8 +389,8 @@ void LightRenderer::initGL()
     // prepare and upload indices as a one time deal
     const u32 indices[] = { 0, 1, 2, 0, 2, 3 }; // pattern for a triangle array
     // for each possible sprite, add the 6 index pattern
-    for (size_t j = 0; j < m_maxTileCount; j++) {
-        for (size_t i = 0; i < sizeof(indices) / sizeof(*indices); i++) {
+    for (uint32_t j = 0; j < m_maxTileCount; j++) {
+        for (uint32_t i = 0; i < sizeof(indices) / sizeof(*indices); i++) {
             indicesv.push_back(4 * j + indices[i]);
         }
     }
@@ -461,7 +461,7 @@ void LightRenderer::initBackbufferGL()
     glGenVertexArrays(1, &m_vaoBackbuffer);
     glBindVertexArray(m_vaoBackbuffer);
 
-    int quadCount = 1;
+    uint32_t quadCount = 1;
 
     glGenBuffers(1, &m_vboBackbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, m_vboBackbuffer);
@@ -478,8 +478,8 @@ void LightRenderer::initBackbufferGL()
     // prepare and upload indices as a one time deal
     const u32 indices[] = { 0, 1, 2, 0, 2, 3 }; // pattern for a triangle array
     // for each possible sprite, add the 6 index pattern
-    for (size_t j = 0; j < quadCount; j++) {
-        for (size_t i = 0; i < sizeof(indices) / sizeof(*indices); i++) {
+    for (uint32_t j = 0; j < quadCount; j++) {
+        for (uint32_t i = 0; i < sizeof(indices) / sizeof(*indices); i++) {
             indicesv.push_back(4 * j + indices[i]);
         }
     }

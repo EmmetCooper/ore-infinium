@@ -172,7 +172,7 @@ std::map<std::string, SpriteSheetRenderer::SpriteFrameIdentifier> SpriteSheetRen
     YAML::Node doc;
     parser.GetNextDocument(doc);
 
-    for (int i = 0; i < doc.size(); i++) {
+    for (size_t i = 0; i < doc.size(); i++) {
         SpriteFrameIdentifier frame;
         doc[i] >> frame;
 
@@ -473,8 +473,8 @@ void SpriteSheetRenderer::initGLCharacters()
     // prepare and upload indices as a one time deal
     const uint32_t indices[] = { 0, 1, 2, 0, 2, 3 }; // pattern for a triangle array
     // for each possible sprite, add the 6 index pattern
-    for (size_t j = 0; j < m_maxSpriteCount; j++) {
-        for (size_t i = 0; i < sizeof(indices) / sizeof(*indices); i++) {
+    for (uint32_t j = 0; j < m_maxSpriteCount; j++) {
+        for (uint32_t i = 0; i < sizeof(indices) / sizeof(*indices); i++) {
             indicesv.push_back(4 * j + indices[i]);
         }
     }
@@ -559,8 +559,8 @@ void SpriteSheetRenderer::initGLEntities()
     // prepare and upload indices as a one time deal
     const uint32_t indices[] = { 0, 1, 2, 0, 2, 3 }; // pattern for a triangle array
     // for each possible sprite, add the 6 index pattern
-    for (size_t j = 0; j < m_maxSpriteCount; j++) {
-        for (size_t i = 0; i < sizeof(indices) / sizeof(*indices); i++) {
+    for (uint32_t j = 0; j < m_maxSpriteCount; j++) {
+        for (uint32_t i = 0; i < sizeof(indices) / sizeof(*indices); i++) {
             indicesv.push_back(4 * j + indices[i]);
         }
     }

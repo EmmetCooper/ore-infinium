@@ -308,7 +308,7 @@ void MainMenu::showOptionsDialog()
 
 bool MainMenu::escapeMenuVisible()
 {
-    m_escapeMenu->IsVisible();
+    return m_escapeMenu->IsVisible();
 }
 
 void MainMenu::showEscapeMenu()

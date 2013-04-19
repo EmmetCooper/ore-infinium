@@ -32,8 +32,8 @@
 #include <Rocket/Controls.h>
 
 QuickBarMenu::QuickBarMenu(Client* client, QuickBarInventory* inventory, SpriteSheetRenderer* spriteSheetRenderer)
-    :   m_client(client),
-        m_inventory(inventory),
+    :   m_inventory(inventory),
+        m_client(client),
         m_spriteSheetRenderer(spriteSheetRenderer)
 {
     DecoratorSpriteSheetInstancer* instancer = new DecoratorSpriteSheetInstancer();

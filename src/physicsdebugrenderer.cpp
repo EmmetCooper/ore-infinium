@@ -242,7 +242,7 @@ void PhysicsDebugRenderer::DrawPolygon(const b2Vec2* vertices, int32 vertexCount
 {
     const size_t iboOffset = m_verticesPolygons.size();
 
-    for (size_t i = 0; i < vertexCount; ++i) {
+    for (int32_t i = 0; i < vertexCount; ++i) {
         Vertex vertex;
         vertex.x = vertices[i].x;
         vertex.y = vertices[i].y;
@@ -267,7 +267,7 @@ void PhysicsDebugRenderer::DrawSolidPolygon(const b2Vec2* vertices, int32 vertex
 {
     const size_t iboOffset = m_verticesSolidPolygons.size();
 
-    for (size_t i = 0; i < vertexCount; ++i) {
+    for (int32_t i = 0; i < vertexCount; ++i) {
         Vertex vertex;
         vertex.x = vertices[i].x;
         vertex.y = vertices[i].y;
@@ -347,7 +347,7 @@ void PhysicsDebugRenderer::DrawSolidCircle(const b2Vec2& center, float32 radius,
         m_verticesSolidCircles.push_back(vertex);
     }
 
-    for (int i = 1; i < vertices.size() - 1; i++) {
+    for (size_t i = 1; i < vertices.size() - 1; i++) {
         m_indicesSolidCircles.push_back(iboOffset);
         m_indicesSolidCircles.push_back(iboOffset + i);
         m_indicesSolidCircles.push_back(iboOffset + i + 1);

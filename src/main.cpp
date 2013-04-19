@@ -24,7 +24,7 @@ std::vector<std::string> args;
 
 bool contains(const std::string& str)
 {
-    for (int i = 0; i < args.size(); ++i) {
+    for (size_t i = 0; i < args.size(); ++i) {
         if (args[i] == str) {
         return true;
         }

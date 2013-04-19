@@ -45,7 +45,7 @@ struct AABB {
 class QuadTree {
 public:
     QuadTree(QuadTree* parent, b2Vec2 center, b2Vec2 halfDimension);
-    QuadTree(QuadTree* parent, b2Vec2 center, b2Vec2 halfDimension, int nodeCapacity);
+    QuadTree(QuadTree* parent, b2Vec2 center, b2Vec2 halfDimension, size_t nodeCapacity);
 
     bool insert(Entity *);
     void subdivide();
@@ -54,7 +54,7 @@ public:
     void clear();
 
     AABB m_boundary;
-    int m_nodeCapacity;
+    size_t m_nodeCapacity;
 
     // leaves
     QuadTree* NW = nullptr;

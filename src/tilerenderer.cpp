@@ -62,7 +62,7 @@ TileRenderer::TileRenderer(World* world, Camera* camera, Entities::Player* mainP
     const GLint yoffset = 0;
     const GLsizei depth = 1;
 
-    for (int i = 0; i < Block::blockTypeMap.size(); ++i) {
+    for (size_t i = 0; i < Block::blockTypeMap.size(); ++i) {
         Image image(Block::blockTypeMap.at(i).texture);
 
         glTexSubImage3D(GL_TEXTURE_2D_ARRAY, level, xoffset, yoffset, i, Block::BLOCK_SIZE_PIXELS, Block::BLOCK_SIZE_PIXELS, depth, GL_BGRA, GL_UNSIGNED_BYTE, image.bytes());
@@ -321,8 +321,8 @@ void TileRenderer::initGL()
     // prepare and upload indices as a one time deal
     const uint32_t indices[] = { 0, 1, 2, 0, 2, 3 }; // pattern for a triangle array
     // for each possible sprite, add the 6 index pattern
-    for (size_t j = 0; j < m_maxTileCount; j++) {
-        for (size_t i = 0; i < sizeof(indices) / sizeof(*indices); i++) {
+    for (uint32_t j = 0; j < m_maxTileCount; j++) {
+        for (uint32_t i = 0; i < sizeof(indices) / sizeof(*indices); i++) {
             indicesv.push_back(4 * j + indices[i]);
         }
     }

@@ -750,9 +750,9 @@ void Client::receiveChunk(const std::string& packetContents)
 
     std::vector<Block> blocks;
 
-    int index = 0;
-    for (int row = message.starty(); row < message.endy(); ++row) {
-        for (int column = message.startx(); column < message.endx(); ++column) {
+    uint32_t index = 0;
+    for (uint32_t row = message.starty(); row < message.endy(); ++row) {
+        for (uint32_t column = message.startx(); column < message.endx(); ++column) {
             Block block;
             block.meshType = message.meshtype(index);
             block.primitiveType = message.primitivetype(index);

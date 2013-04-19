@@ -583,12 +583,12 @@ compress
 
 void World::loadChunk(Chunk* chunk)
 {
-    int sourceIndex = 0;
+    uint32_t sourceIndex = 0;
 
     Debug::log(Debug::NetworkClientContinuousArea) << "Loading Chunk START Y: " << chunk->startY() << " ENDY: " << chunk->endY() << " STARTX: " <<  chunk->startX() << " ENDX: " << chunk->endX();
 
-    for (int row = chunk->startY(); row < chunk->endY(); ++row) {
-        for (int column = chunk->startX(); column < chunk->endX(); ++column) {
+    for (uint32_t row = chunk->startY(); row < chunk->endY(); ++row) {
+        for (uint32_t column = chunk->startX(); column < chunk->endX(); ++column) {
 
             uint32_t index = column * WORLD_ROWCOUNT + row;
             m_blocks.at(index) = chunk->blocks()->at(sourceIndex);

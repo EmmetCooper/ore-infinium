@@ -109,7 +109,7 @@ private:
     GLuint m_ebo; // element buffer object
 
     //FIXME: count max tiles to render
-    int m_maxTileCount = 8200;
+    uint32_t m_maxTileCount = 8200;
 
     bool m_renderingEnabled = true;
 

@@ -118,7 +118,7 @@ private:
     uint32_t m_playerID;
 
     /// milliseconds
-    const int64_t m_placeableDelay = 500;
+    const uint64_t m_placeableDelay = 500;
 
     /**
      * NOTE: presently not designed to allow name changing mid-connection. You need to reconnect to do that.
@@ -144,7 +144,7 @@ private:
     uint16_t m_ping = 0;
 
     Timer* m_jumpTimer = nullptr;
-    uint32_t m_jumpDelay = 300;
+    uint64_t m_jumpDelay = 300;
 };
 
 }

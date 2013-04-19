@@ -29,7 +29,7 @@ QuadTree::QuadTree(QuadTree* parent, b2Vec2 _center, b2Vec2 _halfDimension)
     m_points.reserve(m_nodeCapacity);
 }
 
-QuadTree::QuadTree(QuadTree* parent, b2Vec2 _center, b2Vec2 _halfDimension, int _nodeCapacity)
+QuadTree::QuadTree(QuadTree* parent, b2Vec2 _center, b2Vec2 _halfDimension, size_t _nodeCapacity)
     : m_boundary(_center, _halfDimension),
       m_nodeCapacity(_nodeCapacity),
       m_parent(parent)
@@ -89,7 +89,7 @@ void QuadTree::queryRange(std::vector<Entity*> & list, AABB range) {
         return ; // list is empty
     }
 
-    for (int i = 0; i < m_points.size(); ++i) {
+    for (size_t i = 0; i < m_points.size(); ++i) {
         if (range.containsPoint(m_points[i])) {
             list.push_back(m_points[i]);
         }

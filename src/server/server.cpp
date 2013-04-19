@@ -343,8 +343,8 @@ void Server::sendInitialWorldChunk(ENetPeer* peer)
 
     Chunk chunk = m_world->createChunk(startX, startY, endX, endY);
 
-    for (int row = startY; row < endY; ++row) {
-        for (int column = startX; column < endX; ++column) {
+    for (uint32_t row = startY; row < endY; ++row) {
+        for (uint32_t column = startX; column < endX; ++column) {
 
             uint32_t index = column * WORLD_ROWCOUNT + row;
             Block& block = chunk.blocks()->at(index);
@@ -368,8 +368,8 @@ void Server::sendWorldChunk(Chunk* chunk)
     message.set_starty(chunk->startY());
     message.set_endy(chunk->endY());
 
-    for (int row = chunk->startY(); row < chunk->endY(); ++row) {
-        for (int column = chunk->startX(); column < chunk->endX(); ++column) {
+    for (uint32_t row = chunk->startY(); row < chunk->endY(); ++row) {
+        for (uint32_t column = chunk->startX(); column < chunk->endX(); ++column) {
 
             uint32_t index = column * WORLD_ROWCOUNT + row;
             Block& block = chunk->blocks()->at(index);
