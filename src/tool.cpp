@@ -15,36 +15,35 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
-#include "torch.h"
+#include "tool.h"
 #include "debug.h"
 
-Torch::Torch(const glm::vec2& position): Item("torch1Ground1")
+Tool::Tool(const glm::vec2& position): Item("torch1Ground1")
 {
     Item::setPosition(position);
     Item::setName("Torch Testname");
     Item::setDetails("a motherfucking torch.");
-    Item::m_maximumStackSize = 64;
-    Item::m_type = Item::ItemType::Torch;
-    Item::m_properties = Item::ItemProperties::Placeable;
+    Item::m_maximumStackSize = 32;
+    Item::m_type = Item::ItemType::Tool;
+    Item::m_properties = Item::ItemProperties::Consumable;
 }
 
-Torch::~Torch()
+Tool::~Tool()
 {
 
 }
 
-Item* Torch::duplicate()
+Item* Tool::duplicate()
 {
-    Torch* torch = new Torch(Item::position());
-    Debug::log(Debug::ServerEntityCreationArea) << "duplicating torch, position: " << torch->position().x << " y: " << torch->position().y;
+    Tool* tool = new Tool(Item::position());
 
-    return torch;
+    return tool;
 }
 
-void Torch::activatePrimary()
+void Tool::activatePrimary()
 {
 }
 
-void Torch::activateSecondary()
+void Tool::activateSecondary()
 {
 }

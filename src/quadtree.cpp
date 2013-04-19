@@ -16,6 +16,7 @@
  *****************************************************************************/
 
 #include "quadtree.h"
+#include "debug.h"
 
 #include <assert.h>
 
@@ -37,14 +38,15 @@ QuadTree::QuadTree(QuadTree* parent, b2Vec2 _center, b2Vec2 _halfDimension, int 
     m_points.reserve(m_nodeCapacity);
 }
 
-bool QuadTree::insert(Entity * a)
+bool QuadTree::insert(Entity * entity)
 {
-    if (!m_boundary.containsPoint(a)) {
+    Debug::assertf(entity, "quadtree insertion error, entity to insert was null (horrible api abuse)");
+    if (!m_boundary.containsPoint(entity)) {
         return false;
     }
 
     if (m_points.size() < m_nodeCapacity) {
-        m_points.push_back(a);
+        m_points.push_back(entity);
         return true;
     }
 
@@ -52,19 +54,19 @@ bool QuadTree::insert(Entity * a)
         subdivide();
     }
 
-    if (NW->insert(a)) {
+    if (NW->insert(entity)) {
         return true;
     }
 
-    if (NE->insert(a)) {
+    if (NE->insert(entity)) {
         return true;
     }
 
-    if (SW->insert(a)) {
+    if (SW->insert(entity)) {
         return true;
     }
 
-    if (SE->insert(a)) {
+    if (SE->insert(entity)) {
         return true;
     }
 

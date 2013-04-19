@@ -78,12 +78,6 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         m_spriteSheetRenderer = new SpriteSheetRenderer(m_camera);
 //FIXME:        m_spriteSheetRenderer->registerSprite(m_uselessEntity);
 
-        b2Vec2 halfWorld(Block::BLOCK_SIZE * WORLD_COLUMNCOUNT * 0.5f, Block::BLOCK_SIZE * WORLD_ROWCOUNT * 0.5f);
-        m_torchesQuadTree = new QuadTree(nullptr, halfWorld, halfWorld);
-        for (auto* t :m_torches) {
-            m_torchesQuadTree->insert(t);
-        }
-
         m_quadTreeRenderer = new QuadTreeRenderer(m_camera);
         m_quadTreeRenderer->addQuadTree(m_torchesQuadTree);
 
@@ -128,6 +122,9 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         groundBody->CreateFixture(&groundBox, 0.0f);
         */
 
+        b2Vec2 halfWorld(Block::BLOCK_SIZE * WORLD_COLUMNCOUNT * 0.5f, Block::BLOCK_SIZE * WORLD_ROWCOUNT * 0.5f);
+        m_torchesQuadTree = new QuadTree(nullptr, halfWorld, halfWorld);
+
         if (m_server->client()) {
             m_server->client()->setBox2DWorld(m_box2DWorld);
         }
@@ -135,8 +132,15 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         loadWorld();
         //HACK, as if that wasn't obvious.
         saveWorld();
+
+        // FIXME: load torches (this doesn't actually do anything but is in theory what we'll need to load shit)
+        for (auto* t :m_torches) {
+            m_torchesQuadTree->insert(t);
+        }
+
         Debug::log(Debug::WorldLoaderArea) << "World is x: " << (WORLD_COLUMNCOUNT * Block::BLOCK_SIZE) << " y: " << (WORLD_ROWCOUNT * Block::BLOCK_SIZE) << " meters big";
     }
+
 
     //FIXME: saveMap();
 
@@ -692,6 +696,7 @@ void World::attemptItemPlacement(Entities::Player* player)
         Torch* newTorch = dynamic_cast<Torch*>(torch->duplicate());
         newTorch->setStackSize(1);
         m_torches.push_back(newTorch);
+        m_torchesQuadTree->insert(torch);
 
         //send the new inventory item count to this player's client.
         m_server->sendQuickBarInventoryItemCountChanged(player, inventory->equippedIndex(), torch->stackSize());
@@ -719,7 +724,6 @@ void World::spawnItem(Item* item)
 
         //FIXME: HACK;
         m_torches.push_back(torch);
-        m_torchesQuadTree->insert(torch);
         break;
     }
 

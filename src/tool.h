@@ -15,36 +15,43 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
-#include "torch.h"
-#include "debug.h"
+#ifndef TOOL_H
+#define TOOL_H
 
-Torch::Torch(const glm::vec2& position): Item("torch1Ground1")
+#include "item.h"
+
+#include <vector>
+#include <string>
+
+/**
+ */
+class Tool : public Item
 {
-    Item::setPosition(position);
-    Item::setName("Torch Testname");
-    Item::setDetails("a motherfucking torch.");
-    Item::m_maximumStackSize = 64;
-    Item::m_type = Item::ItemType::Torch;
-    Item::m_properties = Item::ItemProperties::Placeable;
-}
+public:
+    Tool(const glm::vec2& position);
+    ~Tool();
 
-Torch::~Torch()
-{
+    /**
+     */
+    virtual void activatePrimary();
 
-}
+    /**
+     */
+    virtual void activateSecondary();
 
-Item* Torch::duplicate()
-{
-    Torch* torch = new Torch(Item::position());
-    Debug::log(Debug::ServerEntityCreationArea) << "duplicating torch, position: " << torch->position().x << " y: " << torch->position().y;
+    virtual Item* duplicate();
 
-    return torch;
-}
+    float attackRadius() {
+        return m_attackRadius;
+    }
 
-void Torch::activatePrimary()
-{
-}
+    void setAttackRadius(float radius) {
+        m_attackRadius = radius;
+    }
 
-void Torch::activateSecondary()
-{
-}
+private:
+    /// meters
+    float m_attackRadius = 10.0f;
+};
+
+#endif
