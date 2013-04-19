@@ -23,6 +23,7 @@
 #include <vector>
 #include <string>
 
+class Timer;
 /**
  */
 class Tool : public Item
@@ -30,6 +31,19 @@ class Tool : public Item
 public:
     Tool(const glm::vec2& position);
     ~Tool();
+
+    enum ToolType {
+       PickAxe,
+       Axe,
+       Bucket /// ?
+    };
+
+    enum Material {
+       Wood,
+       Stone,
+       Steel,
+       Diamond
+    };
 
     /**
      */
@@ -49,7 +63,18 @@ public:
         m_attackRadius = radius;
     }
 
+    float primaryAttackDelay() {
+        return m_primaryAttackDelay;
+    }
+
+    void setPrimaryAttackDelay(uint32_t delay) {
+        m_primaryAttackDelay = delay;
+    }
+
 private:
+    uint32_t m_primaryAttackDelay = 0;
+    Timer* m_primaryAttackTimer = nullptr;
+
     /// meters
     float m_attackRadius = 10.0f;
 };

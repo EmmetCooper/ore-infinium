@@ -42,6 +42,13 @@ Player::Player(const std::string& frameName)
     m_sizeMeters = glm::vec2(Block::BLOCK_SIZE * 2, Block::BLOCK_SIZE * 3);
 }
 
+Player::~Player()
+{
+    delete m_placeableDelayTimer;
+    delete m_jumpTimer;
+    delete m_quickBarInventory;
+}
+
 void Player::createPhysicsBody(World* world, const glm::vec2& position)
 {
     const glm::vec2 size = this->sizeMeters();

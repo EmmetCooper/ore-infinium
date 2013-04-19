@@ -38,6 +38,7 @@ public:
      * Create a player with the starting frame texture
      */
     Player(const std::string& frameName);
+    ~Player();
 
 //    void handleEvent(const SDL_Event& event);
 
