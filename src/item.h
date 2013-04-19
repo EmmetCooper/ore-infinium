@@ -59,11 +59,12 @@ public:
     /// turn into
     enum ItemType {
         Torch = 0,
-        Container,
+        Container, /// chesticles
         Weapon,
         Armor,
-        Vegetation,
-        Block /// blocks are handled super specially. they have different placement rules, adn they are not rendered as an Entity, but something totally different.
+        Vegetation, /// we be plantin' trees and shit
+        Block, /// blocks are handled super specially. they have different placement rules, adn they are not rendered as an Entity, but something totally different.
+        Tool
     };
 
     struct PlacementHints {

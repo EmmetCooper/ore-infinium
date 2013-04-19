@@ -1,200 +1,131 @@
-#include "quadtree.h"
+/******************************************************************************
+ *   Copyright (C) 2013 by Shaun Reich <sreich@kde.org>                       *
+ *                                                                            *
+ *   This program is free software; you can redistribute it and/or            *
+ *   modify it under the terms of the GNU General Public License as           *
+ *   published by the Free Software Foundation; either version 2 of           *
+ *   the License, or (at your option) any later version.                      *
+ *                                                                            *
+ *   This program is distributed in the hope that it will be useful,          *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of           *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            *
+ *   GNU General Public License for more details.                             *
+ *                                                                            *
+ *   You should have received a copy of the GNU General Public License        *
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
+ *****************************************************************************/
 
-#include "entity.h"
+#include "quadtree.h"
 #include "debug.h"
 
-using namespace std;
+#include <assert.h>
 
-QuadTree::QuadTree(float _x, float _y, float _width, float _height, int _level) :
-    m_x(_x),
-    m_y(_y),
-    m_width(_width),
-    m_height(_height),
-    m_level(_level)
+QuadTree::QuadTree(QuadTree* parent, b2Vec2 _center, b2Vec2 _halfDimension)
+    : m_boundary(_center, _halfDimension),
+      m_nodeCapacity(4),
+      m_parent(parent)
 {
-    if (m_level == MAX_LEVELS) {
-        Debug::log() << "quadtree max level obtained: " << m_level;
-        return;
-    }
+    NW = NE = SW = SE = nullptr;
+    m_points.reserve(m_nodeCapacity);
 }
 
-QuadTree::~QuadTree()
+QuadTree::QuadTree(QuadTree* parent, b2Vec2 _center, b2Vec2 _halfDimension, int _nodeCapacity)
+    : m_boundary(_center, _halfDimension),
+      m_nodeCapacity(_nodeCapacity),
+      m_parent(parent)
 {
-
+    NW = NE = SW = SE = nullptr;
+    m_points.reserve(m_nodeCapacity);
 }
 
-void QuadTree::split()
+bool QuadTree::insert(Entity * entity)
 {
-    nodes[0] = new QuadTree(m_x, m_y, m_width / 2.0f, m_height / 2.0f, m_level + 1);
-    nodes[1] = new QuadTree(m_x + m_width / 2.0f, m_y, m_width / 2.0f, m_height / 2.0f, m_level + 1);
-    nodes[2] = new QuadTree(m_x, m_y + m_height / 2.0f, m_width / 2.0f, m_height / 2.0f, m_level + 1);
-    nodes[3] = new QuadTree(m_x + m_width / 2.0f, m_y + m_height / 2.0f, m_width / 2.0f, m_height / 2.0f, m_level + 1);
+    Debug::assertf(entity, "quadtree insertion error, entity to insert was null (horrible api abuse)");
+    if (!m_boundary.containsPoint(entity)) {
+        return false;
+    }
+
+    if (m_points.size() < m_nodeCapacity) {
+        m_points.push_back(entity);
+        return true;
+    }
+
+    if (NW == nullptr) {
+        subdivide();
+    }
+
+    if (NW->insert(entity)) {
+        return true;
+    }
+
+    if (NE->insert(entity)) {
+        return true;
+    }
+
+    if (SW->insert(entity)) {
+        return true;
+    }
+
+    if (SE->insert(entity)) {
+        return true;
+    }
+
+    assert(false);
+    return false; // should never happen
 }
 
-vector<Entity*> QuadTree::entitiesInRegion(float x, float y, float width, float height)
-{
-    /*
-    if (m_level == MAX_LEVELS) {
-        return m_entities;
-    }
+void QuadTree::subdivide() {
+    b2Vec2 center = m_boundary.center;
+    b2Vec2 newDim(m_boundary.halfDimension.x / 2, m_boundary.halfDimension.y / 2);
 
-    vector<Entity*> returnObjects, childReturnObjects;
-    if (!m_entities.empty()) {
-        returnObjects = m_entities;
-    }
-
-    if (_x > m_x + m_width / 2.0f && _x < m_x + m_width) {
-        if (_y > m_y + m_height / 2.0f && _y < m_y + m_height) {
-            childReturnObjects = SE->entitiesAt(_x, _y);
-            returnObjects.insert(returnObjects.end(), childReturnObjects.begin(), childReturnObjects.end());
-            return returnObjects;
-        } else if (_y > m_y && _y <= m_y + m_height / 2.0f) {
-            childReturnObjects = NE->entitiesAt(_x, _y);
-            returnObjects.insert(returnObjects.end(), childReturnObjects.begin(), childReturnObjects.end());
-            return returnObjects;
-        }
-    } else if (_x > m_x && _x <= m_x + m_width / 2.0f) {
-        if (_y > m_y + m_height / 2.0f && _y < m_y + m_height) {
-            childReturnObjects = SW->entitiesAt(_x, _y);
-            returnObjects.insert(returnObjects.end(), childReturnObjects.begin(), childReturnObjects.end());
-            return returnObjects;
-        } else if (_y > m_y && _y <= m_y + m_height / 2.0f) {
-            childReturnObjects = NW->entitiesAt(_x, _y);
-            returnObjects.insert(returnObjects.end(), childReturnObjects.begin(), childReturnObjects.end());
-            return returnObjects;
-        }
-    }
-
-    return returnObjects;
-    */
+    NW = new QuadTree(this, b2Vec2(center.x - newDim.x, center.y - newDim.y), newDim);
+    NE = new QuadTree(this, b2Vec2(center.x + newDim.x, center.y - newDim.y), newDim);
+    SW = new QuadTree(this, b2Vec2(center.x - newDim.x, center.y + newDim.y), newDim);
+    SE = new QuadTree(this, b2Vec2(center.x + newDim.x, center.y + newDim.y), newDim);
 }
 
-void QuadTree::clear()
-{
-    if (m_level == MAX_LEVELS) {
-        m_entities.clear();
-        return;
-    } else {
-        /*
-        NW->clear();
-        NE->clear();
-        SW->clear();
-        SE->clear();
-        */
+void QuadTree::queryRange(std::vector<Entity*> & list, AABB range) {
+    if (!m_boundary.intersectsAABB(range)) {
+        return ; // list is empty
     }
 
-    if (!m_entities.empty()) {
-        m_entities.clear();
-    }
-}
-
-/*
-bool Quadtree::contains(Quadtree *child, Entity *entity)
-{
-    const glm::vec2& position = entity->position();
-    const glm::vec2& size = entity->size();
-
-    return   !(position.x < child->m_x ||
-               position.y < child->m_y ||
-               position.x > child->m_x + child->m_width  ||
-               position.y > child->m_y + child->m_height ||
-               position.x + size.x < child->m_x ||
-               position.y + size.y < child->m_y ||
-               position.x + size.x > child->m_x + child->m_width ||
-               position.y + size.y > child->m_y + child->m_height);
-}
-*/
-
-/*
- * Insert the object into the quadtree. If the node
- * exceeds the capacity, it will split and add all
- * objects to their corresponding nodes.
- */
-void QuadTree::insert(Entity* entity)
-{
-    if (nodes[0] != nullptr) {
-        int index = getIndex(entity);
-
-        if (index != -1) {
-            nodes[index]->insert(entity);
-
-            return;
+    for (int i = 0; i < m_points.size(); ++i) {
+        if (range.containsPoint(m_points[i])) {
+            list.push_back(m_points[i]);
         }
     }
 
-    m_entities.push_back(entity);
-
-    if (m_entities.size() > MAX_OBJECTS && m_level < MAX_LEVELS) {
-        if (nodes[0] == nullptr) {
-            split();
-        }
-
-        int i = 0;
-        while (i < m_entities.size()) {
-            int index = getIndex(m_entities.at(i));
-            if (index != -1) {
-                nodes[index]->insert(m_entities.remove(i));
-            } else {
-                i++;
-            }
-        }
-
+    if (NW == nullptr) {
+        return ;
     }
+
+    NW->queryRange(list, range);
+    NE->queryRange(list, range);
+    SW->queryRange(list, range);
+    SE->queryRange(list, range);
 }
 
-/*
- * Determine which node the object belongs to. -1 means
- * object cannot completely fit within a child node and is part
- * of the parent node
- */
-int QuadTree::getIndex(Entity* entity)
-{
-    int index = -1;
-
-    const glm::vec2& position = entity->position();
-    const glm::vec2& size = entity->size();
-
-    double verticalMidpoint = m_x + (m_width / 2);
-    double horizontalMidpoint = m_y + (m_height / 2);
-
-    // Object can completely fit within the top quadrants
-    bool topQuadrant = (position.y < horizontalMidpoint && position.y + size.y < horizontalMidpoint);
-    // Object can completely fit within the bottom quadrants
-    bool bottomQuadrant = (position.y > horizontalMidpoint);
-
-    // Object can completely fit within the left quadrants
-    if (position.x < verticalMidpoint && position.x + size.x < verticalMidpoint) {
-        if (topQuadrant) {
-            index = 1;
-        } else if (bottomQuadrant) {
-            index = 2;
-        }
-    }
-    // Object can completely fit within the right quadrants
-    else if (position.x > verticalMidpoint) {
-        if (topQuadrant) {
-            index = 0;
-        } else if (bottomQuadrant) {
-            index = 3;
-        }
+// scan the tree and remove all node/Item*
+void QuadTree::clear() {
+    if (this == nullptr) {
+        return ;
     }
 
-    return index;
-}
+    m_points.clear();
 
-/*
- * Return all objects that could collide with the given object
- */
-vector<Entity*> QuadTree::retrieve(vector<Entity*> returnObjects, Entity* entity)
-{
-    int index = getIndex(entity);
-    if (index != -1 && nodes[0] != nullptr) {
-        nodes[index]->retrieve(returnObjects, entity);
-    }
+    NW->clear();
+    delete NW;
+    NW = nullptr;
 
-    for (Entity * currentEntity : m_entities) {
-        returnObjects.push_back(currentEntity);
-    }
+    NE->clear();
+    delete NE;
+    NE = nullptr;
 
-    return returnObjects;
+    SW->clear();
+    delete SW;
+    SW = nullptr;
+
+    SE->clear();
+    delete SE;
+    SE = nullptr;
 }

@@ -568,7 +568,6 @@ void PhysicsDebugRenderer::renderSegments()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-    Debug::log(Debug::ClientRendererArea) << " DREW ALL SEGMENTS";
     m_maxVBOSizeSegments = m_verticesSegments.size();
     m_highestIBOSizeSegments = m_indicesSegments.size();
     m_verticesSegments.clear();

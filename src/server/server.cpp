@@ -162,7 +162,7 @@ void Server::processMessage(ENetEvent& event)
 //    std::cout << "(Server) Message from client, our client->server round trip latency is: " << event.peer->roundTripTime  << "\n";
 //    std::cout << "(Server) latency is: " << event.peer->lowestRoundTripTime  << "\n";
 
-    std::string packetContents = std::string((char*)(event.packet->data), event.packet->dataLength);
+    std::string packetContents = std::string(reinterpret_cast<char*>(event.packet->data), event.packet->dataLength);
 
     uint32_t packetType = Packet::deserializePacketType(packetContents);
 

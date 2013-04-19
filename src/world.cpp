@@ -33,11 +33,13 @@
 #include "tilerenderer.h"
 #include "lightrenderer.h"
 #include "physicsdebugrenderer.h"
+#include "quadtreerenderer.h"
 
 //HACK #include "sky.h"
 #include "settings/settings.h"
 #include "quickbarinventory.h"
 #include "timer.h"
+#include "quadtree.h"
 
 #include <Box2D/Box2D.h>
 #include <stdio.h>
@@ -75,6 +77,9 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         m_camera = new Camera();
         m_spriteSheetRenderer = new SpriteSheetRenderer(m_camera);
 //FIXME:        m_spriteSheetRenderer->registerSprite(m_uselessEntity);
+
+        m_quadTreeRenderer = new QuadTreeRenderer(m_camera);
+        m_quadTreeRenderer->addQuadTree(m_torchesQuadTree);
 
         m_tileRenderer = new TileRenderer(this, m_camera, m_mainPlayer);
 
@@ -117,6 +122,9 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         groundBody->CreateFixture(&groundBox, 0.0f);
         */
 
+        b2Vec2 halfWorld(Block::BLOCK_SIZE * WORLD_COLUMNCOUNT * 0.5f, Block::BLOCK_SIZE * WORLD_ROWCOUNT * 0.5f);
+        m_torchesQuadTree = new QuadTree(nullptr, halfWorld, halfWorld);
+
         if (m_server->client()) {
             m_server->client()->setBox2DWorld(m_box2DWorld);
         }
@@ -124,8 +132,15 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         loadWorld();
         //HACK, as if that wasn't obvious.
         saveWorld();
+
+        // FIXME: load torches (this doesn't actually do anything but is in theory what we'll need to load shit)
+        for (auto* t :m_torches) {
+            m_torchesQuadTree->insert(t);
+        }
+
         Debug::log(Debug::WorldLoaderArea) << "World is x: " << (WORLD_COLUMNCOUNT * Block::BLOCK_SIZE) << " y: " << (WORLD_ROWCOUNT * Block::BLOCK_SIZE) << " meters big";
     }
+
 
     //FIXME: saveMap();
 
@@ -292,6 +307,8 @@ void World::render()
     //HACK    m_window->setView(m_window->getDefaultView());
     m_spriteSheetRenderer->renderEntities();
     m_spriteSheetRenderer->renderCharacters();
+
+    m_quadTreeRenderer->render();
 
     renderCrosshair();
 }
@@ -625,9 +642,9 @@ void World::itemSecondaryActivated(Entities::Player* player, Item* item)
 void World::handlePlayerLeftMouse(Entities::Player* player)
 {
     //TODO: HANDLE INVENTORY AND TAKE THAT INTO ACCOUNT
-     performBlockAttack(player);
+ //    performBlockAttack(player);
      //FIXME:
-    return;
+//    return;
 
     // FIXME: HACK: perform the action based on what type of thing is equipped.
     // if it's a sword we attack shit, if it's a pickaxe we attack blocks. for now, lets
@@ -679,6 +696,7 @@ void World::attemptItemPlacement(Entities::Player* player)
         Torch* newTorch = dynamic_cast<Torch*>(torch->duplicate());
         newTorch->setStackSize(1);
         m_torches.push_back(newTorch);
+        m_torchesQuadTree->insert(torch);
 
         //send the new inventory item count to this player's client.
         m_server->sendQuickBarInventoryItemCountChanged(player, inventory->equippedIndex(), torch->stackSize());

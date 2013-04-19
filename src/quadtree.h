@@ -1,45 +1,71 @@
-#ifndef __QUADTREE_H__
-#define __QUADTREE_H__
+/******************************************************************************
+ *   Copyright (C) 2013 by Shaun Reich <sreich@kde.org>                       *
+ *                                                                            *
+ *   This program is free software; you can redistribute it and/or            *
+ *   modify it under the terms of the GNU General Public License as           *
+ *   published by the Free Software Foundation; either version 2 of           *
+ *   the License, or (at your option) any later version.                      *
+ *                                                                            *
+ *   This program is distributed in the hope that it will be useful,          *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of           *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            *
+ *   GNU General Public License for more details.                             *
+ *                                                                            *
+ *   You should have received a copy of the GNU General Public License        *
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
+ *****************************************************************************/
 
-#include <vector>
+#ifndef __QUADTREE__
+#define __QUADTREE__
 
-using namespace std;
+#include "src/entity.h"
 
-class QuadTree;
-class Entity;
+#include <Box2D/Box2D.h>
 
-class QuadTree
-{
-public:
-    QuadTree(float x, float y, float width, float height, int level);
-    ~QuadTree();
+struct AABB {
+    AABB(b2Vec2 _center, b2Vec2 _halfDimension) : center(_center), halfDimension(_halfDimension) {}
 
-    void insert(Entity* entity);
+    bool containsPoint(Entity* entity) {
+        b2Vec2 p(entity->position().x, entity->position().y);
+        return ((p.x > center.x - halfDimension.x && p.x <= center.x + halfDimension.x) &&
+                (p.y > center.y - halfDimension.y && p.y <= center.y + halfDimension.y));
+    }
 
-    vector<Entity*> entitiesInRegion(float x, float y, float width, float height);
-    vector<Entity*> retrieve(vector<Entity*> returnObjects, Entity* entity);
+    bool intersectsAABB(AABB other) {
+        return (((other.center.x - other.halfDimension.x > center.x - halfDimension.x && other.center.x - other.halfDimension.x < center.x + halfDimension.x) ||
+                 (other.center.x + other.halfDimension.x > center.x - halfDimension.x && other.center.x + other.halfDimension.x < center.x + halfDimension.x)) &&
+                ((other.center.y - other.halfDimension.y > center.y - halfDimension.y && other.center.y - other.halfDimension.y < center.y + halfDimension.y) ||
+                 (other.center.y + other.halfDimension.y > center.y - halfDimension.y && other.center.y + other.halfDimension.y < center.y + halfDimension.y)));
+    }
 
-    void clear();
-    void split();
-
-private:
-    const int MAX_OBJECTS = 10;
-    const int MAX_LEVELS = 5;
-
-private:
-    float m_x;
-    float m_y;
-    float m_width;
-    float m_height;
-    int m_level;
-
-    vector<Entity*> m_entities;
-
-//    QuadTree* parent;
-    QuadTree* nodes[4];
-
-//    bool contains(Quadtree* child, Entity* object);
-    int getIndex(Entity* entity);
+    b2Vec2 center;
+    b2Vec2 halfDimension;
 };
 
-#endif
+class QuadTree {
+public:
+    QuadTree(QuadTree* parent, b2Vec2 center, b2Vec2 halfDimension);
+    QuadTree(QuadTree* parent, b2Vec2 center, b2Vec2 halfDimension, int nodeCapacity);
+
+    bool insert(Entity *);
+    void subdivide();
+    void queryRange(std::vector<Entity*> &, AABB);
+
+    void clear();
+
+    AABB m_boundary;
+    int m_nodeCapacity;
+
+    // leaves
+    QuadTree* NW = nullptr;
+    QuadTree* NE = nullptr;
+    QuadTree* SW = nullptr;
+    QuadTree* SE = nullptr;
+
+    QuadTree *m_parent = nullptr;
+
+    // data
+    std::vector<Entity*> m_points;
+};
+
+#endif // __QUADTREE__
