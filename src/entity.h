@@ -42,7 +42,7 @@ public:
         PositionDirty = 1 << 0
     };
 
-    uint32_t dirtyFlags();
+    uint32_t dirtyFlags() const;
     void clearDirtyFlag(uint32_t dirtyFlag);
 
     virtual void createPhysicsBody(World* world, const glm::vec2& position);
@@ -69,14 +69,15 @@ public:
     void setName(const std::string& name) {
         m_name = name;
     }
-    std::string name() {
+    std::string name() const {
         return m_name;
     }
 
     void setDetails(const std::string& details) {
         m_details = details;
     }
-    std::string details() {
+
+    std::string details() const {
         return m_details;
     }
 

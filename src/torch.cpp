@@ -18,7 +18,7 @@
 #include "torch.h"
 #include "debug.h"
 
-Torch::Torch(const glm::vec2& position): Item("torch1Ground1")
+Torch::Torch(const glm::vec2& position) : Item("torch1Ground1")
 {
     Item::setPosition(position);
     Item::setName("Torch Testname");
@@ -28,6 +28,17 @@ Torch::Torch(const glm::vec2& position): Item("torch1Ground1")
     Item::m_properties = Item::ItemProperties::Placeable;
 }
 
+Torch::Torch(const Torch& torch) : Item(torch.frameName())
+{
+    Item::setPosition(torch.position());
+    Item::setName(torch.name());
+    Item::setDetails(torch.details());
+    Item::m_maximumStackSize = torch.maximumStackSize();
+    Item::m_type = Item::ItemType::Torch;
+    Item::m_properties = Item::ItemProperties::Placeable;
+}
+
+
 Torch::~Torch()
 {
 
@@ -35,7 +46,7 @@ Torch::~Torch()
 
 Item* Torch::duplicate()
 {
-    Torch* torch = new Torch(Item::position());
+    Torch* torch = new Torch(*this);
     Debug::log(Debug::ServerEntityCreationArea) << "duplicating torch, position: " << torch->position().x << " y: " << torch->position().y;
 
     return torch;

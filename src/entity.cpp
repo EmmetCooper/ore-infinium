@@ -96,7 +96,7 @@ void Entity::setPosition(const glm::vec2& vect)
     Sprite::setPosition(vect);
 }
 
-uint32_t Entity::dirtyFlags()
+uint32_t Entity::dirtyFlags() const
 {
     return m_dirtyFlags;
 }

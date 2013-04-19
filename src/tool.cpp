@@ -47,6 +47,7 @@ Item* Tool::duplicate()
 
 void Tool::activatePrimary()
 {
+    //TODO: decrement duraability
 }
 
 void Tool::activateSecondary()

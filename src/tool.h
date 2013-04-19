@@ -55,7 +55,7 @@ public:
 
     virtual Item* duplicate();
 
-    float attackRadius() {
+    float attackRadius() const {
         return m_attackRadius;
     }
 
@@ -63,7 +63,7 @@ public:
         m_attackRadius = radius;
     }
 
-    float primaryAttackDelay() {
+    float primaryAttackDelay() const {
         return m_primaryAttackDelay;
     }
 

@@ -123,7 +123,7 @@ public:
         m_player = player;
     }
 
-    bool placeable() {
+    bool placeable() const {
         return m_properties & ItemProperties::Placeable;
     }
 
@@ -134,19 +134,23 @@ public:
     void setStackSize(uint32_t stackSize) {
         m_stackSize = stackSize;
     }
-    uint32_t stackSize() {
+    uint32_t stackSize() const {
         return m_stackSize;
     }
 
-    uint32_t state() {
+    uint32_t state() const {
         return m_state;
     }
     void setState(uint32_t state) {
         m_state = state;
     }
 
-    uint32_t type() {
+    uint32_t type() const {
         return m_type;
+    }
+
+    uint32_t maximumStackSize() const {
+       return m_maximumStackSize;
     }
 
 protected:

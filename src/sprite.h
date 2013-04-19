@@ -45,11 +45,11 @@ public:
     void setFrameName(const std::string& frameName) {
         m_frameName = frameName;
     }
-    std::string frameName() {
+    std::string frameName() const {
         return m_frameName;
     }
 
-    SpriteSheetRenderer::SpriteSheetType spriteSheetType() {
+    SpriteSheetRenderer::SpriteSheetType spriteSheetType() const {
         return m_spriteSheetType;
     };
 

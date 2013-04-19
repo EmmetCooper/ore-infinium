@@ -56,7 +56,7 @@ public:
     void setMousePositionWorldCoords(float x, float y) {
         m_mousePositionWorldCoords = glm::vec2(x, y);
     }
-    glm::vec2 mousePositionWorldCoords() {
+    glm::vec2 mousePositionWorldCoords() const {
         return m_mousePositionWorldCoords;
     }
 
@@ -66,10 +66,10 @@ public:
     void setMouseRightButtonHeld(bool held) {
         m_mouseRightButtonHeld = held;
     }
-    bool mouseLeftButtonHeld() {
+    bool mouseLeftButtonHeld() const {
         return m_mouseLeftButtonHeld;
     }
-    bool mouseRightButtonHeld() {
+    bool mouseRightButtonHeld() const {
         return m_mouseRightButtonHeld;
     }
 

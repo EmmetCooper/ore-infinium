@@ -29,6 +29,7 @@ class Torch : public Item
 {
 public:
     Torch(const glm::vec2& position);
+    Torch(const Torch& torch);
     ~Torch();
 
     /**
@@ -43,7 +44,7 @@ public:
 
     virtual Item* duplicate();
 
-    float radius() {
+    float radius() const {
         return m_radius;
     }
     void setRadius(float radius) {
