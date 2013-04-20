@@ -39,7 +39,7 @@ void Shell::LoadFonts(const char* directory)
     font_names[2] = "Delicious-Bold.otf";
     font_names[3] = "Delicious-BoldItalic.otf";
 
-    for (int i = 0; i < sizeof(font_names) / sizeof(Rocket::Core::String); i++) {
+    for (size_t i = 0; i < sizeof(font_names) / sizeof(Rocket::Core::String); i++) {
         Rocket::Core::FontDatabase::LoadFontFace(Rocket::Core::String(directory) + font_names[i]);
     }
 }

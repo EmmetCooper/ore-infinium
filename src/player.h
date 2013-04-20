@@ -138,6 +138,11 @@ private:
     bool m_mouseLeftButtonHeld = false;
     bool m_mouseRightButtonHeld = false;
 
+    uint32_t loadedChunksStartRow = 0;
+    uint32_t loadedChunksEndRow = 0;
+    uint32_t loadedChunksStartColumn = 0;
+    uint32_t loadedChunksEndColumn = 0;
+
     // if > 0 means something is touching our feet, so we can jump.
     uint32_t m_jumpContacts = 0;
 

@@ -82,8 +82,8 @@ void DecoratorSpriteSheet::initGL()
     // prepare and upload indices as a one time deal
     const u32 indices[] = { 0, 1, 2, 0, 2, 3 }; // pattern for a triangle array
     // for each possible sprite, add the 6 index pattern
-    for (size_t j = 0; j < m_maxSpriteCount; j++) {
-        for (size_t i = 0; i < sizeof(indices) / sizeof(*indices); i++) {
+    for (uint32_t j = 0; j < m_maxSpriteCount; j++) {
+        for (uint32_t i = 0; i < sizeof(indices) / sizeof(*indices); i++) {
             indicesv.push_back(4 * j + indices[i]);
         }
     }

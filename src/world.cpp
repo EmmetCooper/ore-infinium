@@ -65,7 +65,6 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
     //FIXME:
 //    m_player = new Entities::Player("someframe");
 //    m_entities.insert(m_entities.end(), m_player);
-
     m_blocks.resize(WORLD_ROWCOUNT * WORLD_COLUMNCOUNT);
 
     m_uselessEntity = new Entity("player1Standing1", SpriteSheetRenderer::SpriteSheetType::Character);
