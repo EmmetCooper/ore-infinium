@@ -82,7 +82,7 @@ Packet::PacketCompression Packet::serializeStreamContents(google::protobuf::io::
     message->SerializeToString(&contentsString);
 
     if ((compressed == PacketCompression::CompressedPacket) && (contentsString.size() <= 60)) {
-        Debug::log(Debug::StartupArea) << "packet serialization, forgoing packet compression, packet size is too small to likely have a positive yield.";
+        Debug::log(Debug::NetworkServerContinuousArea) << "packet serialization, forgoing packet compression, packet size is too small to likely have a positive yield.";
         compressed = PacketCompression::UncompressedPacket;
     }
 
@@ -109,7 +109,7 @@ Packet::PacketCompression Packet::serializeStreamContents(google::protobuf::io::
 
 std::string Packet::compress(std::stringstream* in)
 {
-    Debug::log(Debug::StartupArea) << "compressing packet..precompressed size: " << in->str().size();
+    Debug::log(Debug::NetworkServerContinuousArea) << "compressing packet..precompressed size: " << in->str().size();
    /////////////////////////////////////////////////////////////////////////////////////////////
    boost::iostreams::filtering_streambuf<boost::iostreams::input> out;
    std::stringstream compressedStream;
@@ -122,7 +122,7 @@ std::string Packet::compress(std::stringstream* in)
 
    boost::iostreams::copy(out, compressedStream);
    /////////////////////////////////////////////////////////////////////////////////////////////
-    Debug::log(Debug::StartupArea) << "compressing packet..compressed size: " << compressedStream.str().size();
+    Debug::log(Debug::NetworkServerContinuousArea) << "compressing packet..compressed size: " << compressedStream.str().size();
 
    return compressedStream.str();
 }

@@ -72,7 +72,6 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
     m_entities.insert(m_entities.end(), m_uselessEntity);
 
     if (!m_server) {
-
         m_camera = new Camera();
         m_spriteSheetRenderer = new SpriteSheetRenderer(m_camera);
 //FIXME:        m_spriteSheetRenderer->registerSprite(m_uselessEntity);
@@ -82,6 +81,7 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
         m_tileRenderer = new TileRenderer(this, m_camera, m_mainPlayer);
 
+        //that's a HACK
         Torch* torch = new Torch(glm::vec2(2400 / PIXELS_PER_METER, 1420 / PIXELS_PER_METER));
         m_torches.push_back(torch);
         m_spriteSheetRenderer->registerSprite(torch);
