@@ -31,8 +31,6 @@
 
 #include <Box2D/Common/b2Math.h>
 
-#include <sstream>
-
 class QuadTreeRenderer;
 class QuadTree;
 class QueryCallback;
@@ -52,9 +50,9 @@ class Item;
 class PhysicsDebugRenderer;
 
 //height
-static constexpr unsigned short WORLD_ROWCOUNT = 8400;
+static constexpr uint16_t WORLD_ROWCOUNT = 8400;
 //width
-static constexpr unsigned short WORLD_COLUMNCOUNT = 2400;
+static constexpr uint16_t WORLD_COLUMNCOUNT = 2400;
 
 static constexpr double FIXED_TIMESTEP = 1.0 / 60.0; // hertz
 static constexpr int32_t VELOCITY_ITERATIONS = 6;
