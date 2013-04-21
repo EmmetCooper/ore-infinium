@@ -216,10 +216,10 @@ void World::createInitialTilePhysicsObjects(Entities::Player* player)
 
     //tile indexes
      //FIXME: HACK obviously
-    int startRow = centerTileY - 20;
-    int endRow = startRow + 60;
-    int startColumn = centerTileX - 50;
-    int endColumn = startColumn + 100;
+    int startRow = std::max(centerTileY - 20, 0);
+    int endRow = std::min(centerTileY + 60, static_cast<int>(WORLD_ROWCOUNT));
+    int startColumn = std::max(centerTileX - 50, 0);
+    int endColumn = std::min(centerTileY + 100, static_cast<int>(WORLD_COLUMNCOUNT));
 
     player->activeTileRangeStart = glm::ivec2(startColumn, startRow);
     player->activeTileRangeEnd = glm::ivec2(endColumn, endRow);
@@ -270,7 +270,7 @@ void World::createInitialTilePhysicsObjects(Entities::Player* player)
 
 void World::updateTilePhysicsObjects(Entities::Player* player)
 {
-    destroyTilePhysicsObjects(player);
+    //destroyTilePhysicsObjects(player);
     //createTilePhysicsObjects(player);
 }
 
