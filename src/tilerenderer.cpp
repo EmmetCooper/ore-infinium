@@ -221,7 +221,7 @@ void TileRenderer::render()
             vertices[1].v = vertices[2].v = tileBottom;
             vertices[2].u = vertices[3].u = tileRight;
 
-            //FIXME: use tile type index
+            // NOTE: block primitive type is in the perfect order that we need, so the first one (0) is at the top, and goes down and increases.
             vertices[0].w = vertices[1].w = vertices[2].w = vertices[3].w = block.primitiveType;
 
             Debug::checkGLError();

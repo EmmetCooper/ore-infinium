@@ -20,7 +20,6 @@
 #include "src/network/packet.h"
 
 #include "src/packet.pb.h"
-
 #include "src/player.h"
 
 #include "src/client/client.h"
@@ -31,6 +30,7 @@
 #include <src/chunk.h>
 #include <src/torch.h>
 #include <src/quickbarinventory.h>
+#include <src/globals.h>
 #include "src/../config.h"
 
 #include <google/protobuf/stubs/common.h>
@@ -45,7 +45,7 @@
 #include <thread>
 
 #include <zlib.h>
-
+#include <algorithm>
 #include <SDL2/SDL.h>
 
 Server::Server(unsigned int maxClients, unsigned int port, Client* client) :
@@ -326,14 +326,14 @@ void Server::sendInitialWorldChunk(ENetPeer* peer)
 
     Entities::Player* player = m_clients[peer];
 
-    //FIXME: use a nice value, maybe constant or dynamic..constant is easier though
-    // it needs to be bigger than the player's viewport, obviously
-    //NOTE: divide the value by block size, then get range between left and right and that's how many blocks we are sending
-    uint32_t startX = (player->position().x - World::pixelsToMeters(1024)) / Block::BLOCK_SIZE;
-    uint32_t endX = (player->position().x + World::pixelsToMeters(2024)) / Block::BLOCK_SIZE;
+    uint32_t center = static_cast<uint32_t>(player->position().x / Block::BLOCK_SIZE);
 
-    uint32_t startY = (player->position().y - World::pixelsToMeters(1024))/ Block::BLOCK_SIZE;
-    uint32_t endY = (player->position().y + World::pixelsToMeters(2024)) / Block::BLOCK_SIZE;
+    uint32_t startX = std::min((center) - 100, 0u);
+    uint32_t endX = (center) + 500;
+
+   uint32_t startY = std::min(center - 100, 0u);
+   uint32_t endY = (center) + 500;
+   Debug::log(Debug::NetworkServerInitialArea) << " INITIAL CHUNK: starx: " << startX << " starty: " << startY << "end x: " << endX << " endY: " << endY;
 
     message.set_startx(startX);
     message.set_endx(endX);
