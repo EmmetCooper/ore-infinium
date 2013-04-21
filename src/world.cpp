@@ -298,8 +298,8 @@ void World::destroyTilePhysicsObjects(Entities::Player* player)
     player->activeTileRangeEnd = glm::ivec2(endColumn, endRow);
 
     b2AABB aabb;
-//    aabb.lowerBound = b2Vec2((Block::BLOCK_SIZE * (column)) + (Block::BLOCK_SIZE * 0.5), Block::BLOCK_SIZE * (row) + (Block::BLOCK_SIZE * 0.5));
-//    aabb.upperBound = b2Vec2((Block::BLOCK_SIZE * (column)) + (Block::BLOCK_SIZE * 0.5), Block::BLOCK_SIZE * (row)+ (Block::BLOCK_SIZE * 0.5));
+    aabb.lowerBound = b2Vec2((Block::BLOCK_SIZE * (startColumn)) + (Block::BLOCK_SIZE * 0.5), Block::BLOCK_SIZE * (startRow) + (Block::BLOCK_SIZE * 0.5));
+    aabb.upperBound = b2Vec2((Block::BLOCK_SIZE * (endColumn)) + (Block::BLOCK_SIZE * 0.5), Block::BLOCK_SIZE * (endRow)+ (Block::BLOCK_SIZE * 0.5));
 
     m_queryCallback->setBodySearchType(ContactListener::BodyType::Block);
     m_box2DWorld->QueryAABB(m_queryCallback, aabb);
@@ -309,12 +309,11 @@ void World::destroyTilePhysicsObjects(Entities::Player* player)
 
     for (auto* fixture :m_queryCallback->fixtures()) {
 
-        //    Debug::log(Debug::ServerEntityLogicArea) << "FIXTURE CALLBCK COUNT: " <<  m_queryCallback->bodiesAtPoint(aabb.lowerBound).size();
-        for (auto* b : m_queryCallback->bodiesAtPoint(aabb.lowerBound)) {
+//            Debug::log(Debug::ServerEntityLogicArea) << "FIXTURE CALLBCK delete tile objects: " <<  m_queryCallback->bodiesAtPoint(aabb.lowerBound).size();
             //be sure to delete our body marker
-            delete static_cast<ContactListener::BodyUserData*>(b->GetUserData());
-            m_box2DWorld->DestroyBody(b);
-        }
+        b2Body* b = fixture->GetBody();
+        delete static_cast<ContactListener::BodyUserData*>(b->GetUserData());
+        m_box2DWorld->DestroyBody(b);
     }
 }
 
@@ -695,9 +694,9 @@ void World::itemSecondaryActivated(Entities::Player* player, Item* item)
 void World::handlePlayerLeftMouse(Entities::Player* player)
 {
     //TODO: HANDLE INVENTORY AND TAKE THAT INTO ACCOUNT
- //    performBlockAttack(player);
+     performBlockAttack(player);
      //FIXME:
-//    return;
+    return;
 
     // FIXME: HACK: perform the action based on what type of thing is equipped.
     // if it's a sword we attack shit, if it's a pickaxe we attack blocks. for now, lets
@@ -707,7 +706,7 @@ void World::handlePlayerLeftMouse(Entities::Player* player)
 
     //these items are placeable
     if (item != nullptr && item->placeable()) {
-        attemptItemPlacement(player);
+//        attemptItemPlacement(player);
     }
 }
 
