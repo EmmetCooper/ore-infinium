@@ -294,8 +294,16 @@ void World::destroyTilePhysicsObjects(Entities::Player* player)
     int startColumn = centerTileX - 50;
     int endColumn = startColumn + 100;
 
+    glm::ivec2 previousTileRangeStart = player->activeTileRangeStart;
+    glm::ivec2 previousTileRangeEnd = player->activeTileRangeEnd;
+
     player->activeTileRangeStart = glm::ivec2(startColumn, startRow);
     player->activeTileRangeEnd = glm::ivec2(endColumn, endRow);
+
+    //player viewport unchanged; optimization
+    if (player->activeTileRangeStart == previousTileRangeStart && player->activeTileRangeEnd == previousTileRangeEnd) {
+            return;
+    }
 
     b2AABB aabb;
     aabb.lowerBound = b2Vec2((Block::BLOCK_SIZE * (startColumn)) + (Block::BLOCK_SIZE * 0.5), Block::BLOCK_SIZE * (startRow) + (Block::BLOCK_SIZE * 0.5));
