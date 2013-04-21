@@ -53,15 +53,18 @@ void Camera::centerOn(const glm::vec2 vec)
 
     glm::vec2 halfScreen((Settings::instance()->screenResolutionWidth)/PIXELS_PER_METER / 2.0f, (Settings::instance()->screenResolutionHeight/PIXELS_PER_METER) / 2.0f);
 
-    m_viewMatrix =  glm::translate(glm::mat4(), -glm::vec3(position - halfScreen, 1.0f));
-    m_viewMatrix = glm::scale(m_viewMatrix, glm::vec3(glm::vec2(m_scaleFactor), 1.0f));
+    m_viewMatrix = glm::translate(m_viewMatrix, glm::vec3(halfScreen, 0.0));
+    m_viewMatrix = glm::scale(m_viewMatrix, glm::vec3(glm::vec2(m_scaleFactor), 0.0f));
+    m_viewMatrix =  glm::translate(glm::mat4(), -glm::vec3(position - halfScreen, 0.0f));
     pushMatrix();
 }
 
 void Camera::setPosition(const glm::vec2 vec)
 {
-    m_viewMatrix = glm::translate(glm::mat4(), -glm::vec3(vec, 0.0f));
+    glm::vec2 halfScreen((Settings::instance()->screenResolutionWidth)/PIXELS_PER_METER / 2.0f, (Settings::instance()->screenResolutionHeight/PIXELS_PER_METER) / 2.0f);
+    m_viewMatrix = glm::translate(m_viewMatrix, glm::vec3(halfScreen, 0.0));
     m_viewMatrix = glm::scale(m_viewMatrix, glm::vec3(m_scaleFactor));
+    m_viewMatrix = glm::translate(glm::mat4(), -glm::vec3(vec, 0.0f));
     pushMatrix();
 }
 
