@@ -328,6 +328,7 @@ void Server::sendInitialWorldChunk(ENetPeer* peer)
 
     uint32_t center = static_cast<uint32_t>(player->position().x / Block::BLOCK_SIZE);
 
+    //FIXME: use globals.h viewport max tiles
     uint32_t startX = std::min((center) - 100, 0u);
     uint32_t endX = (center) + 500;
 
