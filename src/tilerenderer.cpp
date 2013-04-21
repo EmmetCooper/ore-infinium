@@ -143,6 +143,15 @@ void TileRenderer::render()
         assert(0);
     }
 
+    //TODO: needs improvement, it's a bit of a hack to buffer blank data then subdata
+    const int totalTiles = (endRow - startRow) * (endColumn - startColumn);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glBufferData(
+        GL_ARRAY_BUFFER,
+        totalTiles * 4 * sizeof(Vertex),
+        NULL,
+        GL_DYNAMIC_DRAW);
+
     int drawingRow = 0;
     int index = 0;
 
@@ -226,7 +235,6 @@ void TileRenderer::render()
 
             Debug::checkGLError();
             // finally upload everything to the actual vbo
-            glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
             glBufferSubData(
                 GL_ARRAY_BUFFER,
                 sizeof(vertices) * index,
@@ -313,11 +321,6 @@ void TileRenderer::initGL()
 
     glGenBuffers(1, &m_vbo);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    glBufferData(
-        GL_ARRAY_BUFFER,
-        m_maxTileCount * 4 * sizeof(Vertex),
-        NULL,
-        GL_DYNAMIC_DRAW);
 
     Debug::checkGLError();
 
