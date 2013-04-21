@@ -326,14 +326,19 @@ void Server::sendInitialWorldChunk(ENetPeer* peer)
 
     Entities::Player* player = m_clients[peer];
 
-    uint32_t center = static_cast<uint32_t>(player->position().x / Block::BLOCK_SIZE);
+    int32_t centerX = static_cast<uint32_t>(player->position().x / Block::BLOCK_SIZE);
+    int32_t centerY = static_cast<uint32_t>(player->position().y / Block::BLOCK_SIZE);
+
+    int32_t maxWidth = static_cast<int32_t>(MAX_VIEWPORT_WIDTH * 0.5);
+    int32_t maxHeight = static_cast<int32_t>(MAX_VIEWPORT_HEIGHT * 0.5);
 
     //FIXME: use globals.h viewport max tiles
-    uint32_t startX = std::min((center) - 100, 0u);
-    uint32_t endX = (center) + 500;
+    int32_t startX = std::max(centerX - maxWidth, 0);
+    int32_t endX = (centerX) + maxWidth;
 
-   uint32_t startY = std::min(center - 100, 0u);
-   uint32_t endY = (center) + 500;
+   int32_t startY = std::max(centerY - maxHeight, 0);
+   int32_t endY = (centerY) + maxHeight;
+
    Debug::log(Debug::NetworkServerInitialArea) << " INITIAL CHUNK: starx: " << startX << " starty: " << startY << "end x: " << endX << " endY: " << endY;
 
     message.set_startx(startX);
@@ -343,11 +348,12 @@ void Server::sendInitialWorldChunk(ENetPeer* peer)
     message.set_endy(endY);
 
     Chunk chunk = m_world->createChunk(startX, startY, endX, endY);
+    assert(startX < endX && startY < endY);
 
-    for (uint32_t row = startY; row < endY; ++row) {
-        for (uint32_t column = startX; column < endX; ++column) {
+    for (int32_t row = startY; row < endY; ++row) {
+        for (int column = startX; column < endX; ++column) {
 
-            uint32_t index = column * WORLD_ROWCOUNT + row;
+            int32_t index = column * WORLD_ROWCOUNT + row;
             Block& block = chunk.blocks()->at(index);
 
             message.add_meshtype(block.meshType);
