@@ -119,6 +119,20 @@ std::set<b2Body*> QueryCallback::bodiesAtPoint(const b2Vec2& point)
     return bodiesAtPoint;
 }
 
+std::set<b2Fixture*> QueryCallback::fixtures()
+{
+    std::set<b2Fixture*> fixturesInRange;
+
+    for (b2Fixture* fixture : m_fixtures) {
+        fixturesInRange.insert(fixture);
+    }
+
+    m_fixtures.clear();
+
+    return fixturesInRange;
+}
+
+
 bool QueryCallback::ReportFixture(b2Fixture* fixture)
 {
     Debug::log(Debug::ServerEntityLogicArea) << "FIXTURE REPORTING";

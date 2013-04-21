@@ -191,7 +191,7 @@ void World::addPlayer(Entities::Player* player)
             }
         }
 
-        createInitialBlockPhysicsObjects(player);
+        createInitialTilePhysicsObjects(player);
 
         //NOTE: you might be asking, why don't we send a chunk? that's because this happens as soon as the client is validated and its
         // player is created. therefore the next calls will be sending player info, and then sending the initial world chunk at this player's position.
@@ -206,7 +206,7 @@ void World::removePlayer(Entities::Player* player)
     m_players.remove(player);
 }
 
-void World::createInitialBlockPhysicsObjects(Entities::Player* player)
+void World::createInitialTilePhysicsObjects(Entities::Player* player)
 {
     glm::vec2 position = player->position();
 
@@ -220,6 +220,9 @@ void World::createInitialBlockPhysicsObjects(Entities::Player* player)
     int endRow = startRow + 60;
     int startColumn = centerTileX - 50;
     int endColumn = startColumn + 100;
+
+    player->activeTileRangeStart = glm::ivec2(startColumn, startRow);
+    player->activeTileRangeEnd = glm::ivec2(endColumn, endRow);
 
     int count = 0;
     int index = 0;
@@ -267,7 +270,52 @@ void World::createInitialBlockPhysicsObjects(Entities::Player* player)
 
 void World::updateTilePhysicsObjects(Entities::Player* player)
 {
+    destroyTilePhysicsObjects(player);
+    //createTilePhysicsObjects(player);
+}
 
+void World::createTilePhysicsObjects(Entities::Player* player)
+{
+
+}
+
+void World::destroyTilePhysicsObjects(Entities::Player* player)
+{
+    const glm::vec2 position = player->position();
+
+    float blockSize = Block::BLOCK_SIZE;
+    int centerTileX = int((position.x / blockSize));
+    int centerTileY = int((position.y / blockSize));
+
+    //tile indexes
+    //FIXME: HACK obviously
+    int startRow = centerTileY - 20;
+    int endRow = startRow + 60;
+    int startColumn = centerTileX - 50;
+    int endColumn = startColumn + 100;
+
+    player->activeTileRangeStart = glm::ivec2(startColumn, startRow);
+    player->activeTileRangeEnd = glm::ivec2(endColumn, endRow);
+
+    b2AABB aabb;
+//    aabb.lowerBound = b2Vec2((Block::BLOCK_SIZE * (column)) + (Block::BLOCK_SIZE * 0.5), Block::BLOCK_SIZE * (row) + (Block::BLOCK_SIZE * 0.5));
+//    aabb.upperBound = b2Vec2((Block::BLOCK_SIZE * (column)) + (Block::BLOCK_SIZE * 0.5), Block::BLOCK_SIZE * (row)+ (Block::BLOCK_SIZE * 0.5));
+
+    m_queryCallback->setBodySearchType(ContactListener::BodyType::Block);
+    m_box2DWorld->QueryAABB(m_queryCallback, aabb);
+
+    int count = 0;
+    int index = 0;
+
+    for (auto* fixture :m_queryCallback->fixtures()) {
+
+        //    Debug::log(Debug::ServerEntityLogicArea) << "FIXTURE CALLBCK COUNT: " <<  m_queryCallback->bodiesAtPoint(aabb.lowerBound).size();
+        for (auto* b : m_queryCallback->bodiesAtPoint(aabb.lowerBound)) {
+            //be sure to delete our body marker
+            delete static_cast<ContactListener::BodyUserData*>(b->GetUserData());
+            m_box2DWorld->DestroyBody(b);
+        }
+    }
 }
 
 Entities::Player* World::findPlayer(uint32_t playerID)
@@ -281,6 +329,7 @@ Entities::Player* World::findPlayer(uint32_t playerID)
     Debug::assertf(false, "World::findPlayer, player does not exist? that shit's whack");
     return nullptr;
 }
+
 
 void World::render()
 {
@@ -348,6 +397,11 @@ void World::update(double elapsedTime)
     }
 
     if (m_server) {
+
+        for (auto * player : m_players) {
+            updateTilePhysicsObjects(player);
+        }
+
         m_box2DWorld->Step(FIXED_TIMESTEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
     }
 
@@ -735,7 +789,7 @@ void World::spawnItem(Item* item)
     m_spriteSheetRenderer->registerSprite(item);
 }
 
-void World::destroyBlockPhysicsObject(uint32_t column, uint32_t row)
+void World::destroyTilePhysicsObject(uint32_t column, uint32_t row)
 {
     b2AABB aabb;
     aabb.lowerBound = b2Vec2((Block::BLOCK_SIZE * (column)) + (Block::BLOCK_SIZE * 0.5), Block::BLOCK_SIZE * (row) + (Block::BLOCK_SIZE * 0.5));
@@ -782,7 +836,7 @@ void World::performBlockAttack(Entities::Player* player)
     if (block.primitiveType != 0) {
         //FIXME: decrement health..
         block.primitiveType = Block::BlockType::Null; //FIXME:
-        destroyBlockPhysicsObject(x, y);
+        destroyTilePhysicsObject(x, y);
 
         blocksModified = true;
     }

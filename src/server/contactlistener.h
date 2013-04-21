@@ -59,6 +59,8 @@ public:
 
     std::set<b2Body*> bodiesAtPoint(const b2Vec2& point);
 
+    std::set<b2Fixture*> fixtures();
+
     /**
      * Call this before calling QueryAABB, it will save all fixtures that meet the criteria
      * so you can call fixtures() later on and retrieve that list.
@@ -73,7 +75,6 @@ private:
     ContactListener::BodyType m_searchType;
 
     std::vector<b2Fixture*> m_fixtures;
-    std::vector<b2Body*> m_bodies;
 };
 
 #endif

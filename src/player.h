@@ -23,7 +23,8 @@
 
 #include <SDL2/SDL_events.h>
 
-class Timer;
+class World;
+class Server;
 class Timer;
 class QuickBarInventory;
 class Camera;
@@ -143,6 +144,11 @@ private:
     uint32_t loadedChunksStartColumn = 0;
     uint32_t loadedChunksEndColumn = 0;
 
+    /// tiles marked within this range are within a reasonable range of the players viewport and should be
+    /// simulated (e.g. have tile physics objects between here).
+    glm::ivec2 activeTileRangeStart = glm::ivec2(0, 0);
+    glm::ivec2 activeTileRangeEnd = glm::ivec2(0, 0);
+
     // if > 0 means something is touching our feet, so we can jump.
     uint32_t m_jumpContacts = 0;
 
@@ -150,6 +156,9 @@ private:
 
     Timer* m_jumpTimer = nullptr;
     uint64_t m_jumpDelay = 300;
+
+    friend Server;
+    friend World;
 };
 
 }

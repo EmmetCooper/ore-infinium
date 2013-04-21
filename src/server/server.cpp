@@ -339,7 +339,12 @@ void Server::sendInitialWorldChunk(ENetPeer* peer)
    int32_t startY = std::max(centerY - maxHeight, 0);
    int32_t endY = (centerY) + maxHeight;
 
-   Debug::log(Debug::NetworkServerInitialArea) << " INITIAL CHUNK: starx: " << startX << " starty: " << startY << "end x: " << endX << " endY: " << endY;
+   player->loadedChunksStartRow = startY;
+   player->loadedChunksEndRow = endY;
+   player->loadedChunksStartColumn = startX;
+   player->loadedChunksEndColumn = endX;
+
+   Debug::log(Debug::NetworkServerInitialArea) << " INITIAL CHUNK: startx: " << startX << " starty: " << startY << "end x: " << endX << " endY: " << endY;
 
     message.set_startx(startX);
     message.set_endx(endX);

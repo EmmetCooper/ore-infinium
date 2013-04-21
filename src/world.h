@@ -146,7 +146,7 @@ private:
      * the player. Future updates need to call @sa updateTilePhysicsObjects
      * Should be called when a player spawns/teleports to a new area in the world
      */
-    void createInitialBlockPhysicsObjects(Entities::Player* player);
+    void createInitialTilePhysicsObjects(Entities::Player* player);
 
     /**
      *
@@ -155,8 +155,13 @@ private:
      * @sa createInitialTilePhysicsObjects
      */
     void updateTilePhysicsObjects(Entities::Player* player);
+    void createTilePhysicsObjects(Entities::Player* player);
+    void destroyTilePhysicsObjects(Entities::Player* player);
 
-    void destroyBlockPhysicsObject(uint32_t column, uint32_t row);
+    /**
+     * For when a tile is destroyed.
+     */
+    void destroyTilePhysicsObject(uint32_t column, uint32_t row);
 
     void renderCrosshair();
 
