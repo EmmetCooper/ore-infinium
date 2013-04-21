@@ -32,6 +32,7 @@ Camera::Camera()
     m_orthoMatrix = glm::ortho(0.0f, float(1600.0f/PIXELS_PER_METER), float(900.0f/PIXELS_PER_METER), 0.0f, -1.0f, 1.0f);
 }
 
+//FIXME: unused
 void Camera::translate(const glm::vec2 vec)
 {
     m_viewMatrix = glm::translate(m_viewMatrix, glm::vec3(vec, 0.0f));
@@ -42,8 +43,6 @@ void Camera::zoom(const float factor)
 {
     m_scaleFactor *= factor;
 
-    m_viewMatrix = glm::scale(m_viewMatrix, glm::vec3(m_scaleFactor));
-
     pushMatrix();
 }
 
@@ -53,12 +52,15 @@ void Camera::centerOn(const glm::vec2 vec)
 
     glm::vec2 halfScreen((Settings::instance()->screenResolutionWidth)/PIXELS_PER_METER / 2.0f, (Settings::instance()->screenResolutionHeight/PIXELS_PER_METER) / 2.0f);
 
-    m_viewMatrix = glm::translate(m_viewMatrix, glm::vec3(halfScreen, 0.0));
-    m_viewMatrix = glm::scale(m_viewMatrix, glm::vec3(glm::vec2(m_scaleFactor), 0.0f));
-    m_viewMatrix =  glm::translate(glm::mat4(), -glm::vec3(position - halfScreen, 0.0f));
+    m_viewMatrix =
+        glm::translate(glm::mat4(), glm::vec3(halfScreen, 0.0)) *
+        glm::scale(glm::mat4(), glm::vec3(m_scaleFactor)) *
+        glm::translate(glm::mat4(), -glm::vec3(position, 0.0f));
+
     pushMatrix();
 }
 
+//FIXME: unused
 void Camera::setPosition(const glm::vec2 vec)
 {
     glm::vec2 halfScreen((Settings::instance()->screenResolutionWidth)/PIXELS_PER_METER / 2.0f, (Settings::instance()->screenResolutionHeight/PIXELS_PER_METER) / 2.0f);
