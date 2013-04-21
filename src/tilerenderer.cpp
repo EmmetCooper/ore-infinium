@@ -110,20 +110,25 @@ void TileRenderer::render()
     Debug::checkGLError();
     glm::vec2 playerPosition = m_mainPlayer->position();
     Debug::log(Debug::TileRendererArea) << "player pos x : " << playerPosition.x << " y: " << playerPosition.y;
+
     float tilesBeforeX = playerPosition.x / Block::BLOCK_SIZE;
-    //row
     float tilesBeforeY = playerPosition.y / Block::BLOCK_SIZE;
+
+    // determine what the size of the tiles are but convert that to our zoom level
+    const float blockSizePixels = Block::BLOCK_SIZE;
+    glm::vec4 tileSize = glm::vec4(blockSizePixels, 0, 0, 0);
+    const float transformedTileSize = glm::vec4(m_camera->view() * tileSize).x;
 
     float halfScreenMetersHeight = (Settings::instance()->screenResolutionHeight * 0.5) / PIXELS_PER_METER;
     float halfScreenMetersWidth = (Settings::instance()->screenResolutionWidth * 0.5) / PIXELS_PER_METER;
 
     // -1 so that we render an additional row and column..to smoothly scroll
-    const int startRow = tilesBeforeY - (halfScreenMetersHeight / Block::BLOCK_SIZE) - 2;
-    const int endRow = tilesBeforeY + (halfScreenMetersHeight / Block::BLOCK_SIZE) + 2;
+    const int startRow = tilesBeforeY - (halfScreenMetersHeight / transformedTileSize) - 2;
+    const int endRow = tilesBeforeY + (halfScreenMetersHeight / transformedTileSize) + 2;
 
     //columns are our X value, rows the Y
-    const int startColumn = tilesBeforeX - (halfScreenMetersWidth / Block::BLOCK_SIZE) - 2;
-    const int endColumn = tilesBeforeX + (halfScreenMetersWidth / Block::BLOCK_SIZE) + 2;
+    const int startColumn = tilesBeforeX - (halfScreenMetersWidth / transformedTileSize) - 2;
+    const int endColumn = tilesBeforeX + (halfScreenMetersWidth / transformedTileSize) + 2;
 
     Debug:: log(Debug::TileRendererArea) << "tilesBeforeX: " << tilesBeforeX << " tilebeforeY: " << tilesBeforeY;
     Debug:: log(Debug::TileRendererArea) << "halfScreenMetersHeight: " << halfScreenMetersHeight << " Width: " << halfScreenMetersWidth;
@@ -199,8 +204,8 @@ void TileRenderer::render()
             assert(blockIndex < WORLD_ROWCOUNT * WORLD_COLUMNCOUNT);
             Block& block = m_world->m_blocks[blockIndex];
 
-            const float tileWidth = 1.0f / float(Block::BLOCK_SIZE_PIXELS) * 16.0f;
-            const float tileHeight = 1.0f / float(Block::BLOCK_SIZE_PIXELS) * 16.0f;
+            const float tileWidth = 1.0f / float(Block::BLOCK_SIZE_PIXELS) * Block::BLOCK_SIZE_PIXELS;
+            const float tileHeight = 1.0f / float(Block::BLOCK_SIZE_PIXELS) * Block::BLOCK_SIZE_PIXELS;
 
             float xPadding = 1.0f / float(Block::BLOCK_SIZE_PIXELS) * 1.0f * (float(column) + 1.0);
             float yPadding = 1.0f / float(Block::BLOCK_SIZE_PIXELS) * 1.0f * (float(row) + 1.0);
