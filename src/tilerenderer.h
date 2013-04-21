@@ -91,9 +91,10 @@ private:
     GLuint m_vbo; // vertex buffer object
     GLuint m_ebo; // element buffer object
 
-    //FIXME: count max tiles to render
-    //HACK: GOD AWFUL HACK, count this dynamically...based on how many fit inside our resolution
-    uint32_t m_maxTileCount = 8800;
+    bool m_firstRun = true;
+
+    // this is a decent default.
+    uint32_t m_highestTileCount = 1000;
 
     Camera* m_camera = nullptr;
     Entities::Player* m_mainPlayer = nullptr;

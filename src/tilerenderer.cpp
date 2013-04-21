@@ -123,12 +123,12 @@ void TileRenderer::render()
     float halfScreenMetersWidth = (Settings::instance()->screenResolutionWidth * 0.5) / PIXELS_PER_METER;
 
     // -1 so that we render an additional row and column..to smoothly scroll
-    const int startRow = tilesBeforeY - (halfScreenMetersHeight / transformedTileSize) - 2;
-    const int endRow = tilesBeforeY + (halfScreenMetersHeight / transformedTileSize) + 2;
+    const int startRow = std::max(static_cast<int>(tilesBeforeY - (halfScreenMetersHeight / transformedTileSize)) - 2, 0);
+    const int endRow = std::min(static_cast<int>(tilesBeforeY + (halfScreenMetersHeight / transformedTileSize) + 2), static_cast<int>(WORLD_ROWCOUNT));
 
     //columns are our X value, rows the Y
-    const int startColumn = tilesBeforeX - (halfScreenMetersWidth / transformedTileSize) - 2;
-    const int endColumn = tilesBeforeX + (halfScreenMetersWidth / transformedTileSize) + 2;
+    const int startColumn = std::max(static_cast<int>(tilesBeforeX - (halfScreenMetersWidth / transformedTileSize)) - 2, 0);
+    const int endColumn = std::min(static_cast<int>(tilesBeforeX + (halfScreenMetersWidth / transformedTileSize) + 2), static_cast<int>(WORLD_COLUMNCOUNT));
 
     Debug:: log(Debug::TileRendererArea) << "tilesBeforeX: " << tilesBeforeX << " tilebeforeY: " << tilesBeforeY;
     Debug:: log(Debug::TileRendererArea) << "halfScreenMetersHeight: " << halfScreenMetersHeight << " Width: " << halfScreenMetersWidth;
@@ -144,13 +144,40 @@ void TileRenderer::render()
     }
 
     //TODO: needs improvement, it's a bit of a hack to buffer blank data then subdata
-    const int totalTiles = (endRow - startRow) * (endColumn - startColumn);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    const uint32_t totalTiles = (endRow - startRow) * (endColumn - startColumn);
+    if (totalTiles > m_highestTileCount || m_firstRun) {
+        m_firstRun = false;
+        m_highestTileCount = totalTiles * 2;
+
+        std::vector<uint32_t> indicesv;
+
+        // prepare and upload indices as a one time deal
+        const uint32_t indices[] = { 0, 1, 2, 0, 2, 3 }; // pattern for a triangle array
+        // for each possible sprite, add the 6 index pattern
+        for (uint32_t j = 0; j < m_highestTileCount; j++) {
+            for (uint32_t i = 0; i < sizeof(indices) / sizeof(*indices); i++) {
+                indicesv.push_back(4 * j + indices[i]);
+            }
+        }
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+    glBindVertexArray(m_vao);
+    glGenBuffers(1, &m_ebo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+
+    glBufferData(
+        GL_ELEMENT_ARRAY_BUFFER,
+        indicesv.size() * sizeof(uint32_t),
+        indicesv.data(),
+        GL_STATIC_DRAW);
+
     glBufferData(
         GL_ARRAY_BUFFER,
-        totalTiles * 4 * sizeof(Vertex),
+        m_highestTileCount * 4 * sizeof(Vertex),
         NULL,
         GL_DYNAMIC_DRAW);
+    }
 
     int drawingRow = 0;
     int index = 0;
@@ -209,7 +236,7 @@ void TileRenderer::render()
             int column = 0;
 
             int blockIndex = currentColumn * WORLD_ROWCOUNT + currentRow;
-            assert(blockIndex > 0);
+            assert(blockIndex >= 0);
             assert(blockIndex < WORLD_ROWCOUNT * WORLD_COLUMNCOUNT);
             Block& block = m_world->m_blocks[blockIndex];
 
@@ -321,27 +348,6 @@ void TileRenderer::initGL()
 
     glGenBuffers(1, &m_vbo);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-
-    Debug::checkGLError();
-
-    std::vector<uint32_t> indicesv;
-
-    // prepare and upload indices as a one time deal
-    const uint32_t indices[] = { 0, 1, 2, 0, 2, 3 }; // pattern for a triangle array
-    // for each possible sprite, add the 6 index pattern
-    for (uint32_t j = 0; j < m_maxTileCount; j++) {
-        for (uint32_t i = 0; i < sizeof(indices) / sizeof(*indices); i++) {
-            indicesv.push_back(4 * j + indices[i]);
-        }
-    }
-
-    glGenBuffers(1, &m_ebo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-    glBufferData(
-        GL_ELEMENT_ARRAY_BUFFER,
-        indicesv.size()*sizeof(uint32_t),
-        indicesv.data(),
-        GL_STATIC_DRAW);
 
     Debug::checkGLError();
 
