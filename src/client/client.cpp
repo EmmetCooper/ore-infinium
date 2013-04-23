@@ -244,30 +244,37 @@ void Client::render(double frameTime)
         }
 
         if (m_box2DWorld && m_physicsDebugRenderer) {
-            m_box2DWorld->DrawDebugData();
 
             int rendererFlags = 0;
             int settingsFlags = Settings::instance()->debugRendererFlags;
+            bool drawingRequired = false;
 
             if (settingsFlags & Debug::RenderingDebug::Box2DAABBRenderingDebug) {
                 rendererFlags |= b2Draw::e_aabbBit;
+                drawingRequired = true;
             }
 
             if (settingsFlags & Debug::RenderingDebug::Box2DShapeRenderingDebug) {
                 rendererFlags |= b2Draw::e_shapeBit;
+                drawingRequired = true;
             }
 
             if (settingsFlags & Debug::RenderingDebug::Box2DCenterOfMassRenderingDebug) {
                 rendererFlags |= b2Draw::e_centerOfMassBit;
+                drawingRequired = true;
             }
 
             if (settingsFlags & Debug::RenderingDebug::Box2DJointRenderingDebug) {
                 rendererFlags |= b2Draw::e_jointBit;
+                drawingRequired = true;
             }
 
-            m_physicsDebugRenderer->SetFlags(rendererFlags);
-            //finalize rendering to screen.
-            m_physicsDebugRenderer->render();
+            if (drawingRequired) {
+                m_box2DWorld->DrawDebugData();
+                m_physicsDebugRenderer->SetFlags(rendererFlags);
+                //finalize rendering to screen.
+                m_physicsDebugRenderer->render();
+            }
 
             m_debugMenu->setPhysicsWorldBodyCount(m_box2DWorld->GetBodyCount());
         }
