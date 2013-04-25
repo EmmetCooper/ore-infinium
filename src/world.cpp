@@ -40,6 +40,7 @@
 #include "quickbarinventory.h"
 #include "timer.h"
 #include "quadtree.h"
+#include "activechunk.h"
 
 #include <Box2D/Box2D.h>
 #include <stdio.h>
@@ -268,10 +269,46 @@ void World::createInitialTilePhysicsObjects(Entities::Player* player)
     Debug::log(Debug::ServerEntityCreationArea) << "Created initial tile physics objects for player, current world body count: " << m_box2DWorld->GetBodyCount() << " count: " << count;
 }
 
-void World::updateTilePhysicsObjects(Entities::Player* player)
+void World::updateTilePhysicsObjects()
 {
     //destroyTilePhysicsObjects(player);
     //createTilePhysicsObjects(player);
+
+    // holds the chunks that every player wants to have activated. made unique after it's done adding
+    std::list<DesiredChunk> desiredChunks;
+
+    for (Entities::Player* player : m_players) {
+        // mark which chunks we want to be activated within this players viewport
+
+        float blockSize = Block::BLOCK_SIZE;
+        glm::ivec2 centerTile = glm::ivec2(int(player->position().x / blockSize), int(player->position().y / blockSize));
+
+        // half of what is specified, to get both left and right sides of the center (player position).
+        glm::ivec2 tilesInViewport = glm::ivec2(int(MAX_VIEWPORT_WIDTH * 0.5f), int(MAX_VIEWPORT_HEIGHT * 0.5f));
+
+        // top-left start
+        glm::ivec2 start = glm::ivec2(centerTile - tilesInViewport);
+        // bottom-right end
+        glm::ivec2 end = glm::ivec2(centerTile + tilesInViewport);
+
+        for (int currentRow = start.y; currentRow < end.y; currentRow += ACTIVECHUNK_SIZE) {
+            for (int currentColumn = start.x; currentColumn < end.x; currentColumn += ACTIVECHUNK_SIZE) {
+
+                DesiredChunk desiredChunk(currentRow, currentColumn);
+                desiredChunks.push_back(desiredChunk);
+            }
+        }
+
+    }
+
+    //trim duplicates
+    Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE pre-removal: " << desiredChunks.size();
+    desiredChunks.unique();
+    Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE post-removal: " << desiredChunks.size();
+    for (auto& d : desiredChunks) {
+
+//        Debug::log(Debug::StartupArea) << "DESIRED CHUNK row:: " << d.row << " col : " << d.column;
+    }
 }
 
 void World::createTilePhysicsObjects(Entities::Player* player)
@@ -405,9 +442,7 @@ void World::update(double elapsedTime)
 
     if (m_server) {
 
-        for (auto * player : m_players) {
-            updateTilePhysicsObjects(player);
-        }
+        updateTilePhysicsObjects();
 
         m_box2DWorld->Step(FIXED_TIMESTEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
     }

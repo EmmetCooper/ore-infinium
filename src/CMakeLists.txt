@@ -3,6 +3,7 @@
 set(EXECUTABLE_NAME "ore-infinium")
 
 set(SRC
+activechunk.cpp
 block.cpp
 camera.cpp
 chunk.cpp

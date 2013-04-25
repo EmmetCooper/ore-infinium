@@ -11,4 +11,7 @@ static constexpr float BLOCK_SIZE = 16.0f / PIXELS_PER_METER;
 static constexpr float MAX_VIEWPORT_WIDTH = 800.0f;
 static constexpr float MAX_VIEWPORT_HEIGHT = 800.0f;
 
+    /// ACTIVECHUNK_SIZE^2 == total tiles within chunk
+    static constexpr uint32_t ACTIVECHUNK_SIZE = 16;
+
 #endif

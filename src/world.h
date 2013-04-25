@@ -154,7 +154,7 @@ private:
      * as the player moves. In other words it creates new ones near the screen and deletes old ones outside of the range of the screen
      * @sa createInitialTilePhysicsObjects
      */
-    void updateTilePhysicsObjects(Entities::Player* player);
+    void updateTilePhysicsObjects();
     void createTilePhysicsObjects(Entities::Player* player);
     void destroyTilePhysicsObjects(Entities::Player* player);
 
