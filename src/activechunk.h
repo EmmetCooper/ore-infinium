@@ -32,7 +32,8 @@ struct DesiredChunk
 
     }
 
-   bool operator==(const DesiredChunk& other);
+    bool operator==(const DesiredChunk& other) const;
+    bool operator<(const DesiredChunk& rhs) const;
 
    uint32_t row;
    uint32_t column;

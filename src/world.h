@@ -21,6 +21,7 @@
 #include "block.h"
 #include "player.h"
 #include "chunk.h"
+#include "activechunk.h"
 
 #include <stdlib.h>
 #include <list>
@@ -31,6 +32,7 @@
 
 #include <Box2D/Common/b2Math.h>
 
+class ActiveChunk;
 class QuadTreeRenderer;
 class QuadTree;
 class QueryCallback;
@@ -219,6 +221,7 @@ private:
     // it's easier to manage with a linear array. access is trivial - array[y][x] simply becomes array[y*rowlength + x]
     // [column * WORLD_ROWCOUNT + row]
     std::vector<Block> m_blocks;
+    std::map<DesiredChunk, ActiveChunk*> m_activeChunks;
 
     TileRenderer* m_tileRenderer = nullptr;
     LightRenderer* m_lightRenderer = nullptr;

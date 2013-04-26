@@ -21,7 +21,7 @@
 
 #include <Box2D/Dynamics/b2Body.h>
 
-bool DesiredChunk::operator==(const DesiredChunk& other)
+bool DesiredChunk::operator==(const DesiredChunk& other) const
 {
     if (this->row == other.row && this->column == other.column) {
         return true;
@@ -30,6 +30,26 @@ bool DesiredChunk::operator==(const DesiredChunk& other)
     return false;
 }
 
+bool DesiredChunk::operator<(const DesiredChunk& rhs) const
+{
+    if( this->row < rhs.row ) {
+        return true;
+    }
+
+    if( this->row > rhs.row ) {
+        return false;
+    }
+
+    if( this->column < rhs.column ) {
+        return true;
+    }
+
+    if( this->column > rhs.column ) {
+        return false;
+    }
+
+    return false;
+}
 
 ActiveChunk::ActiveChunk(uint32_t row, uint32_t column)
 {

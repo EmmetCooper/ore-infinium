@@ -57,6 +57,7 @@
 #include <boost/iostreams/filtering_streambuf.hpp>
 #include <boost/iostreams/copy.hpp>
 #include <boost/iostreams/filter/zlib.hpp>
+#include <glm/core/func_common.hpp>
 
 World::World(Entities::Player* mainPlayer, Client* client, Server* server)
     : m_mainPlayer(mainPlayer),
@@ -281,33 +282,42 @@ void World::updateTilePhysicsObjects()
         // mark which chunks we want to be activated within this players viewport
 
         float blockSize = Block::BLOCK_SIZE;
-        glm::ivec2 centerTile = glm::ivec2(int(player->position().x / blockSize), int(player->position().y / blockSize));
+        glm::ivec2 centerTile = glm::ivec2(int(ceil(player->position().x / blockSize)), int(ceil(player->position().y / blockSize)));
 
         // half of what is specified, to get both left and right sides of the center (player position).
         glm::ivec2 tilesInViewport = glm::ivec2(int(MAX_VIEWPORT_WIDTH * 0.5f), int(MAX_VIEWPORT_HEIGHT * 0.5f));
 
         // top-left start
-        glm::ivec2 start = glm::ivec2(centerTile - tilesInViewport);
+        glm::ivec2 start = glm::ivec2(glm::max(centerTile - tilesInViewport, glm::ivec2(0, 0)));
         // bottom-right end
-        glm::ivec2 end = glm::ivec2(centerTile + tilesInViewport);
+        glm::ivec2 end = glm::ivec2(glm::min(centerTile + tilesInViewport, glm::ivec2(WORLD_COLUMNCOUNT, WORLD_ROWCOUNT)));
 
-        for (int currentRow = start.y; currentRow < end.y; currentRow += ACTIVECHUNK_SIZE) {
-            for (int currentColumn = start.x; currentColumn < end.x; currentColumn += ACTIVECHUNK_SIZE) {
+        Debug::log(Debug::StartupArea) << "activechunk startx: " << start.x << " start.y: " << start.y << " endx: " << end.x << " endy: " << end.y;
+
+        for (int currentRow = start.y; currentRow < end.y / int(ACTIVECHUNK_SIZE); currentRow += ACTIVECHUNK_SIZE) {
+            for (int currentColumn = start.x; currentColumn < end.x / int(ACTIVECHUNK_SIZE); currentColumn += ACTIVECHUNK_SIZE) {
 
                 DesiredChunk desiredChunk(currentRow, currentColumn);
                 desiredChunks.push_back(desiredChunk);
             }
         }
-
     }
 
-    //trim duplicates
     Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE pre-removal: " << desiredChunks.size();
-    desiredChunks.unique();
-    Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE post-removal: " << desiredChunks.size();
-    for (auto& d : desiredChunks) {
 
-//        Debug::log(Debug::StartupArea) << "DESIRED CHUNK row:: " << d.row << " col : " << d.column;
+    //trim duplicates
+    desiredChunks.unique();
+
+    Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE post-removal: " << desiredChunks.size();
+
+    for (auto& d : desiredChunks) {
+        if (m_activeChunks.find(d) == m_activeChunks.end()) {
+            // active chunk does not exist, create it!
+            ActiveChunk* activeChunk = new ActiveChunk(d.row, d.column);
+            m_activeChunks[d] = activeChunk;
+        }
+
+        Debug::log(Debug::StartupArea) << "DESIRED CHUNK row:: " << d.row << " col : " << d.column;
     }
 }
 
