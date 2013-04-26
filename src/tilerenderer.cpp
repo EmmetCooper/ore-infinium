@@ -73,7 +73,10 @@ TileRenderer::~TileRenderer()
 {
     glDeleteBuffers(1, &m_vbo);
     glDeleteBuffers(1, &m_ebo);
+
     glDeleteVertexArrays(1, &m_vao);
+
+    glDeleteTextures(1, &m_tileMapTexture);
 
     delete m_shader;
 }
