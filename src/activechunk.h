@@ -23,6 +23,7 @@
 #include <vector>
 #include "block.h"
 
+class b2World;
 class b2Body;
 
 struct DesiredChunk
@@ -45,7 +46,7 @@ public:
     /**
      * @p row @p column are in active chunk indexes (tilemap index divided by ACTIVECHUNK_SIZE)
      */
-    ActiveChunk(uint32_t row, uint32_t column);
+    ActiveChunk(uint32_t row, uint32_t column, std::vector<Block>* blocks, b2World* box2DWorld);
     ~ActiveChunk();
 
 
@@ -54,6 +55,8 @@ public:
 
 private:
     std::vector<b2Body*> m_tileBodies;
+    std::vector<Block>* m_blocks = nullptr;
+    b2World* m_box2DWorld = nullptr;
 };
 
 #endif

@@ -157,7 +157,6 @@ private:
      * @sa createInitialTilePhysicsObjects
      */
     void updateTilePhysicsObjects();
-    void createTilePhysicsObjects(Entities::Player* player);
     void destroyTilePhysicsObjects(Entities::Player* player);
 
     /**
@@ -178,7 +177,6 @@ private:
      * Attempts to pick a block at a position. Assumes caller checked inventory to see if it's possible.
      */
     void performBlockAttack(Entities::Player* player);
-
 
     /**
      * Calls various functions determining which sort of action should be taken. Should be called on each update()
@@ -248,8 +246,8 @@ private:
     Camera* m_camera = nullptr;
 
     b2World* m_box2DWorld = nullptr;
-    b2Vec2 m_gravity = b2Vec2(0.0f, 9.8f);
-//    b2Vec2 m_gravity = b2Vec2(0.0f, 0.0f);
+//    b2Vec2 m_gravity = b2Vec2(0.0f, 9.8f);
+    b2Vec2 m_gravity = b2Vec2(0.0f, 0.0f);
 
     ContactListener* m_contactListener = nullptr;
     QueryCallback* m_queryCallback = nullptr;

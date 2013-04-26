@@ -210,71 +210,10 @@ void World::removePlayer(Entities::Player* player)
 
 void World::createInitialTilePhysicsObjects(Entities::Player* player)
 {
-    glm::vec2 position = player->position();
-
-    float blockSize = Block::BLOCK_SIZE;
-    int centerTileX = int((position.x / blockSize));
-    int centerTileY = int((position.y / blockSize));
-
-    //tile indexes
-     //FIXME: HACK obviously
-    int startRow = std::max(centerTileY - 20, 0);
-    int endRow = std::min(centerTileY + 60, static_cast<int>(WORLD_ROWCOUNT));
-    int startColumn = std::max(centerTileX - 50, 0);
-    int endColumn = std::min(centerTileY + 100, static_cast<int>(WORLD_COLUMNCOUNT));
-
-    player->activeTileRangeStart = glm::ivec2(startColumn, startRow);
-    player->activeTileRangeEnd = glm::ivec2(endColumn, endRow);
-
-    int count = 0;
-    int index = 0;
-    for (int currentRow = startRow; currentRow < endRow; ++currentRow) {
-        for (int currentColumn = startColumn; currentColumn < endColumn; ++currentColumn) {
-            count++;
-
-            index = currentColumn * WORLD_ROWCOUNT + currentRow;
-            assert(index < WORLD_ROWCOUNT * WORLD_COLUMNCOUNT);
-            Block& block = m_blocks[index];
-
-            if ( Block::blockTypeMap.at(block.primitiveType).collides == false) {
-                //skip over tiles which are not marked as collideable types. obviously, no physics bodies need to be generated for such cases.
-                continue;
-            }
-
-            b2Body* body = nullptr;
-
-            b2BodyDef bodyDef;
-            bodyDef.type = b2_staticBody;
-            bodyDef.position.Set(Block::BLOCK_SIZE * float(currentColumn) + (Block::BLOCK_SIZE * 0.5f), Block::BLOCK_SIZE * float(currentRow) + (Block::BLOCK_SIZE * 0.5f));
-
-            body = m_box2DWorld->CreateBody(&bodyDef);
-
-            ContactListener::BodyUserData* userData = new ContactListener::BodyUserData();
-            userData->type = ContactListener::BodyType::Block;
-            userData->data = &m_blocks[index];
-
-            body->SetUserData(userData);
-            b2PolygonShape box;
-            box.SetAsBox(Block::BLOCK_SIZE * 0.5f , Block::BLOCK_SIZE * 0.5f);
-
-            // create main body's fixture
-            b2FixtureDef fixtureDef;
-            fixtureDef.shape = &box;
-            fixtureDef.density = 1.0f;
-            fixtureDef.friction = 1.0f;
-
-            body->CreateFixture(&fixtureDef);
-        }
-    }
-
-    Debug::log(Debug::ServerEntityCreationArea) << "Created initial tile physics objects for player, current world body count: " << m_box2DWorld->GetBodyCount() << " count: " << count;
 }
 
 void World::updateTilePhysicsObjects()
 {
-    //destroyTilePhysicsObjects(player);
-    //createTilePhysicsObjects(player);
-
     // holds the chunks that every player wants to have activated. made unique after it's done adding
     std::list<DesiredChunk> desiredChunks;
 
@@ -290,40 +229,37 @@ void World::updateTilePhysicsObjects()
         // top-left start
         glm::ivec2 start = glm::ivec2(glm::max(centerTile - tilesInViewport, glm::ivec2(0, 0)));
         // bottom-right end
-        glm::ivec2 end = glm::ivec2(glm::min(centerTile + tilesInViewport, glm::ivec2(WORLD_COLUMNCOUNT, WORLD_ROWCOUNT)));
+        glm::ivec2 end = glm::ivec2(glm::min(centerTile + tilesInViewport, glm::ivec2(WORLD_COLUMNCOUNT - ACTIVECHUNK_SIZE, WORLD_ROWCOUNT - ACTIVECHUNK_SIZE)));
 
+        Debug::log(Debug::StartupArea) << "creating desired chunks, center tile x: " << centerTile.x << " y: " << centerTile.y;
         Debug::log(Debug::StartupArea) << "activechunk startx: " << start.x << " start.y: " << start.y << " endx: " << end.x << " endy: " << end.y;
 
-        for (int currentRow = start.y; currentRow < end.y / int(ACTIVECHUNK_SIZE); currentRow += ACTIVECHUNK_SIZE) {
-            for (int currentColumn = start.x; currentColumn < end.x / int(ACTIVECHUNK_SIZE); currentColumn += ACTIVECHUNK_SIZE) {
+        for (int currentRow = start.y; currentRow < end.y; currentRow += ACTIVECHUNK_SIZE) {
+            for (int currentColumn = start.x; currentColumn < end.x; currentColumn += ACTIVECHUNK_SIZE) {
+                Debug::log(Debug::StartupArea) << "creating desired chunks, current row: " << currentRow << " column: " << currentColumn;
 
-                DesiredChunk desiredChunk(currentRow, currentColumn);
+                DesiredChunk desiredChunk(currentRow / ACTIVECHUNK_SIZE, currentColumn / ACTIVECHUNK_SIZE);
                 desiredChunks.push_back(desiredChunk);
             }
         }
     }
 
-    Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE pre-removal: " << desiredChunks.size();
+//    Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE pre-removal: " << desiredChunks.size();
 
     //trim duplicates
     desiredChunks.unique();
 
-    Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE post-removal: " << desiredChunks.size();
+ //   Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE post-removal: " << desiredChunks.size();
 
     for (auto& d : desiredChunks) {
         if (m_activeChunks.find(d) == m_activeChunks.end()) {
             // active chunk does not exist, create it!
-            ActiveChunk* activeChunk = new ActiveChunk(d.row, d.column);
+            ActiveChunk* activeChunk = new ActiveChunk(d.row, d.column, &m_blocks, m_box2DWorld);
             m_activeChunks[d] = activeChunk;
         }
 
-        Debug::log(Debug::StartupArea) << "DESIRED CHUNK row:: " << d.row << " col : " << d.column;
+ //       Debug::log(Debug::StartupArea) << "DESIRED CHUNK row:: " << d.row << " col : " << d.column;
     }
-}
-
-void World::createTilePhysicsObjects(Entities::Player* player)
-{
-
 }
 
 void World::destroyTilePhysicsObjects(Entities::Player* player)
