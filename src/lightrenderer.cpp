@@ -52,9 +52,16 @@ LightRenderer::LightRenderer(World* world, Camera* camera, Entities::Player* mai
 LightRenderer::~LightRenderer()
 {
     glDeleteBuffers(1, &m_vbo);
+    glDeleteBuffers(1, &m_vboBackbuffer);
     glDeleteBuffers(1, &m_ebo);
+    glDeleteBuffers(1, &m_eboBackbuffer);
 
     glDeleteVertexArrays(1, &m_vao);
+    glDeleteVertexArrays(1, &m_vaoBackbuffer);
+
+    glDeleteFramebuffers(1, &m_fbo);
+    glDeleteTextures(1, &m_fboTexture);
+    glDeleteTextures(1, &m_torchLightTexture);
 }
 
 void LightRenderer::setCamera(Camera* camera)
