@@ -58,6 +58,9 @@ SpriteSheetRenderer::~SpriteSheetRenderer()
     glDeleteBuffers(1, &m_vboEntities);
     glDeleteBuffers(1, &m_eboEntities);
     glDeleteVertexArrays(1, &m_vaoEntities);
+
+    delete m_spriteSheetTextures[SpriteSheetRenderer::SpriteSheetType::Character].texture;
+    delete m_spriteSheetTextures[SpriteSheetRenderer::SpriteSheetType::Entity].texture;
 }
 
 void SpriteSheetRenderer::setCamera(Camera* camera)
