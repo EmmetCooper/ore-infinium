@@ -48,6 +48,7 @@ class ShellRenderInterfaceOpenGL : public Rocket::Core::RenderInterface
 public:
 
     ShellRenderInterfaceOpenGL();
+    virtual ~ShellRenderInterfaceOpenGL();
 
     /**
      * @p width width of viewport

@@ -47,6 +47,17 @@ ShellRenderInterfaceOpenGL::ShellRenderInterfaceOpenGL()
     initGL();
 }
 
+ShellRenderInterfaceOpenGL::~ShellRenderInterfaceOpenGL()
+{
+    glDeleteBuffers(1, &m_vbo);
+    glDeleteBuffers(1, &m_ebo);
+    glDeleteVertexArrays(1, &m_vao);
+
+    glDeleteTextures(1, &m_whiteTexture);
+
+    delete m_shader;
+}
+
 void ShellRenderInterfaceOpenGL::initGL()
 {
     glGenVertexArrays(1, &m_vao);
