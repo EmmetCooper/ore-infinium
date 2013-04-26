@@ -34,7 +34,21 @@ PhysicsDebugRenderer::PhysicsDebugRenderer(Camera* camera)
 PhysicsDebugRenderer::~PhysicsDebugRenderer()
 {
     glDeleteBuffers(1, &m_vboSolidPolygons);
+    glDeleteBuffers(1, &m_iboSolidPolygons);
     glDeleteVertexArrays(1, &m_vaoSolidPolygons);
+
+    glDeleteBuffers(1, &m_vboSolidCircles);
+    glDeleteBuffers(1, &m_iboSolidCircles);
+    glDeleteVertexArrays(1, &m_vaoSolidCircles);
+
+
+    glDeleteBuffers(1, &m_vboPolygons);
+    glDeleteBuffers(1, &m_iboPolygons);
+    glDeleteVertexArrays(1, &m_vaoPolygons);
+
+    glDeleteBuffers(1, &m_vboSegments
+    glDeleteBuffers(1, &m_iboSegments);
+    glDeleteVertexArrays(1, &m_vaoSegments);
 
     // NOTE: cam is not ours to delete.
     delete m_shader;
