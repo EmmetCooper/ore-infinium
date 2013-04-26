@@ -193,8 +193,6 @@ void World::addPlayer(Entities::Player* player)
             }
         }
 
-        createInitialTilePhysicsObjects(player);
-
         //NOTE: you might be asking, why don't we send a chunk? that's because this happens as soon as the client is validated and its
         // player is created. therefore the next calls will be sending player info, and then sending the initial world chunk at this player's position.
 
@@ -206,10 +204,6 @@ void World::addPlayer(Entities::Player* player)
 void World::removePlayer(Entities::Player* player)
 {
     m_players.remove(player);
-}
-
-void World::createInitialTilePhysicsObjects(Entities::Player* player)
-{
 }
 
 void World::updateTilePhysicsObjects()
@@ -241,25 +235,37 @@ void World::updateTilePhysicsObjects()
     }
 
 //    Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE pre-removal: " << desiredChunks.size();
-
-    //trim duplicates
-    desiredChunks.unique();
-
  //   Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE post-removal: " << desiredChunks.size();
 
+
+    // set all refcounts to 0
+    for (auto& activeChunk : m_activeChunks) {
+        activeChunk.second->refcount = 0;
+    }
+
+    // increment the refcount for each one we need
     for (auto& d : desiredChunks) {
-        if (m_activeChunks.find(d) == m_activeChunks.end()) {
+
+        auto it = m_activeChunks.find(d);
+        if (it== m_activeChunks.end()) {
             // active chunk does not exist, create it!
             ActiveChunk* activeChunk = new ActiveChunk(d.row, d.column, &m_blocks, m_box2DWorld);
             m_activeChunks[d] = activeChunk;
+        } else {
+            it->second->refcount += 1;
         }
+    }
 
- //       Debug::log(Debug::StartupArea) << "DESIRED CHUNK row:: " << d.row << " col : " << d.column;
+    // delete all active chunks with a refcount of 0
+    for (auto& activeChunk : m_activeChunks) {
+        if (activeChunk.second->refcount == 0) {
+            delete activeChunk.second;
+            m_activeChunks.erase(activeChunk.first);
+        }
     }
 }
 
-void World::destroyTilePhysicsObjects(Entities::Player* player)
-{
+    /*
     const glm::vec2 position = player->position();
 
     float blockSize = Block::BLOCK_SIZE;
@@ -302,7 +308,7 @@ void World::destroyTilePhysicsObjects(Entities::Player* player)
         delete static_cast<ContactListener::BodyUserData*>(b->GetUserData());
         m_box2DWorld->DestroyBody(b);
     }
-}
+    */
 
 Entities::Player* World::findPlayer(uint32_t playerID)
 {

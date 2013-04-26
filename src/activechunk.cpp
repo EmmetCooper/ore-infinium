@@ -91,6 +91,7 @@ m_box2DWorld(box2DWorld)
             bodyDef.position.Set(Block::BLOCK_SIZE * float(currentColumn) + (Block::BLOCK_SIZE * 0.5f), Block::BLOCK_SIZE * float(currentRow) + (Block::BLOCK_SIZE * 0.5f));
 
             body = m_box2DWorld->CreateBody(&bodyDef);
+            m_tileBodies.push_back(body);
 
             ContactListener::BodyUserData* userData = new ContactListener::BodyUserData();
             userData->type = ContactListener::BodyType::Block;
@@ -114,6 +115,7 @@ m_box2DWorld(box2DWorld)
 ActiveChunk::~ActiveChunk()
 {
     for (b2Body* body : m_tileBodies) {
-       // delete all tile physics objects within this chunk
+        // delete all tile physics objects within this chunk
+        m_box2DWorld->DestroyBody(body);
     }
 }

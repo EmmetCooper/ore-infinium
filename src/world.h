@@ -144,20 +144,12 @@ private:
     void attemptItemPrimaryAttack(Entities::Player* player);
 
     /**
-     * Spawns the static tile physics objects (1 phys object per tile) in some area around
-     * the player. Future updates need to call @sa updateTilePhysicsObjects
-     * Should be called when a player spawns/teleports to a new area in the world
-     */
-    void createInitialTilePhysicsObjects(Entities::Player* player);
-
-    /**
      *
      * Similar in nature to createInitialTilePhysicsObjects, but this is meant to update ones near the edges of the screen, aka
      * as the player moves. In other words it creates new ones near the screen and deletes old ones outside of the range of the screen
      * @sa createInitialTilePhysicsObjects
      */
     void updateTilePhysicsObjects();
-    void destroyTilePhysicsObjects(Entities::Player* player);
 
     /**
      * For when a tile is destroyed.

@@ -51,7 +51,7 @@ public:
 
 
 public:
-    uint32_t refcount = 0;
+    uint32_t refcount = 1;
 
 private:
     std::vector<b2Body*> m_tileBodies;
