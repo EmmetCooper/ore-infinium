@@ -46,7 +46,7 @@ PhysicsDebugRenderer::~PhysicsDebugRenderer()
     glDeleteBuffers(1, &m_iboPolygons);
     glDeleteVertexArrays(1, &m_vaoPolygons);
 
-    glDeleteBuffers(1, &m_vboSegments
+    glDeleteBuffers(1, &m_vboSegments);
     glDeleteBuffers(1, &m_iboSegments);
     glDeleteVertexArrays(1, &m_vaoSegments);
 

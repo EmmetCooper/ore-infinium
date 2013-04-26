@@ -73,8 +73,9 @@ TileRenderer::~TileRenderer()
 {
     glDeleteBuffers(1, &m_vbo);
     glDeleteBuffers(1, &m_ebo);
-
     glDeleteVertexArrays(1, &m_vao);
+
+    delete m_shader;
 }
 
 void TileRenderer::setCamera(Camera* camera)
