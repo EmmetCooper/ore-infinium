@@ -435,12 +435,12 @@ void PhysicsDebugRenderer::renderPolygons()
     }
 
     if (m_indicesPolygons.size() > m_highestIBOSizePolygons) {
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * m_indicesPolygons.size(), m_indicesPolygons.data(), GL_DYNAMIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * m_indicesPolygons.size(), m_indicesPolygons.data(), GL_DYNAMIC_DRAW);
     } else {
-        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(uint16_t) * m_indicesPolygons.size(), m_indicesPolygons.data());
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(uint32_t) * m_indicesPolygons.size(), m_indicesPolygons.data());
     }
 
-    glDrawElements(GL_LINES, m_indicesPolygons.size(), GL_UNSIGNED_SHORT, (GLvoid*)0);
+    glDrawElements(GL_LINES, m_indicesPolygons.size(), GL_UNSIGNED_INT, (GLvoid*)0);
 
     glDisable(GL_BLEND);
 
@@ -475,12 +475,12 @@ void PhysicsDebugRenderer::renderSolidPolygons()
     }
 
     if (m_indicesSolidPolygons.size() > m_highestIBOSizeSolidPolygons) {
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * m_indicesSolidPolygons.size(), m_indicesSolidPolygons.data(), GL_DYNAMIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * m_indicesSolidPolygons.size(), m_indicesSolidPolygons.data(), GL_DYNAMIC_DRAW);
     } else {
-        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(uint16_t) * m_indicesSolidPolygons.size(), m_indicesSolidPolygons.data());
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(uint32_t) * m_indicesSolidPolygons.size(), m_indicesSolidPolygons.data());
     }
 
-    glDrawElements(GL_TRIANGLES, m_indicesSolidPolygons.size(), GL_UNSIGNED_SHORT, (GLvoid*)0);
+    glDrawElements(GL_TRIANGLES, m_indicesSolidPolygons.size(), GL_UNSIGNED_INT, (GLvoid*)0);
 
     glDisable(GL_BLEND);
 
@@ -515,12 +515,12 @@ void PhysicsDebugRenderer::renderSolidCircles()
     }
 
     if (m_indicesSolidCircles.size() > m_highestIBOSizeSolidCircles) {
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * m_indicesSolidCircles.size(), m_indicesSolidCircles.data(), GL_DYNAMIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * m_indicesSolidCircles.size(), m_indicesSolidCircles.data(), GL_DYNAMIC_DRAW);
     } else {
-        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(uint16_t) * m_indicesSolidCircles.size(), m_indicesSolidCircles.data());
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(uint32_t) * m_indicesSolidCircles.size(), m_indicesSolidCircles.data());
     }
 
-    glDrawElements(GL_TRIANGLES, m_indicesSolidCircles.size(), GL_UNSIGNED_SHORT, (GLvoid*)0);
+    glDrawElements(GL_TRIANGLES, m_indicesSolidCircles.size(), GL_UNSIGNED_INT, (GLvoid*)0);
 
     glDisable(GL_BLEND);
 
@@ -555,12 +555,12 @@ void PhysicsDebugRenderer::renderSegments()
     }
 
     if (m_indicesSegments.size() > m_highestIBOSizeSegments) {
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * m_indicesSegments.size(), m_indicesSegments.data(), GL_DYNAMIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * m_indicesSegments.size(), m_indicesSegments.data(), GL_DYNAMIC_DRAW);
     } else {
-        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(uint16_t) * m_indicesSegments.size(), m_indicesSegments.data());
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(uint32_t) * m_indicesSegments.size(), m_indicesSegments.data());
     }
 
-    glDrawElements(GL_LINES, m_indicesSegments.size(), GL_UNSIGNED_SHORT, (GLvoid*)0);
+    glDrawElements(GL_LINES, m_indicesSegments.size(), GL_UNSIGNED_INT, (GLvoid*)0);
 
     glDisable(GL_BLEND);
 

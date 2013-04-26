@@ -75,7 +75,7 @@ private:
     GLuint m_vboSolidPolygons; // vertex buffer object
 
     std::vector<Vertex> m_verticesSolidPolygons;
-    std::vector<uint16_t> m_indicesSolidPolygons;
+    std::vector<uint32_t> m_indicesSolidPolygons;
     size_t m_maxVBOSizeSolidPolygons = 0;
     size_t m_highestIBOSizeSolidPolygons = 0;
     //////////////////////////////////////////////////////////
@@ -86,7 +86,7 @@ private:
     GLuint m_vboSolidCircles; // vertex buffer object
 
     std::vector<Vertex> m_verticesSolidCircles;
-    std::vector<uint16_t> m_indicesSolidCircles;
+    std::vector<uint32_t> m_indicesSolidCircles;
     size_t m_maxVBOSizeSolidCircles = 0;
     size_t m_highestIBOSizeSolidCircles = 0;
     //////////////////////////////////////////////////////////
@@ -97,7 +97,7 @@ private:
     GLuint m_vboPolygons; // vertex buffer object
 
     std::vector<Vertex> m_verticesPolygons;
-    std::vector<uint16_t> m_indicesPolygons;
+    std::vector<uint32_t> m_indicesPolygons;
     size_t m_maxVBOSizePolygons = 0;
     size_t m_highestIBOSizePolygons = 0;
     /////////////////////////////////////////////////////////////////////
@@ -108,7 +108,7 @@ private:
     GLuint m_vboSegments; // vertex buffer object
 
     std::vector<Vertex> m_verticesSegments;
-    std::vector<uint16_t> m_indicesSegments;
+    std::vector<uint32_t> m_indicesSegments;
     size_t m_maxVBOSizeSegments = 0;
     size_t m_highestIBOSizeSegments = 0;
     //////////////////////////////////////////////////////////////

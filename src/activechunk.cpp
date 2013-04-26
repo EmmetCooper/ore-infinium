@@ -59,11 +59,8 @@ m_blocks(blocks),
 m_box2DWorld(box2DWorld)
 {
     //create all tile physics objects within this area. pos is in chunk indices.
-    Debug::log(Debug::StartupArea) << "active chunk ctor, row: " << row << " column: " << column;
     int centerTileX = column * ACTIVECHUNK_SIZE;
     int centerTileY = row * ACTIVECHUNK_SIZE;
-    Debug::log(Debug::StartupArea) << "centertilex: " << centerTileX << "y: " << centerTileY;
-    Debug::log(Debug::StartupArea) << "given row (in chunk indices): " << row << " col: " << column;
 
     //tile indexes
     //FIXME: HACK obviously

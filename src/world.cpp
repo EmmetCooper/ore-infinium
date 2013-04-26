@@ -231,12 +231,8 @@ void World::updateTilePhysicsObjects()
         // bottom-right end
         glm::ivec2 end = glm::ivec2(glm::min(centerTile + tilesInViewport, glm::ivec2(WORLD_COLUMNCOUNT - ACTIVECHUNK_SIZE, WORLD_ROWCOUNT - ACTIVECHUNK_SIZE)));
 
-        Debug::log(Debug::StartupArea) << "creating desired chunks, center tile x: " << centerTile.x << " y: " << centerTile.y;
-        Debug::log(Debug::StartupArea) << "activechunk startx: " << start.x << " start.y: " << start.y << " endx: " << end.x << " endy: " << end.y;
-
         for (int currentRow = start.y; currentRow < end.y; currentRow += ACTIVECHUNK_SIZE) {
             for (int currentColumn = start.x; currentColumn < end.x; currentColumn += ACTIVECHUNK_SIZE) {
-                Debug::log(Debug::StartupArea) << "creating desired chunks, current row: " << currentRow << " column: " << currentColumn;
 
                 DesiredChunk desiredChunk(currentRow / ACTIVECHUNK_SIZE, currentColumn / ACTIVECHUNK_SIZE);
                 desiredChunks.push_back(desiredChunk);
