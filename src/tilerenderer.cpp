@@ -292,7 +292,6 @@ void TileRenderer::render()
 
     m_shader->bindProgram();
 
-
     Debug::checkGLError();
 //    Debug::log() << "RENDERING TILECOUNT: " << m_tileCount;
 

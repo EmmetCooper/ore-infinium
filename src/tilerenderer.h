@@ -79,9 +79,6 @@ private:
     /// the 3D tilemap texture, whose z texcoord indicates which tile type it is.
     int m_tileSheetCount = 0;
     GLuint m_tileMapTexture;
-    GLint m_texture_location;
-
-    GLuint m_spriteSheetTexture = 0;
 
     GLuint m_fbo = 0;
     GLuint m_fboTexture = 0;
