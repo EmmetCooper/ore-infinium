@@ -57,89 +57,94 @@
     <h3>Why is it?</h3>
 
     <p>
-    It is a project that is open source from the very beginning, as improving upon
+    It is a project that is open source , which aims at improving upon
     the neat ideas that Terraria introduced to the world when it released,
     taking input and help from the community, and making our ideas a reality.
+
+    It is planned to be most interested in exploring the avenue that is
+    available through science. So features that encourage base building and
+    various gadgets/contraptions that really prolong the fun factor and the
+    replayability.
+
+    For instance, it will be focused on wiring/electricity and liquid plumbing.
+    So generators whether solar or coal or geothermal (and more..) can power a
+    base with all of its electrical lighting, electric doors, water/lava pumps,
+    traps, switches, sensors, and so on.
+
+    But when the player first starts out, they are practically in the stone age,
+    having to rely on torches until finally creating electrical devices.
     <br>
 
     <br>
 
-    It is written in SDL (just for audio, input and OpenGL context), OpenGL
-    and C++, so is cross-platform and very fast (I use all hardware
-    accelerated rendering)
+    It is written in C++, SDL, and OpenGL 3.2.
+    So it's cross-platform and very fast.
     <br>
 
     <ul>
-    <li>It will have modding capabilities</li><br>
+    <li>It will eventually have modding capabilities, but this isn't on the
+agenda right now</li><br>
 
-    <li>It will have loads of features that I missed and I'm sure some others have as well.</li><br>
+    <li>It's an ongoing project, not an end goal, so the focus is not on just
+rushing and implementing horrendous code just so it works, but thinking of the
+future and how future code will affect what is written.</li><br>
 
-    <li>It's an ongoing project, not an end goal. And in the event that I get hit by a bus tomorrow, feel free to fork it and pick it up!</li><br>
+    <li>Cross-platform (Windows, Linux, Mac OS X, with long-term plans for
+Android, for tablets as that seems like a fun adventure)</li><br>
 
-    <li>Cross-platform (Windows, Linux, Mac OS X, with long-term plans for Android)</li><br>
-
-    <li>Many, many features are planned that people only dreamed of for Terraria to have.</li><br>
-
-    <li>Community driven. I'm very open to code reviews, patches, and constructive criticism, bug and feature requests, etc.</li><br>
+    <li>Community driven. Very open to code reviews, patches, and constructive criticism, bug and feature requests, etc.</li><br>
     </ul>
     </p>
 
     <h3>What license is it under?</h3>
     <p>
+    The code is presently under GPLv2+ as that seems to be the licence
+    we like the most.
+
     All assets are required (by me ;) to be under a Free and Open license.
 
-    The code is presently under GPLv2+ as that seems to be the licence
-    I like the most.
     </p>
 
     <h3>What platforms will it run on?</h3>
 
     <p>
-    The goal initially is to make it run on Linux/Unixen, Mac OS X and Windows.
+    It will run on Linux, Mac OS X and Windows, with future plans for Android
+tablets.
     <br>
-    I don't want to force anyone onto a platform just to play our game.
+    We don't want to force anyone onto a platform just to play our game.
     <br>
 
-    I would love to see it run on Android for instance. But for this to happen
-    I'd need to run through all of my code base and make sure it runs just fine
-    on OpenGL ES 2.0. Not to mention compiles and all my dependencies work on it.
+    It'd be awesome to see it run on Android for instance. But for this to happen
+    we'd need to run through all of my code base and make sure it runs just fine
+    on OpenGL ES 2.0. Not to mention compiles and all the dependencies work on it.
+    Then of course, we'd need a tablet. ;)
     <br>
 
     In theory it should work just fine, and just require a bit of OpenGL tweaking
-    for it (an official port with a proper Android interface notwithstanding).
+    for it (an official port with a proper Android user interface notwithstanding).
     <br>
 
-    I'll worry about getting more into porting to Android after I get something
-    usable on the desktop. Patches welcome ;-)
     </p>
 
     <h3>Current Status</h3>
     <p>
     The project is very, very preliminary right now. If there was a word for
-    pre-alpha, I would use it to describe this.
+    pre-alpha, we would use it to describe this.
 
     <br>
-    But of course, it's progressing quite quickly over just the few weeks it has
-    existed
-
     <br>
     <ul>
     <li>
-    I did have a working tilemap rendering fragment shader..which uses some neat
-    tricks to render it all in super fast manner.
     </li>
 
     <li>
-    And as I'm typing this, I'm researching on how to further revamp the tilemap
-    renderer, and implement the background (underground, and walls), in addition
-    to making the foreground tiles meshable (cleanly, seamless).
-
     <br>
-    The design I'm planning on allows for *a lot* more flexibility than Terraria
-    had. It means that not only is it fast and efficient on hardware, which gives me
-    breathing room to add more features whereever I can, but tiles blend together
+    The design that is in progress, allows for *a lot* more flexibility than Terraria
+    had. It means that not only is it fast and efficient on hardware, which gives
+    breathing room to add more features whereever we can, but tiles blend together
     very nicely based on neighboring tiles. This means that Worlds can be totally
-    different in design, but still look great.
+    different in design, but still look great but without an extra burden on art
+    design since it is done through code
     </li>
     </ul>
 
@@ -151,9 +156,7 @@
 
     <ul>
     <li>
-    Merge requests/patches. They will need to match my coding style, which isn't too
-    difficult (and there's an astyle script at the root directory for ease of use).
-    And of course, fix the issue.
+    Merge requests/patches.
 
     <br>
     I love features, so chances are I'm going to accept
@@ -163,7 +166,7 @@
     have to be released under a free license.
     </li><br>
 
-    <li>Coding style:  http://techbase.kde.org/Policies/Kdelibs_Coding_Style use astyle.sh file to automatically format everything to this. I'll do so ruthlessly every so often. I'd rather have clean code than easy history</li><br>
+    <li>Coding style:  http://techbase.kde.org/Policies/Kdelibs_Coding_Style use astyle.sh file to automatically format everything to this. I'll do so every so often. I'd rather have clean code than easy history</li><br>
 
     <li>Edit the Wiki on here (github)!</li><br>
 
@@ -184,11 +187,11 @@
     <h3>How do I install it?</h3>
 
     <p>
-    Read the INSTALL file and it will show all the dependencies I use and where to
+    Read the INSTALL file and it will show all the dependencies that are in use and where to
     get them, and hopefully how to install them ;-)
     <br>
 
-    After this is installed and you have followed their directions, to get my code,
+    After this is installed and you have followed their directions, to get the code,
     you can either click download the zip, or run `git clone git://github.com/sreich/ore-infinium.git`
     <br>
 
@@ -201,27 +204,21 @@
     <p>
     <ul>
 
-    <li>SDL 2.x (yet unreleased) (and SDL_mixer)</li><br>
+    <li>SDL 2.x (yet unreleased, expected in May 2013)</li><br>
 
-    <li>Platform of Windows, Linux/Unix, Mac OS X</li><br>
+    <li>Platform of Windows, Linux/Unix or Mac OS X</li><br>
 
     <li>
-    Minimum RAM of 250 MiB. Ore Infinium  uses so far.. an average of 60 MiB RES.
-    <br>
-    This will change with world size, since we don't have chunk based loading
-    (yet?), Currently the size of the Block class is 2 bytes (2 unsigned chars).
-    Which means for a 8400x2600 map (the default, soft minimum), (8400 \* 2600 \*
-    2 bytes = ~44 MiB). 
-    <br>
-    Presently, to run the game it's about 60MiB of RAM usage on
-    average. Subject to change, of course.
+    Minimum RAM of 500 MiB.
     </li><br>
+    <br>
 
     <li>
-    GPU and drivers capable of OpenGL 3.2+ (and hopefully OpenGL ES 2.0).
+    GPU and drivers capable of OpenGL 3.2+, which all cards within the past
+    several years support it just fine.
     <br>
     In other words, if your GPU/drivers say DirectX 10+ capable, or you can run
-    DirectX 10+ games then that will work.
+    DirectX 10+ games then that should work just fine.
     </li><br>
 
     </ul>
@@ -237,8 +234,6 @@
     Of course, nothing is in stone.
 
     <ul>
-    <li>Multiplayer (obviously, a must ;)</li><br>
-
     <li>Dungeons</li><br>
 
     <li>
@@ -260,26 +255,26 @@
     NPCs/merchants you can "place" in your home.
     </li><br>
 
-    <li>Teleporters/Portals! Seriously. This is a definite todo in my mind.</li><br>
+    <li>Teleporters! Seriously. This is a definite todo.</li><br>
 
     <li>
-    Crafting system more simlar to Minecraft? Would people like that? Personally,
-    I was not much of a fan for Terraria's crafting.
+    Crafting system more similar to Minecraft, but built-in database of recipes
+    so that it is easy to find what you need.
     </li><br>
 
     <li>
     Menu system (HUD) that is easy to navigate. A lot of games suffer from that
-    issue once they introduce crafting. The GUI/HUD will also be
-    customizable/fully moddable, by YAML, which is a simple text format, and images.
+    issue once they introduce crafting.
     </li><br>
 
     <li>
     Full modding support (another must). This will have to be a later feature
-    though of course, until I get a good amount of content into the game.
+    though of course, until there is a good amount of content into the game and
+    mistakes of design have been made and learned from.
     </li><br>
 
     <li>
-    Android and in general, a mobile port? This is very much long term though. Also, I don't have a tablet.
+    Android and in general, a mobile port. This is very much long term though. Also, I don't have a tablet.
     </li><br>
 
     <li>
@@ -303,51 +298,5 @@
     </ul>
 
     </p>
-
-
-
-
-
-
-
-
-
-
-
-<!--
-        <h3>Welcome to GitHub Pages.</h3>
-
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
-
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
-
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
-
-<h3>Designer Templates</h3>
-
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
-
-<h3>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
-
-    </div>
-
-    <!--[if !IE]><script>fixScale(document);</script>
-
-    <!-->
-
   </body>
 </html>
