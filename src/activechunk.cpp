@@ -85,8 +85,6 @@ m_mainTileBody(mainTileBody)
                 continue;
             }
 
-//            bodyDef.position.Set(Block::BLOCK_SIZE * float(currentColumn) + (Block::BLOCK_SIZE * 0.5f), Block::BLOCK_SIZE * float(currentRow) + (Block::BLOCK_SIZE * 0.5f));
-
             b2Vec2 pos = b2Vec2(Block::BLOCK_SIZE * float(currentColumn) + (Block::BLOCK_SIZE * 0.5f), Block::BLOCK_SIZE * float(currentRow) + (Block::BLOCK_SIZE * 0.5f));
 
             ContactListener::BodyUserData* userData = new ContactListener::BodyUserData();
@@ -110,68 +108,13 @@ m_mainTileBody(mainTileBody)
     }
 }
 
-/*
- b 2BodyDef bodyDef;                                                     *
- bodyDef.type = b2_dynamicBody;
- bodyDef.position.Set(position.x, position.y);
-
- m_body = world->box2DWorld()->CreateBody(&bodyDef);
- // sleeping doesn't make sense for a player body.
- m_body->SetSleepingAllowed(false);
-
- ContactListener::BodyUserData* userData = new ContactListener::BodyUserData();
- userData->type = ContactListener::BodyType::Player;
- userData->data = this;
- m_body->SetUserData(userData);
-
- b2CircleShape circleShape;
- circleShape.m_radius = 0.3f;
-
- // create main body's fixture
- b2FixtureDef fixtureDef;
- fixtureDef.shape = &circleShape;
- fixtureDef.density = 1.0f;
- fixtureDef.friction = 0.0f;
-
- m_body->CreateFixture(&fixtureDef);
-
- //////////// LOWER BODY
-
- b2CircleShape lowerCircleShape;
- b2FixtureDef lowerCircleDef;
- lowerCircleDef.shape = &lowerCircleShape;
- lowerCircleDef.friction = 0.0f;
-
- lowerCircleShape.m_radius = 0.3f;
- lowerCircleShape.m_p = b2Vec2(0.0f, 0.1f);
-
- m_body->CreateFixture(&lowerCircleDef);
-
- ///////// FOOT
-
- b2PolygonShape footBox;
- b2FixtureDef footSensorFixtureDef;
- footSensorFixtureDef.shape = &footBox;
- footSensorFixtureDef.isSensor = true;
- footBox.SetAsBox(0.2, 0.1, b2Vec2(0.0f, 0.4f), 0.0f);
-
- b2Fixture* footSensorFixture = m_body->CreateFixture(&footSensorFixtureDef);
-
- ContactListener::BodyUserData* userDataFoot = new ContactListener::BodyUserData();
- userDataFoot->type = ContactListener::BodyType::PlayerFootSensor;
- userDataFoot->data = this;
- footSensorFixture->SetUserData(userDataFoot);
-
- ////////////////////////////////////////////////////////////////////////
- */
-
 ActiveChunk::~ActiveChunk()
 {
     for (b2Fixture* fixture : m_tileFixtures) {
         // delete all tile physics objects within this chunk
-//        delete static_cast<ContactListener::BodyUserData*>(fixture->GetUserData());
-//        m_mainTileBody->DestroyFixture(fixture);
+        delete static_cast<ContactListener::BodyUserData*>(fixture->GetUserData());
+        m_mainTileBody->DestroyFixture(fixture);
     }
 
-//    m_tileFixtures.clear();
+    m_tileFixtures.clear();
 }
