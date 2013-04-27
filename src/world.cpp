@@ -283,51 +283,6 @@ void World::updateTilePhysicsObjects()
     }
 }
 
-    /*
-    const glm::vec2 position = player->position();
-
-    float blockSize = Block::BLOCK_SIZE;
-    int centerTileX = int((position.x / blockSize));
-    int centerTileY = int((position.y / blockSize));
-
-    //tile indexes
-    //FIXME: HACK obviously
-    int startRow = centerTileY - 20;
-    int endRow = startRow + 60;
-    int startColumn = centerTileX - 50;
-    int endColumn = startColumn + 100;
-
-    glm::ivec2 previousTileRangeStart = player->activeTileRangeStart;
-    glm::ivec2 previousTileRangeEnd = player->activeTileRangeEnd;
-
-    player->activeTileRangeStart = glm::ivec2(startColumn, startRow);
-    player->activeTileRangeEnd = glm::ivec2(endColumn, endRow);
-
-    //player viewport unchanged; optimization
-    if (player->activeTileRangeStart == previousTileRangeStart && player->activeTileRangeEnd == previousTileRangeEnd) {
-            return;
-    }
-
-    b2AABB aabb;
-    aabb.lowerBound = b2Vec2((Block::BLOCK_SIZE * (startColumn)) + (Block::BLOCK_SIZE * 0.5), Block::BLOCK_SIZE * (startRow) + (Block::BLOCK_SIZE * 0.5));
-    aabb.upperBound = b2Vec2((Block::BLOCK_SIZE * (endColumn)) + (Block::BLOCK_SIZE * 0.5), Block::BLOCK_SIZE * (endRow)+ (Block::BLOCK_SIZE * 0.5));
-
-    m_queryCallback->setBodySearchType(ContactListener::BodyType::Block);
-    m_box2DWorld->QueryAABB(m_queryCallback, aabb);
-
-    int count = 0;
-    int index = 0;
-
-    for (auto* fixture :m_queryCallback->fixtures()) {
-
-//            Debug::log(Debug::ServerEntityLogicArea) << "FIXTURE CALLBCK delete tile objects: " <<  m_queryCallback->bodiesAtPoint(aabb.lowerBound).size();
-            //be sure to delete our body marker
-        b2Body* b = fixture->GetBody();
-        delete static_cast<ContactListener::BodyUserData*>(b->GetUserData());
-        m_box2DWorld->DestroyBody(b);
-    }
-    */
-
 Entities::Player* World::findPlayer(uint32_t playerID)
 {
     for (auto * player : m_players) {
