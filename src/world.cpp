@@ -108,27 +108,12 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
         m_queryCallback = new QueryCallback(m_box2DWorld);
 
-
         b2BodyDef bodyDef;
         bodyDef.type = b2_staticBody;
-        bodyDef.position.Set(0.0f, 0.0f); //FIXME: needed? + (Block::BLOCK_SIZE * 0.5f), 0.0f + (Block::BLOCK_SIZE * 0.5f));
+//        bodyDef.position.Set(0.0f, 0.0f); //FIXME: needed? + (Block::BLOCK_SIZE * 0.5f), 0.0f + (Block::BLOCK_SIZE * 0.5f));
+        bodyDef.position.Set(0.0f + (Block::BLOCK_SIZE * 0.5f), 0.0f + (Block::BLOCK_SIZE * 0.5f));
 
         m_mainTileBody = m_box2DWorld->CreateBody(&bodyDef);
-
-        /*
-        b2BodyDef groundBodyDef;
-        groundBodyDef.position.Set(pixelsToMeters(0.0f), pixelsToMeters(2000.0f));//pixelsToMeters(1000));
-
-        b2Body* groundBody = m_box2DWorld->CreateBody(&groundBodyDef);
-
-        b2PolygonShape groundBox;
-        const float groundHeight = 2200.0f;
-        const float groundWidth = 2200.0f;
-//        groundBox.SetAsBox(pixelsToMeters(groundWidth / 2.0f), pixelsToMeters(groundHeight / 2.0f));
-        groundBox.SetAsBox(pixelsToMeters(2500), pixelsToMeters(50));
-
-        groundBody->CreateFixture(&groundBox, 0.0f);
-        */
 
         b2Vec2 halfWorld(Block::BLOCK_SIZE * WORLD_COLUMNCOUNT * 0.5f, Block::BLOCK_SIZE * WORLD_ROWCOUNT * 0.5f);
         m_torchesQuadTree = new QuadTree(nullptr, halfWorld, halfWorld);
@@ -819,13 +804,14 @@ void World::destroyTilePhysicsObject(uint32_t column, uint32_t row)
     aabb.lowerBound = b2Vec2((Block::BLOCK_SIZE * (column)) + (Block::BLOCK_SIZE * 0.5), Block::BLOCK_SIZE * (row) + (Block::BLOCK_SIZE * 0.5));
     aabb.upperBound = b2Vec2((Block::BLOCK_SIZE * (column)) + (Block::BLOCK_SIZE * 0.5), Block::BLOCK_SIZE * (row)+ (Block::BLOCK_SIZE * 0.5));
 
-    m_queryCallback->setBodySearchType(ContactListener::BodyType::Block);
+    m_queryCallback->setFixtureSearchType(ContactListener::BodyType::Block);
     m_box2DWorld->QueryAABB(m_queryCallback, aabb);
+
 //    Debug::log(Debug::ServerEntityLogicArea) << "FIXTURE CALLBCK COUNT: " <<  m_queryCallback->bodiesAtPoint(aabb.lowerBound).size();
-    for (auto* b : m_queryCallback->bodiesAtPoint(aabb.lowerBound)) {
+    for (auto* fixture : m_queryCallback->fixturesAtPoint(aabb.lowerBound)) {
         //be sure to delete our body marker
-        delete static_cast<ContactListener::BodyUserData*>(b->GetUserData());
-        m_box2DWorld->DestroyBody(b);
+        delete static_cast<ContactListener::BodyUserData*>(fixture->GetUserData());
+        m_mainTileBody->DestroyFixture(fixture);
     }
 }
 

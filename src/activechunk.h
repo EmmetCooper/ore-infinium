@@ -25,6 +25,7 @@
 
 class b2World;
 class b2Body;
+class b2Fixture;
 
 struct DesiredChunk
 {
@@ -54,7 +55,7 @@ public:
     uint32_t refcount = 1;
 
 private:
-    std::vector<b2Body*> m_tileBodies;
+    std::vector<b2Fixture*> m_tileFixtures;
     std::vector<Block>* m_blocks = nullptr;
     b2World* m_box2DWorld = nullptr;
     b2Body* m_mainTileBody = nullptr;
