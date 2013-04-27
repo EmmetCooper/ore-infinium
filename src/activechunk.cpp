@@ -98,6 +98,7 @@ m_box2DWorld(box2DWorld)
             userData->data = &m_blocks[index];
 
             body->SetUserData(userData);
+
             b2PolygonShape box;
             box.SetAsBox(Block::BLOCK_SIZE * 0.5f , Block::BLOCK_SIZE * 0.5f);
 
@@ -116,6 +117,9 @@ ActiveChunk::~ActiveChunk()
 {
     for (b2Body* body : m_tileBodies) {
         // delete all tile physics objects within this chunk
+        delete static_cast<ContactListener::BodyUserData*>(body->GetUserData());
         m_box2DWorld->DestroyBody(body);
     }
+
+    m_tileBodies.clear();
 }

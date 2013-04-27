@@ -237,7 +237,6 @@ void World::updateTilePhysicsObjects()
 //    Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE pre-removal: " << desiredChunks.size();
  //   Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE post-removal: " << desiredChunks.size();
 
-
     // set all refcounts to 0
     for (auto& activeChunk : m_activeChunks) {
         activeChunk.second->refcount = 0;
