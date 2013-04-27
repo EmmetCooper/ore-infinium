@@ -110,8 +110,8 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
         b2BodyDef bodyDef;
         bodyDef.type = b2_staticBody;
-//        bodyDef.position.Set(0.0f, 0.0f); //FIXME: needed? + (Block::BLOCK_SIZE * 0.5f), 0.0f + (Block::BLOCK_SIZE * 0.5f));
-        bodyDef.position.Set(0.0f + (Block::BLOCK_SIZE * 0.5f), 0.0f + (Block::BLOCK_SIZE * 0.5f));
+        bodyDef.position.Set(0.0f, 0.0f); //FIXME: needed? + (Block::BLOCK_SIZE * 0.5f), 0.0f + (Block::BLOCK_SIZE * 0.5f));
+//        bodyDef.position.Set(0.0f + (Block::BLOCK_SIZE * 0.5f), 0.0f + (Block::BLOCK_SIZE * 0.5f));
 
         m_mainTileBody = m_box2DWorld->CreateBody(&bodyDef);
 
