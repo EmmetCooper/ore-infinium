@@ -47,6 +47,7 @@ find_package(FreeImage)
 find_package(YamlCpp)
 
 find_package(Box2D)
+find_package(Chipmunk)
 
 find_package(GLM)
 find_package(LibRocket)
@@ -74,6 +75,9 @@ set_package_properties(FreeImage PROPERTIES TYPE REQUIRED PURPOSE "For loading t
 
 set_package_properties(Box2D PROPERTIES DESCRIPTION "Box2D open source 2D iterative solver physics engine" URL "")
 set_package_properties(Box2D PROPERTIES TYPE REQUIRED PURPOSE "I use it for everything collision-wise in the game.")
+
+set_package_properties(Chipmunk PROPERTIES DESCRIPTION "Chipmunk open source 2D physics engine" URL "")
+set_package_properties(Chipmunk PROPERTIES TYPE REQUIRED PURPOSE "I use it for everything collision-wise in the game.")
 
 set_package_properties(LibRocket PROPERTIES DESCRIPTION "LibRocket Cross-Platform GUI library that is described with CSS and HTML" URL "")
 set_package_properties(LibRocket PROPERTIES TYPE REQUIRED PURPOSE "For our game's user interface (inventory, game menu, etc.)")
