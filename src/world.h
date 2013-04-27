@@ -212,6 +212,7 @@ private:
     // [column * WORLD_ROWCOUNT + row]
     std::vector<Block> m_blocks;
     std::map<DesiredChunk, ActiveChunk*> m_activeChunks;
+    b2Body* m_mainTileBody = nullptr;
 
     TileRenderer* m_tileRenderer = nullptr;
     LightRenderer* m_lightRenderer = nullptr;

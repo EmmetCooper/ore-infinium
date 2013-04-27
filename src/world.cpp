@@ -108,6 +108,13 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
         m_queryCallback = new QueryCallback(m_box2DWorld);
 
+
+        b2BodyDef bodyDef;
+        bodyDef.type = b2_staticBody;
+        bodyDef.position.Set(0.0f, 0.0f); //FIXME: needed? + (Block::BLOCK_SIZE * 0.5f), 0.0f + (Block::BLOCK_SIZE * 0.5f));
+
+        m_mainTileBody = m_box2DWorld->CreateBody(&bodyDef);
+
         /*
         b2BodyDef groundBodyDef;
         groundBodyDef.position.Set(pixelsToMeters(0.0f), pixelsToMeters(2000.0f));//pixelsToMeters(1000));
@@ -154,17 +161,45 @@ World::~World()
 {
     delete m_tileRenderer;
     delete m_spriteSheetRenderer;
+    delete m_lightRenderer;
     //    delete m_sky;
 
+    for (auto* torch : m_torches) {
+        delete torch;
+    }
+    m_torches.clear();
+
+    m_blocks.clear();
+
+    for (auto it : m_activeChunks) {
+        delete it.second;
+    }
+    m_activeChunks.clear();
+
+    for (auto* entity : m_entities) {
+        delete entity;
+    }
+    m_entities.clear();
+
+    delete m_blockPickingCrosshair;
+    delete m_mainPlayer;
+    delete m_torchesQuadTree;
+
+    for (auto* player : m_players) {
+        delete player;
+    }
+    m_players.clear();
+
+    m_box2DWorld->DestroyBody(m_mainTileBody);
     delete m_box2DWorld;
     delete m_contactListener;
     delete m_queryCallback;
+
     delete m_camera;
 }
 
 void World::addPlayer(Entities::Player* player)
 {
-
     m_players.push_back(player);
 
     if (m_server) {
@@ -248,7 +283,7 @@ void World::updateTilePhysicsObjects()
         auto it = m_activeChunks.find(d);
         if (it== m_activeChunks.end()) {
             // active chunk does not exist, create it!
-            ActiveChunk* activeChunk = new ActiveChunk(d.row, d.column, &m_blocks, m_box2DWorld);
+            ActiveChunk* activeChunk = new ActiveChunk(d.row, d.column, &m_blocks, m_box2DWorld, m_mainTileBody);
             m_activeChunks[d] = activeChunk;
         } else {
             it->second->refcount += 1;

@@ -46,7 +46,7 @@ public:
     /**
      * @p row @p column are in active chunk indexes (tilemap index divided by ACTIVECHUNK_SIZE)
      */
-    ActiveChunk(uint32_t row, uint32_t column, std::vector<Block>* blocks, b2World* box2DWorld);
+    ActiveChunk(uint32_t row, uint32_t column, std::vector<Block>* blocks, b2World* box2DWorld, b2Body* mainTileBody);
     ~ActiveChunk();
 
 
@@ -57,6 +57,7 @@ private:
     std::vector<b2Body*> m_tileBodies;
     std::vector<Block>* m_blocks = nullptr;
     b2World* m_box2DWorld = nullptr;
+    b2Body* m_mainTileBody = nullptr;
 };
 
 #endif

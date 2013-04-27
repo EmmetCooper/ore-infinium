@@ -54,9 +54,10 @@ bool DesiredChunk::operator<(const DesiredChunk& rhs) const
     return false;
 }
 
-ActiveChunk::ActiveChunk(uint32_t row, uint32_t column, std::vector<Block>* blocks, b2World* box2DWorld) :
+ActiveChunk::ActiveChunk(uint32_t row, uint32_t column, std::vector<Block>* blocks, b2World* box2DWorld, b2Body* mainTileBody) :
 m_blocks(blocks),
-m_box2DWorld(box2DWorld)
+m_box2DWorld(box2DWorld),
+m_mainTileBody(mainTileBody)
 {
     //create all tile physics objects within this area. pos is in chunk indices.
     int centerTileX = column * ACTIVECHUNK_SIZE;
