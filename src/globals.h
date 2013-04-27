@@ -12,6 +12,6 @@
     static constexpr float MAX_VIEWPORT_HEIGHT = 200.0f;
 
     /// ACTIVECHUNK_SIZE^2 == total tiles within chunk
-    static constexpr uint32_t ACTIVECHUNK_SIZE = 64;
+    static constexpr uint32_t ACTIVECHUNK_SIZE = 16;
 
 #endif
