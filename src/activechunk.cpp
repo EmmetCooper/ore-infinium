@@ -106,6 +106,7 @@ m_mainTileBody(mainTileBody)
             m_tileFixtures.push_back(fixture);
         }
     }
+    Debug::log(Debug::StartupArea) << "ACTIVE CHUNK CTOR, tile object count: " << m_tileFixtures.size();
 }
 
 ActiveChunk::~ActiveChunk()
@@ -117,4 +118,5 @@ ActiveChunk::~ActiveChunk()
     }
 
     m_tileFixtures.clear();
+    Debug::log(Debug::StartupArea) << "ACTIVE CHUNK DTOR, tile object count: " << m_tileFixtures.size();
 }
