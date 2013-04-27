@@ -66,9 +66,9 @@ m_mainTileBody(mainTileBody)
     //tile indexes
     //FIXME: HACK obviously
     int startRow = centerTileY;
-    int endRow = centerTileY + 80;
+    int endRow = centerTileY + 40;
     int startColumn = centerTileX;
-    int endColumn = centerTileX + 80;
+    int endColumn = centerTileX + 40;
 
     int count = 0;
     int index = 0;
