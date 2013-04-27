@@ -137,6 +137,10 @@ bool QueryCallback::ReportFixture(b2Fixture* fixture)
 {
     Debug::log(Debug::ServerEntityLogicArea) << "FIXTURE REPORTING";
 
+    if (fixture->GetUserData() == nullptr) {
+        return true;
+    }
+
    ContactListener::BodyUserData* userData = static_cast<ContactListener::BodyUserData*>(fixture->GetUserData());
 
    if (userData->type == m_searchType) {
