@@ -43,6 +43,8 @@
 #include "activechunk.h"
 
 #include <Box2D/Box2D.h>
+#include <chipmunk.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -119,6 +121,42 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
         if (m_server->client()) {
             m_server->client()->setBox2DWorld(m_box2DWorld);
+        }
+
+        cpVect gravity = cpv(0, -100);
+        m_cpSpace = cpSpaceNew();
+        cpSpaceSetGravity(m_cpSpace, gravity);
+
+        std::random_device device;
+        std::mt19937 rand(device());
+        std::uniform_int_distribution<> distribution(0, 1000000);
+
+        distribution(rand);
+
+        cpShape *ground = cpSegmentShapeNew(m_cpSpace->staticBody, cpv(-20, 5), cpv(20, -5), 0);
+        cpShapeSetFriction(ground, 1);
+        cpSpaceAddShape(m_cpSpace, ground);
+
+        cpFloat mass = 1;
+        cpFloat radius = 5;
+        cpFloat moment = cpMomentForCircle(mass, 0, radius, cpvzero);
+
+        m_body = cpSpaceAddBody(m_cpSpace, cpBodyNew(mass, moment));
+        cpBodySetPos(m_body, cpv(distribution(rand), -1000));
+
+        cpShape *ballShape = cpSpaceAddShape(m_cpSpace, cpCircleShapeNew(m_body, radius, cpvzero));
+        cpShapeSetFriction(ballShape, 0.7);
+        cpBodySleep(m_body);
+
+        int max = 600000;
+        for (int i = 0; i < max; ++i) {
+            cpShape *ballShape = cpCircleShapeNew(m_cpSpace->staticBody , radius, cpv(distribution(rand), distribution(rand)));
+            cpSpaceAddShape(m_cpSpace, ballShape);
+            cpShapeSetFriction(ballShape, 0.7);
+
+            if (i == max - 1) {
+                Debug::log(Debug::StartupArea) << "BALL: " << cpShapeGetBB(ballShape).r;
+            }
         }
 
         loadWorld();
@@ -366,6 +404,7 @@ void World::update(double elapsedTime)
         updateTilePhysicsObjects();
 
         m_box2DWorld->Step(FIXED_TIMESTEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+        cpSpaceStep(m_cpSpace, FIXED_TIMESTEP);
     }
 
     //    m_sky->update(elapsedTime);   glm::vec2 mouse = m_mainPlayer->mousePositionWorldCoords();
