@@ -238,9 +238,9 @@ void Client::render(double frameTime)
     // only a client-hosted server has a chance of seeing any debug shit
     if (m_server) {
         if (!m_physicsDebugRenderer && m_box2DWorld && m_world && m_world->spriteSheetRenderer()) {
-            m_physicsDebugRenderer = new PhysicsDebugRenderer(m_world->spriteSheetRenderer()->camera());
+ //           m_physicsDebugRenderer = new PhysicsDebugRenderer(m_world->spriteSheetRenderer()->camera());
             // physics debug renderer first init...
-      //      m_box2DWorld->SetDebugDraw(m_physicsDebugRenderer);
+//            m_box2DWorld->SetDebugDraw(m_physicsDebugRenderer);
         }
 
         if (m_box2DWorld && m_physicsDebugRenderer) {
