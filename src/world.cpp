@@ -148,6 +148,11 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         cpShapeSetFriction(ballShape, 0.7);
         cpBodySleep(m_body);
 
+
+        ////////////////////////
+
+
+        /*
         int max = 600000;
         for (int i = 0; i < max; ++i) {
             cpShape *ballShape = cpCircleShapeNew(m_cpSpace->staticBody , radius, cpv(distribution(rand), distribution(rand)));
@@ -158,6 +163,7 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
                 Debug::log(Debug::StartupArea) << "BALL: " << cpShapeGetBB(ballShape).r;
             }
         }
+        */
 
         loadWorld();
         //HACK, as if that wasn't obvious.
@@ -270,6 +276,10 @@ void World::updateTilePhysicsObjects()
 
     for (Entities::Player* player : m_players) {
         // mark which chunks we want to be activated within this players viewport
+
+            cpShape *ballShape = cpCircleShapeNew(m_cpSpace->staticBody , 5.0f, cpv(player->position().x, player->position().y));
+            cpSpaceAddShape(m_cpSpace, ballShape);
+            cpShapeSetFriction(ballShape, 0.7);
 
         float blockSize = Block::BLOCK_SIZE;
         glm::ivec2 centerTile = glm::ivec2(int(ceil(player->position().x / blockSize)), int(ceil(player->position().y / blockSize)));

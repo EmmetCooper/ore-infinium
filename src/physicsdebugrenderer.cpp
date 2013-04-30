@@ -25,13 +25,13 @@ PhysicsDebugRenderer *s_instance = nullptr;
 PhysicsDebugRenderer::PhysicsDebugRenderer(Camera* camera)
 {
     s_instance = this;
-    m_shader = new Shader("physicsdebugrenderer.vert", "physicsdebugrenderer.frag");
-    m_shader->bindProgram();
-    setCamera(camera);
-
-    Debug::checkGLError();
-    initGL();
-    Debug::checkGLError();
+//    m_shader = new Shader("physicsdebugrenderer.vert", "physicsdebugrenderer.frag");
+//    m_shader->bindProgram();
+//    setCamera(camera);
+//
+//    Debug::checkGLError();
+//    initGL();
+//    Debug::checkGLError();
 }
 
 PhysicsDebugRenderer::~PhysicsDebugRenderer()

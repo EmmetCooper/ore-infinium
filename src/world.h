@@ -139,6 +139,10 @@ public:
         return m_box2DWorld;
     }
 
+    cpSpace* cpWorldSpace() {
+        return m_cpSpace;
+    }
+
     //create containers of various entities, and implement a tile system
     //game.cpp calls into this each tick, which this descends downward into each entity
 private:

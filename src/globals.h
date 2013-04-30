@@ -8,8 +8,8 @@
     //FIXME: find good values for this. Basically this is as far out as *anyone* can see when they zoom out, regardless of resolution they will all only be able to see
     // this many blocks out.
     // units are just tile counts, not in meters, just number of tiles.
-    static constexpr float MAX_VIEWPORT_WIDTH = 20.0f;
-    static constexpr float MAX_VIEWPORT_HEIGHT = 20.0f;
+    static constexpr float MAX_VIEWPORT_WIDTH = 200.0f;
+    static constexpr float MAX_VIEWPORT_HEIGHT = 200.0f;
 
     /// ACTIVECHUNK_SIZE^2 == total tiles within chunk
     static constexpr uint32_t ACTIVECHUNK_SIZE = 2;
