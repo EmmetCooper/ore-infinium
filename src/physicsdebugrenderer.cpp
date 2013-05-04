@@ -20,7 +20,7 @@
 #include "world.h"
 #include "settings/settings.h"
 
-PhysicsDebugRenderer *s_instance = nullptr;
+static PhysicsDebugRenderer *s_instance = nullptr;
 
 PhysicsDebugRenderer::PhysicsDebugRenderer(Camera* camera)
 {
@@ -425,10 +425,17 @@ void PhysicsDebugRenderer::DrawTransform(const b2Transform& xf)
 
 void PhysicsDebugRenderer::render()
 {
-    renderSolidPolygons();
-    renderSolidCircles();
-    renderPolygons();
-    renderSegments();
+    m_mutex.lock();
+
+//    renderSolidPolygons();
+//    renderSolidCircles();
+//    renderPolygons();
+//    renderSegments();
+
+    Debug::log(Debug::StartupArea) << "PHYS DEBUG RENDERER, shape count prior to clear: " << m_shapes.size();
+    m_shapes.clear();
+
+    m_mutex.unlock();
 }
 
 void PhysicsDebugRenderer::renderPolygons()
@@ -680,24 +687,23 @@ static const int circleVAR_count = sizeof(circleVAR)/sizeof(GLdouble)/2;
 
 void PhysicsDebugRenderer::ChipmunkDebugDrawCircle(cpVect center, cpFloat angle, cpFloat radius, Color lineColor, Color fillColor)
 {
-//    glVertexPointer(2, GL_DOUBLE, 0, circleVAR);
-//
-//    glPushMatrix(); {
-//        glTranslatef(center.x, center.y, 0.0f);
-//        glRotatef(angle*180.0f/M_PI, 0.0f, 0.0f, 1.0f);
-//        glScalef(radius, radius, 1.0f);
-//
-//        if(fillColor.a > 0){
-//            glColor_from_color(fillColor);
-//            glDrawArrays(GL_TRIANGLE_FAN, 0, circleVAR_count - 1);
-//        }
-//
-//        if(lineColor.a > 0){
-//            glColor_from_color(lineColor);
-//            glDrawArrays(GL_LINE_STRIP, 0, circleVAR_count);
-//        }
-//    } glPopMatrix();
-//
+    glVertexPointer(2, GL_DOUBLE, 0, circleVAR);
+
+    glPushMatrix(); {
+        glTranslatef(center.x, center.y, 0.0f);
+        glRotatef(angle*180.0f/M_PI, 0.0f, 0.0f, 1.0f);
+        glScalef(radius, radius, 1.0f);
+
+        if(fillColor.a > 0){
+            glColor_from_color(fillColor);
+            glDrawArrays(GL_TRIANGLE_FAN, 0, circleVAR_count - 1);
+        }
+
+        if(lineColor.a > 0){
+            glColor_from_color(lineColor);
+            glDrawArrays(GL_LINE_STRIP, 0, circleVAR_count);
+        }
+    } glPopMatrix();
 }
 
 static const GLdouble pillVAR[] = {
@@ -733,88 +739,88 @@ static const int pillVAR_count = sizeof(pillVAR)/sizeof(GLdouble)/3;
 
 void PhysicsDebugRenderer::ChipmunkDebugDrawSegment(cpVect a, cpVect b, Color color)
 {
-//    GLdouble verts[] = {
-//        a.x, a.y,
-//        b.x, b.y,
-//    };
-//
-//    glVertexPointer(2, GL_DOUBLE, 0, verts);
-//    glColor_from_color(color);
-//    glDrawArrays(GL_LINES, 0, 2);
+    GLdouble verts[] = {
+        a.x, a.y,
+        b.x, b.y,
+    };
+
+    glVertexPointer(2, GL_DOUBLE, 0, verts);
+    glColor_from_color(color);
+    glDrawArrays(GL_LINES, 0, 2);
 }
 
 void PhysicsDebugRenderer::ChipmunkDebugDrawFatSegment(cpVect a, cpVect b, cpFloat radius, Color lineColor, Color fillColor)
 {
-//    if(radius){
-//        glVertexPointer(3, GL_DOUBLE, 0, pillVAR);
-//        glPushMatrix(); {
-//            cpVect d = cpvsub(b, a);
-//            cpVect r = cpvmult(d, radius/cpvlength(d));
-//
-//            const GLfloat matrix[] = {
-//                float(r.x), float(r.y), 0.0f, 0.0f,
-//                float(-r.y), float(r.x), 0.0f, 0.0f,
-//                float(d.x), float(d.y), 0.0f, 0.0f,
-//                float(a.x), float(a.y), 0.0f, 1.0f,
-//            };
-//            glMultMatrixf(matrix);
-//
-//            if(fillColor.a > 0){
-//                glColor_from_color(fillColor);
-//                glDrawArrays(GL_TRIANGLE_FAN, 0, pillVAR_count);
-//            }
-//
-//            if(lineColor.a > 0){
-//                glColor_from_color(lineColor);
-//                glDrawArrays(GL_LINE_LOOP, 0, pillVAR_count);
-//            }
-//        } glPopMatrix();
-//    } else {
-//        ChipmunkDebugDrawSegment(a, b, lineColor);
-//    }
+    if(radius){
+        glVertexPointer(3, GL_DOUBLE, 0, pillVAR);
+        glPushMatrix(); {
+            cpVect d = cpvsub(b, a);
+            cpVect r = cpvmult(d, radius/cpvlength(d));
+
+            const GLfloat matrix[] = {
+                float(r.x), float(r.y), 0.0f, 0.0f,
+                float(-r.y), float(r.x), 0.0f, 0.0f,
+                float(d.x), float(d.y), 0.0f, 0.0f,
+                float(a.x), float(a.y), 0.0f, 1.0f,
+            };
+            glMultMatrixf(matrix);
+
+            if(fillColor.a > 0){
+                glColor_from_color(fillColor);
+                glDrawArrays(GL_TRIANGLE_FAN, 0, pillVAR_count);
+            }
+
+            if(lineColor.a > 0){
+                glColor_from_color(lineColor);
+                glDrawArrays(GL_LINE_LOOP, 0, pillVAR_count);
+            }
+        } glPopMatrix();
+    } else {
+        ChipmunkDebugDrawSegment(a, b, lineColor);
+    }
 }
 
 void PhysicsDebugRenderer::ChipmunkDebugDrawPolygon(int count, cpVect *verts, Color lineColor, Color fillColor)
 {
-//    #if CP_USE_DOUBLES
-//    glVertexPointer(2, GL_DOUBLE, 0, verts);
-//    #else
-//    glVertexPointer(2, GL_DOUBLE, 0, verts);
-//    #endif
-//
-//    if(fillColor.a > 0){
-//        glColor_from_color(fillColor);
-//        glDrawArrays(GL_TRIANGLE_FAN, 0, count);
-//    }
-//
-//    if(lineColor.a > 0){
-//        glColor_from_color(lineColor);
-//        glDrawArrays(GL_LINE_LOOP, 0, count);
-//    }
+    #if CP_USE_DOUBLES
+    glVertexPointer(2, GL_DOUBLE, 0, verts);
+    #else
+    glVertexPointer(2, GL_DOUBLE, 0, verts);
+    #endif
+
+    if(fillColor.a > 0){
+        glColor_from_color(fillColor);
+        glDrawArrays(GL_TRIANGLE_FAN, 0, count);
+    }
+
+    if(lineColor.a > 0){
+        glColor_from_color(lineColor);
+        glDrawArrays(GL_LINE_LOOP, 0, count);
+    }
 }
 
 void PhysicsDebugRenderer::ChipmunkDebugDrawPoints(cpFloat size, int count, cpVect *verts, Color color)
 {
-  //  #if CP_USE_DOUBLES
-  //  glVertexPointer(2, GL_DOUBLE, 0, verts);
-  //  #else
-  //  glVertexPointer(2, GL_DOUBLE, 0, verts);
-  //  #endif
-  //
-  //  glPointSize(size*ChipmunkDebugDrawPointLineScale);
-  //  glColor_from_color(color);
-  //  glDrawArrays(GL_POINTS, 0, count);
+    #if CP_USE_DOUBLES
+    glVertexPointer(2, GL_DOUBLE, 0, verts);
+    #else
+    glVertexPointer(2, GL_DOUBLE, 0, verts);
+    #endif
+
+    glPointSize(size*ChipmunkDebugDrawPointLineScale);
+    glColor_from_color(color);
+    glDrawArrays(GL_POINTS, 0, count);
 }
 
 void PhysicsDebugRenderer::ChipmunkDebugDrawBB(cpBB bb, Color color)
 {
-//    cpVect verts[] = {
-//        cpv(bb.l, bb.b),
-//        cpv(bb.l, bb.t),
-//        cpv(bb.r, bb.t),
-//        cpv(bb.r, bb.b),
-//    };
-//    ChipmunkDebugDrawPolygon(4, verts, color, LAColor(0, 0));
+    cpVect verts[] = {
+        cpv(bb.l, bb.b),
+        cpv(bb.l, bb.t),
+        cpv(bb.r, bb.t),
+        cpv(bb.r, bb.b),
+    };
+    ChipmunkDebugDrawPolygon(4, verts, color, LAColor(0, 0));
 }
 
 void PhysicsDebugRenderer::staticDrawConstraint(cpConstraint *constraint, void *unused)
@@ -824,6 +830,7 @@ void PhysicsDebugRenderer::staticDrawConstraint(cpConstraint *constraint, void *
 
 void PhysicsDebugRenderer::staticDrawShape(cpShape *shape, void *unused)
 {
+    s_instance->ChipmunkDebugDrawShape(shape);
 
 }
 
@@ -860,7 +867,13 @@ void PhysicsDebugRenderer::staticDrawSpring(cpDampedSpring *spring, cpBody *body
 
 //shape
 //FIXME HACK
-//cpBody *body = shape->body;
+
+void PhysicsDebugRenderer::ChipmunkDebugDrawShape(cpShape *shape)
+{
+    assert(shape);
+    m_shapes.push_back(shape);
+//    Debug::log(Debug::StartupArea) << "DRAWING SHAPE: BB B: " << shape->bb.b;
+//  cpBody *body = shape->body;
 //Color color = ColorForShape(shape);
 //
 //switch(shape->klass->type){
@@ -882,14 +895,16 @@ void PhysicsDebugRenderer::staticDrawSpring(cpDampedSpring *spring, cpBody *body
 //    default: break;
 //}
 
-void PhysicsDebugRenderer::ChipmunkDebugDrawShape(cpShape *shape)
-{
- //   staticDrawShape(shape, NULL);
 }
 
-void PhysicsDebugRenderer::ChipmunkDebugDrawShapes(cpSpace *space)
+void PhysicsDebugRenderer::iterateShapesInSpace(cpSpace *space)
 {
-  //  cpSpaceEachShape(space, staticDrawShape, NULL);
+Debug::log(Debug::StartupArea) << "ITERATING SHAPES IN SPACE";
+    m_mutex.lock();
+
+    assert(space);
+    cpSpaceEachShape(space, staticDrawShape, NULL);
+    m_mutex.unlock();
 }
 
 static const GLdouble springVAR[] = {

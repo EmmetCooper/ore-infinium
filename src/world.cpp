@@ -119,9 +119,6 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         b2Vec2 halfWorld(Block::BLOCK_SIZE * WORLD_COLUMNCOUNT * 0.5f, Block::BLOCK_SIZE * WORLD_ROWCOUNT * 0.5f);
         m_torchesQuadTree = new QuadTree(nullptr, halfWorld, halfWorld);
 
-        if (m_server->client()) {
-            m_server->client()->setBox2DWorld(m_box2DWorld);
-        }
 
         cpVect gravity = cpv(0, -100);
         m_cpSpace = cpSpaceNew();
@@ -148,6 +145,9 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         cpShapeSetFriction(ballShape, 0.7);
         cpBodySleep(m_body);
 
+        if (m_server->client()) {
+            m_server->client()->setBox2DWorld(m_box2DWorld);
+        }
 
         ////////////////////////
 
@@ -176,7 +176,6 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
         Debug::log(Debug::WorldLoaderArea) << "World is x: " << (WORLD_COLUMNCOUNT * Block::BLOCK_SIZE) << " y: " << (WORLD_ROWCOUNT * Block::BLOCK_SIZE) << " meters big";
     }
-
 
     //FIXME: saveMap();
 
@@ -277,7 +276,7 @@ void World::updateTilePhysicsObjects()
     for (Entities::Player* player : m_players) {
         // mark which chunks we want to be activated within this players viewport
 
-            cpShape *ballShape = cpCircleShapeNew(m_cpSpace->staticBody , 5.0f, cpv(player->position().x, player->position().y));
+            cpShape *ballShape = cpCircleShapeNew(m_cpSpace->staticBody , 5.0f, cpv(500, 500));
             cpSpaceAddShape(m_cpSpace, ballShape);
             cpShapeSetFriction(ballShape, 0.7);
 
@@ -410,11 +409,14 @@ void World::update(double elapsedTime)
     }
 
     if (m_server) {
-
         updateTilePhysicsObjects();
 
         m_box2DWorld->Step(FIXED_TIMESTEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
         cpSpaceStep(m_cpSpace, FIXED_TIMESTEP);
+
+        if (m_server->client() && m_server->client()->physicsDebugRenderer()) {
+           m_server->client()->physicsDebugRenderer()->iterateShapesInSpace(m_cpSpace);
+        }
     }
 
     //    m_sky->update(elapsedTime);   glm::vec2 mouse = m_mainPlayer->mousePositionWorldCoords();

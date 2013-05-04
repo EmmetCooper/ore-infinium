@@ -30,6 +30,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/swizzle.hpp>
 
+#include <mutex>
 
 class PhysicsDebugRenderer : public b2Draw
 {
@@ -79,7 +80,6 @@ float ChipmunkDebugDrawPointLineScale = 1.0;
     void drawConstraint(cpConstraint *constraint, void *unused);
     void drawSpring(cpDampedSpring *spring, cpBody *body_a, cpBody *body_b);
 
-
     Color ColorForShape(cpShape *shape);
     void glColor_from_color(Color color);
     Color ColorFromHash(cpHashValue hash, float alpha);
@@ -94,7 +94,15 @@ float ChipmunkDebugDrawPointLineScale = 1.0;
     void ChipmunkDebugDrawConstraint(cpConstraint *constraint);
     void ChipmunkDebugDrawShape(cpShape *shape);
 
-    void ChipmunkDebugDrawShapes(cpSpace *space);
+    /**
+     * Should be called ONLY by the server thread, iterates over the space and finds what it has to draw, switches a mutex, adds it to a list
+     * of objects the client has to draw.
+     * NOTE: this function is indeed threadsafe, but only should be called from the server thread after cpStepSpace is called.
+     *
+     * Client will trigger a mutex as well when it comes to iterating over said list and drawing it.
+     */
+    void iterateShapesInSpace(cpSpace *space);
+
     void ChipmunkDebugDrawConstraints(cpSpace *space);
     void ChipmunkDebugDrawCollisionPoints(cpSpace *space);
 
@@ -168,6 +176,10 @@ private:
 
     Camera* m_camera = nullptr;
     Shader* m_shader = nullptr;
+
+    std::vector<cpShape*> m_shapes;
+
+    std::mutex m_mutex;
 };
 
 #endif

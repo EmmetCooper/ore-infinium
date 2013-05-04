@@ -270,11 +270,7 @@ void Client::render(double frameTime)
             }
 
             if (drawingRequired) {
-                m_physicsDebugRenderer->ChipmunkDebugDrawShapes(m_world->cpWorldSpace());
-//                m_box2DWorld->DrawDebugData();
-//                m_physicsDebugRenderer->SetFlags(rendererFlags);
-                //finalize rendering to screen.
-//HACK:                m_physicsDebugRenderer->render();
+                m_physicsDebugRenderer->render();
             }
 
             m_debugMenu->setPhysicsWorldBodyCount(m_box2DWorld->GetBodyCount());

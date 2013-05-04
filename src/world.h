@@ -262,6 +262,11 @@ private:
     Entities::Player* m_mainPlayer = nullptr;
 
     Server* m_server = nullptr;
+
+    /** WARNING: only valid when m_server is not. Existence is indicative of this world instance being the clients
+     *  (which happens for both client-hosting a server and a client-joining)
+     * @sa m_server->client() is what you probably want to use
+     */
     Client* m_client = nullptr;
 
     int32_t m_blockToAttackX = -1;
