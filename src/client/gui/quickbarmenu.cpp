@@ -76,6 +76,7 @@ void QuickBarMenu::ProcessEvent(Rocket::Core::Event& event)
 void QuickBarMenu::loadDocument()
 {
     m_menu = GUI::instance()->context()->LoadDocument("../client/gui/assets/quickBarMenu.rml");
+    m_switchedTooltip = GUI::instance()->context()->LoadDocument("../client/gui/assets/quickBarSwitchedTooltip.rml");
 
     //Rocket::Core::Colourb shit(255, 255, 0, 155);
     //m_menu->SetProperty("background-color", Rocket::Core::Property(shit, Rocket::Core::Property::COLOUR));
@@ -92,14 +93,10 @@ void QuickBarMenu::loadDocument()
 //    m_menu->GetElementById("0sub")->SetProperty("background-image", Rocket::Core::Property("../../../../textures/entities.png 0px 0px 512px 512px", Rocket::Core::Property::KEYWORD));
     m_menu->GetElementById("0sub")->SetAttribute("background-image", "../../../../textures/entities.png 0px 0px 512px 512px");
 
-    m_menu->GetElementById("0")->AddEventListener("click", this);
-    m_menu->GetElementById("1")->AddEventListener("click", this);
-    m_menu->GetElementById("2")->AddEventListener("click", this);
-    m_menu->GetElementById("3")->AddEventListener("click", this);
-    m_menu->GetElementById("4")->AddEventListener("click", this);
-    m_menu->GetElementById("5")->AddEventListener("click", this);
-    m_menu->GetElementById("6")->AddEventListener("click", this);
-    m_menu->GetElementById("7")->AddEventListener("click", this);
+    for (int i = 0; i <= maxInventoryItems; ++i) {
+        std::string str = std::to_string(i);
+        m_menu->GetElementById(str.c_str())->AddEventListener("click", this);
+    }
 }
 
 void QuickBarMenu::selectSlot(uint8_t index)
@@ -107,45 +104,38 @@ void QuickBarMenu::selectSlot(uint8_t index)
     m_inventory->selectSlot(index);
 
     Rocket::Core::Colourb unselectedColor(0, 0, 255, 255);
-    m_menu->GetElementById("0")->SetProperty("background-color", Rocket::Core::Property(unselectedColor, Rocket::Core::Property::COLOUR));
-    m_menu->GetElementById("1")->SetProperty("background-color", Rocket::Core::Property(unselectedColor, Rocket::Core::Property::COLOUR));
-    m_menu->GetElementById("2")->SetProperty("background-color", Rocket::Core::Property(unselectedColor, Rocket::Core::Property::COLOUR));
-    m_menu->GetElementById("3")->SetProperty("background-color", Rocket::Core::Property(unselectedColor, Rocket::Core::Property::COLOUR));
-    m_menu->GetElementById("4")->SetProperty("background-color", Rocket::Core::Property(unselectedColor, Rocket::Core::Property::COLOUR));
-    m_menu->GetElementById("5")->SetProperty("background-color", Rocket::Core::Property(unselectedColor, Rocket::Core::Property::COLOUR));
-    m_menu->GetElementById("6")->SetProperty("background-color", Rocket::Core::Property(unselectedColor, Rocket::Core::Property::COLOUR));
-    m_menu->GetElementById("7")->SetProperty("background-color", Rocket::Core::Property(unselectedColor, Rocket::Core::Property::COLOUR));
+
+    for (int i = 0; i <= maxInventoryItems; ++i) {
+        std::string str = std::to_string(i);
+        m_menu->GetElementById(str.c_str())->SetProperty("background-color", Rocket::Core::Property(unselectedColor, Rocket::Core::Property::COLOUR));
+    }
 
     Rocket::Core::Colourb selectedColor(0, 255, 0, 255);
 
-    switch (index) {
-    case 0:
-        m_menu->GetElementById("0")->SetProperty("background-color", Rocket::Core::Property(selectedColor, Rocket::Core::Property::COLOUR));
-        break;
-    case 1:
-        m_menu->GetElementById("1")->SetProperty("background-color", Rocket::Core::Property(selectedColor, Rocket::Core::Property::COLOUR));
-        break;
-    case 2:
-        m_menu->GetElementById("2")->SetProperty("background-color", Rocket::Core::Property(selectedColor, Rocket::Core::Property::COLOUR));
-        break;
-    case 3:
-        m_menu->GetElementById("3")->SetProperty("background-color", Rocket::Core::Property(selectedColor, Rocket::Core::Property::COLOUR));
-        break;
-    case 4:
-        m_menu->GetElementById("4")->SetProperty("background-color", Rocket::Core::Property(selectedColor, Rocket::Core::Property::COLOUR));
-        break;
-    case 5:
-        m_menu->GetElementById("5")->SetProperty("background-color", Rocket::Core::Property(selectedColor, Rocket::Core::Property::COLOUR));
-        break;
-    case 6:
-        m_menu->GetElementById("6")->SetProperty("background-color", Rocket::Core::Property(selectedColor, Rocket::Core::Property::COLOUR));
-        break;
-    case 7:
-        m_menu->GetElementById("7")->SetProperty("background-color", Rocket::Core::Property(selectedColor, Rocket::Core::Property::COLOUR));
-        break;
-    }
+    std::string str = std::to_string(index);
+    Rocket::Core::Element* currentElement = m_menu->GetElementById(str.c_str());
+    currentElement->SetProperty("background-color", Rocket::Core::Property(selectedColor, Rocket::Core::Property::COLOUR));
+
+    showSwitchedTooltip(currentElement);
 
     m_client->sendQuickBarInventorySlotSelectRequest(index);
+}
+
+void QuickBarMenu::showSwitchedTooltip(Rocket::Core::Element* element)
+{
+    float left = element->GetAbsoluteLeft();
+
+    std::stringstream ss;
+    ss << left;
+    m_switchedTooltip->SetProperty("left", ss.str().c_str());
+
+    ss.str(std::string());
+
+    float top = element->GetAbsoluteTop();
+    ss << top;
+    m_switchedTooltip->SetProperty("top", ss.str().c_str());
+    m_switchedTooltip->Show();
+
 }
 
 void QuickBarMenu::nextSlot()

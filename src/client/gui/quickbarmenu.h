@@ -64,6 +64,9 @@ public:
 
 private:
     void selectSlot(uint8_t index);
+    void showSwitchedTooltip(Rocket::Core::Element* element);
+
+    const int maxInventoryItems = 7;
 
     QuickBarInventory* m_inventory = nullptr;
     Client* m_client = nullptr;
@@ -71,6 +74,9 @@ private:
     SpriteSheetRenderer* m_spriteSheetRenderer = nullptr;
 
     Rocket::Core::ElementDocument* m_menu = nullptr;
+
+    ///selection switched/changed tooltip popup
+    Rocket::Core::ElementDocument* m_switchedTooltip = nullptr;
 };
 
 #endif

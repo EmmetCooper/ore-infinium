@@ -1,0 +1,17 @@
+<rml>
+        <head>
+                <style>
+                        body
+                        {
+                                width: 12px;
+                                height: 19px;
+                                position: absolute;
+
+                                cursor-decorator: image;
+                                cursor-image: gui.png 667px 449px 686px 481px;
+                        }
+                </style>
+        </head>
+        <body>
+        </body>
+</rml>
