@@ -25,13 +25,13 @@ static PhysicsDebugRenderer *s_instance = nullptr;
 PhysicsDebugRenderer::PhysicsDebugRenderer(Camera* camera)
 {
     s_instance = this;
-//    m_shader = new Shader("physicsdebugrenderer.vert", "physicsdebugrenderer.frag");
-//    m_shader->bindProgram();
-//    setCamera(camera);
-//
-//    Debug::checkGLError();
-//    initGL();
-//    Debug::checkGLError();
+    m_shader = new Shader("physicsdebugrenderer.vert", "physicsdebugrenderer.frag");
+    m_shader->bindProgram();
+    setCamera(camera);
+
+    Debug::checkGLError();
+    initGL();
+    Debug::checkGLError();
 }
 
 PhysicsDebugRenderer::~PhysicsDebugRenderer()
@@ -427,13 +427,36 @@ void PhysicsDebugRenderer::render()
 {
     m_mutex.lock();
 
-//    renderSolidPolygons();
-//    renderSolidCircles();
-//    renderPolygons();
-//    renderSegments();
+    for (auto* shape : m_shapes) {
+        cpBody *body = shape->body;
+        Color color = ColorForShape(shape);
 
-    Debug::log(Debug::StartupArea) << "PHYS DEBUG RENDERER, shape count prior to clear: " << m_shapes.size();
-    m_shapes.clear();
+        switch(shape->klass->type){
+            case CP_CIRCLE_SHAPE: {
+                cpCircleShape *circle = (cpCircleShape *)shape;
+                ChipmunkDebugDrawCircle(circle->tc, body->a, circle->r, LINE_COLOR, color);
+                break;
+            }
+            case CP_SEGMENT_SHAPE: {
+                cpSegmentShape *seg = (cpSegmentShape *)shape;
+                ChipmunkDebugDrawFatSegment(seg->ta, seg->tb, seg->r, LINE_COLOR, color);
+                break;
+            }
+            case CP_POLY_SHAPE: {
+                cpPolyShape *poly = (cpPolyShape *)shape;
+                ChipmunkDebugDrawPolygon(poly->numVerts, poly->tVerts, LINE_COLOR, color);
+                break;
+            }
+            default: break;
+        }
+    }
+
+    renderSolidPolygons();
+    renderSolidCircles();
+    renderPolygons();
+    renderSegments();
+
+//    Debug::log(Debug::StartupArea) << "PHYS DEBUG RENDERER, shape count prior to clear: " << m_shapes.size();
 
     m_mutex.unlock();
 }
@@ -872,38 +895,19 @@ void PhysicsDebugRenderer::ChipmunkDebugDrawShape(cpShape *shape)
 {
     assert(shape);
     m_shapes.push_back(shape);
-//    Debug::log(Debug::StartupArea) << "DRAWING SHAPE: BB B: " << shape->bb.b;
-//  cpBody *body = shape->body;
-//Color color = ColorForShape(shape);
-//
-//switch(shape->klass->type){
-//    case CP_CIRCLE_SHAPE: {
-//        cpCircleShape *circle = (cpCircleShape *)shape;
-//        ChipmunkDebugDrawCircle(circle->tc, body->a, circle->r, LINE_COLOR, color);
-//        break;
-//    }
-//    case CP_SEGMENT_SHAPE: {
-//        cpSegmentShape *seg = (cpSegmentShape *)shape;
-//        ChipmunkDebugDrawFatSegment(seg->ta, seg->tb, seg->r, LINE_COLOR, color);
-//        break;
-//    }
-//    case CP_POLY_SHAPE: {
-//        cpPolyShape *poly = (cpPolyShape *)shape;
-//        ChipmunkDebugDrawPolygon(poly->numVerts, poly->tVerts, LINE_COLOR, color);
-//        break;
-//    }
-//    default: break;
-//}
-
 }
 
 void PhysicsDebugRenderer::iterateShapesInSpace(cpSpace *space)
 {
-Debug::log(Debug::StartupArea) << "ITERATING SHAPES IN SPACE";
+    assert(space);
+
     m_mutex.lock();
 
-    assert(space);
+    m_shapes.clear();
     cpSpaceEachShape(space, staticDrawShape, NULL);
+
+    Debug::log(Debug::StartupArea) << "ITERATING SHAPES IN SPACE COUNT: " << m_shapes.size();
+
     m_mutex.unlock();
 }
 

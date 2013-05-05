@@ -275,11 +275,11 @@ void World::updateTilePhysicsObjects()
 
     for (Entities::Player* player : m_players) {
         // mark which chunks we want to be activated within this players viewport
-
-            cpShape *ballShape = cpCircleShapeNew(m_cpSpace->staticBody , 5.0f, cpv(500, 500));
-            cpSpaceAddShape(m_cpSpace, ballShape);
-            cpShapeSetFriction(ballShape, 0.7);
-
+//
+//            cpShape *ballShape = cpCircleShapeNew(m_cpSpace->staticBody , 5.0f, cpv(500, 500));
+//            cpSpaceAddShape(m_cpSpace, ballShape);
+//            cpShapeSetFriction(ballShape, 0.7);
+//
         float blockSize = Block::BLOCK_SIZE;
         glm::ivec2 centerTile = glm::ivec2(int(ceil(player->position().x / blockSize)), int(ceil(player->position().y / blockSize)));
 
