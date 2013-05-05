@@ -136,6 +136,9 @@ void QuickBarMenu::selectSlot(uint8_t index)
     m_client->sendQuickBarInventorySlotSelectRequest(index);
 }
 
+///FIXME:: there is a bit of a sync issue here at startup/connection. when the client joins he makes this, selects an inventory item. what *should* happen is the server
+///tells the client which inventory slot it has selected, after all the quickbar inventory data was sent. because presently we're selecting it, trying to show a tooltip for an item that isn't there yet,
+///and then receiving the inventory data from server but by then it's too late. this isn't something you can notice much though, but i'd prefer it to show the equipped item tooltip on connect and have all data synced by then.
 void QuickBarMenu::showSwitchedTooltip(Rocket::Core::Element* element, uint8_t index)
 {
     assert(m_inventory);
