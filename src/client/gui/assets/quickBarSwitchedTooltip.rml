@@ -1,17 +1,31 @@
 <rml>
         <head>
+        <link type="text/rcss" href="rkt.rcss"/>
+        <link type="text/rcss" href="gui.rcss"/>
+
                 <style>
                         body
                         {
                                 width: 12px;
                                 height: 19px;
                                 position: absolute;
-
                                 cursor-decorator: image;
                                 cursor-image: gui.png 667px 449px 686px 481px;
                         }
+                        div#main
+                        {
+                            padding-top: 0px;
+                            padding-bottom: 0px;
+                            margin-bottom: 0px;
+                            margin-top: 0px;
+                            min-width: 0px;
+                        }
+
                 </style>
         </head>
         <body>
+            <div id="main">
+OH YEAH
+            </div>
         </body>
 </rml>
