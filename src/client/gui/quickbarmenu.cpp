@@ -131,18 +131,25 @@ void QuickBarMenu::selectSlot(uint8_t index)
 
     currentElement->SetProperty("background-color", Rocket::Core::Property(selectedColor, Rocket::Core::Property::COLOUR));
 
-    showSwitchedTooltip(currentElement);
+    showSwitchedTooltip(currentElement, index);
 
     m_client->sendQuickBarInventorySlotSelectRequest(index);
 }
 
-void QuickBarMenu::showSwitchedTooltip(Rocket::Core::Element* element)
+void QuickBarMenu::showSwitchedTooltip(Rocket::Core::Element* element, uint8_t index)
 {
+    assert(m_inventory);
+
     m_switchedTooltipTimer.reset();
 
     float top = element->GetAbsoluteTop() + (element->GetProperty<float>("height") * 0.5f) + m_switchedTooltip->GetProperty<float>("height") - (m_switchedTooltip->GetOffsetHeight() * 0.5f);
     m_switchedTooltip->SetProperty("top", std::to_string(top).c_str());
-    m_switchedTooltip->Show();
+
+    Item* item = m_inventory->item(index);
+    if (item) {
+        m_switchedTooltip->GetElementById("main")->SetInnerRML(item->name().c_str());
+        m_switchedTooltip->Show();
+    }
 }
 
 void QuickBarMenu::nextSlot()

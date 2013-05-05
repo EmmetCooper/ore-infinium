@@ -67,7 +67,7 @@ public:
 
 private:
     void selectSlot(uint8_t index);
-    void showSwitchedTooltip(Rocket::Core::Element* element);
+    void showSwitchedTooltip(Rocket::Core::Element* element, uint8_t index);
 
     /// non-ownership
     QuickBarInventory* m_inventory = nullptr;
