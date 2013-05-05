@@ -174,18 +174,21 @@ void QuickBarMenu::reloadSlot(uint8_t index)
     const std::string subid = ss.str();
     ss.str("");
 
+    Rocket::Core::Element* mainElement = m_menu->GetElementById(id.c_str());
+    Rocket::Core::Element* subElement = m_menu->GetElementById(subid.c_str());
+
     if (item == nullptr) {
-        m_menu->GetElementById(id.c_str())->SetInnerRML("empty");
+        mainElement->SetInnerRML("empty");
 
         // set the icon image to null/empty
-        m_menu->GetElementById(subid.c_str())->SetProperty("image-x1", "0");
-        m_menu->GetElementById(subid.c_str())->SetProperty("image-x2", "0");
-        m_menu->GetElementById(subid.c_str())->SetProperty("image-y1", "0");
-        m_menu->GetElementById(subid.c_str())->SetProperty("image-y2", "0");
+        subElement->SetProperty("image-x1", "0");
+        subElement->SetProperty("image-x2", "0");
+        subElement->SetProperty("image-y1", "0");
+        subElement->SetProperty("image-y2", "0");
     } else {
 
         std::string itemStackSize = std::to_string(item->stackSize());
-        m_menu->GetElementById(id.c_str())->SetInnerRML(itemStackSize.c_str());
+        mainElement->SetInnerRML(itemStackSize.c_str());
 
         SpriteSheetRenderer::SpriteFrameIdentifier frameIdentifier = m_spriteSheetRenderer->spriteFrame(item->frameName());
 
@@ -194,11 +197,11 @@ void QuickBarMenu::reloadSlot(uint8_t index)
         const std::string y1 = std::to_string(frameIdentifier.y);
         const std::string y2 = std::to_string(frameIdentifier.height);
 
-        m_menu->GetElementById(subid.c_str())->SetProperty("image-src", "../textures/entities.png");
-        m_menu->GetElementById(subid.c_str())->SetProperty("image-x1", x1.c_str());
-        m_menu->GetElementById(subid.c_str())->SetProperty("image-x2", x2.c_str());
-        m_menu->GetElementById(subid.c_str())->SetProperty("image-y1", y1.c_str());
-        m_menu->GetElementById(subid.c_str())->SetProperty("image-y2", y2.c_str());
+        subElement->SetProperty("image-src", "../textures/entities.png");
+        subElement->SetProperty("image-x1", x1.c_str());
+        subElement->SetProperty("image-x2", x2.c_str());
+        subElement->SetProperty("image-y1", y1.c_str());
+        subElement->SetProperty("image-y2", y2.c_str());
     }
 }
 
