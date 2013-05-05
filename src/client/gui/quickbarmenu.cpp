@@ -49,6 +49,15 @@ QuickBarMenu::~QuickBarMenu()
 {
 }
 
+void QuickBarMenu::update()
+{
+    if (m_switchedTooltip->IsVisible()) {
+        if (m_switchedTooltipTimer.milliseconds() >= switchedTooltipTimerDisplayTime) {
+            m_switchedTooltip->Hide();
+        }
+    }
+}
+
 void QuickBarMenu::ProcessEvent(Rocket::Core::Event& event)
 {
     const Rocket::Core::String& id = event.GetCurrentElement()->GetId();
@@ -78,6 +87,10 @@ void QuickBarMenu::loadDocument()
     m_menu = GUI::instance()->context()->LoadDocument("../client/gui/assets/quickBarMenu.rml");
     m_switchedTooltip = GUI::instance()->context()->LoadDocument("../client/gui/assets/quickBarSwitchedTooltip.rml");
 
+    float margin = m_menu->GetProperty<float>("width");
+    margin += margin * 0.25f;
+    m_switchedTooltip->SetProperty("margin-right", std::to_string(margin).c_str());
+
     //Rocket::Core::Colourb shit(255, 255, 0, 155);
     //m_menu->SetProperty("background-color", Rocket::Core::Property(shit, Rocket::Core::Property::COLOUR));
 
@@ -93,7 +106,7 @@ void QuickBarMenu::loadDocument()
 //    m_menu->GetElementById("0sub")->SetProperty("background-image", Rocket::Core::Property("../../../../textures/entities.png 0px 0px 512px 512px", Rocket::Core::Property::KEYWORD));
     m_menu->GetElementById("0sub")->SetAttribute("background-image", "../../../../textures/entities.png 0px 0px 512px 512px");
 
-    for (int i = 0; i <= maxInventoryItems; ++i) {
+    for (int i = 0; i < m_inventory->maxEquippedSlots(); ++i) {
         std::string str = std::to_string(i);
         m_menu->GetElementById(str.c_str())->AddEventListener("click", this);
     }
@@ -105,7 +118,7 @@ void QuickBarMenu::selectSlot(uint8_t index)
 
     Rocket::Core::Colourb unselectedColor(0, 0, 255, 255);
 
-    for (int i = 0; i <= maxInventoryItems; ++i) {
+    for (int i = 0; i < m_inventory->maxEquippedSlots(); ++i) {
         std::string str = std::to_string(i);
         m_menu->GetElementById(str.c_str())->SetProperty("background-color", Rocket::Core::Property(unselectedColor, Rocket::Core::Property::COLOUR));
     }
@@ -125,19 +138,11 @@ void QuickBarMenu::selectSlot(uint8_t index)
 
 void QuickBarMenu::showSwitchedTooltip(Rocket::Core::Element* element)
 {
-    float left = element->GetAbsoluteLeft();
+    m_switchedTooltipTimer.reset();
 
-    std::stringstream ss;
-    ss << left;
-    m_switchedTooltip->SetProperty("left", ss.str().c_str());
-
-    ss.str(std::string());
-
-    float top = element->GetAbsoluteTop();
-    ss << top;
-    m_switchedTooltip->SetProperty("top", ss.str().c_str());
+    float top = element->GetAbsoluteTop() + (element->GetProperty<float>("height") * 0.5f) + m_switchedTooltip->GetProperty<float>("height") - (m_switchedTooltip->GetOffsetHeight() * 0.5f);
+    m_switchedTooltip->SetProperty("top", std::to_string(top).c_str());
     m_switchedTooltip->Show();
-
 }
 
 void QuickBarMenu::nextSlot()
@@ -164,21 +169,16 @@ void QuickBarMenu::reloadSlot(uint8_t index)
 {
     Item* item = m_inventory->item(index);
 
-    std::stringstream ss;
-    ss << int(index) << "subcount";
+    //stack size
+    const std::string id = std::to_string(index) + "subcount";
+    //main element (image)
+    const std::string subid = std::to_string(index) + "sub";
 
-    const std::string id = ss.str();
-    ss.str("");
-
-    ss << int(index) << "sub";
-    const std::string subid = ss.str();
-    ss.str("");
-
-    Rocket::Core::Element* mainElement = m_menu->GetElementById(id.c_str());
+    Rocket::Core::Element* stackSizeElement = m_menu->GetElementById(id.c_str());
     Rocket::Core::Element* subElement = m_menu->GetElementById(subid.c_str());
 
     if (item == nullptr) {
-        mainElement->SetInnerRML("empty");
+        stackSizeElement->SetInnerRML("empty");
 
         // set the icon image to null/empty
         subElement->SetProperty("image-x1", "0");
@@ -188,7 +188,7 @@ void QuickBarMenu::reloadSlot(uint8_t index)
     } else {
 
         std::string itemStackSize = std::to_string(item->stackSize());
-        mainElement->SetInnerRML(itemStackSize.c_str());
+        stackSizeElement->SetInnerRML(itemStackSize.c_str());
 
         SpriteSheetRenderer::SpriteFrameIdentifier frameIdentifier = m_spriteSheetRenderer->spriteFrame(item->frameName());
 

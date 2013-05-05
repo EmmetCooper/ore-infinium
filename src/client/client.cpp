@@ -302,6 +302,10 @@ void Client::tick(double frameTime)
         }
 
         m_world->update(frameTime);
+
+        if (m_quickBarMenu) {
+            m_quickBarMenu->update();
+        }
     }
 }
 

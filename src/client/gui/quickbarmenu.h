@@ -23,6 +23,7 @@
 
 #include <Rocket/Core.h>
 #include <SDL_events.h>
+#include <src/timer.h>
 
 class SpriteSheetRenderer;
 namespace Rocket
@@ -51,6 +52,8 @@ public:
 
     void show();
 
+    void update();
+
     void handleEvent(const SDL_Event& event);
 
     void nextSlot();
@@ -66,13 +69,21 @@ private:
     void selectSlot(uint8_t index);
     void showSwitchedTooltip(Rocket::Core::Element* element);
 
-    const int maxInventoryItems = 7;
-
+    /// non-ownership
     QuickBarInventory* m_inventory = nullptr;
+
+    /// non-ownership
     Client* m_client = nullptr;
 
+    /// non-ownership
     SpriteSheetRenderer* m_spriteSheetRenderer = nullptr;
 
+    Timer m_switchedTooltipTimer;
+
+    /// milliseconds
+    const uint64_t switchedTooltipTimerDisplayTime = 2500;
+
+    /// actual quickbar/equipped items gui
     Rocket::Core::ElementDocument* m_menu = nullptr;
 
     ///selection switched/changed tooltip popup
