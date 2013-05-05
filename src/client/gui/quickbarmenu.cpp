@@ -114,6 +114,8 @@ void QuickBarMenu::selectSlot(uint8_t index)
 
     std::string str = std::to_string(index);
     Rocket::Core::Element* currentElement = m_menu->GetElementById(str.c_str());
+    assert(currentElement);
+
     currentElement->SetProperty("background-color", Rocket::Core::Property(selectedColor, Rocket::Core::Property::COLOUR));
 
     showSwitchedTooltip(currentElement);
@@ -182,26 +184,15 @@ void QuickBarMenu::reloadSlot(uint8_t index)
         m_menu->GetElementById(subid.c_str())->SetProperty("image-y2", "0");
     } else {
 
-        ss << item->stackSize();
-        m_menu->GetElementById(id.c_str())->SetInnerRML(ss.str().c_str());
+        std::string itemStackSize = std::to_string(item->stackSize());
+        m_menu->GetElementById(id.c_str())->SetInnerRML(itemStackSize.c_str());
 
         SpriteSheetRenderer::SpriteFrameIdentifier frameIdentifier = m_spriteSheetRenderer->spriteFrame(item->frameName());
 
-        ss.str("");
-        ss << frameIdentifier.x;
-        const std::string x1 = ss.str();
-
-        ss.str("");
-        ss << frameIdentifier.width;
-        const std::string x2 = ss.str();
-
-        ss.str("");
-        ss << frameIdentifier.y;
-        const std::string y1 = ss.str();
-
-        ss.str("");
-        ss << frameIdentifier.height;
-        const std::string y2 = ss.str();
+        const std::string x1 = std::to_string(frameIdentifier.x);
+        const std::string x2 = std::to_string(frameIdentifier.width);
+        const std::string y1 = std::to_string(frameIdentifier.y);
+        const std::string y2 = std::to_string(frameIdentifier.height);
 
         m_menu->GetElementById(subid.c_str())->SetProperty("image-src", "../textures/entities.png");
         m_menu->GetElementById(subid.c_str())->SetProperty("image-x1", x1.c_str());

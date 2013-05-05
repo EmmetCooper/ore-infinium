@@ -6,19 +6,17 @@
                 <style>
                         body
                         {
-                                width: 12px;
-                                height: 19px;
                                 position: absolute;
-                                cursor-decorator: image;
-                                cursor-image: gui.png 667px 449px 686px 481px;
                         }
                         div#main
                         {
+                            background-color: rgba(0, 0, 0, 155);
                             padding-top: 0px;
                             padding-bottom: 0px;
                             margin-bottom: 0px;
                             margin-top: 0px;
                             min-width: 0px;
+                            min-height: 0px;
                         }
 
                 </style>
