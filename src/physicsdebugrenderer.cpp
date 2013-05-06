@@ -360,7 +360,7 @@ void PhysicsDebugRenderer::DrawSolidCircle(cpVect center, cpFloat radius, cpFloa
         Vertex vertex;
         vertex.x = vertices[i].x;
         vertex.y = vertices[i].y;
-//Debug::log(Debug::StartupArea) << "VERT: X: " << vertex.x << " y: " << vertex.y;
+
         uint8_t red = static_cast<uint8_t>(ceil(color.r * 255));
         uint8_t green = static_cast<uint8_t>(ceil(color.g * 255));
         uint8_t blue = static_cast<uint8_t>(ceil(color.b * 255));
@@ -434,8 +434,7 @@ void PhysicsDebugRenderer::render()
         switch(shape->klass->type){
             case CP_CIRCLE_SHAPE: {
                 cpCircleShape *circle = (cpCircleShape *)shape;
-                //ChipmunkDebugDrawCircle(circle->tc, body->a, circle->r, LINE_COLOR, color);
- //               DrawSolidCircle(circle->tc, circle->r, body->a, color);
+                DrawSolidCircle(circle->tc, circle->r, body->a, color);
                 break;
             }
             case CP_SEGMENT_SHAPE: {
@@ -454,11 +453,9 @@ void PhysicsDebugRenderer::render()
     }
 
     renderSolidPolygons();
-//    renderSolidCircles();
+    renderSolidCircles();
  //   renderPolygons();
   //  renderSegments();
-
-//    Debug::log(Debug::StartupArea) << "PHYS DEBUG RENDERER, shape count prior to clear: " << m_shapes.size();
 
     m_mutex.unlock();
 }
