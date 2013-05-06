@@ -119,8 +119,8 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         b2Vec2 halfWorld(Block::BLOCK_SIZE * WORLD_COLUMNCOUNT * 0.5f, Block::BLOCK_SIZE * WORLD_ROWCOUNT * 0.5f);
         m_torchesQuadTree = new QuadTree(nullptr, halfWorld, halfWorld);
 
-
-        cpVect gravity = cpv(0, -100);
+//        cpVect gravity = cpv(0, -100);
+        cpVect gravity = cpv(0, 0);
         m_cpSpace = cpSpaceNew();
         cpSpaceSetGravity(m_cpSpace, gravity);
 
@@ -130,21 +130,21 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
         distribution(rand);
 
-        cpShape *ground = cpSegmentShapeNew(m_cpSpace->staticBody, cpv(-20, 5), cpv(20, -5), 0);
-        cpShapeSetFriction(ground, 1);
-        cpSpaceAddShape(m_cpSpace, ground);
+//FIXME:        cpShape *ground = cpSegmentShapeNew(m_cpSpace->staticBody, cpv(-20, 5), cpv(20, -5), 0);
+//FIXME:        cpShapeSetFriction(ground, 1);
+//FIXME:        cpSpaceAddShape(m_cpSpace, ground);
 
-        cpFloat mass = 1;
-        cpFloat radius = 5;
-        cpFloat moment = cpMomentForCircle(mass, 0, radius, cpvzero);
-
-        m_body = cpSpaceAddBody(m_cpSpace, cpBodyNew(mass, moment));
-        cpBodySetPos(m_body, cpv(distribution(rand), -1000));
-
-        cpShape *ballShape = cpSpaceAddShape(m_cpSpace, cpCircleShapeNew(m_body, radius, cpvzero));
-        cpShapeSetFriction(ballShape, 0.7);
-        cpBodySleep(m_body);
-
+//        cpFloat mass = 1;
+//        cpFloat radius = 5;
+//        cpFloat moment = cpMomentForCircle(mass, 0, radius, cpvzero);
+//
+//        m_body = cpSpaceAddBody(m_cpSpace, cpBodyNew(mass, moment));
+//        cpBodySetPos(m_body, cpv(distribution(rand), -1000));
+//
+//        cpShape *ballShape = cpSpaceAddShape(m_cpSpace, cpCircleShapeNew(m_body, radius, cpvzero));
+//        cpShapeSetFriction(ballShape, 0.7);
+//        cpBodySleep(m_body);
+//
         if (m_server->client()) {
             m_server->client()->setBox2DWorld(m_box2DWorld);
         }
@@ -274,11 +274,19 @@ void World::updateTilePhysicsObjects()
     std::list<DesiredChunk> desiredChunks;
 
     for (Entities::Player* player : m_players) {
-        // mark which chunks we want to be activated within this players viewport
-//
-//            cpShape *ballShape = cpCircleShapeNew(m_cpSpace->staticBody , 5.0f, cpv(500, 500));
-//            cpSpaceAddShape(m_cpSpace, ballShape);
-//            cpShapeSetFriction(ballShape, 0.7);
+    // mark which chunks we want to be activated within this players viewport
+static bool ran = false;
+if (!ran) {
+        cpBB bb = cpBBNew(player->position().x,  player->position().y, player->position().x + 2.0f, player->position().y + 2.0f);
+        cpShape *boxShape = cpBoxShapeNew2(m_cpSpace->staticBody , bb);
+        cpSpaceAddShape(m_cpSpace, boxShape);
+        cpShapeSetFriction(boxShape, 0.7);
+        ran = true;
+}
+
+//        cpShape *ballShape = cpCircleShapeNew(m_cpSpace->staticBody , 5.0f, cpv(player->position().x, player->position().y));
+//        cpSpaceAddShape(m_cpSpace, ballShape);
+//        cpShapeSetFriction(ballShape, 0.7);
 //
         float blockSize = Block::BLOCK_SIZE;
         glm::ivec2 centerTile = glm::ivec2(int(ceil(player->position().x / blockSize)), int(ceil(player->position().y / blockSize)));

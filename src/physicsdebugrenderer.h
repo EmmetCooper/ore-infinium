@@ -42,8 +42,8 @@ public:
     PhysicsDebugRenderer(Camera* camera);
     virtual ~PhysicsDebugRenderer();
 
-    virtual void DrawPolygon(const cpVect* vertices, uint32_t vertexCount, PhysicsDebugRenderer::Color color);
-    virtual void DrawSolidPolygon(const cpVect* vertices, uint32_t vertexCount, PhysicsDebugRenderer::Color color);
+    virtual void DrawPolygon(const cpVect* vertices, int32_t vertexCount, PhysicsDebugRenderer::Color color);
+    virtual void DrawSolidPolygon(const cpVect* vertices, int32_t vertexCount, PhysicsDebugRenderer::Color color);
 
     virtual void DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color);
     virtual void DrawSolidCircle(cpVect center, cpFloat radius, cpFloat rotation, Color color);

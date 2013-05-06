@@ -89,7 +89,7 @@ void PhysicsDebugRenderer::initGLPolygons()
     glVertexAttribPointer(
         pos_attrib,
         2,
-        GL_DOUBLE,
+        GL_FLOAT,
         GL_FALSE,
         sizeof(Vertex),
                           (const GLvoid*)0
@@ -135,7 +135,7 @@ void PhysicsDebugRenderer::initGLSolidPolygons()
     glVertexAttribPointer(
         pos_attrib,
         2,
-        GL_DOUBLE,
+        GL_FLOAT,
         GL_FALSE,
         sizeof(Vertex),
                           (const GLvoid*)0
@@ -181,7 +181,7 @@ void PhysicsDebugRenderer::initGLSolidCircles()
     glVertexAttribPointer(
         pos_attrib,
         2,
-        GL_DOUBLE,
+        GL_FLOAT,
         GL_FALSE,
         sizeof(Vertex),
                           (const GLvoid*)0
@@ -227,7 +227,7 @@ void PhysicsDebugRenderer::initGLSegments()
     glVertexAttribPointer(
         pos_attrib,
         2,
-        GL_DOUBLE,
+        GL_FLOAT,
         GL_FALSE,
         sizeof(Vertex),
                           (const GLvoid*)0
@@ -257,7 +257,7 @@ void PhysicsDebugRenderer::initGLSegments()
     Debug::checkGLError();
 }
 
-void PhysicsDebugRenderer::DrawPolygon(const cpVect* vertices, uint32_t vertexCount, PhysicsDebugRenderer::Color color)
+void PhysicsDebugRenderer::DrawPolygon(const cpVect* vertices, int32_t vertexCount, PhysicsDebugRenderer::Color color)
     //const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
 {
 //    const size_t iboOffset = m_verticesPolygons.size();
@@ -283,31 +283,31 @@ void PhysicsDebugRenderer::DrawPolygon(const cpVect* vertices, uint32_t vertexCo
 //    }
 }
 
-void PhysicsDebugRenderer::DrawSolidPolygon(const cpVect* vertices, uint32_t vertexCount, PhysicsDebugRenderer::Color color)
-    //const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
+void PhysicsDebugRenderer::DrawSolidPolygon(const cpVect* vertices, int32_t vertexCount, PhysicsDebugRenderer::Color color)
 {
-//    const size_t iboOffset = m_verticesSolidPolygons.size();
-//
-//    for (int32_t i = 0; i < vertexCount; ++i) {
-//        Vertex vertex;
-//        vertex.x = vertices[i].x;
-//        vertex.y = vertices[i].y;
-//
-//        uint8_t red = static_cast<uint8_t>(ceil(color.r * 255));
-//        uint8_t green = static_cast<uint8_t>(ceil(color.g * 255));
-//        uint8_t blue = static_cast<uint8_t>(ceil(color.b * 255));
-//        uint8_t alpha = 80;
-//        int32_t colorPacked = red | (green << 8) | (blue << 16) | (alpha << 24);
-//        vertex.color = colorPacked;
-//
-//        m_verticesSolidPolygons.push_back(vertex);
-//    }
-//
-//    for (int i = 1; i < vertexCount - 1; i++) {
-//        m_indicesSolidPolygons.push_back(iboOffset);
-//        m_indicesSolidPolygons.push_back(iboOffset + i);
-//        m_indicesSolidPolygons.push_back(iboOffset + i + 1);
-//    }
+    const size_t iboOffset = m_verticesSolidPolygons.size();
+
+    for (int32_t i = 0; i < vertexCount; ++i) {
+        Vertex vertex;
+        vertex.x = vertices[i].x;
+        vertex.y = vertices[i].y;
+
+        uint8_t red = static_cast<uint8_t>(ceil(color.r * 255));
+        uint8_t green = static_cast<uint8_t>(ceil(color.g * 255));
+        uint8_t blue = static_cast<uint8_t>(ceil(color.b * 255));
+
+        uint8_t alpha = 80;
+        int32_t colorPacked = red | (green << 8) | (blue << 16) | (alpha << 24);
+        vertex.color = colorPacked;
+
+        m_verticesSolidPolygons.push_back(vertex);
+    }
+
+    for (int i = 1; i < vertexCount - 1; i++) {
+        m_indicesSolidPolygons.push_back(iboOffset);
+        m_indicesSolidPolygons.push_back(iboOffset + i);
+        m_indicesSolidPolygons.push_back(iboOffset + i + 1);
+    }
 }
 
 //FIXME: the circle calls need to be fixed to not run a draw call each polygon count
@@ -346,7 +346,7 @@ void PhysicsDebugRenderer::DrawSolidCircle(cpVect center, cpFloat radius, cpFloa
     std::vector<Vertex> vertices;
     for (int32 i = 0; i < k_segments; ++i)
     {
-        cpVect v = cpv(radius * cosf(theta) + center.x, radius * sinf(theta) + center.y);
+        cpVect v = cpv(radius * 4 * cosf(theta) + center.x, radius * 4 * sinf(theta) + center.y);
         Vertex vert;
         vert.x = v.x;
         vert.y = v.y;
@@ -360,7 +360,7 @@ void PhysicsDebugRenderer::DrawSolidCircle(cpVect center, cpFloat radius, cpFloa
         Vertex vertex;
         vertex.x = vertices[i].x;
         vertex.y = vertices[i].y;
-
+//Debug::log(Debug::StartupArea) << "VERT: X: " << vertex.x << " y: " << vertex.y;
         uint8_t red = static_cast<uint8_t>(ceil(color.r * 255));
         uint8_t green = static_cast<uint8_t>(ceil(color.g * 255));
         uint8_t blue = static_cast<uint8_t>(ceil(color.b * 255));
@@ -435,17 +435,18 @@ void PhysicsDebugRenderer::render()
             case CP_CIRCLE_SHAPE: {
                 cpCircleShape *circle = (cpCircleShape *)shape;
                 //ChipmunkDebugDrawCircle(circle->tc, body->a, circle->r, LINE_COLOR, color);
-                DrawSolidCircle(circle->tc, circle->r, body->a, color);
+ //               DrawSolidCircle(circle->tc, circle->r, body->a, color);
                 break;
             }
             case CP_SEGMENT_SHAPE: {
                 cpSegmentShape *seg = (cpSegmentShape *)shape;
-                ChipmunkDebugDrawFatSegment(seg->ta, seg->tb, seg->r, LINE_COLOR, color);
+//                ChipmunkDebugDrawFatSegment(seg->ta, seg->tb, seg->r, LINE_COLOR, color);
                 break;
             }
             case CP_POLY_SHAPE: {
                 cpPolyShape *poly = (cpPolyShape *)shape;
-                ChipmunkDebugDrawPolygon(poly->numVerts, poly->tVerts, LINE_COLOR, color);
+                //ChipmunkDebugDrawPolygon(poly->numVerts, poly->tVerts, LINE_COLOR, color);
+                DrawSolidPolygon(poly->tVerts, poly->numVerts, color);
                 break;
             }
             default: break;
@@ -453,9 +454,9 @@ void PhysicsDebugRenderer::render()
     }
 
     renderSolidPolygons();
-    renderSolidCircles();
-    renderPolygons();
-    renderSegments();
+//    renderSolidCircles();
+ //   renderPolygons();
+  //  renderSegments();
 
 //    Debug::log(Debug::StartupArea) << "PHYS DEBUG RENDERER, shape count prior to clear: " << m_shapes.size();
 
@@ -855,7 +856,6 @@ void PhysicsDebugRenderer::staticDrawConstraint(cpConstraint *constraint, void *
 void PhysicsDebugRenderer::staticDrawShape(cpShape *shape, void *unused)
 {
     s_instance->ChipmunkDebugDrawShape(shape);
-
 }
 
 void PhysicsDebugRenderer::staticDrawSpring(cpDampedSpring *spring, cpBody *body_a, cpBody *body_b)
@@ -907,7 +907,7 @@ void PhysicsDebugRenderer::iterateShapesInSpace(cpSpace *space)
     m_shapes.clear();
     cpSpaceEachShape(space, staticDrawShape, NULL);
 
-    Debug::log(Debug::StartupArea) << "ITERATING SHAPES IN SPACE COUNT: " << m_shapes.size();
+//    Debug::log(Debug::StartupArea) << "ITERATING SHAPES IN SPACE COUNT: " << m_shapes.size();
 
     m_mutex.unlock();
 }
