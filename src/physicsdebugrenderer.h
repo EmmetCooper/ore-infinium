@@ -32,29 +32,29 @@
 
 #include <mutex>
 
-class PhysicsDebugRenderer : public b2Draw
+class PhysicsDebugRenderer
 {
 public:
+    typedef struct Color {
+        float r, g, b, a;
+    } Color;
+
     PhysicsDebugRenderer(Camera* camera);
     virtual ~PhysicsDebugRenderer();
 
-    virtual void DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color);
-    virtual void DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color);
+    virtual void DrawPolygon(const cpVect* vertices, uint32_t vertexCount, PhysicsDebugRenderer::Color color);
+    virtual void DrawSolidPolygon(const cpVect* vertices, uint32_t vertexCount, PhysicsDebugRenderer::Color color);
 
     virtual void DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color);
-    virtual void DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color);
+    virtual void DrawSolidCircle(cpVect center, cpFloat radius, cpFloat rotation, Color color);
 
-    virtual void DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color);
+    virtual void DrawSegment(const cpVect& p1, const cpVect& p2, PhysicsDebugRenderer::Color color);
     virtual void DrawTransform(const b2Transform& xf);
 
     void setCamera(Camera* camera);
 
     void render();
 
-
-    typedef struct Color {
-        float r, g, b, a;
-    } Color;
 
 const Color LINE_COLOR = {200.0/255.0, 210.0/255.0, 230.0/255.0, 1.0};
 const Color CONSTRAINT_COLOR = {0.0, 0.75, 0.0, 1.0};
