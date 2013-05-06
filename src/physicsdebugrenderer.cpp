@@ -428,35 +428,11 @@ void PhysicsDebugRenderer::render()
 {
     m_mutex.lock();
 
-    for (auto* shape : m_shapes) {
-        cpBody *body = shape->body;
-        Color color = ColorForShape(shape);
-
-        switch(shape->klass->type){
-            case CP_CIRCLE_SHAPE: {
-                cpCircleShape *circle = (cpCircleShape *)shape;
-                DrawSolidCircle(circle->tc, circle->r, body->a, color);
-                break;
-            }
-            case CP_SEGMENT_SHAPE: {
-                cpSegmentShape *seg = (cpSegmentShape *)shape;
-//                ChipmunkDebugDrawFatSegment(seg->ta, seg->tb, seg->r, LINE_COLOR, color);
-                break;
-            }
-            case CP_POLY_SHAPE: {
-                cpPolyShape *poly = (cpPolyShape *)shape;
-                //ChipmunkDebugDrawPolygon(poly->numVerts, poly->tVerts, LINE_COLOR, color);
-                DrawSolidPolygon(poly->tVerts, poly->numVerts, color);
-                break;
-            }
-            default: break;
-        }
-    }
-
     renderSolidPolygons();
     renderSolidCircles();
  //   renderPolygons();
   //  renderSegments();
+
 
     m_mutex.unlock();
 }
@@ -497,8 +473,6 @@ void PhysicsDebugRenderer::renderPolygons()
 
     m_maxVBOSizePolygons = m_verticesPolygons.size();
     m_highestIBOSizePolygons = m_indicesPolygons.size();
-    m_verticesPolygons.clear();
-    m_indicesPolygons.clear();
 }
 
 void PhysicsDebugRenderer::renderSolidPolygons()
@@ -537,8 +511,6 @@ void PhysicsDebugRenderer::renderSolidPolygons()
 
     m_maxVBOSizeSolidPolygons = m_verticesSolidPolygons.size();
     m_highestIBOSizeSolidPolygons = m_indicesSolidPolygons.size();
-    m_verticesSolidPolygons.clear();
-    m_indicesSolidPolygons.clear();
 }
 
 void PhysicsDebugRenderer::renderSolidCircles()
@@ -577,8 +549,6 @@ void PhysicsDebugRenderer::renderSolidCircles()
 
     m_maxVBOSizeSolidCircles = m_verticesSolidCircles.size();
     m_highestIBOSizeSolidCircles = m_indicesSolidCircles.size();
-    m_verticesSolidCircles.clear();
-    m_indicesSolidCircles.clear();
 }
 
 void PhysicsDebugRenderer::renderSegments()
@@ -617,8 +587,6 @@ void PhysicsDebugRenderer::renderSegments()
 
     m_maxVBOSizeSegments = m_verticesSegments.size();
     m_highestIBOSizeSegments = m_indicesSegments.size();
-    m_verticesSegments.clear();
-    m_indicesSegments.clear();
 }
 
 
@@ -893,7 +861,29 @@ void PhysicsDebugRenderer::staticDrawSpring(cpDampedSpring *spring, cpBody *body
 void PhysicsDebugRenderer::ChipmunkDebugDrawShape(cpShape *shape)
 {
     assert(shape);
-    m_shapes.push_back(shape);
+
+    cpBody *body = shape->body;
+    Color color = ColorForShape(shape);
+
+    switch(shape->klass->type){
+        case CP_CIRCLE_SHAPE: {
+            cpCircleShape *circle = (cpCircleShape *)shape;
+            DrawSolidCircle(circle->tc, circle->r, body->a, color);
+            break;
+        }
+        case CP_SEGMENT_SHAPE: {
+            cpSegmentShape *seg = (cpSegmentShape *)shape;
+//                ChipmunkDebugDrawFatSegment(seg->ta, seg->tb, seg->r, LINE_COLOR, color);
+            break;
+        }
+        case CP_POLY_SHAPE: {
+            cpPolyShape *poly = (cpPolyShape *)shape;
+            //ChipmunkDebugDrawPolygon(poly->numVerts, poly->tVerts, LINE_COLOR, color);
+            DrawSolidPolygon(poly->tVerts, poly->numVerts, color);
+            break;
+        }
+        default: break;
+    }
 }
 
 void PhysicsDebugRenderer::iterateShapesInSpace(cpSpace *space)
@@ -902,7 +892,15 @@ void PhysicsDebugRenderer::iterateShapesInSpace(cpSpace *space)
 
     m_mutex.lock();
 
-    m_shapes.clear();
+    m_verticesSolidCircles.clear();
+    m_indicesSolidCircles.clear();
+    m_verticesSolidPolygons.clear();
+    m_indicesSolidPolygons.clear();
+    m_verticesPolygons.clear();
+    m_indicesPolygons.clear();
+    m_verticesSegments.clear();
+    m_indicesSegments.clear();
+
     cpSpaceEachShape(space, staticDrawShape, NULL);
 
 //    Debug::log(Debug::StartupArea) << "ITERATING SHAPES IN SPACE COUNT: " << m_shapes.size();

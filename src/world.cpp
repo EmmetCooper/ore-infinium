@@ -215,6 +215,8 @@ World::~World()
     }
     m_players.clear();
 
+    cpSpaceFree(m_cpSpace);
+
     delete m_box2DWorld;
     delete m_contactListener;
     delete m_queryCallback;
