@@ -218,7 +218,6 @@ private:
     // [column * WORLD_ROWCOUNT + row]
     std::vector<Block> m_blocks;
     std::map<DesiredChunk, ActiveChunk*> m_activeChunks;
-    b2Body* m_mainTileBody = nullptr;
 
     TileRenderer* m_tileRenderer = nullptr;
     LightRenderer* m_lightRenderer = nullptr;
@@ -245,11 +244,10 @@ private:
     Camera* m_camera = nullptr;
 
     b2World* m_box2DWorld = nullptr;
-    b2Vec2 m_gravity = b2Vec2(0.0f, 9.8f);
-//    b2Vec2 m_gravity = b2Vec2(0.0f, 0.0f);
+//    b2Vec2 m_gravity = b2Vec2(0.0f, 9.8f);
+    b2Vec2 m_gravity = b2Vec2(0.0f, 0.0f);
 
     cpSpace* m_cpSpace = nullptr;
-    cpBody* m_body = nullptr;
 
     ContactListener* m_contactListener = nullptr;
     QueryCallback* m_queryCallback = nullptr;

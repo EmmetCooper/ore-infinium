@@ -114,8 +114,6 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         bodyDef.type = b2_staticBody;
         bodyDef.position.Set(0.0f, 0.0f);
 
-        m_mainTileBody = m_box2DWorld->CreateBody(&bodyDef);
-
         b2Vec2 halfWorld(Block::BLOCK_SIZE * WORLD_COLUMNCOUNT * 0.5f, Block::BLOCK_SIZE * WORLD_ROWCOUNT * 0.5f);
         m_torchesQuadTree = new QuadTree(nullptr, halfWorld, halfWorld);
 
@@ -217,7 +215,6 @@ World::~World()
     }
     m_players.clear();
 
-    m_box2DWorld->DestroyBody(m_mainTileBody);
     delete m_box2DWorld;
     delete m_contactListener;
     delete m_queryCallback;
@@ -275,18 +272,10 @@ void World::updateTilePhysicsObjects()
 
     for (Entities::Player* player : m_players) {
     // mark which chunks we want to be activated within this players viewport
-static bool ran = false;
-if (!ran) {
-        cpBB bb = cpBBNew(player->position().x,  player->position().y, player->position().x + 2.0f, player->position().y + 2.0f);
-        cpShape *boxShape = cpBoxShapeNew2(m_cpSpace->staticBody , bb);
-        cpSpaceAddShape(m_cpSpace, boxShape);
-        cpShapeSetFriction(boxShape, 0.7);
-        ran = true;
-
+//FIXME: HACK
         //cpShape *ballShape = cpCircleShapeNew(m_cpSpace->staticBody , 5.0f, cpv(player->position().x, player->position().y));
         //cpSpaceAddShape(m_cpSpace, ballShape);
         //cpShapeSetFriction(ballShape, 0.7);
-}
 
         float blockSize = Block::BLOCK_SIZE;
         glm::ivec2 centerTile = glm::ivec2(int(ceil(player->position().x / blockSize)), int(ceil(player->position().y / blockSize)));
@@ -322,7 +311,7 @@ if (!ran) {
         auto it = m_activeChunks.find(d);
         if (it== m_activeChunks.end()) {
             // active chunk does not exist, create it!
-            ActiveChunk* activeChunk = new ActiveChunk(d.row, d.column, &m_blocks, m_box2DWorld, m_mainTileBody);
+            ActiveChunk* activeChunk = new ActiveChunk(d.row, d.column, &m_blocks, m_cpSpace);
             m_activeChunks[d] = activeChunk;
         } else {
             it->second->refcount += 1;
@@ -823,8 +812,8 @@ void World::destroyTilePhysicsObject(uint32_t column, uint32_t row)
 //    Debug::log(Debug::ServerEntityLogicArea) << "FIXTURE CALLBCK COUNT: " <<  m_queryCallback->bodiesAtPoint(aabb.lowerBound).size();
     for (auto* fixture : m_queryCallback->fixturesAtPoint(aabb.lowerBound)) {
         //be sure to delete our body marker
-        delete static_cast<ContactListener::BodyUserData*>(fixture->GetUserData());
-        m_mainTileBody->DestroyFixture(fixture);
+        //delete static_cast<ContactListener::BodyUserData*>(fixture->GetUserData());
+        //m_mainTileBody->DestroyFixture(fixture);
     }
 }
 

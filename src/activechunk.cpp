@@ -21,8 +21,7 @@
 #include "server/contactlistener.h"
 #include "debug.h"
 
-#include <Box2D/Dynamics/b2World.h>
-#include <Box2D/Dynamics/b2Body.h>
+#include <chipmunk.h>
 
 bool DesiredChunk::operator==(const DesiredChunk& other) const
 {
@@ -54,10 +53,9 @@ bool DesiredChunk::operator<(const DesiredChunk& rhs) const
     return false;
 }
 
-ActiveChunk::ActiveChunk(uint32_t row, uint32_t column, std::vector<Block>* blocks, b2World* box2DWorld, b2Body* mainTileBody) :
+ActiveChunk::ActiveChunk(uint32_t row, uint32_t column, std::vector<Block>* blocks, cpSpace* cpWorldSpace) :
 m_blocks(blocks),
-m_box2DWorld(box2DWorld),
-m_mainTileBody(mainTileBody)
+m_cpSpace(cpWorldSpace)
 {
     //create all tile physics objects within this area. pos is in chunk indices.
     int centerTileX = column * ACTIVECHUNK_SIZE;
@@ -85,25 +83,37 @@ m_mainTileBody(mainTileBody)
                 continue;
             }
 
-            b2Vec2 pos = b2Vec2(Block::BLOCK_SIZE * float(currentColumn) + (Block::BLOCK_SIZE * 0.5f), Block::BLOCK_SIZE * float(currentRow) + (Block::BLOCK_SIZE * 0.5f));
+//
+//            b2Vec2 pos = b2Vec2(Block::BLOCK_SIZE * float(currentColumn) + (Block::BLOCK_SIZE * 0.5f), Block::BLOCK_SIZE * float(currentRow) + (Block::BLOCK_SIZE * 0.5f));
+//
+//            ContactListener::BodyUserData* userData = new ContactListener::BodyUserData();
+//            userData->type = ContactListener::BodyType::Block;
+//            userData->data = &m_blocks[index];
+//
+//            b2PolygonShape box;
+//            box.SetAsBox(Block::BLOCK_SIZE * 0.5f , Block::BLOCK_SIZE * 0.5f, pos, 0.0f);
+//            box.m_centroid = b2Vec2(Block::BLOCK_SIZE * float(currentColumn) + (Block::BLOCK_SIZE * 0.5f), Block::BLOCK_SIZE * float(currentRow) + (Block::BLOCK_SIZE * 0.5f));
+//
+//            // create main body's fixture
+//            b2FixtureDef fixtureDef;
+//            fixtureDef.shape = &box;
+//            fixtureDef.density = 1.0f;
+//            fixtureDef.friction = 1.0f;
+//            fixtureDef.userData = userData;
+//
+//            b2Fixture* fixture = m_mainTileBody->CreateFixture(&fixtureDef);
+//            m_tileFixtures.push_back(fixture);
 
-            ContactListener::BodyUserData* userData = new ContactListener::BodyUserData();
-            userData->type = ContactListener::BodyType::Block;
-            userData->data = &m_blocks[index];
+            float x = Block::BLOCK_SIZE * float(currentColumn);
+            float y = Block::BLOCK_SIZE * float(currentRow);
 
-            b2PolygonShape box;
-            box.SetAsBox(Block::BLOCK_SIZE * 0.5f , Block::BLOCK_SIZE * 0.5f, pos, 0.0f);
-            box.m_centroid = b2Vec2(Block::BLOCK_SIZE * float(currentColumn) + (Block::BLOCK_SIZE * 0.5f), Block::BLOCK_SIZE * float(currentRow) + (Block::BLOCK_SIZE * 0.5f));
+            cpBB bb = cpBBNew(x, y, x + Block::BLOCK_SIZE, y + BLOCK_SIZE);
+            cpShape *tileShape = cpBoxShapeNew2(m_cpSpace->staticBody , bb);
 
-            // create main body's fixture
-            b2FixtureDef fixtureDef;
-            fixtureDef.shape = &box;
-            fixtureDef.density = 1.0f;
-            fixtureDef.friction = 1.0f;
-            fixtureDef.userData = userData;
+            cpSpaceAddShape(m_cpSpace, tileShape);
+            cpShapeSetFriction(tileShape, 0.7);
 
-            b2Fixture* fixture = m_mainTileBody->CreateFixture(&fixtureDef);
-            m_tileFixtures.push_back(fixture);
+            m_tileShapes.push_back(tileShape);
         }
     }
     //Debug::log(Debug::StartupArea) << "ACTIVE CHUNK CTOR, tile object count: " << m_tileFixtures.size();
@@ -111,12 +121,14 @@ m_mainTileBody(mainTileBody)
 
 ActiveChunk::~ActiveChunk()
 {
-    for (b2Fixture* fixture : m_tileFixtures) {
+    for (cpShape* shape : m_tileShapes) {
+        cpSpaceRemoveShape(m_cpSpace, shape);
+        cpShapeFree(shape);
         // delete all tile physics objects within this chunk
-        delete static_cast<ContactListener::BodyUserData*>(fixture->GetUserData());
-        m_mainTileBody->DestroyFixture(fixture);
+        //HACK
+        //delete static_cast<ContactListener::BodyUserData*>(fixture->GetUserData());
     }
 
-    m_tileFixtures.clear();
+    m_tileShapes.clear();
     //Debug::log(Debug::StartupArea) << "ACTIVE CHUNK DTOR, tile object count: " << m_tileFixtures.size();
 }
