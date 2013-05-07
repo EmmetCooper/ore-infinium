@@ -347,7 +347,7 @@ void PhysicsDebugRenderer::DrawSolidCircle(cpVect center, cpFloat radius, cpFloa
     std::vector<Vertex> vertices;
     for (int32 i = 0; i < k_segments; ++i)
     {
-        cpVect v = cpv(radius * 4 * cosf(theta) + center.x, radius * 4 * sinf(theta) + center.y);
+        cpVect v = cpv(radius * cosf(theta) + center.x, radius * sinf(theta) + center.y);
         Vertex vert;
         vert.x = v.x;
         vert.y = v.y;
