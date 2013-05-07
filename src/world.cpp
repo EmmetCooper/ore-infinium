@@ -118,7 +118,7 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         m_torchesQuadTree = new QuadTree(nullptr, halfWorld, halfWorld);
 
 //        cpVect gravity = cpv(0, -100);
-        cpVect gravity = cpv(0, 0);
+        cpVect gravity = cpv(0.0, 9.8);
         m_cpSpace = cpSpaceNew();
         cpSpaceSetGravity(m_cpSpace, gravity);
 
@@ -274,10 +274,6 @@ void World::updateTilePhysicsObjects()
 
     for (Entities::Player* player : m_players) {
     // mark which chunks we want to be activated within this players viewport
-//FIXME: HACK
-        //cpShape *ballShape = cpCircleShapeNew(m_cpSpace->staticBody , 5.0f, cpv(player->position().x, player->position().y));
-        //cpSpaceAddShape(m_cpSpace, ballShape);
-        //cpShapeSetFriction(ballShape, 0.7);
 
         float blockSize = Block::BLOCK_SIZE;
         glm::ivec2 centerTile = glm::ivec2(int(ceil(player->position().x / blockSize)), int(ceil(player->position().y / blockSize)));
@@ -412,7 +408,6 @@ void World::update(double elapsedTime)
 
         m_box2DWorld->Step(FIXED_TIMESTEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
         cpSpaceStep(m_cpSpace, FIXED_TIMESTEP);
-
 
         if (m_server->client() && m_server->client()->physicsDebugRenderer()) {
             static bool physicsRenderingFlushNeeded = true;

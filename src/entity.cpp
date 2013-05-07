@@ -22,10 +22,7 @@
 #include "block.h"
 #include "server/contactlistener.h"
 
-#include <Box2D/Dynamics/b2Body.h>
-#include <Box2D/Dynamics/b2World.h>
-#include <Box2D/Dynamics/b2Fixture.h>
-#include <Box2D/Collision/Shapes/b2PolygonShape.h>
+#include <chipmunk.h>
 
 Entity::Entity(const std::string& frameName, SpriteSheetRenderer::SpriteSheetType spriteSheetType)
     : Sprite(frameName, spriteSheetType)
@@ -69,25 +66,26 @@ void Entity::update(double elapsedTime, World* world)
 
         //Debug::log(Debug::Area::ServerEntityLogicArea) << "Entity update, apply velocity. velocity is x: " << m_velocity.x << " y: " << m_velocity.y;
 
-        glm::vec2 position = glm::vec2(m_body->GetPosition().x, m_body->GetPosition().y);
+        const cpVect& pos = cpBodyGetPos(m_body);
+        glm::vec2 position = glm::vec2(pos.x, pos.y);
 
         this->setPosition(position);
 
-        //HACK FIXME:
-
-        glm::vec2 fullVector = m_velocity * glm::vec2(300, 300);
-
-        b2Vec2 currentVelocity = m_body->GetLinearVelocity();
-
-        b2Vec2 desiredVelocity = b2Vec2(fullVector.x, fullVector.y);
-        float velocityChange = desiredVelocity.x - currentVelocity.x;
-
-        //Debug::log(Debug::Area::ServerEntityLogicArea) << "Entity update, desired velocity is x: " << desiredVelocity.x << " y: " << desiredVelocity.y << " current velocity is x: " << currentVelocity.x << " y: " << currentVelocity.y;
-
-        float impulse = m_body->GetMass() * velocityChange;
-
-        m_body->ApplyLinearImpulse(b2Vec2(impulse, 0), m_body->GetWorldCenter());
-
+//FIXME:        //HACK FIXME:
+//FIXME:
+//FIXME:        glm::vec2 fullVector = m_velocity * glm::vec2(300, 300);
+//FIXME:
+//FIXME:        b2Vec2 currentVelocity = m_body->GetLinearVelocity();
+//FIXME:
+//FIXME:        b2Vec2 desiredVelocity = b2Vec2(fullVector.x, fullVector.y);
+//FIXME:        float velocityChange = desiredVelocity.x - currentVelocity.x;
+//FIXME:
+//FIXME:        //Debug::log(Debug::Area::ServerEntityLogicArea) << "Entity update, desired velocity is x: " << desiredVelocity.x << " y: " << desiredVelocity.y << " current velocity is x: " << currentVelocity.x << " y: " << currentVelocity.y;
+//FIXME:
+//FIXME:        float impulse = m_body->GetMass() * velocityChange;
+//FIXME:
+//FIXME:        m_body->ApplyLinearImpulse(b2Vec2(impulse, 0), m_body->GetWorldCenter());
+//FIXME:
     }
 }
 

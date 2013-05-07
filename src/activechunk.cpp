@@ -109,9 +109,9 @@ m_cpSpace(cpWorldSpace)
 
             cpBB bb = cpBBNew(x, y, x + Block::BLOCK_SIZE, y + BLOCK_SIZE);
             cpShape *tileShape = cpBoxShapeNew2(m_cpSpace->staticBody , bb);
+            cpShapeSetFriction(tileShape, 0.7);
 
             cpSpaceAddShape(m_cpSpace, tileShape);
-            cpShapeSetFriction(tileShape, 0.7);
 
             m_tileShapes.push_back(tileShape);
         }
