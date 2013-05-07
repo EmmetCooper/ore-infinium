@@ -55,6 +55,7 @@ public:
 
     void render();
 
+    uint32_t shapeCount() { return m_shapeCount; }
 
 const Color LINE_COLOR = {200.0/255.0, 210.0/255.0, 230.0/255.0, 1.0};
 const Color CONSTRAINT_COLOR = {0.0, 0.75, 0.0, 1.0};
@@ -180,6 +181,8 @@ private:
     std::vector<cpShape*> m_shapes;
 
     std::mutex m_mutex;
+
+    uint32_t m_shapeCount = 0;
 };
 
 #endif

@@ -126,7 +126,7 @@ void DebugMenu::update(double frameTime)
         m_debug->GetElementById("5")->SetInnerRML(playerString.c_str());
     }
 
-    ss << "Physics Body Count: " << m_physicsWorldBodyCount;
+    ss << "Physics Shape Count: " << m_physicsWorldShapeCount;
 
     std::string physicsBodyCount = ss.str();
     ss.str("");

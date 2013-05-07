@@ -39,7 +39,6 @@ Entity::Entity(const Entity& entity) : Sprite(entity)
 
 Entity::~Entity()
 {
-
 }
 
 void Entity::setVelocity(const glm::vec2& velocity)

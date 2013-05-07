@@ -861,6 +861,7 @@ void PhysicsDebugRenderer::staticDrawSpring(cpDampedSpring *spring, cpBody *body
 void PhysicsDebugRenderer::ChipmunkDebugDrawShape(cpShape *shape)
 {
     assert(shape);
+    ++m_shapeCount;
 
     cpBody *body = shape->body;
     Color color = ColorForShape(shape);
@@ -900,6 +901,7 @@ void PhysicsDebugRenderer::iterateShapesInSpace(cpSpace *space)
     m_indicesPolygons.clear();
     m_verticesSegments.clear();
     m_indicesSegments.clear();
+    m_shapeCount = 0;
 
     cpSpaceEachShape(space, staticDrawShape, NULL);
 

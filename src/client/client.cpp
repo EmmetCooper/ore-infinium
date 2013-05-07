@@ -273,7 +273,7 @@ void Client::render(double frameTime)
                 m_physicsDebugRenderer->render();
             }
 
-            m_debugMenu->setPhysicsWorldBodyCount(m_box2DWorld->GetBodyCount());
+            m_debugMenu->setPhysicsWorldShapeCount(m_physicsDebugRenderer->shapeCount());
         }
     }
 
