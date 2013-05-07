@@ -22,6 +22,7 @@
 #include "player.h"
 #include "chunk.h"
 #include "activechunk.h"
+#include "timer.h"
 
 #include <stdlib.h>
 #include <list>
@@ -260,6 +261,8 @@ private:
     Entities::Player* m_mainPlayer = nullptr;
 
     Server* m_server = nullptr;
+
+    Timer m_physicsRendererFlushTimer;
 
     /** WARNING: only valid when m_server is not. Existence is indicative of this world instance being the clients
      *  (which happens for both client-hosting a server and a client-joining)

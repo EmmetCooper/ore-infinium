@@ -413,8 +413,14 @@ void World::update(double elapsedTime)
         m_box2DWorld->Step(FIXED_TIMESTEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
         cpSpaceStep(m_cpSpace, FIXED_TIMESTEP);
 
+
         if (m_server->client() && m_server->client()->physicsDebugRenderer()) {
-           m_server->client()->physicsDebugRenderer()->iterateShapesInSpace(m_cpSpace);
+            static bool physicsRenderingFlushNeeded = true;
+
+            if (m_physicsRendererFlushTimer.milliseconds() >= 5000) {
+                m_server->client()->physicsDebugRenderer()->iterateShapesInSpace(m_cpSpace);
+                m_physicsRendererFlushTimer.reset();
+            }
         }
     }
 
