@@ -64,28 +64,22 @@ void Entity::update(double elapsedTime, World* world)
     if (m_body) {
         //Debug::log(Debug::Area::ServerEntityLogicArea) << "Sprites present position is: x: " << position().x << " y: " << position().y << " SETTING SPRITE POSITION TO X: " << m_body->GetPosition().x << " Y : " << m_body->GetPosition().y;
 
-        //Debug::log(Debug::Area::ServerEntityLogicArea) << "Entity update, apply velocity. velocity is x: " << m_velocity.x << " y: " << m_velocity.y;
-
         const cpVect& pos = cpBodyGetPos(m_body);
         glm::vec2 position = glm::vec2(pos.x, pos.y);
 
         this->setPosition(position);
 
-//FIXME:        //HACK FIXME:
-//FIXME:
-//FIXME:        glm::vec2 fullVector = m_velocity * glm::vec2(300, 300);
-//FIXME:
-//FIXME:        b2Vec2 currentVelocity = m_body->GetLinearVelocity();
-//FIXME:
-//FIXME:        b2Vec2 desiredVelocity = b2Vec2(fullVector.x, fullVector.y);
-//FIXME:        float velocityChange = desiredVelocity.x - currentVelocity.x;
-//FIXME:
-//FIXME:        //Debug::log(Debug::Area::ServerEntityLogicArea) << "Entity update, desired velocity is x: " << desiredVelocity.x << " y: " << desiredVelocity.y << " current velocity is x: " << currentVelocity.x << " y: " << currentVelocity.y;
-//FIXME:
-//FIXME:        float impulse = m_body->GetMass() * velocityChange;
-//FIXME:
-//FIXME:        m_body->ApplyLinearImpulse(b2Vec2(impulse, 0), m_body->GetWorldCenter());
-//FIXME:
+        glm::vec2 desiredVelocity = m_velocity * glm::vec2(300, 300);
+
+        const cpVect& currentVelocity = cpBodyGetVel(m_body);
+
+        cpFloat velocityChange = desiredVelocity.x - currentVelocity.x;
+
+        cpFloat mass = cpBodyGetMass(m_body);
+        cpVect impulse = cpv(mass * velocityChange, 0.0);
+
+        cpBodyApplyImpulse(m_body, impulse, cpvzero);
+
     }
 }
 
