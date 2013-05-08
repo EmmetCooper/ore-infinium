@@ -22,8 +22,6 @@
 #include "src/shader.h"
 
 #include <GL/glew.h>
-#include <Box2D/Box2D.h>
-
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -54,11 +52,9 @@ public:
     virtual void DrawPolygon(const cpVect* vertices, int32_t vertexCount, PhysicsDebugRenderer::Color color);
     virtual void DrawSolidPolygon(const cpVect* vertices, int32_t vertexCount, PhysicsDebugRenderer::Color color);
 
-    virtual void DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color);
     virtual void DrawSolidCircle(cpVect center, cpFloat radius, cpFloat rotation, Color color);
 
     virtual void DrawSegment(const cpVect& p1, const cpVect& p2, PhysicsDebugRenderer::Color color);
-    virtual void DrawTransform(const b2Transform& xf);
 
     void setCamera(Camera* camera);
 
@@ -66,11 +62,11 @@ public:
 
     uint32_t shapeCount() { return m_shapeCount; }
 
-const Color LINE_COLOR = {200.0/255.0, 210.0/255.0, 230.0/255.0, 1.0};
-const Color CONSTRAINT_COLOR = {0.0, 0.75, 0.0, 1.0};
-const float SHAPE_ALPHA = 1.0;
+    const Color LINE_COLOR = {200.0/255.0, 210.0/255.0, 230.0/255.0, 1.0};
+    const Color CONSTRAINT_COLOR = {0.0, 0.75, 0.0, 1.0};
+    const float SHAPE_ALPHA = 1.0;
 
-float ChipmunkDebugDrawPointLineScale = 1.0;
+    float ChipmunkDebugDrawPointLineScale = 1.0;
 
     static inline Color RGBAColor(float r, float g, float b, float a){
         Color color = {r, g, b, a};
@@ -86,23 +82,11 @@ float ChipmunkDebugDrawPointLineScale = 1.0;
     static void staticDrawConstraint(cpConstraint *constraint, void *unused);
     static void staticDrawSpring(cpDampedSpring *spring, cpBody *body_a, cpBody *body_b);
 
-    void drawShape(cpShape *shape, void *unused);
-    void drawConstraint(cpConstraint *constraint, void *unused);
-    void drawSpring(cpDampedSpring *spring, cpBody *body_a, cpBody *body_b);
-
     Color ColorForShape(cpShape *shape);
     void glColor_from_color(Color color);
     Color ColorFromHash(cpHashValue hash, float alpha);
 
-    void ChipmunkDebugDrawCircle(cpVect center, cpFloat angle, cpFloat radius, Color lineColor, Color fillColor);
-    void ChipmunkDebugDrawSegment(cpVect a, cpVect b, Color color);
-    void ChipmunkDebugDrawFatSegment(cpVect a, cpVect b, cpFloat radius, Color lineColor, Color fillColor);
-    void ChipmunkDebugDrawPolygon(int count, cpVect *verts, Color lineColor, Color fillColor);
-    void ChipmunkDebugDrawPoints(cpFloat size, int count, cpVect *verts, Color color);
-    void ChipmunkDebugDrawBB(cpBB bb, Color color);
-
-    void ChipmunkDebugDrawConstraint(cpConstraint *constraint);
-    void ChipmunkDebugDrawShape(cpShape *shape);
+   void ChipmunkDebugDrawShape(cpShape *shape);
 
     /**
      * Should be called ONLY by the server thread, iterates over the space and finds what it has to draw, switches a mutex, adds it to a list
@@ -112,9 +96,6 @@ float ChipmunkDebugDrawPointLineScale = 1.0;
      * Client will trigger a mutex as well when it comes to iterating over said list and drawing it.
      */
     void iterateShapesInSpace(cpSpace *space);
-
-    void ChipmunkDebugDrawConstraints(cpSpace *space);
-    void ChipmunkDebugDrawCollisionPoints(cpSpace *space);
 
 private:
     void initGL();

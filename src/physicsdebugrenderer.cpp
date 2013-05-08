@@ -314,9 +314,9 @@ void PhysicsDebugRenderer::DrawSolidPolygon(const cpVect* vertices, int32_t vert
 }
 
 //FIXME: the circle calls need to be fixed to not run a draw call each polygon count
-void PhysicsDebugRenderer::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color)
-{
-    assert(0);
+//void PhysicsDebugRenderer::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color)
+//{
+ //   assert(0);
     /*
     const float32 k_segments = 16.0f;
     int vertexCount=16;
@@ -337,17 +337,17 @@ void PhysicsDebugRenderer::DrawCircle(const b2Vec2& center, float32 radius, cons
 
     glDrawArrays(GL_TRIANGLE_FAN, 0, vertexCount);
     */
-}
+//}
 
 void PhysicsDebugRenderer::DrawSolidCircle(cpVect center, cpFloat radius, cpFloat rotation, PhysicsDebugRenderer::Color color)
 {
-    const float32 k_segments = 16.0f;
+    const cpFloat k_segments = 16.0f;
     int vertexCount = 16;
-    const float32 k_increment = 2.0f * PI / k_segments;
+    const cpFloat k_increment = 2.0f * PI / k_segments;
     cpFloat theta = 0.0f;
 
     std::vector<Vertex> vertices;
-    for (int32 i = 0; i < k_segments; ++i)
+    for (uint32_t i = 0; i < k_segments; ++i)
     {
         cpVect v = cpv(radius * cosf(theta) + center.x, radius * sinf(theta) + center.y);
         Vertex vert;
@@ -382,41 +382,40 @@ void PhysicsDebugRenderer::DrawSolidCircle(cpVect center, cpFloat radius, cpFloa
 
     // Draw the axis line
     //FIXME: i don't think this works? but i don't see why it wouldn't..
-//    DrawSegment(center, center + radius * axis, color);
+    DrawSegment(center, cpv(center.x + radius * rotation, center.y + radius * rotation), color);
 }
 
 void PhysicsDebugRenderer::DrawSegment(const cpVect& p1, const cpVect& p2, PhysicsDebugRenderer::Color color)
 {
-//
-//    std::vector<b2Vec2> vertices;
-//    vertices.push_back(p1);
-//    vertices.push_back(p2);
-//
-//    size_t vertexCount = vertices.size();
-//
-//    for (size_t i = 0; i < vertexCount; ++i) {
-//        Vertex vertex;
-//        vertex.x = vertices[i].x;
-//        vertex.y = vertices[i].y;
-//
-//        uint8_t red = static_cast<uint8_t>(ceil(color.r * 255));
-//        uint8_t green = static_cast<uint8_t>(ceil(color.g * 255));
-//        uint8_t blue = static_cast<uint8_t>(ceil(color.b * 255));
-//        uint8_t alpha = 255;
-//        int32_t colorPacked = red | (green << 8) | (blue << 16) | (alpha << 24);
-//        vertex.color = colorPacked;
-//
-//        m_verticesSegments.push_back(vertex);
-//    }
-//
-//    const size_t iboOffset = m_verticesSegments.size();
-//
-//    m_indicesSegments.push_back(iboOffset);
-//    m_indicesSegments.push_back(iboOffset + 1);
+
+    std::vector<cpVect> vertices;
+    vertices.push_back(p1);
+    vertices.push_back(p2);
+
+    size_t vertexCount = vertices.size();
+
+    for (size_t i = 0; i < vertexCount; ++i) {
+        Vertex vertex;
+        vertex.x = vertices[i].x;
+        vertex.y = vertices[i].y;
+
+        uint8_t red = static_cast<uint8_t>(ceil(color.r * 255));
+        uint8_t green = static_cast<uint8_t>(ceil(color.g * 255));
+        uint8_t blue = static_cast<uint8_t>(ceil(color.b * 255));
+        uint8_t alpha = 255;
+        int32_t colorPacked = red | (green << 8) | (blue << 16) | (alpha << 24);
+        vertex.color = colorPacked;
+
+        m_verticesSegments.push_back(vertex);
+    }
+
+    const size_t iboOffset = m_verticesSegments.size();
+
+    m_indicesSegments.push_back(iboOffset);
+    m_indicesSegments.push_back(iboOffset + 1);
 }
 
-void PhysicsDebugRenderer::DrawTransform(const b2Transform& xf)
-{
+//void PhysicsDebugRenderer::DrawTransform(const b2Transform& xf)
 //    b2Vec2 p1 = xf.p, p2;
 //    const float32 k_axisScale = 0.4f;
 //    p2 = p1 + k_axisScale * xf.q.GetXAxis();
@@ -424,7 +423,6 @@ void PhysicsDebugRenderer::DrawTransform(const b2Transform& xf)
 //
 //    p2 = p1 + k_axisScale * xf.q.GetYAxis();
 //    DrawSegment(p1, p2, b2Color(0.0f, 1.0f, 0.0f));
-}
 
 void PhysicsDebugRenderer::render()
 {
@@ -432,8 +430,8 @@ void PhysicsDebugRenderer::render()
 
     renderSolidPolygons();
     renderSolidCircles();
- //   renderPolygons();
-  //  renderSegments();
+    renderPolygons();
+    renderSegments();
 
 
     m_mutex.unlock();
@@ -648,173 +646,6 @@ PhysicsDebugRenderer::Color PhysicsDebugRenderer::ColorForShape(cpShape *shape)
     }
 }
 
-static const GLdouble circleVAR[] = {
-    0.0000f,  1.0000f,
-    0.2588f,  0.9659f,
-    0.5000f,  0.8660f,
-    0.7071f,  0.7071f,
-    0.8660f,  0.5000f,
-    0.9659f,  0.2588f,
-    1.0000f,  0.0000f,
-    0.9659f, -0.2588f,
-    0.8660f, -0.5000f,
-    0.7071f, -0.7071f,
-    0.5000f, -0.8660f,
-    0.2588f, -0.9659f,
-    0.0000f, -1.0000f,
-    -0.2588f, -0.9659f,
-    -0.5000f, -0.8660f,
-    -0.7071f, -0.7071f,
-    -0.8660f, -0.5000f,
-    -0.9659f, -0.2588f,
-    -1.0000f, -0.0000f,
-    -0.9659f,  0.2588f,
-    -0.8660f,  0.5000f,
-    -0.7071f,  0.7071f,
-    -0.5000f,  0.8660f,
-    -0.2588f,  0.9659f,
-    0.0000f,  1.0000f,
-    0.0f, 0.0f, // For an extra line to see the rotation.
-};
-static const int circleVAR_count = sizeof(circleVAR)/sizeof(GLdouble)/2;
-
-void PhysicsDebugRenderer::ChipmunkDebugDrawCircle(cpVect center, cpFloat angle, cpFloat radius, Color lineColor, Color fillColor)
-{
-    glVertexPointer(2, GL_DOUBLE, 0, circleVAR);
-
-    glPushMatrix(); {
-        glTranslatef(center.x, center.y, 0.0f);
-        glRotatef(angle*180.0f/M_PI, 0.0f, 0.0f, 1.0f);
-        glScalef(radius, radius, 1.0f);
-
-        if(fillColor.a > 0){
-            glColor_from_color(fillColor);
-            glDrawArrays(GL_TRIANGLE_FAN, 0, circleVAR_count - 1);
-        }
-
-        if(lineColor.a > 0){
-            glColor_from_color(lineColor);
-            glDrawArrays(GL_LINE_STRIP, 0, circleVAR_count);
-        }
-    } glPopMatrix();
-}
-
-static const GLdouble pillVAR[] = {
-    0.0000f,  1.0000f, 1.0f,
-    0.2588f,  0.9659f, 1.0f,
-    0.5000f,  0.8660f, 1.0f,
-    0.7071f,  0.7071f, 1.0f,
-    0.8660f,  0.5000f, 1.0f,
-    0.9659f,  0.2588f, 1.0f,
-    1.0000f,  0.0000f, 1.0f,
-    0.9659f, -0.2588f, 1.0f,
-    0.8660f, -0.5000f, 1.0f,
-    0.7071f, -0.7071f, 1.0f,
-    0.5000f, -0.8660f, 1.0f,
-    0.2588f, -0.9659f, 1.0f,
-    0.0000f, -1.0000f, 1.0f,
-
-    0.0000f, -1.0000f, 0.0f,
-    -0.2588f, -0.9659f, 0.0f,
-    -0.5000f, -0.8660f, 0.0f,
-    -0.7071f, -0.7071f, 0.0f,
-    -0.8660f, -0.5000f, 0.0f,
-    -0.9659f, -0.2588f, 0.0f,
-    -1.0000f, -0.0000f, 0.0f,
-    -0.9659f,  0.2588f, 0.0f,
-    -0.8660f,  0.5000f, 0.0f,
-    -0.7071f,  0.7071f, 0.0f,
-    -0.5000f,  0.8660f, 0.0f,
-    -0.2588f,  0.9659f, 0.0f,
-    0.0000f,  1.0000f, 0.0f,
-};
-static const int pillVAR_count = sizeof(pillVAR)/sizeof(GLdouble)/3;
-
-void PhysicsDebugRenderer::ChipmunkDebugDrawSegment(cpVect a, cpVect b, Color color)
-{
-    GLdouble verts[] = {
-        a.x, a.y,
-        b.x, b.y,
-    };
-
-    glVertexPointer(2, GL_DOUBLE, 0, verts);
-    glColor_from_color(color);
-    glDrawArrays(GL_LINES, 0, 2);
-}
-
-void PhysicsDebugRenderer::ChipmunkDebugDrawFatSegment(cpVect a, cpVect b, cpFloat radius, Color lineColor, Color fillColor)
-{
-    if(radius){
-        glVertexPointer(3, GL_DOUBLE, 0, pillVAR);
-        glPushMatrix(); {
-            cpVect d = cpvsub(b, a);
-            cpVect r = cpvmult(d, radius/cpvlength(d));
-
-            const GLfloat matrix[] = {
-                float(r.x), float(r.y), 0.0f, 0.0f,
-                float(-r.y), float(r.x), 0.0f, 0.0f,
-                float(d.x), float(d.y), 0.0f, 0.0f,
-                float(a.x), float(a.y), 0.0f, 1.0f,
-            };
-            glMultMatrixf(matrix);
-
-            if(fillColor.a > 0){
-                glColor_from_color(fillColor);
-                glDrawArrays(GL_TRIANGLE_FAN, 0, pillVAR_count);
-            }
-
-            if(lineColor.a > 0){
-                glColor_from_color(lineColor);
-                glDrawArrays(GL_LINE_LOOP, 0, pillVAR_count);
-            }
-        } glPopMatrix();
-    } else {
-        ChipmunkDebugDrawSegment(a, b, lineColor);
-    }
-}
-
-void PhysicsDebugRenderer::ChipmunkDebugDrawPolygon(int count, cpVect *verts, Color lineColor, Color fillColor)
-{
-    #if CP_USE_DOUBLES
-    glVertexPointer(2, GL_DOUBLE, 0, verts);
-    #else
-    glVertexPointer(2, GL_DOUBLE, 0, verts);
-    #endif
-
-    if(fillColor.a > 0){
-        glColor_from_color(fillColor);
-        glDrawArrays(GL_TRIANGLE_FAN, 0, count);
-    }
-
-    if(lineColor.a > 0){
-        glColor_from_color(lineColor);
-        glDrawArrays(GL_LINE_LOOP, 0, count);
-    }
-}
-
-void PhysicsDebugRenderer::ChipmunkDebugDrawPoints(cpFloat size, int count, cpVect *verts, Color color)
-{
-    #if CP_USE_DOUBLES
-    glVertexPointer(2, GL_DOUBLE, 0, verts);
-    #else
-    glVertexPointer(2, GL_DOUBLE, 0, verts);
-    #endif
-
-    glPointSize(size*ChipmunkDebugDrawPointLineScale);
-    glColor_from_color(color);
-    glDrawArrays(GL_POINTS, 0, count);
-}
-
-void PhysicsDebugRenderer::ChipmunkDebugDrawBB(cpBB bb, Color color)
-{
-    cpVect verts[] = {
-        cpv(bb.l, bb.b),
-        cpv(bb.l, bb.t),
-        cpv(bb.r, bb.t),
-        cpv(bb.r, bb.b),
-    };
-    ChipmunkDebugDrawPolygon(4, verts, color, LAColor(0, 0));
-}
 
 void PhysicsDebugRenderer::staticDrawConstraint(cpConstraint *constraint, void *unused)
 {
@@ -931,8 +762,8 @@ static const GLdouble springVAR[] = {
 };
 static const int springVAR_count = sizeof(springVAR)/sizeof(GLdouble)/2;
 
-void PhysicsDebugRenderer::drawConstraint(cpConstraint *constraint, void *unused)
-{
+//void PhysicsDebugRenderer::drawConstraint(cpConstraint *constraint, void *unused)
+//{
 //    cpBody *body_a = constraint->a;
 //    cpBody *body_b = constraint->b;
 //
@@ -975,20 +806,20 @@ void PhysicsDebugRenderer::drawConstraint(cpConstraint *constraint, void *unused
 //    } else if(klass == cpDampedSpringGetClass()){
 //        staticDrawSpring((cpDampedSpring *)constraint, body_a, body_b);
 //    }
-}
+//}
 
-void PhysicsDebugRenderer::ChipmunkDebugDrawConstraint(cpConstraint *constraint)
-{
+//void PhysicsDebugRenderer::ChipmunkDebugDrawConstraint(cpConstraint *constraint)
+//{
 //    staticDrawConstraint(constraint, NULL);
-}
+//}
 
-void PhysicsDebugRenderer::ChipmunkDebugDrawConstraints(cpSpace *space)
-{
+//void PhysicsDebugRenderer::ChipmunkDebugDrawConstraints(cpSpace *space)
+//{
 //    cpSpaceEachConstraint(space, staticDrawConstraint, NULL);
-}
+//}
 
-void PhysicsDebugRenderer::ChipmunkDebugDrawCollisionPoints(cpSpace *space)
-{
+//void PhysicsDebugRenderer::ChipmunkDebugDrawCollisionPoints(cpSpace *space)
+//{
 //    cpArray *arbiters = space->arbiters;
 //
 //    glColor3f(1.0f, 0.0f, 0.0f);
@@ -1004,4 +835,4 @@ void PhysicsDebugRenderer::ChipmunkDebugDrawCollisionPoints(cpSpace *space)
 //            }
 //        }
 //    } glEnd();
-}
+//}

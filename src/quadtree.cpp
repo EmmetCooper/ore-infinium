@@ -18,10 +18,12 @@
 #include "quadtree.h"
 #include "debug.h"
 
+#include <chipmunk/chipmunk.h>
+
 #include <assert.h>
 
-QuadTree::QuadTree(QuadTree* parent, b2Vec2 _center, b2Vec2 _halfDimension)
-    : m_boundary(_center, _halfDimension),
+QuadTree::QuadTree(QuadTree* parent, cpVect _center, cpVect _halfDimension)
+    : //m_boundary(_center, _halfDimension), HACK:
       m_nodeCapacity(4),
       m_parent(parent)
 {
@@ -29,8 +31,8 @@ QuadTree::QuadTree(QuadTree* parent, b2Vec2 _center, b2Vec2 _halfDimension)
     m_points.reserve(m_nodeCapacity);
 }
 
-QuadTree::QuadTree(QuadTree* parent, b2Vec2 _center, b2Vec2 _halfDimension, size_t _nodeCapacity)
-    : m_boundary(_center, _halfDimension),
+QuadTree::QuadTree(QuadTree* parent, cpVect _center, cpVect _halfDimension, size_t _nodeCapacity)
+    : //HACK: m_boundary(_center, _halfDimension),
       m_nodeCapacity(_nodeCapacity),
       m_parent(parent)
 {
@@ -41,9 +43,9 @@ QuadTree::QuadTree(QuadTree* parent, b2Vec2 _center, b2Vec2 _halfDimension, size
 bool QuadTree::insert(Entity * entity)
 {
     Debug::assertf(entity, "quadtree insertion error, entity to insert was null (horrible api abuse)");
-    if (!m_boundary.containsPoint(entity)) {
-        return false;
-    }
+//HACK    if (!m_boundary.containsPoint(entity)) {
+//HACK        return false;
+//HACK    }
 
     if (m_points.size() < m_nodeCapacity) {
         m_points.push_back(entity);
@@ -75,16 +77,21 @@ bool QuadTree::insert(Entity * entity)
 }
 
 void QuadTree::subdivide() {
-    b2Vec2 center = m_boundary.center;
-    b2Vec2 newDim(m_boundary.halfDimension.x / 2, m_boundary.halfDimension.y / 2);
+    /*
+     * HACK:
+    cpVect center = m_boundary.center;
+    cpVect newDim(m_boundary.halfDimension.x / 2, m_boundary.halfDimension.y / 2);
 
     NW = new QuadTree(this, b2Vec2(center.x - newDim.x, center.y - newDim.y), newDim);
     NE = new QuadTree(this, b2Vec2(center.x + newDim.x, center.y - newDim.y), newDim);
     SW = new QuadTree(this, b2Vec2(center.x - newDim.x, center.y + newDim.y), newDim);
     SE = new QuadTree(this, b2Vec2(center.x + newDim.x, center.y + newDim.y), newDim);
+    */
 }
 
-void QuadTree::queryRange(std::vector<Entity*> & list, AABB range) {
+void QuadTree::queryRange(std::vector<Entity*> & list, cpBB range) {
+    /*
+     * HACK
     if (!m_boundary.intersectsAABB(range)) {
         return ; // list is empty
     }
@@ -94,6 +101,7 @@ void QuadTree::queryRange(std::vector<Entity*> & list, AABB range) {
             list.push_back(m_points[i]);
         }
     }
+    */
 
     if (NW == nullptr) {
         return ;

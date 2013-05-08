@@ -31,8 +31,6 @@
 #include <GL/glew.h>
 #include <SDL2/SDL_events.h>
 
-#include <Box2D/Common/b2Math.h>
-
 struct cpBody;
 struct cpSpace;
 class ActiveChunk;
@@ -40,8 +38,6 @@ class QuadTreeRenderer;
 class QuadTree;
 class QueryCallback;
 class ContactListener;
-class b2Body;
-class b2World;
 class LightRenderer;
 class Server;
 class Client;
@@ -135,10 +131,6 @@ public:
     void loadChunk(Chunk* chunk);
 
     void spawnItem(Item* item);
-
-    b2World* box2DWorld() {
-        return m_box2DWorld;
-    }
 
     cpSpace* cpWorldSpace() {
         return m_cpSpace;
@@ -244,13 +236,7 @@ private:
      */
     Camera* m_camera = nullptr;
 
-    b2World* m_box2DWorld = nullptr;
-//    b2Vec2 m_gravity = b2Vec2(0.0f, 9.8f);
-    b2Vec2 m_gravity = b2Vec2(0.0f, 0.0f);
-
     cpSpace* m_cpSpace = nullptr;
-
-    QueryCallback* m_queryCallback = nullptr;
 
     /**
      * Null if we are in server mode.

@@ -20,40 +20,43 @@
 
 #include "src/entity.h"
 
-#include <Box2D/Box2D.h>
-
-struct AABB {
-    AABB(b2Vec2 _center, b2Vec2 _halfDimension) : center(_center), halfDimension(_halfDimension) {}
-
-    bool containsPoint(Entity* entity) {
-        b2Vec2 p(entity->position().x, entity->position().y);
-        return ((p.x > center.x - halfDimension.x && p.x <= center.x + halfDimension.x) &&
-                (p.y > center.y - halfDimension.y && p.y <= center.y + halfDimension.y));
-    }
-
-    bool intersectsAABB(AABB other) {
-        return (((other.center.x - other.halfDimension.x > center.x - halfDimension.x && other.center.x - other.halfDimension.x < center.x + halfDimension.x) ||
-                 (other.center.x + other.halfDimension.x > center.x - halfDimension.x && other.center.x + other.halfDimension.x < center.x + halfDimension.x)) &&
-                ((other.center.y - other.halfDimension.y > center.y - halfDimension.y && other.center.y - other.halfDimension.y < center.y + halfDimension.y) ||
-                 (other.center.y + other.halfDimension.y > center.y - halfDimension.y && other.center.y + other.halfDimension.y < center.y + halfDimension.y)));
-    }
-
-    b2Vec2 center;
-    b2Vec2 halfDimension;
-};
+struct cpVect;
+struct cpBB;
+//
+//struct AABB {
+//    AABB(cpVect _center, cpVect _halfDimension) : center(_center), halfDimension(_halfDimension) {}
+//
+//    bool containsPoint(Entity* entity) {
+//        //FIXME: HACK
+////        cpVect p(entity->position().x, entity->position().y);
+////        return ((p.x > center.x - halfDimension.x && p.x <= center.x + halfDimension.x) &&
+////                (p.y > center.y - halfDimension.y && p.y <= center.y + halfDimension.y));
+//    }
+//
+//    bool intersectsAABB(AABB other) {
+//        return (((other.center.x - other.halfDimension.x > center.x - halfDimension.x && other.center.x - other.halfDimension.x < center.x + halfDimension.x) ||
+//                 (other.center.x + other.halfDimension.x > center.x - halfDimension.x && other.center.x + other.halfDimension.x < center.x + halfDimension.x)) &&
+//                ((other.center.y - other.halfDimension.y > center.y - halfDimension.y && other.center.y - other.halfDimension.y < center.y + halfDimension.y) ||
+//                 (other.center.y + other.halfDimension.y > center.y - halfDimension.y && other.center.y + other.halfDimension.y < center.y + halfDimension.y)));
+//                  //FIXME: HACK
+//    }
+//
+//    cpVect center;
+//    cpVect halfDimension;
+//};
 
 class QuadTree {
 public:
-    QuadTree(QuadTree* parent, b2Vec2 center, b2Vec2 halfDimension);
-    QuadTree(QuadTree* parent, b2Vec2 center, b2Vec2 halfDimension, size_t nodeCapacity);
+    QuadTree(QuadTree* parent, cpVect center, cpVect halfDimension);
+    QuadTree(QuadTree* parent, cpVect center, cpVect halfDimension, size_t nodeCapacity);
 
-    bool insert(Entity *);
+    bool insert(Entity* entity);
     void subdivide();
-    void queryRange(std::vector<Entity*> &, AABB);
+    void queryRange(std::vector<Entity*> & emptyInputList, cpBB bb);
 
     void clear();
 
-    AABB m_boundary;
+//    AABB m_boundary;
     size_t m_nodeCapacity;
 
     // leaves

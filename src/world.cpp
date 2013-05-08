@@ -42,7 +42,6 @@
 #include "quadtree.h"
 #include "activechunk.h"
 
-#include <Box2D/Box2D.h>
 #include <chipmunk/chipmunk.h>
 
 #include <stdio.h>
@@ -102,16 +101,7 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
     //client doesn't actually load/generate any world
     if (m_server) {
-        m_box2DWorld = new b2World(m_gravity);
-        m_box2DWorld->SetAllowSleeping(true);
-
-        m_queryCallback = new QueryCallback(m_box2DWorld);
-
-        b2BodyDef bodyDef;
-        bodyDef.type = b2_staticBody;
-        bodyDef.position.Set(0.0f, 0.0f);
-
-        b2Vec2 halfWorld(Block::BLOCK_SIZE * WORLD_COLUMNCOUNT * 0.5f, Block::BLOCK_SIZE * WORLD_ROWCOUNT * 0.5f);
+        cpVect halfWorld = cpv(Block::BLOCK_SIZE * WORLD_COLUMNCOUNT * 0.5f, Block::BLOCK_SIZE * WORLD_ROWCOUNT * 0.5f);
         m_torchesQuadTree = new QuadTree(nullptr, halfWorld, halfWorld);
 
 //        cpVect gravity = cpv(0, -100);
@@ -121,10 +111,6 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         cpSpaceSetIterations(m_cpSpace, 10);
         cpSpaceSetSleepTimeThreshold(m_cpSpace, 0.5);
 //        cpSpaceAddCollisionHandler(m_cpSpace, 0, 0, &ContactListener::begin, nullptr, nullptr, nullptr, this);
-
-        if (m_server->client()) {
-            m_server->client()->setBox2DWorld(m_box2DWorld);
-        }
 
         ////////////////////////
 
@@ -181,9 +167,6 @@ World::~World()
     m_players.clear();
 
     cpSpaceFree(m_cpSpace);
-
-    delete m_box2DWorld;
-    delete m_queryCallback;
 
     delete m_camera;
 }
@@ -768,19 +751,20 @@ void World::spawnItem(Item* item)
 
 void World::destroyTilePhysicsObject(uint32_t column, uint32_t row)
 {
-    b2AABB aabb;
-    aabb.lowerBound = b2Vec2((Block::BLOCK_SIZE * (column)) + (Block::BLOCK_SIZE * 0.5), Block::BLOCK_SIZE * (row) + (Block::BLOCK_SIZE * 0.5));
-    aabb.upperBound = b2Vec2((Block::BLOCK_SIZE * (column)) + (Block::BLOCK_SIZE * 0.5), Block::BLOCK_SIZE * (row)+ (Block::BLOCK_SIZE * 0.5));
-
-    m_queryCallback->setFixtureSearchType(ContactListener::BodyType::Block);
-    m_box2DWorld->QueryAABB(m_queryCallback, aabb);
-
-//    Debug::log(Debug::ServerEntityLogicArea) << "FIXTURE CALLBCK COUNT: " <<  m_queryCallback->bodiesAtPoint(aabb.lowerBound).size();
-    for (auto* fixture : m_queryCallback->fixturesAtPoint(aabb.lowerBound)) {
-        //be sure to delete our body marker
-        //delete static_cast<ContactListener::BodyUserData*>(fixture->GetUserData());
-        //m_mainTileBody->DestroyFixture(fixture);
-    }
+//     FIXME:
+//    b2AABB aabb;
+//    aabb.lowerBound = b2Vec2((Block::BLOCK_SIZE * (column)) + (Block::BLOCK_SIZE * 0.5), Block::BLOCK_SIZE * (row) + (Block::BLOCK_SIZE * 0.5));
+//    aabb.upperBound = b2Vec2((Block::BLOCK_SIZE * (column)) + (Block::BLOCK_SIZE * 0.5), Block::BLOCK_SIZE * (row)+ (Block::BLOCK_SIZE * 0.5));
+//
+//    m_queryCallback->setFixtureSearchType(ContactListener::BodyType::Block);
+//    m_box2DWorld->QueryAABB(m_queryCallback, aabb);
+//
+////    Debug::log(Debug::ServerEntityLogicArea) << "FIXTURE CALLBCK COUNT: " <<  m_queryCallback->bodiesAtPoint(aabb.lowerBound).size();
+//    for (auto* fixture : m_queryCallback->fixturesAtPoint(aabb.lowerBound)) {
+//        //be sure to delete our body marker
+//        //delete static_cast<ContactListener::BodyUserData*>(fixture->GetUserData());
+//        //m_mainTileBody->DestroyFixture(fixture);
+//    }
 }
 
 void World::performBlockAttack(Entities::Player* player)

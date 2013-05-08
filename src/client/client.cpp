@@ -237,35 +237,35 @@ void Client::render(double frameTime)
 
     // only a client-hosted server has a chance of seeing any debug shit
     if (m_server) {
-        if (!m_physicsDebugRenderer && m_box2DWorld && m_world && m_world->spriteSheetRenderer()) {
+        if (!m_physicsDebugRenderer && m_world && m_world->spriteSheetRenderer()) {
             m_physicsDebugRenderer = new PhysicsDebugRenderer(m_world->spriteSheetRenderer()->camera());
             // physics debug renderer first init...
 //            m_box2DWorld->SetDebugDraw(m_physicsDebugRenderer);
         }
 
-        if (m_box2DWorld && m_physicsDebugRenderer) {
+        if (m_physicsDebugRenderer) {
 
             int rendererFlags = 0;
             int settingsFlags = Settings::instance()->debugRendererFlags;
             bool drawingRequired = false;
 
             if (settingsFlags & Debug::RenderingDebug::Box2DAABBRenderingDebug) {
-                rendererFlags |= b2Draw::e_aabbBit;
+               // rendererFlags |= b2Draw::e_aabbBit;
                 drawingRequired = true;
             }
 
             if (settingsFlags & Debug::RenderingDebug::Box2DShapeRenderingDebug) {
-                rendererFlags |= b2Draw::e_shapeBit;
+              //  rendererFlags |= b2Draw::e_shapeBit;
                 drawingRequired = true;
             }
 
             if (settingsFlags & Debug::RenderingDebug::Box2DCenterOfMassRenderingDebug) {
-                rendererFlags |= b2Draw::e_centerOfMassBit;
+             //   rendererFlags |= b2Draw::e_centerOfMassBit;
                 drawingRequired = true;
             }
 
             if (settingsFlags & Debug::RenderingDebug::Box2DJointRenderingDebug) {
-                rendererFlags |= b2Draw::e_jointBit;
+            //    rendererFlags |= b2Draw::e_jointBit;
                 drawingRequired = true;
             }
 
