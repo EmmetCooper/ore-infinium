@@ -21,7 +21,7 @@
 #include "world.h"
 #include "settings/settings.h"
 
-#include <chipmunk_private.h>
+#include <chipmunk/chipmunk_private.h>
 
 static PhysicsDebugRenderer *s_instance = nullptr;
 

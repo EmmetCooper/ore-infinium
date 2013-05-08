@@ -250,7 +250,6 @@ private:
 
     cpSpace* m_cpSpace = nullptr;
 
-    ContactListener* m_contactListener = nullptr;
     QueryCallback* m_queryCallback = nullptr;
 
     /**

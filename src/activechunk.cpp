@@ -21,7 +21,7 @@
 #include "server/contactlistener.h"
 #include "debug.h"
 
-#include <chipmunk.h>
+#include <chipmunk/chipmunk.h>
 
 bool DesiredChunk::operator==(const DesiredChunk& other) const
 {
@@ -110,6 +110,12 @@ m_cpSpace(cpWorldSpace)
             cpBB bb = cpBBNew(x, y, x + Block::BLOCK_SIZE, y + BLOCK_SIZE);
             cpShape *tileShape = cpBoxShapeNew2(m_cpSpace->staticBody , bb);
             cpShapeSetFriction(tileShape, 2.7);
+
+            ContactListener::BodyUserData* userData = new ContactListener::BodyUserData();
+            userData->type = ContactListener::BodyType::Block;
+            userData->data = &m_blocks[index];
+
+            cpShapeSetUserData(tileShape, userData);
 
             cpSpaceAddShape(m_cpSpace, tileShape);
 

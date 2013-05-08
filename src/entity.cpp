@@ -22,7 +22,7 @@
 #include "block.h"
 #include "server/contactlistener.h"
 
-#include <chipmunk.h>
+#include <chipmunk/chipmunk.h>
 
 Entity::Entity(const std::string& frameName, SpriteSheetRenderer::SpriteSheetType spriteSheetType)
     : Sprite(frameName, spriteSheetType)

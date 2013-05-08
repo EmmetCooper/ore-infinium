@@ -27,7 +27,7 @@
 #include "timer.h"
 #include <assert.h>
 
-#include <chipmunk.h>
+#include <chipmunk/chipmunk.h>
 
 namespace Entities
 {
@@ -49,7 +49,37 @@ Player::~Player()
 
 void Player::playerUpdateVelocity(cpBody* body, cpVect gravity, cpFloat damping, cpFloat dt)
 {
+    ContactListener::BodyUserData* userData = static_cast<ContactListener::BodyUserData*> (body->data);
+    Player* player = static_cast<Player*> (userData->data);
 
+    float horizontalMovement = player->m_desiredVelocity.x * 300;
+    cpShapeSetSurfaceVelocity(player->m_footShape, cpv(horizontalMovement, 0.0));
+    cpBodyUpdateVelocity(body, gravity, damping, dt);
+}
+
+void Player::update(double elapsedTime, World* world)
+{
+    Entity::update(elapsedTime, world);
+
+    m_canJump = false;
+
+    if (m_body) {
+        cpBodyEachArbiter(m_body, &checkEachArbiter, this);
+    }
+}
+
+void Player::checkEachArbiter(cpBody* body, cpArbiter* arbiter, void* data)
+{
+    Debug::log(Debug::StartupArea) << "ARBITER CHECK HIT!:";
+    Player* player = static_cast<Player*>(data);
+
+    cpShape* shapeA;
+    cpShape* shapeB;
+    cpArbiterGetShapes(arbiter, &shapeA, &shapeB);
+
+    if (shapeA == player->m_footShape || shapeB == player->m_footShape) {
+        player->m_canJump = true;
+    }
 }
 
 void Player::createPhysicsBody(World* world, const glm::vec2& position)
@@ -59,7 +89,14 @@ void Player::createPhysicsBody(World* world, const glm::vec2& position)
     cpSpace* space = world->cpWorldSpace();
 
     m_body = cpBodyNew(0.5, INFINITY);
-//    m_body->velocity_func =
+
+    ContactListener::BodyUserData* userData = new ContactListener::BodyUserData;
+    userData->type = ContactListener::Player;
+    userData->data = this;
+
+    cpBodySetUserData(m_body, userData);
+    m_body->velocity_func = &playerUpdateVelocity;
+
     cpSpaceAddBody(space, m_body);
     cpBodySetPos(m_body, cpv(position.x, position.y));
 
@@ -68,7 +105,7 @@ void Player::createPhysicsBody(World* world, const glm::vec2& position)
 
     cpSpaceAddShape(space, groundShape);
 
-    m_groundShape = groundShape;
+    m_footShape = groundShape;
 
     //create dynamic body
 //    b2BodyDef bodyDef;
@@ -130,7 +167,7 @@ void Player::createPhysicsBody(World* world, const glm::vec2& position)
 
 void Player::move(int32_t directionX, int32_t directionY)
 {
-    Entity::setVelocity(directionX * movementSpeed, directionY * movementSpeed);
+    m_desiredVelocity = glm::vec2(directionX * movementSpeed, directionY * movementSpeed);
 }
 
 void Player::jump()
@@ -138,6 +175,7 @@ void Player::jump()
     if (m_body) {
         if (m_jumpTimer->milliseconds() >= m_jumpDelay) {
 //            if (m_jumpContacts > 0) {
+            if (m_canJump) {
             cpVect currentVelocity = cpBodyGetVel(m_body);
 
                 cpFloat velocityChange = -5.0;
@@ -148,7 +186,7 @@ void Player::jump()
 
                 m_jumpTimer->reset();
                 cpBodyApplyImpulse(m_body, cpv(0, impulse), cpvzero);
- //           }
+           }
         }
     }
 }

@@ -21,17 +21,13 @@
 #include <Box2D/Box2D.h>
 #include <set>
 
-class ContactListener : public b2ContactListener
+struct cpArbiter;
+struct cpSpace;
+
+class ContactListener
 {
 public:
-    ContactListener();
-    virtual ~ContactListener();
-
-    virtual void BeginContact(b2Contact* contact);
-    virtual void EndContact(b2Contact* contact);
-
-    virtual void PreSolve(b2Contact* contact, const b2Manifold* oldManifold);
-    virtual void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse);
+    static int /* cpBool */ begin(cpArbiter* arbiter, cpSpace* space, void* data /* World pointer */);
 
     enum BodyType {
         Invalid = -1,
@@ -46,8 +42,8 @@ public:
     };
 
 private:
-    void checkBeginContact(BodyUserData* userData);
-    void checkEndContact(BodyUserData* userData);
+    static void checkBeginContact(BodyUserData* userData);
+    static void checkEndContact(BodyUserData* userData);
 };
 
 class QueryCallback : public b2QueryCallback

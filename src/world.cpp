@@ -43,7 +43,7 @@
 #include "activechunk.h"
 
 #include <Box2D/Box2D.h>
-#include <chipmunk.h>
+#include <chipmunk/chipmunk.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -105,9 +105,6 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         m_box2DWorld = new b2World(m_gravity);
         m_box2DWorld->SetAllowSleeping(true);
 
-        m_contactListener = new ContactListener();
-        m_box2DWorld->SetContactListener(m_contactListener);
-
         m_queryCallback = new QueryCallback(m_box2DWorld);
 
         b2BodyDef bodyDef;
@@ -123,47 +120,13 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         cpSpaceSetGravity(m_cpSpace, gravity);
         cpSpaceSetIterations(m_cpSpace, 10);
         cpSpaceSetSleepTimeThreshold(m_cpSpace, 0.5);
+//        cpSpaceAddCollisionHandler(m_cpSpace, 0, 0, &ContactListener::begin, nullptr, nullptr, nullptr, this);
 
-        std::random_device device;
-        std::mt19937 rand(device());
-        std::uniform_int_distribution<> distribution(0, 1000000);
-
-        distribution(rand);
-
-//FIXME:        cpShape *ground = cpSegmentShapeNew(m_cpSpace->staticBody, cpv(-20, 5), cpv(20, -5), 0);
-//FIXME:        cpShapeSetFriction(ground, 1);
-//FIXME:        cpSpaceAddShape(m_cpSpace, ground);
-
-//        cpFloat mass = 1;
-//        cpFloat radius = 5;
-//        cpFloat moment = cpMomentForCircle(mass, 0, radius, cpvzero);
-//
-//        m_body = cpSpaceAddBody(m_cpSpace, cpBodyNew(mass, moment));
-//        cpBodySetPos(m_body, cpv(distribution(rand), -1000));
-//
-//        cpShape *ballShape = cpSpaceAddShape(m_cpSpace, cpCircleShapeNew(m_body, radius, cpvzero));
-//        cpShapeSetFriction(ballShape, 0.7);
-//        cpBodySleep(m_body);
-//
         if (m_server->client()) {
             m_server->client()->setBox2DWorld(m_box2DWorld);
         }
 
         ////////////////////////
-
-
-        /*
-        int max = 600000;
-        for (int i = 0; i < max; ++i) {
-            cpShape *ballShape = cpCircleShapeNew(m_cpSpace->staticBody , radius, cpv(distribution(rand), distribution(rand)));
-            cpSpaceAddShape(m_cpSpace, ballShape);
-            cpShapeSetFriction(ballShape, 0.7);
-
-            if (i == max - 1) {
-                Debug::log(Debug::StartupArea) << "BALL: " << cpShapeGetBB(ballShape).r;
-            }
-        }
-        */
 
         loadWorld();
         //HACK, as if that wasn't obvious.
@@ -220,7 +183,6 @@ World::~World()
     cpSpaceFree(m_cpSpace);
 
     delete m_box2DWorld;
-    delete m_contactListener;
     delete m_queryCallback;
 
     delete m_camera;

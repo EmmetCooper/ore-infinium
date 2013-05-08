@@ -21,17 +21,9 @@
 
 #include <src/debug.h>
 #include <set>
+#include <chipmunk/chipmunk.h>
 
-ContactListener::ContactListener()
-{
-
-}
-
-ContactListener::~ContactListener()
-{
-
-}
-
+/*
 void ContactListener::BeginContact(b2Contact* contact)
 {
     void* fixtureDataA = contact->GetFixtureA()->GetUserData();
@@ -65,6 +57,15 @@ void ContactListener::EndContact(b2Contact* contact)
        checkEndContact(userDataB);
    }
 }
+*/
+
+
+int ContactListener::begin(cpArbiter* arbiter, cpSpace* space, void* data)
+{
+
+    return 0;
+}
+
 
 void ContactListener::checkBeginContact(ContactListener::BodyUserData* userData)
 {
@@ -86,16 +87,6 @@ void ContactListener::checkEndContact(ContactListener::BodyUserData* userData)
         player->removeJumpContact();
         break;
     }
-}
-
-void ContactListener::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
-{
-    b2ContactListener::PreSolve(contact, oldManifold);
-}
-
-void ContactListener::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
-{
-    b2ContactListener::PostSolve(contact, impulse);
 }
 
 QueryCallback::QueryCallback(b2World* world)

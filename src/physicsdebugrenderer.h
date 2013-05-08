@@ -30,9 +30,8 @@
 #include <glm/gtc/swizzle.hpp>
 
 #include <mutex>
-#include <chipmunk_types.h>
 
-#include <chipmunk_types.h>
+#include <chipmunk/chipmunk_types.h>
 
 struct cpConstraint;
 struct cpDampedSpring;

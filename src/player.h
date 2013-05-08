@@ -23,9 +23,10 @@
 
 
 #include <SDL2/SDL_events.h>
-#include <chipmunk_types.h>
+#include <chipmunk/chipmunk_types.h>
 
 struct cpVect;
+struct cpArbiter;
 
 class World;
 class Server;
@@ -54,6 +55,8 @@ public:
     uint32_t playerID() const;
 
     virtual void createPhysicsBody(World* world, const glm::vec2& position);
+
+    virtual void update(double elapsedTime, World* world);
 
     /**
      * Server side only, to asociate and keep track of each player's (clients) mouse position
@@ -113,6 +116,8 @@ public:
 
 private:
     static void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);
+    static void checkEachArbiter(cpBody* body, cpArbiter* arbiter, void* data);
+
 
     uint32_t m_maxHealth = 2500;
     uint32_t m_health = m_maxHealth;
@@ -158,12 +163,16 @@ private:
     // if > 0 means something is touching our feet, so we can jump.
     uint32_t m_jumpContacts = 0;
 
+    bool m_canJump = false;
+
     uint16_t m_ping = 0;
 
     Timer* m_jumpTimer = nullptr;
     uint64_t m_jumpDelay = 300;
 
-    cpShape* m_groundShape = nullptr;
+    cpShape* m_footShape = nullptr;
+
+    glm::vec2 m_desiredVelocity = glm::vec2(0.0f, 0.0f);
 
     friend Server;
     friend World;
