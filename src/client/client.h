@@ -26,7 +26,6 @@
 #include <SDL2/SDL.h>
 #include <SDL_log.h>
 #include <thread>
-#include <Box2D/Dynamics/b2World.h>
 
 struct cpSpace;
 class DebugSettings;
