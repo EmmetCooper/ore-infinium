@@ -61,7 +61,7 @@ void Player::update(double elapsedTime, World* world)
 {
     Entity::update(elapsedTime, world);
 
-    m_canJump = false;
+    m_feetOnGround = false;
 
     if (m_body) {
         cpBodyEachArbiter(m_body, &checkEachArbiter, this);
@@ -78,7 +78,7 @@ void Player::checkEachArbiter(cpBody* body, cpArbiter* arbiter, void* data)
     cpArbiterGetShapes(arbiter, &shapeA, &shapeB);
 
     if (shapeA == player->m_footShape || shapeB == player->m_footShape) {
-        player->m_canJump = true;
+        player->m_feetOnGround = true;
     }
 }
 
@@ -175,7 +175,7 @@ void Player::jump()
     if (m_body) {
         if (m_jumpTimer->milliseconds() >= m_jumpDelay) {
 //            if (m_jumpContacts > 0) {
-            if (m_canJump) {
+            if (m_feetOnGround) {
             cpVect currentVelocity = cpBodyGetVel(m_body);
 
                 cpFloat velocityChange = -5.0;

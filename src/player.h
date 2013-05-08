@@ -163,7 +163,7 @@ private:
     // if > 0 means something is touching our feet, so we can jump.
     uint32_t m_jumpContacts = 0;
 
-    bool m_canJump = false;
+    bool m_feetOnGround = false;
 
     uint16_t m_ping = 0;
 
