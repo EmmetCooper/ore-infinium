@@ -3,8 +3,9 @@ binaries each day). Before you can do that, you must install the following:
 
 IMPORTANT: this game requires at least OpenGL 3.2 or newer. You can figure this
 out usually by running 'glxinfo'. Mesa doesn't yet have 3.2 drivers.
+
 (so open source drivers won't work on Linux, for example. At least not until
-I can (hopefully) support older GL versions).
+I can (hopefully) support older GL versions). All things in due time.
 
 To get started building this on Kubuntu (which is what I'm using as a test
 machine, and is, as a rule, a good base for shipping software), you can install
@@ -22,23 +23,32 @@ binary, which e.g. ubuntu ships in a separate package
 
 * GLEW
 
-* librocket (GUI HTML/CSS C++ library)
+* libRocket (GUI HTML/CSS C++ library)
 
-* C++11 compatible compiler (GCC 4.7 is fine and clang 3.2)
+* FreeType (librocket already requires that so if you have that you should be
+fine).
+
+* OpenAL-Soft >= 1.14
+
+* C++11 compatible compiler (at least GCC 4.7 is fine and clang 3.2). MSVC is
+particularly a retarded cousin of other compilers, so you can likely forget
+about that compiling for several years, as is the case with most projects.
 
 * YAML-CPP (0.3.0. NOT GREATER THAN. Newer versions like 0.5 have a new API
 which I unfortunately cannot yet use as evidently, nothing ships it yet, not
-until the next version of ubuntu).
+until the next version of ubuntu). Kind of a pain in the ass, but whatever.
+
+* Chipmunk physics library (http://chipmunk-physics.net) >= 6.1
 
 * ZLib (for compression, for both my network packets and file saving, etc.)
 
 --------------------------------------------------------------------
 
 
-If you're running Ubuntu 12.10 (which is what I support the most), then type:
+If you're running Ubuntu 13.04 (which is what I support the most), then type:
 
 'apt-get install libenet-dev libglew-dev libprotobuf-dev protobuf-compiler
-libyaml-cpp-dev zlib1g-dev'
+libyaml-cpp-dev zlib1g-dev libopenal-dev'
 
 And just to make sure, if you've never done development, you probably need to
 run:
