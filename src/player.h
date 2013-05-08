@@ -21,9 +21,8 @@
 #include "entity.h"
 #include "block.h"
 
-
 #include <SDL2/SDL_events.h>
-#include <chipmunk/chipmunk_types.h>
+#include <chipmunk/chipmunk.h>
 
 struct cpVect;
 struct cpArbiter;

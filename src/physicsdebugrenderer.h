@@ -29,7 +29,6 @@
 
 #include <mutex>
 
-#include <chipmunk/chipmunk_types.h>
 
 struct cpConstraint;
 struct cpDampedSpring;
