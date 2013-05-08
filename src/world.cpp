@@ -375,7 +375,7 @@ void World::update(double elapsedTime)
         if (m_server->client() && m_server->client()->physicsDebugRenderer()) {
             static bool physicsRenderingFlushNeeded = true;
 
-            if (m_physicsRendererFlushTimer.milliseconds() >= 5000) {
+            if (m_physicsRendererFlushTimer.milliseconds() >= 500) {
                 m_server->client()->physicsDebugRenderer()->iterateShapesInSpace(m_cpSpace);
                 m_physicsRendererFlushTimer.reset();
             }
