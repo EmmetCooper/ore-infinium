@@ -64,10 +64,6 @@ public:
 
     const float FPS = 60.0;
 
-    void setBox2DWorld(b2World* world) {
-        m_box2DWorld = world;
-    }
-
     PhysicsDebugRenderer* physicsDebugRenderer() {
         return m_physicsDebugRenderer;
     }
@@ -158,7 +154,6 @@ private:
     int32_t m_playerInputDirectionX = 0;
     int32_t m_playerInputDirectionY = 0;
 
-    b2World* m_box2DWorld = nullptr;
     cpSpace* m_cpSpace = nullptr;
     PhysicsDebugRenderer* m_physicsDebugRenderer = nullptr;
 
