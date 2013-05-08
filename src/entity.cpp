@@ -68,17 +68,19 @@ void Entity::update(double elapsedTime, World* world)
 
         this->setPosition(position);
 
-        glm::vec2 desiredVelocity = m_velocity * glm::vec2(300, 300);
-
-        const cpVect& currentVelocity = cpBodyGetVel(m_body);
-
-        cpFloat velocityChange = desiredVelocity.x - currentVelocity.x;
-
-        cpFloat mass = cpBodyGetMass(m_body);
-        cpVect impulse = cpv(mass * velocityChange, 0.0);
-
-        cpBodyApplyImpulse(m_body, impulse, cpvzero);
-
+//        glm::vec2 desiredVelocity = m_velocity * glm::vec2(350, 300);
+//
+//        cpShapeSetSurfaceVelocity(m_mainShape, cpv(desiredVelocity.x, 0.0));
+//
+//        const cpVect& currentVelocity = cpBodyGetVel(m_body);
+//
+//        cpFloat velocityChange = desiredVelocity.x - currentVelocity.x;
+//
+//        cpFloat mass = cpBodyGetMass(m_body);
+//        cpVect impulse = cpv(mass * velocityChange, 0.0);
+//
+//        cpBodyApplyImpulse(m_body, impulse, cpvzero);
+//
     }
 }
 

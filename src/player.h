@@ -21,7 +21,11 @@
 #include "entity.h"
 #include "block.h"
 
+
 #include <SDL2/SDL_events.h>
+#include <chipmunk_types.h>
+
+struct cpVect;
 
 class World;
 class Server;
@@ -108,6 +112,8 @@ public:
     static constexpr float movementSpeed = 1.0f * movementUnits;
 
 private:
+    static void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);
+
     uint32_t m_maxHealth = 2500;
     uint32_t m_health = m_maxHealth;
 
@@ -156,6 +162,8 @@ private:
 
     Timer* m_jumpTimer = nullptr;
     uint64_t m_jumpDelay = 300;
+
+    cpShape* m_groundShape = nullptr;
 
     friend Server;
     friend World;

@@ -23,6 +23,8 @@
 #include <glm/core/type.hpp>
 
 struct cpBody;
+struct cpShape;
+
 class World;
 
 class Entity : public Sprite

@@ -24,13 +24,23 @@
 #include <GL/glew.h>
 #include <Box2D/Box2D.h>
 
-#include "chipmunk_private.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/swizzle.hpp>
 
 #include <mutex>
+#include <chipmunk_types.h>
+
+#include <chipmunk_types.h>
+
+struct cpConstraint;
+struct cpDampedSpring;
+struct cpSpace;
+struct cpBody;
+struct cpShape;
+struct cpVect;
+struct cpBB;
 
 class PhysicsDebugRenderer
 {

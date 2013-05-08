@@ -47,6 +47,11 @@ Player::~Player()
     delete m_quickBarInventory;
 }
 
+void Player::playerUpdateVelocity(cpBody* body, cpVect gravity, cpFloat damping, cpFloat dt)
+{
+
+}
+
 void Player::createPhysicsBody(World* world, const glm::vec2& position)
 {
     const glm::vec2 size = this->sizeMeters();
@@ -54,13 +59,16 @@ void Player::createPhysicsBody(World* world, const glm::vec2& position)
     cpSpace* space = world->cpWorldSpace();
 
     m_body = cpBodyNew(0.5, INFINITY);
+//    m_body->velocity_func =
     cpSpaceAddBody(space, m_body);
     cpBodySetPos(m_body, cpv(position.x, position.y));
 
-    cpShape *topCircleShape = cpCircleShapeNew(m_body , size.x * 0.5, cpvzero);
-    cpShapeSetFriction(topCircleShape, 0.5);
+    cpShape *groundShape = cpCircleShapeNew(m_body , size.x * 1.5, cpvzero);
+    cpShapeSetFriction(groundShape, 17.5);
 
-    cpSpaceAddShape(space, topCircleShape);
+    cpSpaceAddShape(space, groundShape);
+
+    m_groundShape = groundShape;
 
     //create dynamic body
 //    b2BodyDef bodyDef;

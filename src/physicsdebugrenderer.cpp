@@ -21,6 +21,8 @@
 #include "world.h"
 #include "settings/settings.h"
 
+#include <chipmunk_private.h>
+
 static PhysicsDebugRenderer *s_instance = nullptr;
 
 const cpFloat PI = 3.14159;

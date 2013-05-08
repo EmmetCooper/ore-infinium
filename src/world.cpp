@@ -121,6 +121,8 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         cpVect gravity = cpv(0.0, 9.8);
         m_cpSpace = cpSpaceNew();
         cpSpaceSetGravity(m_cpSpace, gravity);
+        cpSpaceSetIterations(m_cpSpace, 10);
+        cpSpaceSetSleepTimeThreshold(m_cpSpace, 0.5);
 
         std::random_device device;
         std::mt19937 rand(device());
@@ -238,11 +240,11 @@ void World::addPlayer(Entities::Player* player)
         //FIXME: HACK: this needs improvement. obviously..otherwise it could very easily destroy everything underneath wherever the player left off.
         //clear an area around the player's rect, of tiles, so he can spawn properly.
         const int startX = ((playerPosition.x) / Block::BLOCK_SIZE) - (10);
-        const int endX = startX + (20);
+        const int endX = startX + (400);
 
         //columns are our X value, rows the Y
         const int startY = ((playerPosition.y) / Block::BLOCK_SIZE) - (10);
-        const int endY = startY + (20);
+        const int endY = startY + (50);
         int index = 0;
 
         for (int row = startY; row < endY; ++row) {
@@ -406,7 +408,6 @@ void World::update(double elapsedTime)
     if (m_server) {
         updateTilePhysicsObjects();
 
-        m_box2DWorld->Step(FIXED_TIMESTEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
         cpSpaceStep(m_cpSpace, FIXED_TIMESTEP);
 
         if (m_server->client() && m_server->client()->physicsDebugRenderer()) {
