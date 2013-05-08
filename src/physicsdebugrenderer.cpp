@@ -25,7 +25,7 @@
 
 static PhysicsDebugRenderer *s_instance = nullptr;
 
-const cpFloat PI = 3.14159;
+const cpFloat PI = 3.1415926535897932384626433832795028841971693993751058;
 
 PhysicsDebugRenderer::PhysicsDebugRenderer(Camera* camera)
 {
