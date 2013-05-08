@@ -54,6 +54,11 @@ void Player::playerUpdateVelocity(cpBody* body, cpVect gravity, cpFloat damping,
 
     float horizontalMovement = player->m_desiredVelocity.x * 300;
     cpShapeSetSurfaceVelocity(player->m_footShape, cpv(horizontalMovement, 0.0));
+
+    if (!player->m_feetOnGround) {
+       body->v.x =  player->m_desiredVelocity.x * 300;
+    }
+
     cpBodyUpdateVelocity(body, gravity, damping, dt);
 }
 
