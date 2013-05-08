@@ -52,11 +52,13 @@ void Player::playerUpdateVelocity(cpBody* body, cpVect gravity, cpFloat damping,
     ContactListener::BodyUserData* userData = static_cast<ContactListener::BodyUserData*> (body->data);
     Player* player = static_cast<Player*> (userData->data);
 
-    float horizontalMovement = player->m_desiredVelocity.x * 300;
+    float horizontalMovement = player->m_desiredVelocity.x * 300.0;
     cpShapeSetSurfaceVelocity(player->m_footShape, cpv(horizontalMovement, 0.0));
 
     if (!player->m_feetOnGround) {
-       body->v.x =  player->m_desiredVelocity.x * 300;
+       cpFloat desiredVelocity = player->m_desiredVelocity.x * 300.0;
+       cpFloat playerAirAccel = 8.5;
+       body->v.x = cpflerpconst(body->v.x, desiredVelocity, playerAirAccel*dt);
     }
 
     cpBodyUpdateVelocity(body, gravity, damping, dt);
@@ -75,7 +77,6 @@ void Player::update(double elapsedTime, World* world)
 
 void Player::checkEachArbiter(cpBody* body, cpArbiter* arbiter, void* data)
 {
-    Debug::log(Debug::StartupArea) << "ARBITER CHECK HIT!:";
     Player* player = static_cast<Player*>(data);
 
     cpShape* shapeA;
