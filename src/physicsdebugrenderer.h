@@ -29,7 +29,6 @@
 
 #include <mutex>
 
-
 struct cpConstraint;
 struct cpDampedSpring;
 struct cpSpace;

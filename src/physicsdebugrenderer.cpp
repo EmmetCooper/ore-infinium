@@ -15,14 +15,13 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
+#include <chipmunk/chipmunk_private.h>
+
 #include "physicsdebugrenderer.h"
 
 #include "debug.h"
 #include "world.h"
 #include "settings/settings.h"
-
-#include <chipmunk/chipmunk.h>
-#include <chipmunk/chipmunk_private.h>
 
 static PhysicsDebugRenderer *s_instance = nullptr;
 
