@@ -300,6 +300,7 @@ void Client::tick(double frameTime)
 
         if (m_quickBarMenu) {
             m_quickBarMenu->update();
+        }
 
         if (m_server) {
             if (m_physicsDebugRenderer) {
