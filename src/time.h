@@ -1,5 +1,5 @@
 /******************************************************************************
- *   Copyright (C) 2012 by Shaun Reich <sreich@kde.org>                       *
+ *   Copyright (C) 2013 by Shaun Reich <sreich@kde.org>                       *
  *                                                                            *
  *   This program is free software; you can redistribute it and/or            *
  *   modify it under the terms of the GNU General Public License as           *
@@ -25,24 +25,22 @@ class Time
 {
 public:
     Time();
-    static Time* instance();
+    ~Time();
 
-    //FIXME: pass elapsed time into this
     /**
      * Called once per update() of the World, increments
-     * the world time according to a constant value, compensated
-     * by elapsed frame time.
+     * the world time according to a constant value
      */
     void tick();
 
-    void setTime(unsigned char hour, unsigned char minute) { setHour(hour); setMinute(minute); }
+    void setTime(uint8_t hour, uint8_t minute) { setHour(hour); setMinute(minute); }
 
-    void setHour(unsigned char hour) { assert(hour <= 12 && hour > 0); m_hour = hour; }
+    void setHour(uint8_t hour) { assert(hour <= 12 && hour > 0); m_hour = hour; }
 
-    void setMinute(unsigned char minute) { assert(minute <= 59 && minute >= 0); m_minute = minute; }
+    void setMinute(uint8_t minute) { assert(minute <= 59 && minute >= 0); m_minute = minute; }
 
-    unsigned char currentHour() { return m_hour; }
-    unsigned char currentMinute() { return m_minute; }
+    uint8_t currentHour() { return m_hour; }
+    uint8_t currentMinute() { return m_minute; }
 
     /**
      * Returns the current time as a formatted string.
@@ -51,10 +49,9 @@ public:
     std::string toString();
 
 private:
-    ~Time();
 
     //sunrise should be ~07:00, sunset 19:00
-    unsigned char m_hour = 0;
-    unsigned char m_minute = 0;
+    uint8_t m_hour = 0;
+    uint8_t m_minute = 0;
 };
 #endif

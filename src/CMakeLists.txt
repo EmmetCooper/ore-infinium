@@ -23,6 +23,7 @@ texture.cpp
 tilerenderer.cpp
 torch.cpp
 world.cpp
+sky.cpp
 item.cpp
 quickbarinventory.cpp
 timer.cpp

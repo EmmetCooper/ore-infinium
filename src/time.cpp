@@ -1,5 +1,5 @@
 /******************************************************************************
- *   Copyright (C) 2012 by Shaun Reich <sreich@kde.org>                       *
+ *   Copyright (C) 2013 by Shaun Reich <sreich@kde.org>                       *
  *                                                                            *
  *   This program is free software; you can redistribute it and/or            *
  *   modify it under the terms of the GNU General Public License as           *
@@ -20,8 +20,6 @@
 #include <iostream>
 #include <sstream>
 
-static Time* s_instance = 0;
-
 Time::Time()
 {
 }
@@ -33,7 +31,7 @@ Time::~Time()
 void Time::tick()
 {
     // 1 minute, presumably
-    int interval = 1;
+    uint8_t interval = 1;
 
     m_minute += interval;
 
@@ -59,13 +57,4 @@ std::string Time::toString()
 
     ss << short(m_minute);
     return ss.str();
-}
-
-Time* Time::instance()
-{
-    if (!s_instance) {
-        s_instance = new Time();
-    }
-
-    return s_instance;
 }

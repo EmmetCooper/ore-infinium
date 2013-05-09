@@ -1,5 +1,5 @@
 /******************************************************************************
- *   Copyright (C) 2012 by Shaun Reich <sreich@kde.org>                       *
+ *   Copyright (C) 2013 by Shaun Reich <sreich@kde.org>                       *
  *                                                                            *
  *   This program is free software; you can redistribute it and/or            *
  *   modify it under the terms of the GNU General Public License as           *
@@ -18,45 +18,35 @@
 #ifndef SKY_H
 #define SKY_H
 
-#include "texture.h"
+#include <glm/glm.hpp>
 
-class CloudSystem;
+class World;
 
 class Sky
 {
 public:
-    Sky(sf::RenderWindow *window, sf::View *view, float height);
+    Sky(World* world);
 
     void update(const float elapsedTime);
     void render();
 
 private:
-    sf::RenderWindow *m_window;
-    sf::View *m_view;
-<<<<<<< HEAD
-    Texture m_sunSprite;
-    Texture m_moonSprite;
-=======
 
-    Renderable m_sunSprite;
-    Renderable m_moonSprite;
-    Renderable m_skyBox;
+    //Renderable m_sunSprite;
+    //Renderable m_moonSprite;
+    //Renderable m_skyBox;
 
-    sf::Texture m_skyBoxDayTexture;
-    sf::Texture m_skyBoxDuskTexture;
-    sf::Texture m_skyBoxNightTexture;
+    //sf::Texture m_skyBoxDayTexture;
+    //sf::Texture m_skyBoxDuskTexture;
+    //sf::Texture m_skyBoxNightTexture;
 
-    sf::Vector2f m_sunPosition;
-    sf::Vector2f m_moonPosition;
+    glm::vec2 m_sunPosition;
+    glm::vec2 m_moonPosition;
 
->>>>>>> sky
-    CloudSystem *m_cloudSystem = nullptr;
+    //CloudSystem *m_cloudSystem = nullptr;
 
     float m_timeAngle = 0.0f;
     int m_hour = 0;
-
-    // the height of the sky
-    float m_height;
 };
 
 #endif
