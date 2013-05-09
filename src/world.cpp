@@ -129,7 +129,7 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
     //FIXME: saveMap();
 
     if (m_client) {
-        m_sky = new SkyRenderer(this);
+        m_sky = new SkyRenderer(this, m_camera);
     }
 }
 

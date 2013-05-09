@@ -24,14 +24,16 @@
 #include <glm/core/type.hpp>
 #include <vector>
 
+class Camera;
 class Texture;
 class World;
 class Shader;
+class Camera;
 
 class SkyRenderer
 {
 public:
-    SkyRenderer(World* world);
+    SkyRenderer(World* world, Camera* camera);
     ~SkyRenderer();
 
     void update(const float elapsedTime);
@@ -98,6 +100,8 @@ private:
 
     float m_timeAngle = 0.0f;
     int m_hour = 0;
+
+    Camera* m_camera = nullptr;
 };
 
 #endif

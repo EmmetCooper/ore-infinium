@@ -20,6 +20,7 @@
 #include "src/world.h"
 #include "src/shader.h"
 #include "src/time.h"
+#include "src/camera.h"
 #include "src/texture.h"
 #include "src/debug.h"
 #include "settings/settings.h"
@@ -29,7 +30,8 @@
 
 #include <math.h>
 
-SkyRenderer::SkyRenderer(World* world)
+SkyRenderer::SkyRenderer(World* world, Camera* camera) :
+m_camera(camera)
 {
     m_sunMoonShader = new Shader("skyrenderer.vert", "skyrenderer.frag");
 
@@ -38,20 +40,6 @@ SkyRenderer::SkyRenderer(World* world)
 
     m_moonTexture = new Texture("../textures/moon.png");
     m_moonTexture->generate(Texture::TextureFilterNearest);
-
-    float x = 0.0f;
-    float y = 0.0f;
-    m_viewMatrix = glm::translate(glm::mat4(), glm::vec3(x, y, 0.0f));
-    Debug::log(Debug::Area::ClientRendererArea) << "sky renderer init, screen at width: " << Settings::instance()->screenResolutionWidth << " height: " << Settings::instance()->screenResolutionHeight;
-    //    m_orthoMatrix = glm::ortho(0.0f, float(Settings::instance()->screenResolutionWidth), float(Settings::instance()->screenResolutionHeight), 0.0f, -1.0f, 1.0f);
-    m_orthoMatrix = glm::ortho(0.0f, float(1600.0f/PIXELS_PER_METER), float(900.0f/PIXELS_PER_METER), 0.0f, -1.0f, 1.0f);
-
-    m_sunMoonShader->bindProgram();
-
-    glm::mat4 mvp =  m_orthoMatrix * m_viewMatrix;
-
-    int mvpLoc = glGetUniformLocation(m_sunMoonShader->shaderProgram(), "mvp");
-    glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, &mvp[0][0]);
 
     m_sunMoonShader->unbindProgram();
 
@@ -349,16 +337,32 @@ void SkyRenderer::renderSunAndMoon()
 {
     m_sunMoonShader->bindProgram();
 
+    float x = 0.0f;
+    float y = 0.0f;
+    m_viewMatrix = glm::translate(glm::mat4(), glm::vec3(x, y, 0.0f));
+    Debug::log(Debug::Area::ClientRendererArea) << "sky renderer init, screen at width: " << Settings::instance()->screenResolutionWidth << " height: " << Settings::instance()->screenResolutionHeight;
+    //    m_orthoMatrix = glm::ortho(0.0f, float(Settings::instance()->screenResolutionWidth), float(Settings::instance()->screenResolutionHeight), 0.0f, -1.0f, 1.0f);
+
+    m_orthoMatrix = glm::ortho(0.0f, float(1600.0f), float(900.0f), 0.0f, -1.0f, 1.0f);
+
+    m_sunMoonShader->bindProgram();
+
+    glm::mat4 mvp =  m_orthoMatrix * m_viewMatrix;
+
+    int mvpLoc = glGetUniformLocation(m_sunMoonShader->shaderProgram(), "mvp");
+    glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, &mvp[0][0]);
+
+
     Debug::checkGLError();
 
     SunOrMoon moon;
     moon.texture = m_moonTexture->textureHandle();
-    moon.position = glm::vec2(200, 200);
+    moon.position = glm::vec2(500, 500);
     moon.size = glm::vec2(60, 60);
 
     SunOrMoon sun;
     sun.texture = m_sunTexture->textureHandle();
-    sun.position = glm::vec2(500, 500);
+    sun.position = glm::vec2(550, 550);
     sun.size = glm::vec2(60, 60);
 
     std::vector<SunOrMoon> renderables;
@@ -366,7 +370,6 @@ void SkyRenderer::renderSunAndMoon()
     renderables.push_back(moon);
 
     for (size_t index = 0; index < renderables.size(); ++index) {
-
         // vertices that will be uploaded.
         Vertex vertices[4];
 
@@ -447,9 +450,25 @@ void SkyRenderer::renderSunAndMoon()
 
     Debug::checkGLError();
 
-    glDrawElements(
+    m_sunTexture->bind();
+
+    //sun
+    /*
+    glDrawRangeElements(
         GL_TRIANGLES,
-        6 * (renderables.size()), // 6 indices for 2 triangles
+        0,//6 * (1), // 6 indices for 2 triangles
+                        6 * (1),
+                        6 * 1,
+                GL_UNSIGNED_INT,
+                (const GLvoid*)0);
+*/
+    m_moonTexture->bind();
+    //moon
+    glDrawRangeElements(
+        GL_TRIANGLES,
+        6 * (1), // 6 indices for 2 triangles
+                        6 * (2),
+                        6 * 1,
                 GL_UNSIGNED_INT,
                 (const GLvoid*)0);
 
@@ -491,6 +510,7 @@ void SkyRenderer::update(const float elapsedTime)
 
 void SkyRenderer::render()
 {
+
     renderSunAndMoon();
  //   sf::VertexArray line(sf::Lines, 2);
  //   sf::Vector2f screen = sf::Vector2f(SCREEN_W/2, SCREEN_H/2);

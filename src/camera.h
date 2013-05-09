@@ -54,6 +54,10 @@ public:
     glm::mat4 ortho() const;
     glm::mat4 view() const;
 
+    float scaleFactor() {
+        return m_scaleFactor;
+    }
+
 private:
     void pushMatrix();
 
