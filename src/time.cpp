@@ -15,48 +15,57 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
-#ifndef SKY_H
-#define SKY_H
+#include "time.h"
 
-#include "texture.h"
+#include <iostream>
+#include <sstream>
 
-class CloudSystem;
+static Time* s_instance = 0;
 
-class Sky
+Time::Time()
 {
-public:
-    Sky(sf::RenderWindow *window, sf::View *view, float height);
+}
 
-    void update(const float elapsedTime);
-    void render();
+Time::~Time()
+{
+}
 
-private:
-    sf::RenderWindow *m_window;
-    sf::View *m_view;
-<<<<<<< HEAD
-    Texture m_sunSprite;
-    Texture m_moonSprite;
-=======
+void Time::tick()
+{
+    // 1 minute, presumably
+    int interval = 1;
 
-    Renderable m_sunSprite;
-    Renderable m_moonSprite;
-    Renderable m_skyBox;
+    m_minute += interval;
 
-    sf::Texture m_skyBoxDayTexture;
-    sf::Texture m_skyBoxDuskTexture;
-    sf::Texture m_skyBoxNightTexture;
+    if (m_minute >= 60) {
+        ++m_hour;
+        m_minute = 0;
+    }
 
-    sf::Vector2f m_sunPosition;
-    sf::Vector2f m_moonPosition;
+    if (m_hour > 24) {
+        m_hour = 0;
+    }
+}
 
->>>>>>> sky
-    CloudSystem *m_cloudSystem = nullptr;
+std::string Time::toString()
+{
+    std::stringstream ss;
+    ss << short(m_hour) << ":";
 
-    float m_timeAngle = 0.0f;
-    int m_hour = 0;
+    //format it so it's native looking wrt single digit minutes
+    if (m_minute < 10) {
+        ss << "0";
+    }
 
-    // the height of the sky
-    float m_height;
-};
+    ss << short(m_minute);
+    return ss.str();
+}
 
-#endif
+Time* Time::instance()
+{
+    if (!s_instance) {
+        s_instance = new Time();
+    }
+
+    return s_instance;
+}

@@ -15,48 +15,46 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
-#ifndef SKY_H
-#define SKY_H
+#ifndef TIME_H
+#define TIME_H
 
-#include "texture.h"
+#include <string>
+#include <assert.h>
 
-class CloudSystem;
-
-class Sky
+class Time
 {
 public:
-    Sky(sf::RenderWindow *window, sf::View *view, float height);
+    Time();
+    static Time* instance();
 
-    void update(const float elapsedTime);
-    void render();
+    //FIXME: pass elapsed time into this
+    /**
+     * Called once per update() of the World, increments
+     * the world time according to a constant value, compensated
+     * by elapsed frame time.
+     */
+    void tick();
+
+    void setTime(unsigned char hour, unsigned char minute) { setHour(hour); setMinute(minute); }
+
+    void setHour(unsigned char hour) { assert(hour <= 12 && hour > 0); m_hour = hour; }
+
+    void setMinute(unsigned char minute) { assert(minute <= 59 && minute >= 0); m_minute = minute; }
+
+    unsigned char currentHour() { return m_hour; }
+    unsigned char currentMinute() { return m_minute; }
+
+    /**
+     * Returns the current time as a formatted string.
+     * e.g. 12:45, 23:59, 00:00. 24-hour clock.
+     */
+    std::string toString();
 
 private:
-    sf::RenderWindow *m_window;
-    sf::View *m_view;
-<<<<<<< HEAD
-    Texture m_sunSprite;
-    Texture m_moonSprite;
-=======
+    ~Time();
 
-    Renderable m_sunSprite;
-    Renderable m_moonSprite;
-    Renderable m_skyBox;
-
-    sf::Texture m_skyBoxDayTexture;
-    sf::Texture m_skyBoxDuskTexture;
-    sf::Texture m_skyBoxNightTexture;
-
-    sf::Vector2f m_sunPosition;
-    sf::Vector2f m_moonPosition;
-
->>>>>>> sky
-    CloudSystem *m_cloudSystem = nullptr;
-
-    float m_timeAngle = 0.0f;
-    int m_hour = 0;
-
-    // the height of the sky
-    float m_height;
+    //sunrise should be ~07:00, sunset 19:00
+    unsigned char m_hour = 0;
+    unsigned char m_minute = 0;
 };
-
 #endif
