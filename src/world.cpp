@@ -749,7 +749,7 @@ void World::spawnItem(Item* item)
     m_spriteSheetRenderer->registerSprite(item);
 }
 
-void World::postStepCallback(cpSpace* space, void* obj, void* data)
+void World::tileRemovedPostStepCallback(cpSpace* space, void* obj, void* data)
 {
     assert(space);
     World* world = static_cast<World*>(data);
@@ -791,7 +791,7 @@ void World::attackTilePhysicsObjectCallback(cpShape* shape, cpFloat t, cpVect n,
     block->primitiveType = Block::BlockType::Null;
 
     world->m_tileShapesToDestroy.push_back(shape);
-    cpSpaceAddPostStepCallback(world->m_cpSpace, &World::postStepCallback, nullptr, world);
+    cpSpaceAddPostStepCallback(world->m_cpSpace, &World::tileRemovedPostStepCallback, nullptr, world);
 
     uint32_t column = blockWrapper->column;
     uint32_t row = blockWrapper->row;

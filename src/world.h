@@ -155,7 +155,7 @@ private:
      */
     void attackTilePhysicsObject(const glm::vec2& positionToAttack, Entities::Player* player);
     static void attackTilePhysicsObjectCallback(cpShape* shape, cpFloat t, cpVect n, void *data);
-    static void postStepCallback(cpSpace* space, void* obj, void* data);
+    static void tileRemovedPostStepCallback(cpSpace* space, void* obj, void* data);
 
     void renderCrosshair();
 
