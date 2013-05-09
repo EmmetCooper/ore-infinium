@@ -68,6 +68,8 @@ public:
         return m_physicsDebugRenderer;
     }
 
+    void setActiveChunkCount(uint32_t count);
+
     void disconnect();
 
     void shutdown();

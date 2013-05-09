@@ -258,6 +258,9 @@ void World::updateTilePhysicsObjects()
             // active chunk does not exist, create it!
             ActiveChunk* activeChunk = new ActiveChunk(d.row, d.column, &m_blocks, m_cpSpace);
             m_activeChunks[d] = activeChunk;
+            if (m_server->client()) {
+                m_server->client()->setActiveChunkCount(m_activeChunks.size());
+            }
         } else {
             it->second->refcount += 1;
         }

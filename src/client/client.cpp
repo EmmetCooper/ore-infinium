@@ -272,8 +272,6 @@ void Client::render(double frameTime)
             if (drawingRequired) {
                 m_physicsDebugRenderer->render();
             }
-
-            m_debugMenu->setPhysicsWorldShapeCount(m_physicsDebugRenderer->shapeCount());
         }
     }
 
@@ -299,7 +297,18 @@ void Client::tick(double frameTime)
         }
 
         m_world->update(frameTime);
+
+        if (m_server) {
+            if (m_physicsDebugRenderer) {
+                m_debugMenu->setPhysicsWorldShapeCount(m_physicsDebugRenderer->shapeCount());
+            }
+        }
     }
+}
+
+void Client::setActiveChunkCount(uint32_t count)
+{
+    m_debugMenu->setActiveChunkCount(count);
 }
 
 void Client::drawDebugText(double frameTime)
