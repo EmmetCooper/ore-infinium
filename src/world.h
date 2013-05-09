@@ -155,6 +155,7 @@ private:
      */
     void attackTilePhysicsObject(const glm::vec2& positionToAttack, Entities::Player* player);
     static void attackTilePhysicsObjectCallback(cpShape* shape, cpFloat t, cpVect n, void *data);
+    static void postStepCallback(cpSpace* space, void* obj, void* data);
 
     void renderCrosshair();
 
@@ -212,6 +213,7 @@ private:
     // [column * WORLD_ROWCOUNT + row]
     std::vector<Block> m_blocks;
     std::map<DesiredChunk, ActiveChunk*> m_activeChunks;
+    std::vector<cpShape*> m_tileShapesToDestroy;
 
     TileRenderer* m_tileRenderer = nullptr;
     LightRenderer* m_lightRenderer = nullptr;

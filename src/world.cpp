@@ -749,6 +749,26 @@ void World::spawnItem(Item* item)
     m_spriteSheetRenderer->registerSprite(item);
 }
 
+void World::postStepCallback(cpSpace* space, void* obj, void* data)
+{
+    assert(space);
+    World* world = static_cast<World*>(data);
+
+    for (cpShape* shape : world->m_tileShapesToDestroy) {
+        ContactListener::BodyUserData* userData = static_cast<ContactListener::BodyUserData*>(cpShapeGetUserData(shape));
+
+        ContactListener::BlockWrapper* blockWrapper = static_cast<ContactListener::BlockWrapper*>(userData->data);
+
+        delete blockWrapper;
+        delete userData;
+
+        cpSpaceRemoveShape(space, shape);
+        cpShapeDestroy(shape);
+    }
+
+    world->m_tileShapesToDestroy.clear();
+}
+
 void World::attackTilePhysicsObjectCallback(cpShape* shape, cpFloat t, cpVect n, void *data)
 {
     ContactListener::BodyUserData* userData = static_cast<ContactListener::BodyUserData*>(cpShapeGetUserData(shape));
@@ -761,23 +781,24 @@ void World::attackTilePhysicsObjectCallback(cpShape* shape, cpFloat t, cpVect n,
     ContactListener::BlockWrapper* blockWrapper = static_cast<ContactListener::BlockWrapper*>(userData->data);
     Block* block = blockWrapper->block;
 
-    bool blocksModified = false;
-    if (block->primitiveType != 0) {
-        //FIXME: decrement health..
-        block->primitiveType = Block::BlockType::Null; //FIXME:
-
-        blocksModified = true;
+    if (block->primitiveType == Block::BlockType::Null) {
+        return;
     }
 
-    if (blocksModified) {
-        uint32_t column = blockWrapper->column;
-        uint32_t row = blockWrapper->row;
+    World* world = static_cast<World*>(data);
 
-        World* world = static_cast<World*>(data);
+    //FIXME: decrement health..
+    block->primitiveType = Block::BlockType::Null;
 
-        Chunk chunk(column, row, column + 1, row + 1, &world->m_blocks);
-        world->m_server->sendWorldChunk(&chunk);
-    }
+    world->m_tileShapesToDestroy.push_back(shape);
+    cpSpaceAddPostStepCallback(world->m_cpSpace, &World::postStepCallback, nullptr, world);
+
+    uint32_t column = blockWrapper->column;
+    uint32_t row = blockWrapper->row;
+
+
+    Chunk chunk(column, row, column + 1, row + 1, &world->m_blocks);
+    world->m_server->sendWorldChunk(&chunk);
 }
 
 void World::attackTilePhysicsObject(const glm::vec2& positionToAttack, Entities::Player* player)
