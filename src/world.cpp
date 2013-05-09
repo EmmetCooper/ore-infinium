@@ -35,7 +35,7 @@
 #include "physicsdebugrenderer.h"
 #include "quadtreerenderer.h"
 
-#include "sky.h"
+#include "skyrenderer.h"
 #include "settings/settings.h"
 #include "quickbarinventory.h"
 #include "timer.h"
@@ -128,10 +128,8 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
     //FIXME: saveMap();
 
-    //FIXME: height
-
     if (m_client) {
-        m_sky = new Sky(this);
+        m_sky = new SkyRenderer(this);
     }
 }
 

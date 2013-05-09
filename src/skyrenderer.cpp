@@ -15,20 +15,21 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
-#include "sky.h"
+#include "skyrenderer.h"
 
 #include "src/world.h"
 #include "src/shader.h"
 #include "src/time.h"
 #include "src/texture.h"
 #include "src/debug.h"
+#include "settings/settings.h"
 
 #include <iostream>
 #include <stdio.h>
 
 #include <math.h>
 
-Sky::Sky(World* world)
+SkyRenderer::SkyRenderer(World* world)
 {
     m_sunMoonShader = new Shader("skyrenderer.vert", "skyrenderer.frag");
 
@@ -38,23 +39,39 @@ Sky::Sky(World* world)
     m_moonTexture = new Texture("../textures/moon.png");
     m_moonTexture->generate(Texture::TextureFilterNearest);
 
+    float x = 0.0f;
+    float y = 0.0f;
+    m_viewMatrix = glm::translate(glm::mat4(), glm::vec3(x, y, 0.0f));
+    Debug::log(Debug::Area::ClientRendererArea) << "sky renderer init, screen at width: " << Settings::instance()->screenResolutionWidth << " height: " << Settings::instance()->screenResolutionHeight;
+    //    m_orthoMatrix = glm::ortho(0.0f, float(Settings::instance()->screenResolutionWidth), float(Settings::instance()->screenResolutionHeight), 0.0f, -1.0f, 1.0f);
+    m_orthoMatrix = glm::ortho(0.0f, float(1600.0f/PIXELS_PER_METER), float(900.0f/PIXELS_PER_METER), 0.0f, -1.0f, 1.0f);
+
+    m_sunMoonShader->bindProgram();
+
+    glm::mat4 mvp =  m_orthoMatrix * m_viewMatrix;
+
+    int mvpLoc = glGetUniformLocation(m_sunMoonShader->shaderProgram(), "mvp");
+    glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, &mvp[0][0]);
+
+    m_sunMoonShader->unbindProgram();
+
     initGL();
 }
 
-Sky::~Sky()
+SkyRenderer::~SkyRenderer()
 {
     delete m_sunMoonShader;
     delete m_sunTexture;
     delete m_moonTexture;
 }
 
-void Sky::initGL()
+void SkyRenderer::initGL()
 {
     initGLSunMoon();
     //initGLSkyBackground();
 }
 
-void Sky::initGLSunMoon()
+void SkyRenderer::initGLSunMoon()
 {
     glGenVertexArrays(1, &m_vaoSunMoon);
     glBindVertexArray(m_vaoSunMoon);
@@ -139,7 +156,7 @@ void Sky::initGLSunMoon()
 
 }
 
-void Sky::initGLSkyBackground()
+void SkyRenderer::initGLSkyBackground()
 {
     glGenVertexArrays(1, &m_vao);
     glBindVertexArray(m_vao);
@@ -223,7 +240,7 @@ void Sky::initGLSkyBackground()
 }
 
 
-void Sky::renderSkyBackground()
+void SkyRenderer::renderSkyBackground()
 {
     m_sunMoonShader->bindProgram();
 
@@ -328,7 +345,7 @@ void Sky::renderSkyBackground()
     Debug::checkGLError();
 }
 
-void Sky::renderSunAndMoon()
+void SkyRenderer::renderSunAndMoon()
 {
     m_sunMoonShader->bindProgram();
 
@@ -446,7 +463,7 @@ void Sky::renderSunAndMoon()
     Debug::checkGLError();
 }
 
-void Sky::update(const float elapsedTime)
+void SkyRenderer::update(const float elapsedTime)
 {
 //    sf::Vector2f _viewportCenter;
 //    _viewportCenter.x = SCREEN_W / 2;
@@ -472,7 +489,7 @@ void Sky::update(const float elapsedTime)
 //    m_moonSprite.setPosition(m_moonPosition);
 }
 
-void Sky::render()
+void SkyRenderer::render()
 {
     renderSunAndMoon();
  //   sf::VertexArray line(sf::Lines, 2);

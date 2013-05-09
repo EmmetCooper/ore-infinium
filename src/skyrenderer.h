@@ -21,17 +21,18 @@
 #include <GL/glew.h>
 
 #include <glm/glm.hpp>
+#include <glm/core/type.hpp>
 #include <vector>
 
 class Texture;
 class World;
 class Shader;
 
-class Sky
+class SkyRenderer
 {
 public:
-    Sky(World* world);
-    ~Sky();
+    SkyRenderer(World* world);
+    ~SkyRenderer();
 
     void update(const float elapsedTime);
     void render();
@@ -91,6 +92,9 @@ private:
     Shader* m_sunMoonShader = nullptr;
 
     //CloudSystem *m_cloudSystem = nullptr;
+
+    glm::mat4 m_orthoMatrix;
+    glm::mat4 m_viewMatrix;
 
     float m_timeAngle = 0.0f;
     int m_hour = 0;

@@ -42,7 +42,7 @@ class LightRenderer;
 class Server;
 class Client;
 class TileRenderer;
-class Sky;
+class SkyRenderer;
 class Camera;
 class SpriteSheetRenderer;
 class CollisionMap;
@@ -225,7 +225,7 @@ private:
 
     //HACK: remove when we get beyond just testing stupid shit
     Entity* m_uselessEntity = nullptr;
-    Sky *m_sky = nullptr;
+    SkyRenderer *m_sky = nullptr;
 
     bool m_mouseLeftHeld = false;
 
