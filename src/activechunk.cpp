@@ -133,11 +133,14 @@ m_cpSpace(cpWorldSpace)
 ActiveChunk::~ActiveChunk()
 {
     for (cpShape* shape : m_tileShapes) {
+        ContactListener::BodyUserData* userData = static_cast<ContactListener::BodyUserData*>(cpShapeGetUserData(shape));
+        ContactListener::BlockWrapper* blockWrapper = static_cast<ContactListener::BlockWrapper*>(userData->data);
+
+        delete blockWrapper;
+        delete userData;
+
         cpSpaceRemoveShape(m_cpSpace, shape);
         cpShapeFree(shape);
-//        // delete all tile physics objects within this chunk
-        //HACK
-        //delete static_cast<ContactListener::BodyUserData*>(fixture->GetUserData());
     }
 
     m_tileShapes.clear();

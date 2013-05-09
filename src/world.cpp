@@ -771,8 +771,6 @@ void World::tileRemovedPostStepCallback(cpSpace* space, void* obj, void* data)
 
         cpSpaceRemoveShape(space, shape);
         cpShapeDestroy(shape);
-
-
     }
 
     world->m_tileShapesToDestroy.clear();
