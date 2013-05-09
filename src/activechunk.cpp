@@ -143,3 +143,12 @@ ActiveChunk::~ActiveChunk()
     m_tileShapes.clear();
     //Debug::log(Debug::StartupArea) << "ACTIVE CHUNK DTOR, tile object count: " << m_tileFixtures.size();
 }
+
+void ActiveChunk::shapeRemoved(cpShape* shape)
+{
+    for (auto it = m_tileShapes.begin(); it < m_tileShapes.end(); ++it) {
+        if (*it == shape) {
+            m_tileShapes.erase(it);
+        }
+    }
+}

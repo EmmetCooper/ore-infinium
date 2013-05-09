@@ -762,11 +762,17 @@ void World::tileRemovedPostStepCallback(cpSpace* space, void* obj, void* data)
 
         ContactListener::BlockWrapper* blockWrapper = static_cast<ContactListener::BlockWrapper*>(userData->data);
 
+        // find the active chunk associated with this block, we need to remove that otherwise we'll have a double-delete on our hands.
+        DesiredChunk desiredChunk(blockWrapper->row / ACTIVECHUNK_SIZE, blockWrapper->column / ACTIVECHUNK_SIZE);
+        world->m_activeChunks.at(desiredChunk)->shapeRemoved(shape);
+
         delete blockWrapper;
         delete userData;
 
         cpSpaceRemoveShape(space, shape);
         cpShapeDestroy(shape);
+
+
     }
 
     world->m_tileShapesToDestroy.clear();

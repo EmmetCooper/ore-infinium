@@ -50,6 +50,8 @@ public:
     ActiveChunk(uint32_t row, uint32_t column, std::vector<Block>* blocks, cpSpace* cpWorldSpace);
     ~ActiveChunk();
 
+    void shapeRemoved(cpShape* shape);
+
 public:
     uint32_t refcount = 1;
 
