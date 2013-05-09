@@ -24,6 +24,7 @@ tilerenderer.cpp
 torch.cpp
 world.cpp
 sky.cpp
+time.cpp
 item.cpp
 quickbarinventory.cpp
 timer.cpp

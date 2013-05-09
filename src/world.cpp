@@ -35,7 +35,7 @@
 #include "physicsdebugrenderer.h"
 #include "quadtreerenderer.h"
 
-//HACK #include "sky.h"
+#include "sky.h"
 #include "settings/settings.h"
 #include "quickbarinventory.h"
 #include "timer.h"
@@ -129,8 +129,10 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
     //FIXME: saveMap();
 
     //FIXME: height
-    //    m_sky = new Sky(m_window, m_view, 0.0f);
-    //FIXME: HACK: rendering is borked because of this, server will shit bricks when it sees this, because it needs to run this code
+
+    if (m_client) {
+        m_sky = new Sky(this);
+    }
 }
 
 World::~World()
@@ -138,7 +140,7 @@ World::~World()
     delete m_tileRenderer;
     delete m_spriteSheetRenderer;
     delete m_lightRenderer;
-    //    delete m_sky;
+    delete m_sky;
 
     for (auto* torch : m_torches) {
         delete torch;
@@ -303,7 +305,6 @@ void World::render()
     //HACK    m_window->setView(*m_view);
    m_lightRenderer->renderToFBO();
 
-    //    m_sky->render();
     m_tileRenderer->render();
 
     //FIXME: incorporate entities into the pre-lit gamescene FBO, then render lighting as last pass
@@ -314,6 +315,8 @@ void World::render()
     m_spriteSheetRenderer->renderCharacters();
 
     m_quadTreeRenderer->render();
+
+    m_sky->render();
 
     renderCrosshair();
 }

@@ -542,7 +542,6 @@ void SpriteSheetRenderer::initGLCharacters()
 
 }
 
-
 void SpriteSheetRenderer::initGLEntities()
 {
 
