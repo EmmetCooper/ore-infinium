@@ -22,6 +22,7 @@
 #include "player.h"
 #include "chunk.h"
 #include "activechunk.h"
+#include "timer.h"
 
 #include <stdlib.h>
 #include <list>
@@ -30,15 +31,13 @@
 #include <GL/glew.h>
 #include <SDL2/SDL_events.h>
 
-#include <Box2D/Common/b2Math.h>
-
+struct cpBody;
+struct cpSpace;
 class ActiveChunk;
 class QuadTreeRenderer;
 class QuadTree;
 class QueryCallback;
 class ContactListener;
-class b2Body;
-class b2World;
 class LightRenderer;
 class Server;
 class Client;
@@ -133,8 +132,8 @@ public:
 
     void spawnItem(Item* item);
 
-    b2World* box2DWorld() {
-        return m_box2DWorld;
+    cpSpace* cpWorldSpace() {
+        return m_cpSpace;
     }
 
     //create containers of various entities, and implement a tile system
@@ -154,7 +153,9 @@ private:
     /**
      * For when a tile is destroyed.
      */
-    void destroyTilePhysicsObject(uint32_t column, uint32_t row);
+    void attackTilePhysicsObject(const glm::vec2& positionToAttack, Entities::Player* player);
+    static void attackTilePhysicsObjectCallback(cpShape* shape, cpFloat t, cpVect n, void *data);
+    static void tileRemovedPostStepCallback(cpSpace* space, void* obj, void* data);
 
     void renderCrosshair();
 
@@ -212,7 +213,7 @@ private:
     // [column * WORLD_ROWCOUNT + row]
     std::vector<Block> m_blocks;
     std::map<DesiredChunk, ActiveChunk*> m_activeChunks;
-    b2Body* m_mainTileBody = nullptr;
+    std::vector<cpShape*> m_tileShapesToDestroy;
 
     TileRenderer* m_tileRenderer = nullptr;
     LightRenderer* m_lightRenderer = nullptr;
@@ -238,12 +239,7 @@ private:
      */
     Camera* m_camera = nullptr;
 
-    b2World* m_box2DWorld = nullptr;
-    b2Vec2 m_gravity = b2Vec2(0.0f, 9.8f);
-//    b2Vec2 m_gravity = b2Vec2(0.0f, 0.0f);
-
-    ContactListener* m_contactListener = nullptr;
-    QueryCallback* m_queryCallback = nullptr;
+    cpSpace* m_cpSpace = nullptr;
 
     /**
      * Null if we are in server mode.
@@ -253,6 +249,13 @@ private:
     Entities::Player* m_mainPlayer = nullptr;
 
     Server* m_server = nullptr;
+
+    Timer m_physicsRendererFlushTimer;
+
+    /** WARNING: only valid when m_server is not. Existence is indicative of this world instance being the clients
+     *  (which happens for both client-hosting a server and a client-joining)
+     * @sa m_server->client() is what you probably want to use
+     */
     Client* m_client = nullptr;
 
     int32_t m_blockToAttackX = -1;

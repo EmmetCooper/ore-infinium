@@ -18,14 +18,14 @@
 #ifndef ACTIVECHUNK_H
 #define ACTIVECHUNK_H
 
+#include "block.h"
+
 #include <map>
 #include <string>
 #include <vector>
-#include "block.h"
 
-class b2World;
-class b2Body;
-class b2Fixture;
+struct cpSpace;
+struct cpShape;
 
 struct DesiredChunk
 {
@@ -47,18 +47,18 @@ public:
     /**
      * @p row @p column are in active chunk indexes (tilemap index divided by ACTIVECHUNK_SIZE)
      */
-    ActiveChunk(uint32_t row, uint32_t column, std::vector<Block>* blocks, b2World* box2DWorld, b2Body* mainTileBody);
+    ActiveChunk(uint32_t row, uint32_t column, std::vector<Block>* blocks, cpSpace* cpWorldSpace);
     ~ActiveChunk();
 
+    void shapeRemoved(cpShape* shape);
 
 public:
     uint32_t refcount = 1;
 
 private:
-    std::vector<b2Fixture*> m_tileFixtures;
+    std::vector<cpShape*> m_tileShapes;
     std::vector<Block>* m_blocks = nullptr;
-    b2World* m_box2DWorld = nullptr;
-    b2Body* m_mainTileBody = nullptr;
+    cpSpace* m_cpSpace = nullptr;
 };
 
 #endif

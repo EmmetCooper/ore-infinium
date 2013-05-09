@@ -26,8 +26,8 @@
 #include <SDL2/SDL.h>
 #include <SDL_log.h>
 #include <thread>
-#include <Box2D/Dynamics/b2World.h>
 
+struct cpSpace;
 class DebugSettings;
 class PhysicsDebugRenderer;
 class QuickBarMenu;
@@ -64,9 +64,11 @@ public:
 
     const float FPS = 60.0;
 
-    void setBox2DWorld(b2World* world) {
-        m_box2DWorld = world;
+    PhysicsDebugRenderer* physicsDebugRenderer() {
+        return m_physicsDebugRenderer;
     }
+
+    void setActiveChunkCount(uint32_t count);
 
     void disconnect();
 
@@ -154,7 +156,7 @@ private:
     int32_t m_playerInputDirectionX = 0;
     int32_t m_playerInputDirectionY = 0;
 
-    b2World* m_box2DWorld = nullptr;
+    cpSpace* m_cpSpace = nullptr;
     PhysicsDebugRenderer* m_physicsDebugRenderer = nullptr;
 
     bool m_playerJumpRequested = false;

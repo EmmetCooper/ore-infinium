@@ -15,13 +15,21 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
+#include <chipmunk/chipmunk_private.h>
+
 #include "physicsdebugrenderer.h"
+
 #include "debug.h"
 #include "world.h"
 #include "settings/settings.h"
 
+static PhysicsDebugRenderer *s_instance = nullptr;
+
+const cpFloat PI = 3.1415926535897932384626433832795028841971693993751058;
+
 PhysicsDebugRenderer::PhysicsDebugRenderer(Camera* camera)
 {
+    s_instance = this;
     m_shader = new Shader("physicsdebugrenderer.vert", "physicsdebugrenderer.frag");
     m_shader->bindProgram();
     setCamera(camera);
@@ -252,32 +260,33 @@ void PhysicsDebugRenderer::initGLSegments()
     Debug::checkGLError();
 }
 
-void PhysicsDebugRenderer::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
+void PhysicsDebugRenderer::DrawPolygon(const cpVect* vertices, int32_t vertexCount, PhysicsDebugRenderer::Color color)
+    //const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
 {
-    const size_t iboOffset = m_verticesPolygons.size();
-
-    for (int32_t i = 0; i < vertexCount; ++i) {
-        Vertex vertex;
-        vertex.x = vertices[i].x;
-        vertex.y = vertices[i].y;
-
-        uint8_t red = static_cast<uint8_t>(ceil(color.r * 255));
-        uint8_t green = static_cast<uint8_t>(ceil(color.g * 255));
-        uint8_t blue = static_cast<uint8_t>(ceil(color.b * 255));
-        uint8_t alpha = 80;
-        int32_t colorPacked = red | (green << 8) | (blue << 16) | (alpha << 24);
-        vertex.color = colorPacked;
-
-        m_verticesPolygons.push_back(vertex);
-    }
-
-    for (int i = 0; i < vertexCount; i++) {
-        m_indicesPolygons.push_back(iboOffset + (i % vertexCount));
-        m_indicesPolygons.push_back(iboOffset + ((i + 1) % vertexCount));
-    }
+//    const size_t iboOffset = m_verticesPolygons.size();
+//
+//    for (int32_t i = 0; i < vertexCount; ++i) {
+//        Vertex vertex;
+//        vertex.x = vertices[i].x;
+//        vertex.y = vertices[i].y;
+//
+//        uint8_t red = static_cast<uint8_t>(ceil(color.r * 255));
+//        uint8_t green = static_cast<uint8_t>(ceil(color.g * 255));
+//        uint8_t blue = static_cast<uint8_t>(ceil(color.b * 255));
+//        uint8_t alpha = 80;
+//        int32_t colorPacked = red | (green << 8) | (blue << 16) | (alpha << 24);
+//        vertex.color = colorPacked;
+//
+//        m_verticesPolygons.push_back(vertex);
+//    }
+//
+//    for (int i = 0; i < vertexCount; i++) {
+//        m_indicesPolygons.push_back(iboOffset + (i % vertexCount));
+//        m_indicesPolygons.push_back(iboOffset + ((i + 1) % vertexCount));
+//    }
 }
 
-void PhysicsDebugRenderer::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
+void PhysicsDebugRenderer::DrawSolidPolygon(const cpVect* vertices, int32_t vertexCount, PhysicsDebugRenderer::Color color)
 {
     const size_t iboOffset = m_verticesSolidPolygons.size();
 
@@ -289,6 +298,7 @@ void PhysicsDebugRenderer::DrawSolidPolygon(const b2Vec2* vertices, int32 vertex
         uint8_t red = static_cast<uint8_t>(ceil(color.r * 255));
         uint8_t green = static_cast<uint8_t>(ceil(color.g * 255));
         uint8_t blue = static_cast<uint8_t>(ceil(color.b * 255));
+
         uint8_t alpha = 80;
         int32_t colorPacked = red | (green << 8) | (blue << 16) | (alpha << 24);
         vertex.color = colorPacked;
@@ -304,14 +314,16 @@ void PhysicsDebugRenderer::DrawSolidPolygon(const b2Vec2* vertices, int32 vertex
 }
 
 //FIXME: the circle calls need to be fixed to not run a draw call each polygon count
-void PhysicsDebugRenderer::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color)
-{
+//void PhysicsDebugRenderer::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color)
+//{
+ //   assert(0);
+    /*
     const float32 k_segments = 16.0f;
     int vertexCount=16;
     const float32 k_increment = 2.0f * b2_pi / k_segments;
     float32 theta = 0.0f;
 
-    GLfloat                         glVertices[vertexCount*2];
+    GLdouble                         glVertices[vertexCount*2];
     for (int32 i = 0; i < k_segments; ++i)
     {
         b2Vec2 v = center + radius * b2Vec2(cosf(theta), sinf(theta));
@@ -321,22 +333,23 @@ void PhysicsDebugRenderer::DrawCircle(const b2Vec2& center, float32 radius, cons
     }
 
     glColor4f(color.r, color.g, color.b,1);
-    glVertexPointer(2, GL_FLOAT, 0, glVertices);
+    glVertexPointer(2, GL_DOUBLE, 0, glVertices);
 
     glDrawArrays(GL_TRIANGLE_FAN, 0, vertexCount);
-}
+    */
+//}
 
-void PhysicsDebugRenderer::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color)
+void PhysicsDebugRenderer::DrawSolidCircle(cpVect center, cpFloat radius, cpFloat rotation, PhysicsDebugRenderer::Color color)
 {
-    const float32 k_segments = 16.0f;
+    const cpFloat k_segments = 16.0f;
     int vertexCount = 16;
-    const float32 k_increment = 2.0f * b2_pi / k_segments;
-    float32 theta = 0.0f;
+    const cpFloat k_increment = 2.0f * PI / k_segments;
+    cpFloat theta = 0.0f;
 
     std::vector<Vertex> vertices;
-    for (int32 i = 0; i < k_segments; ++i)
+    for (uint32_t i = 0; i < k_segments; ++i)
     {
-        b2Vec2 v = center + radius * b2Vec2(cosf(theta), sinf(theta));
+        cpVect v = cpv(radius * cosf(theta) + center.x, radius * sinf(theta) + center.y);
         Vertex vert;
         vert.x = v.x;
         vert.y = v.y;
@@ -367,22 +380,15 @@ void PhysicsDebugRenderer::DrawSolidCircle(const b2Vec2& center, float32 radius,
         m_indicesSolidCircles.push_back(iboOffset + i + 1);
     }
 
-    /*
-    glColor4f(color.r, color.g, color.b,0.5f);
-    glVertexPointer(2, GL_FLOAT, 0, glVertices);
-    glDrawArrays(GL_TRIANGLE_FAN, 0, vertexCount);
-    glColor4f(color.r, color.g, color.b,1);
-    glDrawArrays(GL_LINE_LOOP, 0, vertexCount);
-    */
-
     // Draw the axis line
     //FIXME: i don't think this works? but i don't see why it wouldn't..
-    DrawSegment(center, center + radius * axis, color);
+    DrawSegment(center, cpv(center.x + radius * rotation, center.y + radius * rotation), color);
 }
 
-void PhysicsDebugRenderer::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color)
+void PhysicsDebugRenderer::DrawSegment(const cpVect& p1, const cpVect& p2, PhysicsDebugRenderer::Color color)
 {
-    std::vector<b2Vec2> vertices;
+
+    std::vector<cpVect> vertices;
     vertices.push_back(p1);
     vertices.push_back(p2);
 
@@ -409,23 +415,26 @@ void PhysicsDebugRenderer::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const
     m_indicesSegments.push_back(iboOffset + 1);
 }
 
-void PhysicsDebugRenderer::DrawTransform(const b2Transform& xf)
-{
-    b2Vec2 p1 = xf.p, p2;
-    const float32 k_axisScale = 0.4f;
-    p2 = p1 + k_axisScale * xf.q.GetXAxis();
-    DrawSegment(p1, p2, b2Color(1.0f, 0.0f, 0.0f));
-
-    p2 = p1 + k_axisScale * xf.q.GetYAxis();
-    DrawSegment(p1, p2, b2Color(0.0f, 1.0f, 0.0f));
-}
+//void PhysicsDebugRenderer::DrawTransform(const b2Transform& xf)
+//    b2Vec2 p1 = xf.p, p2;
+//    const float32 k_axisScale = 0.4f;
+//    p2 = p1 + k_axisScale * xf.q.GetXAxis();
+//    DrawSegment(p1, p2, b2Color(1.0f, 0.0f, 0.0f));
+//
+//    p2 = p1 + k_axisScale * xf.q.GetYAxis();
+//    DrawSegment(p1, p2, b2Color(0.0f, 1.0f, 0.0f));
 
 void PhysicsDebugRenderer::render()
 {
+    m_mutex.lock();
+
     renderSolidPolygons();
     renderSolidCircles();
     renderPolygons();
     renderSegments();
+
+
+    m_mutex.unlock();
 }
 
 void PhysicsDebugRenderer::renderPolygons()
@@ -464,8 +473,6 @@ void PhysicsDebugRenderer::renderPolygons()
 
     m_maxVBOSizePolygons = m_verticesPolygons.size();
     m_highestIBOSizePolygons = m_indicesPolygons.size();
-    m_verticesPolygons.clear();
-    m_indicesPolygons.clear();
 }
 
 void PhysicsDebugRenderer::renderSolidPolygons()
@@ -504,8 +511,6 @@ void PhysicsDebugRenderer::renderSolidPolygons()
 
     m_maxVBOSizeSolidPolygons = m_verticesSolidPolygons.size();
     m_highestIBOSizeSolidPolygons = m_indicesSolidPolygons.size();
-    m_verticesSolidPolygons.clear();
-    m_indicesSolidPolygons.clear();
 }
 
 void PhysicsDebugRenderer::renderSolidCircles()
@@ -544,8 +549,6 @@ void PhysicsDebugRenderer::renderSolidCircles()
 
     m_maxVBOSizeSolidCircles = m_verticesSolidCircles.size();
     m_highestIBOSizeSolidCircles = m_indicesSolidCircles.size();
-    m_verticesSolidCircles.clear();
-    m_indicesSolidCircles.clear();
 }
 
 void PhysicsDebugRenderer::renderSegments()
@@ -584,6 +587,252 @@ void PhysicsDebugRenderer::renderSegments()
 
     m_maxVBOSizeSegments = m_verticesSegments.size();
     m_highestIBOSizeSegments = m_indicesSegments.size();
+}
+
+
+PhysicsDebugRenderer::Color PhysicsDebugRenderer::ColorFromHash(cpHashValue hash, float alpha)
+{
+    unsigned long val = (unsigned long)hash;
+
+    // scramble the bits up using Robert Jenkins' 32 bit integer hash function
+    val = (val+0x7ed55d16) + (val<<12);
+    val = (val^0xc761c23c) ^ (val>>19);
+    val = (val+0x165667b1) + (val<<5);
+    val = (val+0xd3a2646c) ^ (val<<9);
+    val = (val+0xfd7046c5) + (val<<3);
+    val = (val^0xb55a4f09) ^ (val>>16);
+
+    GLdouble r = (val>>0) & 0xFF;
+    GLdouble g = (val>>8) & 0xFF;
+    GLdouble b = (val>>16) & 0xFF;
+
+    GLdouble max = cpfmax(cpfmax(r, g), b);
+    GLdouble min = cpfmin(cpfmin(r, g), b);
+    GLdouble intensity = 0.75;
+
+    // Saturate and scale the color
+    if(min == max){
+        return RGBAColor(intensity, 0.0, 0.0, alpha);
+    } else {
+        GLdouble coef = alpha*intensity/(max - min);
+        return RGBAColor(
+            (r - min)*coef,
+                         (g - min)*coef,
+                         (b - min)*coef,
+                         alpha
+        );
+    }
+}
+
+inline void
+PhysicsDebugRenderer::glColor_from_color(Color color){
+  //FIXME: HACK:  glColor4fv((GLdouble *)&color);
+}
+
+PhysicsDebugRenderer::Color PhysicsDebugRenderer::ColorForShape(cpShape *shape)
+{
+    if(cpShapeGetSensor(shape)){
+        return LAColor(1, 0);
+    } else {
+        cpBody *body = shape->body;
+
+        if(cpBodyIsSleeping(body)){
+            return LAColor(0.2, 1);
+        } else if(body->node.idleTime > shape->space->sleepTimeThreshold) {
+            return LAColor(0.66, 1);
+        } else {
+            return ColorFromHash(shape->hashid, SHAPE_ALPHA);
+        }
+    }
+}
+
+
+void PhysicsDebugRenderer::staticDrawConstraint(cpConstraint *constraint, void *unused)
+{
+
+}
+
+void PhysicsDebugRenderer::staticDrawShape(cpShape *shape, void *unused)
+{
+    s_instance->ChipmunkDebugDrawShape(shape);
+}
+
+void PhysicsDebugRenderer::staticDrawSpring(cpDampedSpring *spring, cpBody *body_a, cpBody *body_b)
+{
+//    cpVect a = cpvadd(body_a->p, cpvrotate(spring->anchr1, body_a->rot));
+//    cpVect b = cpvadd(body_b->p, cpvrotate(spring->anchr2, body_b->rot));
+//
+//    cpVect points[] = {a, b};
+//    ChipmunkDebugDrawPoints(5, 2, points, CONSTRAINT_COLOR);
+//
+//    cpVect delta = cpvsub(b, a);
+//
+//    glVertexPointer(2, GL_DOUBLE, 0, springVAR);
+//    glPushMatrix(); {
+//        GLdouble x = a.x;
+//        GLdouble y = a.y;
+//        GLdouble cos = delta.x;
+//        GLdouble sin = delta.y;
+//        GLdouble s = 1.0f/cpvlength(delta);
+//
+//        const GLdouble matrix[] = {
+//            cos,    sin, 0.0f, 0.0f,
+//            -sin*s,  cos*s, 0.0f, 0.0f,
+//            0.0f,   0.0f, 1.0f, 0.0f,
+//            x,      y, 0.0f, 1.0f,
+//        };
+//
+//        glMultMatrixf(matrix);
+//        glDrawArrays(GL_LINE_STRIP, 0, springVAR_count);
+//    } glPopMatrix();
+}
+
+
+//shape
+//FIXME HACK
+
+void PhysicsDebugRenderer::ChipmunkDebugDrawShape(cpShape *shape)
+{
+    assert(shape);
+    ++m_shapeCount;
+
+    cpBody *body = shape->body;
+    Color color = ColorForShape(shape);
+
+    switch(shape->klass->type){
+        case CP_CIRCLE_SHAPE: {
+            cpCircleShape *circle = (cpCircleShape *)shape;
+            DrawSolidCircle(circle->tc, circle->r, body->a, color);
+            break;
+        }
+        case CP_SEGMENT_SHAPE: {
+            cpSegmentShape *seg = (cpSegmentShape *)shape;
+//                ChipmunkDebugDrawFatSegment(seg->ta, seg->tb, seg->r, LINE_COLOR, color);
+            break;
+        }
+        case CP_POLY_SHAPE: {
+            cpPolyShape *poly = (cpPolyShape *)shape;
+            //ChipmunkDebugDrawPolygon(poly->numVerts, poly->tVerts, LINE_COLOR, color);
+            DrawSolidPolygon(poly->tVerts, poly->numVerts, color);
+            break;
+        }
+        default: break;
+    }
+}
+
+void PhysicsDebugRenderer::iterateShapesInSpace(cpSpace *space)
+{
+    assert(space);
+
+    m_mutex.lock();
+
+    m_verticesSolidCircles.clear();
+    m_indicesSolidCircles.clear();
+    m_verticesSolidPolygons.clear();
+    m_indicesSolidPolygons.clear();
+    m_verticesPolygons.clear();
+    m_indicesPolygons.clear();
     m_verticesSegments.clear();
     m_indicesSegments.clear();
+    m_shapeCount = 0;
+
+    cpSpaceEachShape(space, staticDrawShape, NULL);
+
+//    Debug::log(Debug::StartupArea) << "ITERATING SHAPES IN SPACE COUNT: " << m_shapes.size();
+
+    m_mutex.unlock();
 }
+
+static const GLdouble springVAR[] = {
+    0.00f, 0.0f,
+    0.20f, 0.0f,
+    0.25f, 3.0f,
+    0.30f,-6.0f,
+    0.35f, 6.0f,
+    0.40f,-6.0f,
+    0.45f, 6.0f,
+    0.50f,-6.0f,
+    0.55f, 6.0f,
+    0.60f,-6.0f,
+    0.65f, 6.0f,
+    0.70f,-3.0f,
+    0.75f, 6.0f,
+    0.80f, 0.0f,
+    1.00f, 0.0f,
+};
+static const int springVAR_count = sizeof(springVAR)/sizeof(GLdouble)/2;
+
+//void PhysicsDebugRenderer::drawConstraint(cpConstraint *constraint, void *unused)
+//{
+//    cpBody *body_a = constraint->a;
+//    cpBody *body_b = constraint->b;
+//
+//    const cpConstraintClass *klass = constraint->klass;
+//    if(klass == cpPinJointGetClass()){
+//        cpPinJoint *joint = (cpPinJoint *)constraint;
+//
+//        cpVect a = cpvadd(body_a->p, cpvrotate(joint->anchr1, body_a->rot));
+//        cpVect b = cpvadd(body_b->p, cpvrotate(joint->anchr2, body_b->rot));
+//
+//        cpVect points[] = {a, b};
+//        ChipmunkDebugDrawPoints(5, 2, points, CONSTRAINT_COLOR);
+//        ChipmunkDebugDrawSegment(a, b, CONSTRAINT_COLOR);
+//    } else if(klass == cpSlideJointGetClass()){
+//        cpSlideJoint *joint = (cpSlideJoint *)constraint;
+//
+//        cpVect a = cpvadd(body_a->p, cpvrotate(joint->anchr1, body_a->rot));
+//        cpVect b = cpvadd(body_b->p, cpvrotate(joint->anchr2, body_b->rot));
+//
+//        cpVect points[] = {a, b};
+//        ChipmunkDebugDrawPoints(5, 2, points, CONSTRAINT_COLOR);
+//        ChipmunkDebugDrawSegment(a, b, CONSTRAINT_COLOR);
+//    } else if(klass == cpPivotJointGetClass()){
+//        cpPivotJoint *joint = (cpPivotJoint *)constraint;
+//
+//        cpVect a = cpvadd(body_a->p, cpvrotate(joint->anchr1, body_a->rot));
+//        cpVect b = cpvadd(body_b->p, cpvrotate(joint->anchr2, body_b->rot));
+//
+//        cpVect points[] = {a, b};
+//        ChipmunkDebugDrawPoints(10, 2, points, CONSTRAINT_COLOR);
+//    } else if(klass == cpGrooveJointGetClass()){
+//        cpGrooveJoint *joint = (cpGrooveJoint *)constraint;
+//
+//        cpVect a = cpvadd(body_a->p, cpvrotate(joint->grv_a, body_a->rot));
+//        cpVect b = cpvadd(body_a->p, cpvrotate(joint->grv_b, body_a->rot));
+//        cpVect c = cpvadd(body_b->p, cpvrotate(joint->anchr2, body_b->rot));
+//
+//        ChipmunkDebugDrawPoints(5, 1, &c, CONSTRAINT_COLOR);
+//        ChipmunkDebugDrawSegment(a, b, CONSTRAINT_COLOR);
+//    } else if(klass == cpDampedSpringGetClass()){
+//        staticDrawSpring((cpDampedSpring *)constraint, body_a, body_b);
+//    }
+//}
+
+//void PhysicsDebugRenderer::ChipmunkDebugDrawConstraint(cpConstraint *constraint)
+//{
+//    staticDrawConstraint(constraint, NULL);
+//}
+
+//void PhysicsDebugRenderer::ChipmunkDebugDrawConstraints(cpSpace *space)
+//{
+//    cpSpaceEachConstraint(space, staticDrawConstraint, NULL);
+//}
+
+//void PhysicsDebugRenderer::ChipmunkDebugDrawCollisionPoints(cpSpace *space)
+//{
+//    cpArray *arbiters = space->arbiters;
+//
+//    glColor3f(1.0f, 0.0f, 0.0f);
+//    glPointSize(4.0f*ChipmunkDebugDrawPointLineScale);
+//
+//    glBegin(GL_POINTS); {
+//        for(int i=0; i<arbiters->num; i++){
+//            cpArbiter *arb = (cpArbiter*)arbiters->arr[i];
+//
+//            for(int j=0; j<arb->numContacts; j++){
+//                cpVect v = arb->contacts[j].p;
+//                glVertex2f(v.x, v.y);
+//            }
+//        }
+//    } glEnd();
+//}

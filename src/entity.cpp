@@ -22,10 +22,7 @@
 #include "block.h"
 #include "server/contactlistener.h"
 
-#include <Box2D/Dynamics/b2Body.h>
-#include <Box2D/Dynamics/b2World.h>
-#include <Box2D/Dynamics/b2Fixture.h>
-#include <Box2D/Collision/Shapes/b2PolygonShape.h>
+#include <chipmunk/chipmunk.h>
 
 Entity::Entity(const std::string& frameName, SpriteSheetRenderer::SpriteSheetType spriteSheetType)
     : Sprite(frameName, spriteSheetType)
@@ -42,7 +39,6 @@ Entity::Entity(const Entity& entity) : Sprite(entity)
 
 Entity::~Entity()
 {
-
 }
 
 void Entity::setVelocity(const glm::vec2& velocity)
@@ -67,27 +63,24 @@ void Entity::update(double elapsedTime, World* world)
     if (m_body) {
         //Debug::log(Debug::Area::ServerEntityLogicArea) << "Sprites present position is: x: " << position().x << " y: " << position().y << " SETTING SPRITE POSITION TO X: " << m_body->GetPosition().x << " Y : " << m_body->GetPosition().y;
 
-        //Debug::log(Debug::Area::ServerEntityLogicArea) << "Entity update, apply velocity. velocity is x: " << m_velocity.x << " y: " << m_velocity.y;
-
-        glm::vec2 position = glm::vec2(m_body->GetPosition().x, m_body->GetPosition().y);
+        const cpVect& pos = cpBodyGetPos(m_body);
+        glm::vec2 position = glm::vec2(pos.x, pos.y);
 
         this->setPosition(position);
 
-        //HACK FIXME:
-
-        glm::vec2 fullVector = m_velocity * glm::vec2(300, 300);
-
-        b2Vec2 currentVelocity = m_body->GetLinearVelocity();
-
-        b2Vec2 desiredVelocity = b2Vec2(fullVector.x, fullVector.y);
-        float velocityChange = desiredVelocity.x - currentVelocity.x;
-
-        //Debug::log(Debug::Area::ServerEntityLogicArea) << "Entity update, desired velocity is x: " << desiredVelocity.x << " y: " << desiredVelocity.y << " current velocity is x: " << currentVelocity.x << " y: " << currentVelocity.y;
-
-        float impulse = m_body->GetMass() * velocityChange;
-
-        m_body->ApplyLinearImpulse(b2Vec2(impulse, 0), m_body->GetWorldCenter());
-
+//        glm::vec2 desiredVelocity = m_velocity * glm::vec2(350, 300);
+//
+//        cpShapeSetSurfaceVelocity(m_mainShape, cpv(desiredVelocity.x, 0.0));
+//
+//        const cpVect& currentVelocity = cpBodyGetVel(m_body);
+//
+//        cpFloat velocityChange = desiredVelocity.x - currentVelocity.x;
+//
+//        cpFloat mass = cpBodyGetMass(m_body);
+//        cpVect impulse = cpv(mass * velocityChange, 0.0);
+//
+//        cpBodyApplyImpulse(m_body, impulse, cpvzero);
+//
     }
 }
 

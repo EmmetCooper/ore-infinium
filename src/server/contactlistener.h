@@ -20,24 +20,21 @@
 
 #include <Box2D/Box2D.h>
 #include <set>
+#include <src/block.h>
 
-class ContactListener : public b2ContactListener
+struct cpArbiter;
+struct cpSpace;
+
+class ContactListener
 {
 public:
-    ContactListener();
-    virtual ~ContactListener();
-
-    virtual void BeginContact(b2Contact* contact);
-    virtual void EndContact(b2Contact* contact);
-
-    virtual void PreSolve(b2Contact* contact, const b2Manifold* oldManifold);
-    virtual void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse);
+    static int /* cpBool */ begin(cpArbiter* arbiter, cpSpace* space, void* data /* World pointer */);
 
     enum BodyType {
-        Invalid = -1,
-        Player = 0,
-        PlayerFootSensor = 1,
-        Block
+        InvalidBodyType = -1,
+        PlayerBodyType = 0,
+        PlayerFootSensorBodyType = 1,
+        BlockBodyType
     };
 
     struct BodyUserData {
@@ -45,9 +42,15 @@ public:
         void* data = nullptr;
     };
 
+    struct BlockWrapper {
+        Block* block;
+        uint32_t row;
+        uint32_t column;
+    };
+
 private:
-    void checkBeginContact(BodyUserData* userData);
-    void checkEndContact(BodyUserData* userData);
+    static void checkBeginContact(BodyUserData* userData);
+    static void checkEndContact(BodyUserData* userData);
 };
 
 class QueryCallback : public b2QueryCallback

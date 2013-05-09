@@ -27,9 +27,7 @@
 #include "timer.h"
 #include <assert.h>
 
-#include <Box2D/Box2D.h>
-#include <Box2D/Dynamics/b2Body.h>
-#include <Box2D/Dynamics/Contacts/b2Contact.h>
+#include <chipmunk/chipmunk.h>
 
 namespace Entities
 {
@@ -49,88 +47,153 @@ Player::~Player()
     delete m_quickBarInventory;
 }
 
+void Player::playerUpdateVelocity(cpBody* body, cpVect gravity, cpFloat damping, cpFloat dt)
+{
+    ContactListener::BodyUserData* userData = static_cast<ContactListener::BodyUserData*> (body->data);
+    Player* player = static_cast<Player*> (userData->data);
+
+    float horizontalMovement = player->m_desiredVelocity.x * 300.0;
+    cpShapeSetSurfaceVelocity(player->m_footShape, cpv(horizontalMovement, 0.0));
+
+    if (!player->m_feetOnGround) {
+       cpFloat desiredVelocity = player->m_desiredVelocity.x * 300.0;
+       cpFloat playerAirAccel = 8.5;
+       body->v.x = cpflerpconst(body->v.x, desiredVelocity, playerAirAccel*dt);
+    }
+
+    cpBodyUpdateVelocity(body, gravity, damping, dt);
+}
+
+void Player::update(double elapsedTime, World* world)
+{
+    Entity::update(elapsedTime, world);
+
+    m_feetOnGround = false;
+
+    if (m_body) {
+        cpBodyEachArbiter(m_body, &checkEachArbiter, this);
+    }
+}
+
+void Player::checkEachArbiter(cpBody* body, cpArbiter* arbiter, void* data)
+{
+    Player* player = static_cast<Player*>(data);
+
+    cpShape* shapeA;
+    cpShape* shapeB;
+    cpArbiterGetShapes(arbiter, &shapeA, &shapeB);
+
+    if (shapeA == player->m_footShape || shapeB == player->m_footShape) {
+        player->m_feetOnGround = true;
+    }
+}
+
 void Player::createPhysicsBody(World* world, const glm::vec2& position)
 {
     const glm::vec2 size = this->sizeMeters();
 
-    //create dynamic body
-    b2BodyDef bodyDef;
-    bodyDef.type = b2_dynamicBody;
-    bodyDef.position.Set(position.x, position.y);
+    cpSpace* space = world->cpWorldSpace();
 
-    m_body = world->box2DWorld()->CreateBody(&bodyDef);
-    // sleeping doesn't make sense for a player body.
-    m_body->SetSleepingAllowed(false);
+    m_body = cpBodyNew(0.5, INFINITY);
 
-    ContactListener::BodyUserData* userData = new ContactListener::BodyUserData();
-    userData->type = ContactListener::BodyType::Player;
+    ContactListener::BodyUserData* userData = new ContactListener::BodyUserData;
+    userData->type = ContactListener::PlayerBodyType;
     userData->data = this;
-    m_body->SetUserData(userData);
 
-    b2CircleShape circleShape;
-    circleShape.m_radius = 0.3f;
+    cpBodySetUserData(m_body, userData);
+    m_body->velocity_func = &playerUpdateVelocity;
 
-    // create main body's fixture
-    b2FixtureDef fixtureDef;
-    fixtureDef.shape = &circleShape;
-    fixtureDef.density = 1.0f;
-    fixtureDef.friction = 0.0f;
+    cpSpaceAddBody(space, m_body);
+    cpBodySetPos(m_body, cpv(position.x, position.y));
 
-    m_body->CreateFixture(&fixtureDef);
+    cpShape *groundShape = cpCircleShapeNew(m_body , size.x * 1.5, cpvzero);
+    cpShapeSetUserData(groundShape, userData);
+    cpShapeSetFriction(groundShape, 17.5);
+
+    cpSpaceAddShape(space, groundShape);
+
+    m_footShape = groundShape;
+
+    //create dynamic body
+//    b2BodyDef bodyDef;
+//    bodyDef.type = b2_dynamicBody;
+//    bodyDef.position.Set(position.x, position.y);
+//
+//    m_body = world->cpWorldSpace()
+//    // sleeping doesn't make sense for a player body.
+//    m_body->SetSleepingAllowed(false);
+//
+//    ContactListener::BodyUserData* userData = new ContactListener::BodyUserData();
+//    userData->type = ContactListener::BodyType::Player;
+//    userData->data = this;
+//    m_body->SetUserData(userData);
+//
+//    b2CircleShape circleShape;
+//    circleShape.m_radius = 0.3f;
+//
+//    // create main body's fixture
+//    b2FixtureDef fixtureDef;
+//    fixtureDef.shape = &circleShape;
+//    fixtureDef.density = 1.0f;
+//    fixtureDef.friction = 0.0f;
+//
+//    m_body->CreateFixture(&fixtureDef);
 
     //////////// LOWER BODY
 
-    b2CircleShape lowerCircleShape;
-    b2FixtureDef lowerCircleDef;
-    lowerCircleDef.shape = &lowerCircleShape;
-    lowerCircleDef.friction = 0.0f;
-
-    lowerCircleShape.m_radius = 0.3f;
-    lowerCircleShape.m_p = b2Vec2(0.0f, 0.1f);
-
-    m_body->CreateFixture(&lowerCircleDef);
+ //   b2CircleShape lowerCircleShape;
+ //   b2FixtureDef lowerCircleDef;
+ //   lowerCircleDef.shape = &lowerCircleShape;
+ //   lowerCircleDef.friction = 0.0f;
+ //
+ //   lowerCircleShape.m_radius = 0.3f;
+ //   lowerCircleShape.m_p = b2Vec2(0.0f, 0.1f);
+ //
+ //   m_body->CreateFixture(&lowerCircleDef);
 
     ///////// FOOT
 
-    b2PolygonShape footBox;
-    b2FixtureDef footSensorFixtureDef;
-    footSensorFixtureDef.shape = &footBox;
-    footSensorFixtureDef.isSensor = true;
-    footBox.SetAsBox(0.2, 0.1, b2Vec2(0.0f, 0.4f), 0.0f);
-
-    b2Fixture* footSensorFixture = m_body->CreateFixture(&footSensorFixtureDef);
-
-    ContactListener::BodyUserData* userDataFoot = new ContactListener::BodyUserData();
-    userDataFoot->type = ContactListener::BodyType::PlayerFootSensor;
-    userDataFoot->data = this;
-    footSensorFixture->SetUserData(userDataFoot);
+//    b2PolygonShape footBox;
+//    b2FixtureDef footSensorFixtureDef;
+//    footSensorFixtureDef.shape = &footBox;
+//    footSensorFixtureDef.isSensor = true;
+//    footBox.SetAsBox(0.2, 0.1, b2Vec2(0.0f, 0.4f), 0.0f);
+//
+//    b2Fixture* footSensorFixture = m_body->CreateFixture(&footSensorFixtureDef);
+//
+//    ContactListener::BodyUserData* userDataFoot = new ContactListener::BodyUserData();
+//    userDataFoot->type = ContactListener::BodyType::PlayerFootSensor;
+//    userDataFoot->data = this;
+//    footSensorFixture->SetUserData(userDataFoot);
+//
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    m_body->SetFixedRotation(true);
+//    m_body->SetFixedRotation(true);
 }
 
 void Player::move(int32_t directionX, int32_t directionY)
 {
-    Entity::setVelocity(directionX * movementSpeed, directionY * movementSpeed);
+    m_desiredVelocity = glm::vec2(directionX * movementSpeed, directionY * movementSpeed);
 }
 
 void Player::jump()
 {
     if (m_body) {
         if (m_jumpTimer->milliseconds() >= m_jumpDelay) {
-            if (m_jumpContacts > 0) {
-                b2Vec2 currentVelocity = m_body->GetLinearVelocity();
+//            if (m_jumpContacts > 0) {
+            if (m_feetOnGround) {
+            cpVect currentVelocity = cpBodyGetVel(m_body);
 
-                glm::vec2 fullVector = glm::vec2(0, -5);
-                float velocityChange = fullVector.y;
+                cpFloat velocityChange = -5.0;
 
-                float impulse = m_body->GetMass() * velocityChange;
+                float impulse = cpBodyGetMass(m_body) * velocityChange;
 
-                m_body->ApplyLinearImpulse(b2Vec2(0, impulse), m_body->GetWorldCenter());
+//                m_body->ApplyLinearImpulse(b2Vec2(0, impulse), m_body->GetWorldCenter());
 
                 m_jumpTimer->reset();
-            }
+                cpBodyApplyImpulse(m_body, cpv(0, impulse), cpvzero);
+           }
         }
     }
 }

@@ -54,8 +54,12 @@ public:
         return m_collapsed;
     }
 
-    void setPhysicsWorldBodyCount(int32_t count) {
-        m_physicsWorldBodyCount = count;
+    void setPhysicsWorldShapeCount(uint32_t count) {
+        m_physicsWorldShapeCount = count;
+    }
+
+    void setActiveChunkCount(uint32_t count) {
+        m_activeChunkCount = count;
     }
 
     Rocket::Core::ElementDocument* document();
@@ -69,7 +73,8 @@ private:
     Rocket::Core::ElementDocument* m_debug = nullptr;
     bool m_collapsed = false;
 
-    int32_t m_physicsWorldBodyCount = 0;
+    uint32_t m_physicsWorldShapeCount = 0;
+    uint32_t m_activeChunkCount = 0;
 };
 
 #endif

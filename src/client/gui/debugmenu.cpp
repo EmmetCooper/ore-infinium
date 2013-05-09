@@ -63,7 +63,7 @@ void DebugMenu::setCollapsed(bool collapsed)
 {
     m_collapsed = collapsed;
 
-    int height = 135;
+    int height = 150;
     int width = 34;
 
     if (!collapsed) {
@@ -126,7 +126,7 @@ void DebugMenu::update(double frameTime)
         m_debug->GetElementById("5")->SetInnerRML(playerString.c_str());
     }
 
-    ss << "Physics Body Count: " << m_physicsWorldBodyCount;
+    ss << "Physics Shape Count: " << m_physicsWorldShapeCount;
 
     std::string physicsBodyCount = ss.str();
     ss.str("");
@@ -136,6 +136,9 @@ void DebugMenu::update(double frameTime)
     m_debug->GetElementById("4")->SetInnerRML(connectedString.c_str());
     m_debug->GetElementById("2")->SetInnerRML("F8 instant multiplayer host session");
     m_debug->GetElementById("3")->SetInnerRML("F11 to show/hide debug settings menu");
+
+    std::string activeChunks = "Active Chunk Count: " + std::to_string(m_activeChunkCount);
+    m_debug->GetElementById("7")->SetInnerRML(activeChunks.c_str());
 }
 
 void DebugMenu::show()

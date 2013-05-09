@@ -22,9 +22,10 @@
 #include "collisionmap.h"
 #include <glm/core/type.hpp>
 
-class b2Body;
+struct cpBody;
+struct cpShape;
+
 class World;
-const float GRAVITY = 0.05f;
 
 class Entity : public Sprite
 {
@@ -48,7 +49,7 @@ public:
     void clearDirtyFlag(uint32_t dirtyFlag);
 
     virtual void createPhysicsBody(World* world, const glm::vec2& position);
-    b2Body* physicsBody();
+    cpBody* physicsBody() { return m_body; }
 
     /**
      * Use only to reset the entities position to some other place.
@@ -84,7 +85,7 @@ public:
     }
 
 protected:
-    b2Body* m_body = nullptr;
+    cpBody* m_body = nullptr;
 
 private:
     glm::vec2 m_velocity = glm::vec2(0, 0);

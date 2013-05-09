@@ -22,30 +22,78 @@
 #include "src/shader.h"
 
 #include <GL/glew.h>
-#include <Box2D/Box2D.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/swizzle.hpp>
 
-class PhysicsDebugRenderer : public b2Draw
+#include <mutex>
+
+struct cpConstraint;
+struct cpDampedSpring;
+struct cpSpace;
+struct cpBody;
+struct cpShape;
+struct cpVect;
+struct cpBB;
+
+class PhysicsDebugRenderer
 {
 public:
+    typedef struct Color {
+        float r, g, b, a;
+    } Color;
+
     PhysicsDebugRenderer(Camera* camera);
     virtual ~PhysicsDebugRenderer();
 
-    virtual void DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color);
-    virtual void DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color);
+    virtual void DrawPolygon(const cpVect* vertices, int32_t vertexCount, PhysicsDebugRenderer::Color color);
+    virtual void DrawSolidPolygon(const cpVect* vertices, int32_t vertexCount, PhysicsDebugRenderer::Color color);
 
-    virtual void DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color);
-    virtual void DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color);
+    virtual void DrawSolidCircle(cpVect center, cpFloat radius, cpFloat rotation, Color color);
 
-    virtual void DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color);
-    virtual void DrawTransform(const b2Transform& xf);
+    virtual void DrawSegment(const cpVect& p1, const cpVect& p2, PhysicsDebugRenderer::Color color);
 
     void setCamera(Camera* camera);
 
     void render();
+
+    uint32_t shapeCount() { return m_shapeCount; }
+
+    const Color LINE_COLOR = {200.0/255.0, 210.0/255.0, 230.0/255.0, 1.0};
+    const Color CONSTRAINT_COLOR = {0.0, 0.75, 0.0, 1.0};
+    const float SHAPE_ALPHA = 1.0;
+
+    float ChipmunkDebugDrawPointLineScale = 1.0;
+
+    static inline Color RGBAColor(float r, float g, float b, float a){
+        Color color = {r, g, b, a};
+        return color;
+    }
+
+    static inline Color LAColor(float l, float a){
+        Color color = {l, l, l, a};
+        return color;
+    }
+
+    static void staticDrawShape(cpShape *shape, void *unused);
+    static void staticDrawConstraint(cpConstraint *constraint, void *unused);
+    static void staticDrawSpring(cpDampedSpring *spring, cpBody *body_a, cpBody *body_b);
+
+    Color ColorForShape(cpShape *shape);
+    void glColor_from_color(Color color);
+    Color ColorFromHash(cpHashValue hash, float alpha);
+
+   void ChipmunkDebugDrawShape(cpShape *shape);
+
+    /**
+     * Should be called ONLY by the server thread, iterates over the space and finds what it has to draw, switches a mutex, adds it to a list
+     * of objects the client has to draw.
+     * NOTE: this function is indeed threadsafe, but only should be called from the server thread after cpStepSpace is called.
+     *
+     * Client will trigger a mutex as well when it comes to iterating over said list and drawing it.
+     */
+    void iterateShapesInSpace(cpSpace *space);
 
 private:
     void initGL();
@@ -117,6 +165,12 @@ private:
 
     Camera* m_camera = nullptr;
     Shader* m_shader = nullptr;
+
+    std::vector<cpShape*> m_shapes;
+
+    std::mutex m_mutex;
+
+    uint32_t m_shapeCount = 0;
 };
 
 #endif

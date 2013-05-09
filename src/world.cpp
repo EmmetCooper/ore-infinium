@@ -42,7 +42,8 @@
 #include "quadtree.h"
 #include "activechunk.h"
 
-#include <Box2D/Box2D.h>
+#include <chipmunk/chipmunk.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -100,26 +101,18 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
     //client doesn't actually load/generate any world
     if (m_server) {
-        m_box2DWorld = new b2World(m_gravity);
-        m_box2DWorld->SetAllowSleeping(true);
-
-        m_contactListener = new ContactListener();
-        m_box2DWorld->SetContactListener(m_contactListener);
-
-        m_queryCallback = new QueryCallback(m_box2DWorld);
-
-        b2BodyDef bodyDef;
-        bodyDef.type = b2_staticBody;
-        bodyDef.position.Set(0.0f, 0.0f);
-
-        m_mainTileBody = m_box2DWorld->CreateBody(&bodyDef);
-
-        b2Vec2 halfWorld(Block::BLOCK_SIZE * WORLD_COLUMNCOUNT * 0.5f, Block::BLOCK_SIZE * WORLD_ROWCOUNT * 0.5f);
+        cpVect halfWorld = cpv(Block::BLOCK_SIZE * WORLD_COLUMNCOUNT * 0.5f, Block::BLOCK_SIZE * WORLD_ROWCOUNT * 0.5f);
         m_torchesQuadTree = new QuadTree(nullptr, halfWorld, halfWorld);
 
-        if (m_server->client()) {
-            m_server->client()->setBox2DWorld(m_box2DWorld);
-        }
+//        cpVect gravity = cpv(0, -100);
+        cpVect gravity = cpv(0.0, 9.8);
+        m_cpSpace = cpSpaceNew();
+        cpSpaceSetGravity(m_cpSpace, gravity);
+        cpSpaceSetIterations(m_cpSpace, 10);
+        cpSpaceSetSleepTimeThreshold(m_cpSpace, 0.5);
+//        cpSpaceAddCollisionHandler(m_cpSpace, 0, 0, &ContactListener::begin, nullptr, nullptr, nullptr, this);
+
+        ////////////////////////
 
         loadWorld();
         //HACK, as if that wasn't obvious.
@@ -132,7 +125,6 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
         Debug::log(Debug::WorldLoaderArea) << "World is x: " << (WORLD_COLUMNCOUNT * Block::BLOCK_SIZE) << " y: " << (WORLD_ROWCOUNT * Block::BLOCK_SIZE) << " meters big";
     }
-
 
     //FIXME: saveMap();
 
@@ -174,10 +166,7 @@ World::~World()
     }
     m_players.clear();
 
-    m_box2DWorld->DestroyBody(m_mainTileBody);
-    delete m_box2DWorld;
-    delete m_contactListener;
-    delete m_queryCallback;
+    cpSpaceFree(m_cpSpace);
 
     delete m_camera;
 }
@@ -196,11 +185,11 @@ void World::addPlayer(Entities::Player* player)
         //FIXME: HACK: this needs improvement. obviously..otherwise it could very easily destroy everything underneath wherever the player left off.
         //clear an area around the player's rect, of tiles, so he can spawn properly.
         const int startX = ((playerPosition.x) / Block::BLOCK_SIZE) - (10);
-        const int endX = startX + (20);
+        const int endX = startX + (400);
 
         //columns are our X value, rows the Y
         const int startY = ((playerPosition.y) / Block::BLOCK_SIZE) - (10);
-        const int endY = startY + (20);
+        const int endY = startY + (50);
         int index = 0;
 
         for (int row = startY; row < endY; ++row) {
@@ -231,7 +220,7 @@ void World::updateTilePhysicsObjects()
     std::list<DesiredChunk> desiredChunks;
 
     for (Entities::Player* player : m_players) {
-        // mark which chunks we want to be activated within this players viewport
+    // mark which chunks we want to be activated within this players viewport
 
         float blockSize = Block::BLOCK_SIZE;
         glm::ivec2 centerTile = glm::ivec2(int(ceil(player->position().x / blockSize)), int(ceil(player->position().y / blockSize)));
@@ -267,8 +256,11 @@ void World::updateTilePhysicsObjects()
         auto it = m_activeChunks.find(d);
         if (it== m_activeChunks.end()) {
             // active chunk does not exist, create it!
-            ActiveChunk* activeChunk = new ActiveChunk(d.row, d.column, &m_blocks, m_box2DWorld, m_mainTileBody);
+            ActiveChunk* activeChunk = new ActiveChunk(d.row, d.column, &m_blocks, m_cpSpace);
             m_activeChunks[d] = activeChunk;
+            if (m_server->client()) {
+                m_server->client()->setActiveChunkCount(m_activeChunks.size());
+            }
         } else {
             it->second->refcount += 1;
         }
@@ -362,10 +354,18 @@ void World::update(double elapsedTime)
     }
 
     if (m_server) {
-
         updateTilePhysicsObjects();
 
-        m_box2DWorld->Step(FIXED_TIMESTEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+        cpSpaceStep(m_cpSpace, FIXED_TIMESTEP);
+
+        if (m_server->client() && m_server->client()->physicsDebugRenderer()) {
+            static bool physicsRenderingFlushNeeded = true;
+
+            if (m_physicsRendererFlushTimer.milliseconds() >= 500) {
+                m_server->client()->physicsDebugRenderer()->iterateShapesInSpace(m_cpSpace);
+                m_physicsRendererFlushTimer.reset();
+            }
+        }
     }
 
     //    m_sky->update(elapsedTime);   glm::vec2 mouse = m_mainPlayer->mousePositionWorldCoords();
@@ -752,30 +752,94 @@ void World::spawnItem(Item* item)
     m_spriteSheetRenderer->registerSprite(item);
 }
 
-void World::destroyTilePhysicsObject(uint32_t column, uint32_t row)
+void World::tileRemovedPostStepCallback(cpSpace* space, void* obj, void* data)
 {
-    b2AABB aabb;
-    aabb.lowerBound = b2Vec2((Block::BLOCK_SIZE * (column)) + (Block::BLOCK_SIZE * 0.5), Block::BLOCK_SIZE * (row) + (Block::BLOCK_SIZE * 0.5));
-    aabb.upperBound = b2Vec2((Block::BLOCK_SIZE * (column)) + (Block::BLOCK_SIZE * 0.5), Block::BLOCK_SIZE * (row)+ (Block::BLOCK_SIZE * 0.5));
+    assert(space);
+    World* world = static_cast<World*>(data);
 
-    m_queryCallback->setFixtureSearchType(ContactListener::BodyType::Block);
-    m_box2DWorld->QueryAABB(m_queryCallback, aabb);
+    for (cpShape* shape : world->m_tileShapesToDestroy) {
+        ContactListener::BodyUserData* userData = static_cast<ContactListener::BodyUserData*>(cpShapeGetUserData(shape));
 
-//    Debug::log(Debug::ServerEntityLogicArea) << "FIXTURE CALLBCK COUNT: " <<  m_queryCallback->bodiesAtPoint(aabb.lowerBound).size();
-    for (auto* fixture : m_queryCallback->fixturesAtPoint(aabb.lowerBound)) {
-        //be sure to delete our body marker
-        delete static_cast<ContactListener::BodyUserData*>(fixture->GetUserData());
-        m_mainTileBody->DestroyFixture(fixture);
+        ContactListener::BlockWrapper* blockWrapper = static_cast<ContactListener::BlockWrapper*>(userData->data);
+
+        // find the active chunk associated with this block, we need to remove that otherwise we'll have a double-delete on our hands.
+        DesiredChunk desiredChunk(blockWrapper->row / ACTIVECHUNK_SIZE, blockWrapper->column / ACTIVECHUNK_SIZE);
+        world->m_activeChunks.at(desiredChunk)->shapeRemoved(shape);
+
+        delete blockWrapper;
+        delete userData;
+
+        cpSpaceRemoveShape(space, shape);
+        cpShapeDestroy(shape);
     }
+
+    world->m_tileShapesToDestroy.clear();
+}
+
+void World::attackTilePhysicsObjectCallback(cpShape* shape, cpFloat t, cpVect n, void *data)
+{
+    ContactListener::BodyUserData* userData = static_cast<ContactListener::BodyUserData*>(cpShapeGetUserData(shape));
+    assert(userData);
+
+    if (userData->type != ContactListener::BodyType::BlockBodyType) {
+        return;
+    }
+
+    ContactListener::BlockWrapper* blockWrapper = static_cast<ContactListener::BlockWrapper*>(userData->data);
+    Block* block = blockWrapper->block;
+
+    if (block->primitiveType == Block::BlockType::Null) {
+        return;
+    }
+
+    World* world = static_cast<World*>(data);
+
+    //FIXME: decrement health..
+    block->primitiveType = Block::BlockType::Null;
+
+    world->m_tileShapesToDestroy.push_back(shape);
+    cpSpaceAddPostStepCallback(world->m_cpSpace, &World::tileRemovedPostStepCallback, nullptr, world);
+
+    uint32_t column = blockWrapper->column;
+    uint32_t row = blockWrapper->row;
+
+
+    Chunk chunk(column, row, column + 1, row + 1, &world->m_blocks);
+    world->m_server->sendWorldChunk(&chunk);
+}
+
+void World::attackTilePhysicsObject(const glm::vec2& positionToAttack, Entities::Player* player)
+{
+    //HACK: this presents an issue..we need to notify, upon tile destruction, to the corresponding active chunk, that this tile has been removed so it doesn't attempt to delete that shit.
+
+    cpVect start = cpv(player->position().x, player->position().y);
+    cpVect end = cpv(positionToAttack.x, positionToAttack.y);
+
+    cpLayers layers = CP_ALL_LAYERS;
+    cpGroup group = CP_NO_GROUP;
+
+    cpSpaceSegmentQuery(m_cpSpace, start, end, layers, group, &World::attackTilePhysicsObjectCallback, this);
+
+
+//     FIXME:
+//    b2AABB aabb;
+//    aabb.lowerBound = b2Vec2((Block::BLOCK_SIZE * (column)) + (Block::BLOCK_SIZE * 0.5), Block::BLOCK_SIZE * (row) + (Block::BLOCK_SIZE * 0.5));
+//    aabb.upperBound = b2Vec2((Block::BLOCK_SIZE * (column)) + (Block::BLOCK_SIZE * 0.5), Block::BLOCK_SIZE * (row)+ (Block::BLOCK_SIZE * 0.5));
+//
+//    m_queryCallback->setFixtureSearchType(ContactListener::BodyType::Block);
+//    m_box2DWorld->QueryAABB(m_queryCallback, aabb);
+//
+////    Debug::log(Debug::ServerEntityLogicArea) << "FIXTURE CALLBCK COUNT: " <<  m_queryCallback->bodiesAtPoint(aabb.lowerBound).size();
+//    for (auto* fixture : m_queryCallback->fixturesAtPoint(aabb.lowerBound)) {
+//        //be sure to delete our body marker
+//        //delete static_cast<ContactListener::BodyUserData*>(fixture->GetUserData());
+//        //m_mainTileBody->DestroyFixture(fixture);
+//    }
 }
 
 void World::performBlockAttack(Entities::Player* player)
 {
     glm::vec2 mouse = player->mousePositionWorldCoords();
-    glm::ivec2 intendedBlockToPick = glm::ivec2(floor(mouse.x / Block::BLOCK_SIZE), floor(mouse.y / Block::BLOCK_SIZE));
-
-    uint32_t x = intendedBlockToPick.x;
-    uint32_t y = intendedBlockToPick.y;
 
     const glm::vec2 playerPosition = player->position();
 
@@ -790,23 +854,5 @@ void World::performBlockAttack(Entities::Player* player)
     }
 #endif
 
-    bool blocksModified = false;
-
-    int index = x * WORLD_ROWCOUNT + y;
-    assert(index < WORLD_ROWCOUNT * WORLD_COLUMNCOUNT);
-
-    Block& block = m_blocks[index];
-
-    if (block.primitiveType != 0) {
-        //FIXME: decrement health..
-        block.primitiveType = Block::BlockType::Null; //FIXME:
-        destroyTilePhysicsObject(x, y);
-
-        blocksModified = true;
-    }
-
-    if (blocksModified) {
-        Chunk chunk(x, y, x + 1, y + 1, &m_blocks);
-        m_server->sendWorldChunk(&chunk);
-    }
+    attackTilePhysicsObject(mouse, player);
 }

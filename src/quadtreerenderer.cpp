@@ -140,10 +140,10 @@ void QuadTreeRenderer::uploadVertices(QuadTree *tree)
     // vertices[1] -> bottom left
     // vertices[2] -> bottom right
     // vertices[3] -> top right
+//BIG HACK TIME
+    glm::vec2 spritePosition;//FIXME:(tree->m_boundary.center.x - tree->m_boundary.halfDimension.x, tree->m_boundary.center.y - tree->m_boundary.halfDimension.y);
 
-    glm::vec2 spritePosition(tree->m_boundary.center.x - tree->m_boundary.halfDimension.x, tree->m_boundary.center.y - tree->m_boundary.halfDimension.y);
-
-    glm::vec4 rect = glm::vec4(spritePosition.x - (tree->m_boundary.halfDimension.x * 2.0f), spritePosition.y - (tree->m_boundary.halfDimension.x * 2.0f), spritePosition.x + (tree->m_boundary.halfDimension.x * 2.0f), spritePosition.y + (tree->m_boundary.halfDimension.y * 2.0f));
+    glm::vec4 rect;//FIXME: = glm::vec4(spritePosition.x - (tree->m_boundary.halfDimension.x * 2.0f), spritePosition.y - (tree->m_boundary.halfDimension.x * 2.0f), spritePosition.x + (tree->m_boundary.halfDimension.x * 2.0f), spritePosition.y + (tree->m_boundary.halfDimension.y * 2.0f));
 
     float x = rect.x;
     float width = rect.z;
