@@ -97,7 +97,7 @@ void Player::createPhysicsBody(World* world, const glm::vec2& position)
     m_body = cpBodyNew(0.5, INFINITY);
 
     ContactListener::BodyUserData* userData = new ContactListener::BodyUserData;
-    userData->type = ContactListener::Player;
+    userData->type = ContactListener::PlayerBodyType;
     userData->data = this;
 
     cpBodySetUserData(m_body, userData);
@@ -107,6 +107,7 @@ void Player::createPhysicsBody(World* world, const glm::vec2& position)
     cpBodySetPos(m_body, cpv(position.x, position.y));
 
     cpShape *groundShape = cpCircleShapeNew(m_body , size.x * 1.5, cpvzero);
+    cpShapeSetUserData(groundShape, userData);
     cpShapeSetFriction(groundShape, 17.5);
 
     cpSpaceAddShape(space, groundShape);

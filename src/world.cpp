@@ -749,8 +749,50 @@ void World::spawnItem(Item* item)
     m_spriteSheetRenderer->registerSprite(item);
 }
 
-void World::destroyTilePhysicsObject(uint32_t column, uint32_t row)
+void World::attackTilePhysicsObjectCallback(cpShape* shape, cpFloat t, cpVect n, void *data)
 {
+    ContactListener::BodyUserData* userData = static_cast<ContactListener::BodyUserData*>(cpShapeGetUserData(shape));
+    assert(userData);
+
+    if (userData->type != ContactListener::BodyType::BlockBodyType) {
+        return;
+    }
+
+    ContactListener::BlockWrapper* blockWrapper = static_cast<ContactListener::BlockWrapper*>(userData->data);
+    Block* block = blockWrapper->block;
+
+    bool blocksModified = false;
+    if (block->primitiveType != 0) {
+        //FIXME: decrement health..
+        block->primitiveType = Block::BlockType::Null; //FIXME:
+
+        blocksModified = true;
+    }
+
+    if (blocksModified) {
+        uint32_t column = blockWrapper->column;
+        uint32_t row = blockWrapper->row;
+
+        World* world = static_cast<World*>(data);
+
+        Chunk chunk(column, row, column + 1, row + 1, &world->m_blocks);
+        world->m_server->sendWorldChunk(&chunk);
+    }
+}
+
+void World::attackTilePhysicsObject(const glm::vec2& positionToAttack, Entities::Player* player)
+{
+    //HACK: this presents an issue..we need to notify, upon tile destruction, to the corresponding active chunk, that this tile has been removed so it doesn't attempt to delete that shit.
+
+    cpVect start = cpv(player->position().x, player->position().y);
+    cpVect end = cpv(positionToAttack.x, positionToAttack.y);
+
+    cpLayers layers = CP_ALL_LAYERS;
+    cpGroup group = CP_NO_GROUP;
+
+    cpSpaceSegmentQuery(m_cpSpace, start, end, layers, group, &World::attackTilePhysicsObjectCallback, this);
+
+
 //     FIXME:
 //    b2AABB aabb;
 //    aabb.lowerBound = b2Vec2((Block::BLOCK_SIZE * (column)) + (Block::BLOCK_SIZE * 0.5), Block::BLOCK_SIZE * (row) + (Block::BLOCK_SIZE * 0.5));
@@ -770,10 +812,6 @@ void World::destroyTilePhysicsObject(uint32_t column, uint32_t row)
 void World::performBlockAttack(Entities::Player* player)
 {
     glm::vec2 mouse = player->mousePositionWorldCoords();
-    glm::ivec2 intendedBlockToPick = glm::ivec2(floor(mouse.x / Block::BLOCK_SIZE), floor(mouse.y / Block::BLOCK_SIZE));
-
-    uint32_t x = intendedBlockToPick.x;
-    uint32_t y = intendedBlockToPick.y;
 
     const glm::vec2 playerPosition = player->position();
 
@@ -788,23 +826,5 @@ void World::performBlockAttack(Entities::Player* player)
     }
 #endif
 
-    bool blocksModified = false;
-
-    int index = x * WORLD_ROWCOUNT + y;
-    assert(index < WORLD_ROWCOUNT * WORLD_COLUMNCOUNT);
-
-    Block& block = m_blocks[index];
-
-    if (block.primitiveType != 0) {
-        //FIXME: decrement health..
-        block.primitiveType = Block::BlockType::Null; //FIXME:
-        destroyTilePhysicsObject(x, y);
-
-        blocksModified = true;
-    }
-
-    if (blocksModified) {
-        Chunk chunk(x, y, x + 1, y + 1, &m_blocks);
-        m_server->sendWorldChunk(&chunk);
-    }
+    attackTilePhysicsObject(mouse, player);
 }

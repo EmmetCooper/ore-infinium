@@ -153,7 +153,8 @@ private:
     /**
      * For when a tile is destroyed.
      */
-    void destroyTilePhysicsObject(uint32_t column, uint32_t row);
+    void attackTilePhysicsObject(const glm::vec2& positionToAttack, Entities::Player* player);
+    static void attackTilePhysicsObjectCallback(cpShape* shape, cpFloat t, cpVect n, void *data);
 
     void renderCrosshair();
 

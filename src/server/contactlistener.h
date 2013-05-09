@@ -20,6 +20,7 @@
 
 #include <Box2D/Box2D.h>
 #include <set>
+#include <src/block.h>
 
 struct cpArbiter;
 struct cpSpace;
@@ -30,15 +31,21 @@ public:
     static int /* cpBool */ begin(cpArbiter* arbiter, cpSpace* space, void* data /* World pointer */);
 
     enum BodyType {
-        Invalid = -1,
-        Player = 0,
-        PlayerFootSensor = 1,
-        Block
+        InvalidBodyType = -1,
+        PlayerBodyType = 0,
+        PlayerFootSensorBodyType = 1,
+        BlockBodyType
     };
 
     struct BodyUserData {
         int type = -1;
         void* data = nullptr;
+    };
+
+    struct BlockWrapper {
+        Block* block;
+        uint32_t row;
+        uint32_t column;
     };
 
 private:

@@ -111,9 +111,14 @@ m_cpSpace(cpWorldSpace)
             cpShape *tileShape = cpBoxShapeNew2(m_cpSpace->staticBody , bb);
             cpShapeSetFriction(tileShape, 2.7);
 
+            ContactListener::BlockWrapper* blockWrapper = new ContactListener::BlockWrapper();
+            blockWrapper->block = &m_blocks->at(index);
+            blockWrapper->row = currentRow;
+            blockWrapper->column = currentColumn;
+
             ContactListener::BodyUserData* userData = new ContactListener::BodyUserData();
-            userData->type = ContactListener::BodyType::Block;
-            userData->data = &m_blocks[index];
+            userData->type = ContactListener::BodyType::BlockBodyType;
+            userData->data = blockWrapper;
 
             cpShapeSetUserData(tileShape, userData);
 

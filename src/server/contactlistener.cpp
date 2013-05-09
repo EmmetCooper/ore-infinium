@@ -71,7 +71,7 @@ void ContactListener::checkBeginContact(ContactListener::BodyUserData* userData)
 {
 //    Debug::log(Debug::ServerEntityLogicArea) << "BOX2D BEGINN CONTACT";
     switch (userData->type) {
-    case BodyType::PlayerFootSensor: {
+    case BodyType::PlayerFootSensorBodyType: {
         Entities::Player* player = static_cast<Entities::Player*>(userData->data);
         player->addJumpContact();
         break;
@@ -82,7 +82,7 @@ void ContactListener::checkBeginContact(ContactListener::BodyUserData* userData)
 void ContactListener::checkEndContact(ContactListener::BodyUserData* userData)
 {
     switch (userData->type) {
-    case BodyType::PlayerFootSensor:
+    case BodyType::PlayerFootSensorBodyType:
         Entities::Player* player = static_cast<Entities::Player*>(userData->data);
         player->removeJumpContact();
         break;
