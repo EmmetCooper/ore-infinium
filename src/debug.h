@@ -67,10 +67,11 @@ public:
         GUIRenderingDebug = 1 << 0,
         LightRenderingPassDebug = 1 << 1,
         TileRenderingPassDebug = 1 << 2,
-        Box2DShapeRenderingDebug = 1 << 3,
-        Box2DCenterOfMassRenderingDebug = 1 << 4,
-        Box2DJointRenderingDebug = 1 << 5,
-        Box2DAABBRenderingDebug = 1 << 6
+        SkyRenderingPassDebug = 1 << 3,
+        Box2DShapeRenderingDebug = 1 << 4,
+        Box2DCenterOfMassRenderingDebug = 1 << 5,
+        Box2DJointRenderingDebug = 1 << 6,
+        Box2DAABBRenderingDebug = 1 << 7
     };
 
     static LogStream log(Area area);

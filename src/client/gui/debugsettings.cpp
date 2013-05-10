@@ -208,6 +208,12 @@ void DebugSettings::ProcessEvent(Rocket::Core::Event& event)
         } else {
             Settings::instance()->debugRendererFlags &= ~Debug::RenderingDebug::TileRenderingPassDebug;
         }
+    } else if (id == "SkyRenderingPass") {
+        if (isChecked) {
+            Settings::instance()->debugRendererFlags |= Debug::RenderingDebug::SkyRenderingPassDebug;
+        } else {
+            Settings::instance()->debugRendererFlags &= ~Debug::RenderingDebug::SkyRenderingPassDebug;
+        }
     } else if (id == "Box2DShapeRendering") {
         if (isChecked) {
             Settings::instance()->debugRendererFlags |= Debug::RenderingDebug::Box2DShapeRenderingDebug;
@@ -300,6 +306,7 @@ void DebugSettings::loadDocument()
     m_debugSettings->GetElementById("GUIDebugRendering")->AddEventListener("change", this);
     m_debugSettings->GetElementById("LightRenderingPass")->AddEventListener("change", this);
     m_debugSettings->GetElementById("TileRenderingPass")->AddEventListener("change", this);
+    m_debugSettings->GetElementById("SkyRenderingPass")->AddEventListener("change", this);
     m_debugSettings->GetElementById("Box2DShapeRendering")->AddEventListener("change", this);
     m_debugSettings->GetElementById("Box2DCenterOfMassRendering")->AddEventListener("change", this);
     m_debugSettings->GetElementById("Box2DJointRendering")->AddEventListener("change", this);
@@ -321,6 +328,10 @@ void DebugSettings::loadRenderingSettings()
 
     if (flags & Debug::RenderingDebug::TileRenderingPassDebug) {
         m_debugSettings->GetElementById("TileRenderingPass")->SetAttribute<Rocket::Core::String>("checked", "");
+    }
+
+    if (flags & Debug::RenderingDebug::SkyRenderingPassDebug) {
+        m_debugSettings->GetElementById("SkyRenderingPass")->SetAttribute<Rocket::Core::String>("checked", "");
     }
 
     if (flags & Debug::RenderingDebug::Box2DShapeRenderingDebug) {

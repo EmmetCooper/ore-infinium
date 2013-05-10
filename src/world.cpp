@@ -319,7 +319,9 @@ void World::render()
 
     m_quadTreeRenderer->render();
 
-    m_sky->render();
+    if (Settings::instance()->debugRendererFlags & Debug::RenderingDebug::SkyRenderingPassDebug) {
+        m_sky->render();
+    }
 
     renderCrosshair();
 }
