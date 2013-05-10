@@ -44,7 +44,8 @@ void Debug::assertf(bool value, const std::string& message)
 void Debug::fatal(bool value, Debug::Area area, const std::string& message)
 {
     if (!value) {
-        Debug::log(area) << "FATAL: " << message;
+        //HACK so that it actually outputs something regardless.
+        Debug::log(Debug::Area::ImportantArea) << "FATAL: " << message;
         assert(0);
     }
 }
@@ -74,7 +75,6 @@ void Debug::glDebugCallback(unsigned int source, unsigned int type, unsigned int
     if ((Settings::instance()->debugAreas & Debug::Area::ShadersArea) == false) {
         return;
     }
-
 
     std::string sourceString;
 
@@ -415,6 +415,14 @@ LogStream::~LogStream()
             }
 
             areaString.append("[StartupArea]");
+            break;
+
+        case Debug::Area::ImportantArea:
+            if ((Settings::instance()->debugAreas & Debug::Area::ImportantArea) == false) {
+                return;
+            }
+
+            areaString.append("[ImportantArea]");
             break;
     }
 

@@ -41,6 +41,8 @@ m_camera(camera)
     SpriteFrame sun;
     sun.texturePosition = glm::vec2(0, 0);
     sun.textureSize = glm::vec2(256, 256);
+    sun.sizeMeters = glm::vec2(200, 200);
+    sun.position = glm::vec2(500, 500);
     m_celestialBodiesSprites.push_back(sun);
 
 //    SpriteFrame moon;
@@ -331,6 +333,7 @@ void SkyRenderer::renderSkyBackground()
 
 void SkyRenderer::renderCelestialBodies()
 {
+    m_celestialBodiesTexture->bind();
     m_celestialBodiesShader->bindProgram();
 
     float x = 0.0f;

@@ -53,7 +53,8 @@ public:
         ClientEntityCreationArea = 1 << 19,
         ServerEntityCreationArea = 1 << 20,
         SettingsArea = 1 << 21,
-        StartupArea = 1 << 22
+        StartupArea = 1 << 22,
+        ImportantArea = 1 << 23
     };
 
     /**
