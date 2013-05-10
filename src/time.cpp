@@ -40,7 +40,7 @@ void Time::tick()
         m_minute = 0;
     }
 
-    if (m_hour > 24) {
+    if (m_hour >= 24) {
         m_hour = 0;
     }
 }
