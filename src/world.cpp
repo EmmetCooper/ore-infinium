@@ -190,11 +190,11 @@ void World::addPlayer(Entities::Player* player)
         //FIXME: HACK: this needs improvement. obviously..otherwise it could very easily destroy everything underneath wherever the player left off.
         //clear an area around the player's rect, of tiles, so he can spawn properly.
         const int startX = ((playerPosition.x) / Block::BLOCK_SIZE) - (10);
-        const int endX = startX + (400);
+        const int endX = startX + (20);
 
         //columns are our X value, rows the Y
         const int startY = ((playerPosition.y) / Block::BLOCK_SIZE) - (10);
-        const int endY = startY + (50);
+        const int endY = startY + (20);
         int index = 0;
 
         for (int row = startY; row < endY; ++row) {
