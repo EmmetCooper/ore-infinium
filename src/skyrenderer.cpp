@@ -46,10 +46,12 @@ m_time(time)
     sun.position = glm::vec2(500, 500);
     m_celestialBodiesSprites.push_back(sun);
 
-//    SpriteFrame moon;
-//    sun.texturePosition = glm::vec2(0, 0);
-//    sun.textureSize = glm::vec2(256, 256);
-//    m_celestialBodiesSprites.push_back(moon);
+    SpriteFrame moon;
+    moon.texturePosition = glm::vec2(402, 54);
+    moon.textureSize = glm::vec2(150, 160);
+    moon.sizeMeters = glm::vec2(50, 50);
+    moon.position = glm::vec2(500, 500);
+    m_celestialBodiesSprites.push_back(moon);
 
     initGL();
 }
@@ -464,8 +466,8 @@ void SkyRenderer::update(const float elapsedTime)
     glm::vec2 viewportCenter = glm::vec2(1600/2, 900/2);
     const unsigned char hour = m_time->currentHour();
     const unsigned char minute = m_time->currentMinute();
-//    std::cout << "MINUTE! " << (short) minute << "\n";
 
+    ///// SUN
     m_timeAngle = (hour * (180 / 12)) + (minute * (180 / 12) / 60 );
     double angle = (m_timeAngle + 90) * (M_PI / 180);
     float newX = viewportCenter.x + cos(angle) * 400;
@@ -473,15 +475,16 @@ void SkyRenderer::update(const float elapsedTime)
 
     // sun position
     m_celestialBodiesSprites.at(0).position = glm::vec2(newX, newY);
+    ////////////
 
+    //////////// MOON
+    angle = (m_timeAngle + 90 - 180) * (M_PI / 180);
+    newX = viewportCenter.x + cos(angle) * 400;
+    newY = viewportCenter.y + sin(angle) * 400;
 
-//
-//    angle = (m_timeAngle + 90 - 180) * (M_PI / 180);
-//    newX = _viewportCenter.x + cos(angle) * 400;
-//    newY = _viewportCenter.y + sin(angle) * 400;
-//
-//    m_moonPosition = sf::Vector2f(newX, newY);
-//    m_moonSprite.setPosition(m_moonPosition);
+    // moon position
+    m_celestialBodiesSprites.at(1).position = glm::vec2(newX, newY);
+    /////////////////
 }
 
 void SkyRenderer::render()
