@@ -42,10 +42,10 @@ public:
 private:
     void initGL();
     void initGLSkyBackground();
-    void initGLSunMoon();
+    void initGLCelestialBodies();
 
     void renderSkyBackground();
-    void renderSunAndMoon();
+    void renderCelestialBodies();
 
     /* Each vertex is:
      * two floats for the 2d coordinate
@@ -60,38 +60,39 @@ private:
         float u, v;
     };
 
-    struct SunOrMoon {
-       GLuint texture;
+    ///size of celestialBodies.png
+    const int SPRITESHEET_WIDTH = 1024;
+    const int SPRITESHEET_HEIGHT = 1024;
+
+    struct SpriteFrame {
+        /// screen position of said object
        glm::vec2 position;
-       glm::vec2 size;
+       /// size in meters
+       glm::vec2 sizeMeters;
+
+       /// uv position, within spritesheet texture.
+       glm::vec2 texturePosition;
+       /// uv size, within spritesheet texture.
+       glm::vec2 textureSize;
     };
 
-    Texture* m_sunTexture = nullptr;
-    Texture* m_moonTexture = nullptr;
+    GLuint m_vaoSkyBackground; // vertex array object
+    GLuint m_vboSkyBackground; // vertex buffer object
+    GLuint m_eboSkyBackground; // element buffer object
 
-    //Renderable m_sunSprite;
-    //Renderable m_moonSprite;
-    //Renderable m_skyBox;
+    GLuint m_vaoCelestialBodies; // vertex array object
+    GLuint m_vboCelestialBodies; // vertex buffer object
+    GLuint m_eboCelestialBodies; // element buffer object
 
-    //sf::Texture m_skyBoxDayTexture;
-    //sf::Texture m_skyBoxDuskTexture;
-    //sf::Texture m_skyBoxNightTexture;
-
-    glm::vec2 m_sunPosition;
-    glm::vec2 m_moonPosition;
-
-    GLuint m_vao; // vertex array object
-    GLuint m_vbo; // vertex buffer object
-    GLuint m_ebo; // element buffer object
-
-    GLuint m_vaoSunMoon; // vertex array object
-    GLuint m_vboSunMoon; // vertex buffer object
-    GLuint m_eboSunMoon; // element buffer object
+    std::vector<SpriteFrame> m_celestialBodiesSprites;
 
     // sun, moon
-    uint16_t m_maxSpriteCount = 2;
+    uint16_t m_maxCelestialBodies = 2;
+    uint16_t m_maxSkyBackgrounds= 1;
 
-    Shader* m_sunMoonShader = nullptr;
+    Texture* m_celestialBodiesTexture = nullptr;
+    Shader* m_celestialBodiesShader = nullptr;
+    Shader* m_skyBackgroundShader = nullptr;
 
     //CloudSystem *m_cloudSystem = nullptr;
 
@@ -99,7 +100,6 @@ private:
     glm::mat4 m_viewMatrix;
 
     float m_timeAngle = 0.0f;
-    int m_hour = 0;
 
     Camera* m_camera = nullptr;
 };

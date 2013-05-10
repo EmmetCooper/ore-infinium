@@ -33,44 +33,46 @@
 SkyRenderer::SkyRenderer(World* world, Camera* camera) :
 m_camera(camera)
 {
-    m_sunMoonShader = new Shader("skyrenderer.vert", "skyrenderer.frag");
+    m_celestialBodiesShader = new Shader("skyrenderer.vert", "skyrenderer.frag");
 
-    m_sunTexture = new Texture("../textures/sun.png");
-    m_sunTexture->generate(Texture::TextureFilterNearest);
+    m_celestialBodiesTexture = new Texture("../textures/celestialBodies.png");
+    m_celestialBodiesTexture->generate(Texture::TextureFilterNearest);
 
-    m_moonTexture = new Texture("../textures/moon.png");
-    m_moonTexture->generate(Texture::TextureFilterNearest);
+    SpriteFrame sun;
+    sun.texturePosition = glm::vec2(0, 0);
+    sun.textureSize = glm::vec2(256, 256);
+    m_celestialBodiesSprites.push_back(sun);
 
-    m_sunMoonShader->unbindProgram();
+//    SpriteFrame moon;
+//    sun.texturePosition = glm::vec2(0, 0);
+//    sun.textureSize = glm::vec2(256, 256);
+//    m_celestialBodiesSprites.push_back(moon);
 
     initGL();
 }
 
 SkyRenderer::~SkyRenderer()
 {
-    delete m_sunMoonShader;
-    delete m_sunTexture;
-    delete m_moonTexture;
+    delete m_celestialBodiesShader;
+    delete m_celestialBodiesTexture;
 }
 
 void SkyRenderer::initGL()
 {
-    initGLSunMoon();
+    initGLCelestialBodies();
     //initGLSkyBackground();
 }
 
-void SkyRenderer::initGLSunMoon()
+void SkyRenderer::initGLCelestialBodies()
 {
-    glGenVertexArrays(1, &m_vaoSunMoon);
-    glBindVertexArray(m_vaoSunMoon);
+    glGenVertexArrays(1, &m_vaoCelestialBodies);
+    glBindVertexArray(m_vaoCelestialBodies);
 
-    const int sunMoonCount = 2;
-
-    glGenBuffers(1, &m_vboSunMoon);
-    glBindBuffer(GL_ARRAY_BUFFER, m_vboSunMoon);
+    glGenBuffers(1, &m_vboCelestialBodies);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vboCelestialBodies);
     glBufferData(
         GL_ARRAY_BUFFER,
-        sunMoonCount * 4 * sizeof(Vertex),
+        m_maxCelestialBodies * 4 * sizeof(Vertex),
                  NULL,
                  GL_DYNAMIC_DRAW);
 
@@ -81,14 +83,14 @@ void SkyRenderer::initGLSunMoon()
     // prepare and upload indices as a one time deal
     const uint32_t indices[] = { 0, 1, 2, 0, 2, 3 }; // pattern for a triangle array
     // for each possible sprite, add the 6 index pattern
-    for (uint32_t j = 0; j < sunMoonCount; j++) {
+    for (uint32_t j = 0; j < m_maxCelestialBodies; j++) {
         for (uint32_t i = 0; i < sizeof(indices) / sizeof(*indices); i++) {
             indicesv.push_back(4 * j + indices[i]);
         }
     }
 
-    glGenBuffers(1, &m_eboSunMoon);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_eboSunMoon);
+    glGenBuffers(1, &m_eboCelestialBodies);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_eboCelestialBodies);
     glBufferData(
         GL_ELEMENT_ARRAY_BUFFER,
         indicesv.size()*sizeof(uint32_t),
@@ -99,7 +101,7 @@ void SkyRenderer::initGLSunMoon()
 
     size_t buffer_offset = 0;
 
-    GLint pos_attrib = glGetAttribLocation(m_sunMoonShader->shaderProgram(), "position");
+    GLint pos_attrib = glGetAttribLocation(m_celestialBodiesShader->shaderProgram(), "position");
     glEnableVertexAttribArray(pos_attrib);
     glVertexAttribPointer(
         pos_attrib,
@@ -110,7 +112,7 @@ void SkyRenderer::initGLSunMoon()
                           (const GLvoid*)buffer_offset);
     buffer_offset += sizeof(float) * 2;
 
-    GLint color_attrib = glGetAttribLocation(m_sunMoonShader->shaderProgram(), "color");
+    GLint color_attrib = glGetAttribLocation(m_celestialBodiesShader->shaderProgram(), "color");
 
     Debug::checkGLError();
 
@@ -126,7 +128,7 @@ void SkyRenderer::initGLSunMoon()
 
     Debug::checkGLError();
 
-    GLint texcoord_attrib = glGetAttribLocation(m_sunMoonShader->shaderProgram(), "texcoord");
+    GLint texcoord_attrib = glGetAttribLocation(m_celestialBodiesShader->shaderProgram(), "texcoord");
     glEnableVertexAttribArray(texcoord_attrib);
     glVertexAttribPointer(
         texcoord_attrib,
@@ -146,14 +148,14 @@ void SkyRenderer::initGLSunMoon()
 
 void SkyRenderer::initGLSkyBackground()
 {
-    glGenVertexArrays(1, &m_vao);
-    glBindVertexArray(m_vao);
+    glGenVertexArrays(1, &m_vaoSkyBackground);
+    glBindVertexArray(m_vaoSkyBackground);
 
-    glGenBuffers(1, &m_vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glGenBuffers(1, &m_vboSkyBackground);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vboSkyBackground);
     glBufferData(
         GL_ARRAY_BUFFER,
-        m_maxSpriteCount * 4 * sizeof(Vertex),
+        m_maxSkyBackgrounds * 4 * sizeof(Vertex),
                  NULL,
                  GL_DYNAMIC_DRAW);
 
@@ -164,14 +166,14 @@ void SkyRenderer::initGLSkyBackground()
     // prepare and upload indices as a one time deal
     const uint32_t indices[] = { 0, 1, 2, 0, 2, 3 }; // pattern for a triangle array
     // for each possible sprite, add the 6 index pattern
-    for (uint32_t j = 0; j < m_maxSpriteCount; j++) {
+    for (uint32_t j = 0; j < m_maxSkyBackgrounds; j++) {
         for (uint32_t i = 0; i < sizeof(indices) / sizeof(*indices); i++) {
             indicesv.push_back(4 * j + indices[i]);
         }
     }
 
-    glGenBuffers(1, &m_ebo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+    glGenBuffers(1, &m_eboSkyBackground);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_eboSkyBackground);
     glBufferData(
         GL_ELEMENT_ARRAY_BUFFER,
         indicesv.size()*sizeof(uint32_t),
@@ -182,7 +184,7 @@ void SkyRenderer::initGLSkyBackground()
 
     size_t buffer_offset = 0;
 
-    GLint pos_attrib = glGetAttribLocation(m_sunMoonShader->shaderProgram(), "position");
+    GLint pos_attrib = glGetAttribLocation(m_skyBackgroundShader->shaderProgram(), "position");
     glEnableVertexAttribArray(pos_attrib);
     glVertexAttribPointer(
         pos_attrib,
@@ -193,7 +195,7 @@ void SkyRenderer::initGLSkyBackground()
                           (const GLvoid*)buffer_offset);
     buffer_offset += sizeof(float) * 2;
 
-    GLint color_attrib = glGetAttribLocation(m_sunMoonShader->shaderProgram(), "color");
+    GLint color_attrib = glGetAttribLocation(m_skyBackgroundShader->shaderProgram(), "color");
 
     Debug::checkGLError();
 
@@ -209,7 +211,7 @@ void SkyRenderer::initGLSkyBackground()
 
     Debug::checkGLError();
 
-    GLint texcoord_attrib = glGetAttribLocation(m_sunMoonShader->shaderProgram(), "texcoord");
+    GLint texcoord_attrib = glGetAttribLocation(m_skyBackgroundShader->shaderProgram(), "texcoord");
     glEnableVertexAttribArray(texcoord_attrib);
     glVertexAttribPointer(
         texcoord_attrib,
@@ -224,13 +226,11 @@ void SkyRenderer::initGLSkyBackground()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     Debug::checkGLError();
-
 }
-
 
 void SkyRenderer::renderSkyBackground()
 {
-    m_sunMoonShader->bindProgram();
+    m_skyBackgroundShader->bindProgram();
 
     Debug::checkGLError();
 
@@ -293,7 +293,7 @@ void SkyRenderer::renderSkyBackground()
         vertices[2].u = vertices[3].u = spriteRight;
 
         // finally upload everything to the actual vbo
-        glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, m_vboSkyBackground);
         glBufferSubData(
             GL_ARRAY_BUFFER,
             sizeof(vertices) * index,
@@ -307,23 +307,19 @@ void SkyRenderer::renderSkyBackground()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    glBindVertexArray(m_vao);
-
-    Debug::checkGLError();
-
-    m_sunMoonShader->bindProgram();
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_eboSkyBackground);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vboSkyBackground);
+    glBindVertexArray(m_vaoSkyBackground);
 
     Debug::checkGLError();
 
     glDrawElements(
         GL_TRIANGLES,
-        6 * (m_maxSpriteCount), // 6 indices per 2 triangles
+        6 * (m_maxSkyBackgrounds), // 6 indices per 2 triangles
                 GL_UNSIGNED_INT,
                 (const GLvoid*)0);
 
-    m_sunMoonShader->unbindProgram();
+    m_skyBackgroundShader->unbindProgram();
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -333,9 +329,9 @@ void SkyRenderer::renderSkyBackground()
     Debug::checkGLError();
 }
 
-void SkyRenderer::renderSunAndMoon()
+void SkyRenderer::renderCelestialBodies()
 {
-    m_sunMoonShader->bindProgram();
+    m_celestialBodiesShader->bindProgram();
 
     float x = 0.0f;
     float y = 0.0f;
@@ -345,31 +341,18 @@ void SkyRenderer::renderSunAndMoon()
 
     m_orthoMatrix = glm::ortho(0.0f, float(1600.0f), float(900.0f), 0.0f, -1.0f, 1.0f);
 
-    m_sunMoonShader->bindProgram();
-
     glm::mat4 mvp =  m_orthoMatrix * m_viewMatrix;
 
-    int mvpLoc = glGetUniformLocation(m_sunMoonShader->shaderProgram(), "mvp");
+    int mvpLoc = glGetUniformLocation(m_celestialBodiesShader->shaderProgram(), "mvp");
     glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, &mvp[0][0]);
 
+    ////////////////////////////////////////////////// render... ////////////////////////////////////////////////
 
     Debug::checkGLError();
 
-    SunOrMoon moon;
-    moon.texture = m_moonTexture->textureHandle();
-    moon.position = glm::vec2(500, 500);
-    moon.size = glm::vec2(60, 60);
+    int index = 0;
 
-    SunOrMoon sun;
-    sun.texture = m_sunTexture->textureHandle();
-    sun.position = glm::vec2(550, 550);
-    sun.size = glm::vec2(60, 60);
-
-    std::vector<SunOrMoon> renderables;
-    renderables.push_back(sun);
-    renderables.push_back(moon);
-
-    for (size_t index = 0; index < renderables.size(); ++index) {
+    for (SpriteFrame frame : m_celestialBodiesSprites) {
         // vertices that will be uploaded.
         Vertex vertices[4];
 
@@ -379,9 +362,9 @@ void SkyRenderer::renderSunAndMoon()
         // vertices[2] -> bottom right
         // vertices[3] -> top right
 
-        glm::vec2 spritePosition = renderables.at(index).position;
+        glm::vec2 spritePosition = frame.position;
 
-        glm::vec2 spriteSize = renderables.at(index).size;
+        glm::vec2 spriteSize = frame.sizeMeters;
 
         glm::vec4 rect = glm::vec4(spritePosition.x - (spriteSize.x * 0.5f), spritePosition.y - (spriteSize.x * 0.5f), spritePosition.x + (spriteSize.x * 0.5f), spritePosition.y + (spriteSize.y * 0.5f));
 
@@ -414,10 +397,16 @@ void SkyRenderer::renderSunAndMoon()
             vertices[i].color = color;
         }
 
-        const float spriteLeft = 0.0f;
-        const float spriteRight = 1.0f;
-        const float spriteTop = 0.0f;
-        const float spriteBottom = 1.0f;
+        // copy texcoords to the buffer
+        const float textureWidth = float(frame.textureSize.x) / float(SPRITESHEET_WIDTH);
+        const float textureHeight = float(frame.textureSize.y) / float(SPRITESHEET_HEIGHT);
+        const float textureX = float(frame.texturePosition.x) / float(SPRITESHEET_WIDTH);
+        const float textureY = float(frame.texturePosition.y) / float(SPRITESHEET_HEIGHT);
+
+        const float spriteLeft = textureX;
+        const float spriteRight = spriteLeft + textureWidth;
+        const float spriteTop = 1.0f - (textureY);
+        const float spriteBottom = spriteTop - textureHeight;
 
         // copy texcoords to the buffer
         vertices[0].u = vertices[1].u = spriteLeft;
@@ -426,7 +415,7 @@ void SkyRenderer::renderSunAndMoon()
         vertices[2].u = vertices[3].u = spriteRight;
 
         // finally upload everything to the actual vbo
-        glBindBuffer(GL_ARRAY_BUFFER, m_vboSunMoon);
+        glBindBuffer(GL_ARRAY_BUFFER, m_vboCelestialBodies);
         glBufferSubData(
             GL_ARRAY_BUFFER,
             sizeof(vertices) * index,
@@ -440,39 +429,19 @@ void SkyRenderer::renderSunAndMoon()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_eboSunMoon);
-    glBindBuffer(GL_ARRAY_BUFFER, m_vboSunMoon);
-    glBindVertexArray(m_vaoSunMoon);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_eboCelestialBodies);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vboCelestialBodies);
+    glBindVertexArray(m_vaoCelestialBodies);
 
     Debug::checkGLError();
 
-    m_sunMoonShader->bindProgram();
-
-    Debug::checkGLError();
-
-    m_sunTexture->bind();
-
-    //sun
-    /*
-    glDrawRangeElements(
+    glDrawElements(
         GL_TRIANGLES,
-        0,//6 * (1), // 6 indices for 2 triangles
-                        6 * (1),
-                        6 * 1,
-                GL_UNSIGNED_INT,
-                (const GLvoid*)0);
-*/
-    m_moonTexture->bind();
-    //moon
-    glDrawRangeElements(
-        GL_TRIANGLES,
-        6 * (1), // 6 indices for 2 triangles
-                        6 * (2),
-                        6 * 1,
-                GL_UNSIGNED_INT,
-                (const GLvoid*)0);
+        6 * (m_celestialBodiesSprites.size()), // 6 indices per 2 triangles
+                   GL_UNSIGNED_INT,
+                   (const GLvoid*)0);
 
-    m_sunMoonShader->unbindProgram();
+    m_celestialBodiesShader->unbindProgram();
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -510,8 +479,7 @@ void SkyRenderer::update(const float elapsedTime)
 
 void SkyRenderer::render()
 {
-
-    renderSunAndMoon();
+    renderCelestialBodies();
  //   sf::VertexArray line(sf::Lines, 2);
  //   sf::Vector2f screen = sf::Vector2f(SCREEN_W/2, SCREEN_H/2);
  //   line.append(sf::Vertex(screen));
