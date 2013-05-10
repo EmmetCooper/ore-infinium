@@ -31,6 +31,7 @@
 #include <GL/glew.h>
 #include <SDL2/SDL_events.h>
 
+class Time;
 struct cpBody;
 struct cpSpace;
 class ActiveChunk;
@@ -263,6 +264,8 @@ private:
 
     const float m_zoomInFactor = 1.02;
     const float m_zoomOutFactor = 0.98;
+
+    Time* m_time = nullptr;
 
     friend class TileRenderer;
 };

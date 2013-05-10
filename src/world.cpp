@@ -36,6 +36,7 @@
 #include "quadtreerenderer.h"
 
 #include "skyrenderer.h"
+#include "src/time.h"
 #include "settings/settings.h"
 #include "quickbarinventory.h"
 #include "timer.h"
@@ -99,6 +100,9 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         m_lightRenderer->setTorches(&m_torches);
     }
 
+    m_time = new Time();
+    m_time->setTime(7, 59);
+
     //client doesn't actually load/generate any world
     if (m_server) {
         cpVect halfWorld = cpv(Block::BLOCK_SIZE * WORLD_COLUMNCOUNT * 0.5f, Block::BLOCK_SIZE * WORLD_ROWCOUNT * 0.5f);
@@ -129,7 +133,7 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
     //FIXME: saveMap();
 
     if (m_client) {
-        m_sky = new SkyRenderer(this, m_camera);
+        m_sky = new SkyRenderer(this, m_camera, m_time);
     }
 }
 
@@ -169,6 +173,7 @@ World::~World()
     cpSpaceFree(m_cpSpace);
 
     delete m_camera;
+    delete m_time;
 }
 
 void World::addPlayer(Entities::Player* player)
@@ -344,6 +349,11 @@ void World::update(double elapsedTime)
 {
     //FIXME: MAKE IT CENTER ON THE CENTER OF THE PLAYER SPRITE
     //only occurs on client side, obviously the server doesn't need to do this stuff
+    if (m_client) {
+        //HACK: FIXME receive it over the net, obviously.
+        m_time->tick();
+        m_sky->update(elapsedTime);
+    }
 
     if (m_server) {
         for (auto * player : m_players) {
@@ -355,6 +365,7 @@ void World::update(double elapsedTime)
     }
 
     if (m_server) {
+        m_time->tick();
         updateTilePhysicsObjects();
 
         cpSpaceStep(m_cpSpace, FIXED_TIMESTEP);
@@ -368,8 +379,6 @@ void World::update(double elapsedTime)
             }
         }
     }
-
-    //    m_sky->update(elapsedTime);   glm::vec2 mouse = m_mainPlayer->mousePositionWorldCoords();
 
     //NOTE: players are not exactly considered entities. they are, but they aren't
     for (Entity * currentEntity : m_entities) {

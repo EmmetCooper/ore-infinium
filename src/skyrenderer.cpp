@@ -30,8 +30,9 @@
 
 #include <math.h>
 
-SkyRenderer::SkyRenderer(World* world, Camera* camera) :
-m_camera(camera)
+SkyRenderer::SkyRenderer(World* world, Camera* camera, Time* time) :
+m_camera(camera),
+m_time(time)
 {
     m_celestialBodiesShader = new Shader("skyrenderer.vert", "skyrenderer.frag");
 
@@ -456,21 +457,24 @@ void SkyRenderer::renderCelestialBodies()
 
 void SkyRenderer::update(const float elapsedTime)
 {
-//    sf::Vector2f _viewportCenter;
-//    _viewportCenter.x = SCREEN_W / 2;
-//    _viewportCenter.y = SCREEN_H / 2;
-//
-//    const unsigned char hour = Time::instance()->currentHour();
-//    const unsigned char minute = Time::instance()->currentMinute();
+    assert(m_time);
+
+    Debug::log(Debug::StartupArea) << "m_time: " << m_time->toString();
+
+    glm::vec2 viewportCenter = glm::vec2(1600/2, 900/2);
+    const unsigned char hour = m_time->currentHour();
+    const unsigned char minute = m_time->currentMinute();
 //    std::cout << "MINUTE! " << (short) minute << "\n";
-//
-//    m_timeAngle = (hour * (180 / 12)) + (minute * (180 / 12) / 60 );
-//
-//    double angle = (m_timeAngle + 90) * (M_PI / 180);
-//    float newX = _viewportCenter.x + cos(angle) * 400;
-//    float newY = _viewportCenter.y + sin(angle) * 400;
-//    m_sunPosition = sf::Vector2f(newX, newY);
-//    m_sunSprite.setPosition(m_sunPosition);
+
+    m_timeAngle = (hour * (180 / 12)) + (minute * (180 / 12) / 60 );
+    double angle = (m_timeAngle + 90) * (M_PI / 180);
+    float newX = viewportCenter.x + cos(angle) * 400;
+    float newY = viewportCenter.y + sin(angle) * 400;
+
+    // sun position
+    m_celestialBodiesSprites.at(0).position = glm::vec2(newX, newY);
+
+
 //
 //    angle = (m_timeAngle + 90 - 180) * (M_PI / 180);
 //    newX = _viewportCenter.x + cos(angle) * 400;

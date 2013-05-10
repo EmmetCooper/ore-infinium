@@ -29,11 +29,12 @@ class Texture;
 class World;
 class Shader;
 class Camera;
+class Time;
 
 class SkyRenderer
 {
 public:
-    SkyRenderer(World* world, Camera* camera);
+    SkyRenderer(World* world, Camera* camera, Time* time);
     ~SkyRenderer();
 
     void update(const float elapsedTime);
@@ -102,6 +103,7 @@ private:
     float m_timeAngle = 0.0f;
 
     Camera* m_camera = nullptr;
+    Time* m_time = nullptr;
 };
 
 #endif
