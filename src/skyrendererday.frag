@@ -12,7 +12,12 @@ uniform sampler2D duskTexture;
 out vec4 fragColor;
 
 void main() {
-    vec3 final = mix(texture2D(dayTexture, frag_texcoord).rgb, (texture2D(duskTexture, frag_texcoord).rgb), time);
+    vec4 final = texture2D(dayTexture, frag_texcoord);
 
-    fragColor = frag_color * vec4(final, 1.0);
+    vec4 day = texture2D(dayTexture, frag_texcoord);
+    vec4 dusk = texture2D(duskTexture, frag_texcoord);
+
+    final = mix(day, dusk, time * (frag_texcoord.y / 1.0));
+
+    fragColor = frag_color * (final);
 }
