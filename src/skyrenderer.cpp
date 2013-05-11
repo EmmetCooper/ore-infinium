@@ -272,7 +272,10 @@ void SkyRenderer::renderSkyBackgroundDay()
     float time = std::max(float(m_time->currentHour() - 12) / 12.0f, 0.0f);
     glUniform1f(timeLoc, time);
 
+    GLint heightLoc = glGetUniformLocation(m_skyBackgroundDayShader->shaderProgram(), "height");
+    glUniform1f(heightLoc, 1024.0f);
     Debug::checkGLError();
+
 
     int index = 0;
 

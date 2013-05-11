@@ -101,7 +101,7 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
     }
 
     m_time = new Time();
-    m_time->setTime(7, 59);
+    m_time->setTime(13, 59);
 
     //client doesn't actually load/generate any world
     if (m_server) {

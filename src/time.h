@@ -35,7 +35,7 @@ public:
 
     void setTime(uint8_t hour, uint8_t minute) { setHour(hour); setMinute(minute); }
 
-    void setHour(uint8_t hour) { assert(hour <= 12 && hour > 0); m_hour = hour; }
+    void setHour(uint8_t hour) { assert(hour <= 23 && hour > 0); m_hour = hour; }
 
     void setMinute(uint8_t minute) { assert(minute <= 59 && minute >= 0); m_minute = minute; }
 
