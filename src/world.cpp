@@ -308,6 +308,10 @@ void World::render()
     //HACK    m_window->setView(*m_view);
    m_lightRenderer->renderToFBO();
 
+    if (Settings::instance()->debugRendererFlags & Debug::RenderingDebug::SkyRenderingPassDebug) {
+        m_sky->render();
+    }
+
     m_tileRenderer->render();
 
     //FIXME: incorporate entities into the pre-lit gamescene FBO, then render lighting as last pass
@@ -318,10 +322,6 @@ void World::render()
     m_spriteSheetRenderer->renderCharacters();
 
     m_quadTreeRenderer->render();
-
-    if (Settings::instance()->debugRendererFlags & Debug::RenderingDebug::SkyRenderingPassDebug) {
-        m_sky->render();
-    }
 
     renderCrosshair();
 }

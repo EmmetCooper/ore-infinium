@@ -112,9 +112,9 @@ void Client::initSDL()
     }
 
 //    glewExperimental = GL_TRUE;
-    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
-    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
-    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
+    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
 
     // Request opengl 3.3 context.
     // FIXME: i *want 3.2, but Mesa 9 only has 3.0.. :(
