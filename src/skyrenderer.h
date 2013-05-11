@@ -103,8 +103,6 @@ private:
     glm::mat4 m_orthoMatrix;
     glm::mat4 m_viewMatrix;
 
-    float m_timeAngle = 0.0f;
-
     Camera* m_camera = nullptr;
     Time* m_time = nullptr;
 };

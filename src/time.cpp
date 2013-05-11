@@ -33,7 +33,13 @@ void Time::tick()
     // 1 minute, presumably
     uint8_t interval = 1;
 
-    m_minute += interval;
+    m_second += interval;
+
+    if (m_second >= 60) {
+        ++m_minute;
+        m_second = 0;
+    }
+    //FIXME: do -= instead of ass.
 
     if (m_minute >= 60) {
         ++m_hour;
@@ -55,6 +61,7 @@ std::string Time::toString()
         ss << "0";
     }
 
-    ss << short(m_minute);
+    ss << short(m_minute) << ":";
+    ss << short(m_second);
     return ss.str();
 }

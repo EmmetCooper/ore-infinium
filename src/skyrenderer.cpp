@@ -476,24 +476,25 @@ void SkyRenderer::update(const float elapsedTime)
 {
     assert(m_time);
 
-    Debug::log(Debug::StartupArea) << "m_time: " << m_time->toString();
 
     glm::vec2 viewportCenter = glm::vec2(1600/2, 900/2);
     const unsigned char hour = m_time->currentHour();
     const unsigned char minute = m_time->currentMinute();
+    const unsigned char second = m_time->currentSecond();
 
     ///// SUN
-    m_timeAngle = (hour * (180 / 12)) + (minute * (180 / 12) / 60 );
-    double angle = (m_timeAngle + 90) * (M_PI / 180);
-    float newX = viewportCenter.x + cos(angle) * 400;
-    float newY = viewportCenter.y + sin(angle) * 400;
+    double timeAngle = 360.0 * (double(hour) * 60.0 + double(minute) + double(second) / 60.0) / (24.0 * 60.0);
+    double angle = (timeAngle + 90.0) * (M_PI / 180.0);
+    float newX = viewportCenter.x + cos(angle) * 400.0f;
+    float newY = viewportCenter.y + sin(angle) * 400.0f;
 
+    Debug::log(Debug::StartupArea) << "m_time: ";
     // sun position
     m_celestialBodiesSprites.at(0).position = glm::vec2(newX, newY);
     ////////////
 
     //////////// MOON
-    angle = (m_timeAngle + 90 - 180) * (M_PI / 180);
+    angle = (timeAngle + 90 - 180) * (M_PI / 180);
     newX = viewportCenter.x + cos(angle) * 400;
     newY = viewportCenter.y + sin(angle) * 400;
 

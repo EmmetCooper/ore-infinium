@@ -39,8 +39,11 @@ public:
 
     void setMinute(uint8_t minute) { assert(minute <= 59 && minute >= 0); m_minute = minute; }
 
+    void setSecond(uint8_t second) { assert(second <= 59 && second >= 0); m_second = second; }
+
     uint8_t currentHour() { return m_hour; }
     uint8_t currentMinute() { return m_minute; }
+    uint8_t currentSecond() { return m_second; }
 
     /**
      * Returns the current time as a formatted string.
@@ -53,5 +56,6 @@ private:
     //sunrise should be ~07:00, sunset 19:00
     uint8_t m_hour = 0;
     uint8_t m_minute = 0;
+    uint8_t m_second = 0;
 };
 #endif
