@@ -488,7 +488,7 @@ void SkyRenderer::update(const float elapsedTime)
     float newX = viewportCenter.x + cos(angle) * 400.0f;
     float newY = viewportCenter.y + sin(angle) * 400.0f;
 
-    Debug::log(Debug::StartupArea) << "m_time: ";
+    Debug::log(Debug::StartupArea) << "m_time: " << m_time->toString();
     // sun position
     m_celestialBodiesSprites.at(0).position = glm::vec2(newX, newY);
     ////////////
