@@ -95,6 +95,7 @@ private:
 
     Texture* m_celestialBodiesTexture = nullptr;
     Texture* m_skyBackgroundDayTexture = nullptr;
+    Texture* m_skyBackgroundDuskTexture = nullptr;
     Shader* m_celestialBodiesShader = nullptr;
     Shader* m_skyBackgroundDayShader = nullptr;
 

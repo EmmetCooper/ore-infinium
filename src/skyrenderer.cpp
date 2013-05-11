@@ -43,6 +43,9 @@ m_time(time)
     m_skyBackgroundDayTexture = new Texture("../textures/skyBackgroundDay.png");
     m_skyBackgroundDayTexture->generate(Texture::TextureFilterNearest);
 
+    m_skyBackgroundDuskTexture = new Texture("../textures/skyBackgroundDusk.png");
+    m_skyBackgroundDuskTexture->generate(Texture::TextureFilterNearest);
+
     SpriteFrame sun;
     sun.texturePosition = glm::vec2(0, 0);
     sun.textureSize = glm::vec2(256, 256);
@@ -254,7 +257,20 @@ void SkyRenderer::renderSkyBackgroundDay()
 
     ////////////////////////////////////////////////// render... ////////////////////////////////////////////////
 
+    glActiveTexture(GL_TEXTURE0);
     m_skyBackgroundDayTexture->bind();
+    glActiveTexture(GL_TEXTURE1);
+    m_skyBackgroundDuskTexture->bind();
+
+    GLint dayTextureLoc = glGetUniformLocation(m_skyBackgroundDayShader->shaderProgram(), "dayTexture");
+    glUniform1i(dayTextureLoc, 0);
+
+    GLint duskTextureLoc = glGetUniformLocation(m_skyBackgroundDayShader->shaderProgram(), "duskTexture");
+    glUniform1i(duskTextureLoc, 1);
+
+    GLint timeLoc = glGetUniformLocation(m_skyBackgroundDayShader->shaderProgram(), "time");
+    float time = std::max(float(m_time->currentHour() - 12) / 12.0f, 0.0f);
+    glUniform1f(timeLoc, time);
 
     Debug::checkGLError();
 
@@ -346,6 +362,7 @@ void SkyRenderer::renderSkyBackgroundDay()
 
     glDisable(GL_BLEND);
 
+    glActiveTexture(GL_TEXTURE0);
     Debug::checkGLError();
 }
 
@@ -484,7 +501,7 @@ void SkyRenderer::update(const float elapsedTime)
 
     ///// SUN
     double timeAngle = 360.0 * (double(hour) * 60.0 + double(minute) + double(second) / 60.0) / (24.0 * 60.0);
-    double angle = (timeAngle + 90.0) * (M_PI / 180.0);
+    double angle = (timeAngle + 30.0) * (M_PI / 180.0);
     float newX = viewportCenter.x + cos(angle) * 400.0f;
     float newY = viewportCenter.y + sin(angle) * 400.0f;
 

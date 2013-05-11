@@ -30,7 +30,7 @@ Time::~Time()
 
 void Time::tick()
 {
-    uint8_t interval = 1;
+    uint8_t interval = 32;
 
     m_second += interval;
 
