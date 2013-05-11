@@ -39,7 +39,6 @@ void Time::tick()
         ++m_minute;
         m_second = 0;
     }
-    //FIXME: do -= instead of ass.
 
     if (m_minute >= 60) {
         ++m_hour;
@@ -49,6 +48,8 @@ void Time::tick()
     if (m_hour >= 24) {
         m_hour = 0;
     }
+
+    assert(m_minute <= 59 && m_second <= 59);
 }
 
 std::string Time::toString()
