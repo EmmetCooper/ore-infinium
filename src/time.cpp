@@ -30,23 +30,22 @@ Time::~Time()
 
 void Time::tick()
 {
-    // 1 minute, presumably
     uint8_t interval = 1;
 
     m_second += interval;
 
     if (m_second >= 60) {
         ++m_minute;
-        m_second = 0;
+        m_second -= 60;
     }
 
     if (m_minute >= 60) {
         ++m_hour;
-        m_minute = 0;
+        m_minute -= 60;
     }
 
     if (m_hour >= 24) {
-        m_hour = 0;
+        m_hour -= 24;
     }
 
     assert(m_minute <= 59 && m_second <= 59);

@@ -478,9 +478,9 @@ void SkyRenderer::update(const float elapsedTime)
 
 
     glm::vec2 viewportCenter = glm::vec2(1600/2, 900/2);
-    const unsigned char hour = m_time->currentHour();
-    const unsigned char minute = m_time->currentMinute();
-    const unsigned char second = m_time->currentSecond();
+    const double hour = m_time->currentHour();
+    const double minute = m_time->currentMinute();
+    const double second = m_time->currentSecond();
 
     ///// SUN
     double timeAngle = 360.0 * (double(hour) * 60.0 + double(minute) + double(second) / 60.0) / (24.0 * 60.0);
