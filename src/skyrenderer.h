@@ -45,7 +45,7 @@ private:
     void initGLSkyBackground();
     void initGLCelestialBodies();
 
-    void renderSkyBackground();
+    void renderSkyBackgroundDay();
     void renderCelestialBodies();
 
     /* Each vertex is:
@@ -64,6 +64,8 @@ private:
     ///size of celestialBodies.png
     const int SPRITESHEET_WIDTH = 1024;
     const int SPRITESHEET_HEIGHT = 1024;
+    const int SKY_TEXTURE_WIDTH = 1920;
+    const int SKY_TEXTURE_HEIGHT = 1080;
 
     struct SpriteFrame {
         /// screen position of said object
@@ -92,8 +94,9 @@ private:
     uint16_t m_maxSkyBackgrounds= 1;
 
     Texture* m_celestialBodiesTexture = nullptr;
+    Texture* m_skyBackgroundDayTexture = nullptr;
     Shader* m_celestialBodiesShader = nullptr;
-    Shader* m_skyBackgroundShader = nullptr;
+    Shader* m_skyBackgroundDayShader = nullptr;
 
     //CloudSystem *m_cloudSystem = nullptr;
 

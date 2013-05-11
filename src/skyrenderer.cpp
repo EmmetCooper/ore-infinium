@@ -35,9 +35,13 @@ m_camera(camera),
 m_time(time)
 {
     m_celestialBodiesShader = new Shader("skyrenderer.vert", "skyrenderer.frag");
+    m_skyBackgroundDayShader = new Shader("skyrendererday.vert", "skyrendererday.frag");
 
     m_celestialBodiesTexture = new Texture("../textures/celestialBodies.png");
     m_celestialBodiesTexture->generate(Texture::TextureFilterNearest);
+
+    m_skyBackgroundDayTexture = new Texture("../textures/skyBackgroundDay.png");
+    m_skyBackgroundDayTexture->generate(Texture::TextureFilterNearest);
 
     SpriteFrame sun;
     sun.texturePosition = glm::vec2(0, 0);
@@ -65,7 +69,7 @@ SkyRenderer::~SkyRenderer()
 void SkyRenderer::initGL()
 {
     initGLCelestialBodies();
-    //initGLSkyBackground();
+    initGLSkyBackground();
 }
 
 void SkyRenderer::initGLCelestialBodies()
@@ -189,7 +193,7 @@ void SkyRenderer::initGLSkyBackground()
 
     size_t buffer_offset = 0;
 
-    GLint pos_attrib = glGetAttribLocation(m_skyBackgroundShader->shaderProgram(), "position");
+    GLint pos_attrib = glGetAttribLocation(m_skyBackgroundDayShader->shaderProgram(), "position");
     glEnableVertexAttribArray(pos_attrib);
     glVertexAttribPointer(
         pos_attrib,
@@ -200,7 +204,7 @@ void SkyRenderer::initGLSkyBackground()
                           (const GLvoid*)buffer_offset);
     buffer_offset += sizeof(float) * 2;
 
-    GLint color_attrib = glGetAttribLocation(m_skyBackgroundShader->shaderProgram(), "color");
+    GLint color_attrib = glGetAttribLocation(m_skyBackgroundDayShader->shaderProgram(), "color");
 
     Debug::checkGLError();
 
@@ -216,7 +220,7 @@ void SkyRenderer::initGLSkyBackground()
 
     Debug::checkGLError();
 
-    GLint texcoord_attrib = glGetAttribLocation(m_skyBackgroundShader->shaderProgram(), "texcoord");
+    GLint texcoord_attrib = glGetAttribLocation(m_skyBackgroundDayShader->shaderProgram(), "texcoord");
     glEnableVertexAttribArray(texcoord_attrib);
     glVertexAttribPointer(
         texcoord_attrib,
@@ -233,80 +237,91 @@ void SkyRenderer::initGLSkyBackground()
     Debug::checkGLError();
 }
 
-void SkyRenderer::renderSkyBackground()
+void SkyRenderer::renderSkyBackgroundDay()
 {
-    m_skyBackgroundShader->bindProgram();
+    m_skyBackgroundDayShader->bindProgram();
+
+    m_viewMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, 0.0f, 0.0f));
+    Debug::log(Debug::Area::ClientRendererArea) << "sky renderer init, screen at width: " << Settings::instance()->screenResolutionWidth << " height: " << Settings::instance()->screenResolutionHeight;
+    //    m_orthoMatrix = glm::ortho(0.0f, float(Settings::instance()->screenResolutionWidth), float(Settings::instance()->screenResolutionHeight), 0.0f, -1.0f, 1.0f);
+
+    m_orthoMatrix = glm::ortho(0.0f, float(1600.0f), float(900.0f), 0.0f, -1.0f, 1.0f);
+
+    glm::mat4 mvp =  m_orthoMatrix * m_viewMatrix;
+
+    int mvpLoc = glGetUniformLocation(m_skyBackgroundDayShader->shaderProgram(), "mvp");
+    glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, &mvp[0][0]);
+
+    ////////////////////////////////////////////////// render... ////////////////////////////////////////////////
+
+    m_skyBackgroundDayTexture->bind();
 
     Debug::checkGLError();
 
     int index = 0;
 
-    {
-        // vertices that will be uploaded.
-        Vertex vertices[4];
+    // vertices that will be uploaded.
+    Vertex vertices[4];
 
-        // vertices[n][0] -> X, and [1] -> Y
-        // vertices[0] -> top left
-        // vertices[1] -> bottom left
-        // vertices[2] -> bottom right
-        // vertices[3] -> top right
+    // vertices[n][0] -> X, and [1] -> Y
+    // vertices[0] -> top left
+    // vertices[1] -> bottom left
+    // vertices[2] -> bottom right
+    // vertices[3] -> top right
 
-        glm::vec2 spritePosition ;//HACK:= sprite->position();
+    glm::vec2 spritePosition = glm::vec2(Settings::instance()->screenResolutionWidth * 0.5f, Settings::instance()->screenResolutionWidth * 0.5f);
 
-        glm::vec2 spriteSize;//HACK: = sprite->sizeMeters();
+    glm::vec2 spriteSize = glm::vec2(SKY_TEXTURE_WIDTH, SKY_TEXTURE_HEIGHT);
 
-        glm::vec4 rect = glm::vec4(spritePosition.x - (spriteSize.x * 0.5f), spritePosition.y - (spriteSize.x * 0.5f), spritePosition.x + (spriteSize.x * 0.5f), spritePosition.y + (spriteSize.y * 0.5f));
+    glm::vec4 rect = glm::vec4(spritePosition.x - (spriteSize.x * 0.5f), spritePosition.y - (spriteSize.x * 0.5f), spritePosition.x + (spriteSize.x * 0.5f), spritePosition.y + (spriteSize.y * 0.5f));
 
-        float x = rect.x;
-        float width = rect.z;
-        float y = rect.y;
-        float height = rect.w;
+    float x = rect.x;
+    float width = rect.z;
+    float y = rect.y;
+    float height = rect.w;
 
-        vertices[0].x = x; // top left X
-        vertices[0].y = y; //top left Y
+    vertices[0].x = x; // top left X
+    vertices[0].y = y; //top left Y
 
-        vertices[1].x = x; // bottom left X
-        vertices[1].y = height; // bottom left Y
+    vertices[1].x = x; // bottom left X
+    vertices[1].y = height; // bottom left Y
 
-        vertices[2].x = width; // bottom right X
-        vertices[2].y = height; //bottom right Y
+    vertices[2].x = width; // bottom right X
+    vertices[2].y = height; //bottom right Y
 
-        vertices[3].x = width; // top right X
-        vertices[3].y = y; // top right Y
+    vertices[3].x = width; // top right X
+    vertices[3].y = y; // top right Y
 
-        Debug::checkGLError();
-        // copy color to the buffer
-        for (size_t i = 0; i < sizeof(vertices) / sizeof(*vertices); i++) {
-            //        *colorp = color.bgra;
-            uint8_t red = 255;
-            uint8_t green = 255;
-            uint8_t blue = 255;
-            uint8_t alpha = 255;
-            int32_t color = red | (green << 8) | (blue << 16) | (alpha << 24);
-            vertices[i].color = color;
-        }
-
-        const float spriteLeft = 0.0f;
-        const float spriteRight = 1.0f;
-        const float spriteTop = 0.0f;
-        const float spriteBottom = 1.0f;
-
-        // copy texcoords to the buffer
-        vertices[0].u = vertices[1].u = spriteLeft;
-        vertices[0].v = vertices[3].v = spriteTop;
-        vertices[1].v = vertices[2].v = spriteBottom;
-        vertices[2].u = vertices[3].u = spriteRight;
-
-        // finally upload everything to the actual vbo
-        glBindBuffer(GL_ARRAY_BUFFER, m_vboSkyBackground);
-        glBufferSubData(
-            GL_ARRAY_BUFFER,
-            sizeof(vertices) * index,
-                        sizeof(vertices),
-                        vertices);
-
-        ++index;
+    Debug::checkGLError();
+    // copy color to the buffer
+    for (size_t i = 0; i < sizeof(vertices) / sizeof(*vertices); i++) {
+        //        *colorp = color.bgra;
+        uint8_t red = 255;
+        uint8_t green = 255;
+        uint8_t blue = 255;
+        uint8_t alpha = 255;
+        int32_t color = red | (green << 8) | (blue << 16) | (alpha << 24);
+        vertices[i].color = color;
     }
+
+    const float spriteLeft = 0.0f;
+    const float spriteRight = 1.0f;
+    const float spriteTop = 0.0f;
+    const float spriteBottom = 1.0f;
+
+    // copy texcoords to the buffer
+    vertices[0].u = vertices[1].u = spriteLeft;
+    vertices[0].v = vertices[3].v = spriteTop;
+    vertices[1].v = vertices[2].v = spriteBottom;
+    vertices[2].u = vertices[3].u = spriteRight;
+
+    // finally upload everything to the actual vbo
+    glBindBuffer(GL_ARRAY_BUFFER, m_vboSkyBackground);
+    glBufferSubData(
+        GL_ARRAY_BUFFER,
+        sizeof(vertices) * index,
+                    sizeof(vertices),
+                    vertices);
 
     ////////////////////////////////FINALLY RENDER IT ALL //////////////////////////////////////////
     glEnable(GL_BLEND);
@@ -324,7 +339,7 @@ void SkyRenderer::renderSkyBackground()
                 GL_UNSIGNED_INT,
                 (const GLvoid*)0);
 
-    m_skyBackgroundShader->unbindProgram();
+    m_skyBackgroundDayShader->unbindProgram();
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -489,7 +504,9 @@ void SkyRenderer::update(const float elapsedTime)
 
 void SkyRenderer::render()
 {
+    renderSkyBackgroundDay();
     renderCelestialBodies();
+
  //   sf::VertexArray line(sf::Lines, 2);
  //   sf::Vector2f screen = sf::Vector2f(SCREEN_W/2, SCREEN_H/2);
  //   line.append(sf::Vertex(screen));
