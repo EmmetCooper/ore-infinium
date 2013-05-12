@@ -4,38 +4,12 @@ in vec2 frag_texcoord;
 in vec4 frag_color;
 
 uniform float timeOrig;
-uniform float time;
-uniform float height;
 
 uniform sampler2D dayTexture;
 uniform sampler2D duskTexture;
 
 out vec4 fragColor;
 
-/*
-void main() {
-
-    vec4 dayColor = texture2D(dayTexture, frag_texcoord);
-    vec4 duskColor = texture2D(duskTexture, frag_texcoord);
-
-    float maxTime = 24.0;
-
-    float baseLine = mix(0.0, 24.0, timeOrig/maxTime);
-    float duskLine = mix(22.0 - 20.0, 24.0 - 20.0, timeOrig/maxTime);
-
-    vec4 final = (dayColor * baseLine) * (duskColor * duskLine);
-
-    final.b += time * 0.00000001;
-    fragColor = frag_color * (final);
-}
-*/
-
-//frag_texcoord.y / 1.0)
-//    final.rgb *= frag_texcoord.y * time;
-
-//float val = 0.5 + (timeOrig / 24);
-//float val = (time * (frag_texcoord.y / 1.0) * 2.0) + (timeOrig * 0.00000001);
-//(timeOrig * (1/25) * 0.5);
 void main()
 {
     vec4 dayColor = texture2D(dayTexture, frag_texcoord);

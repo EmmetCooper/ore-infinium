@@ -268,21 +268,12 @@ void SkyRenderer::renderSkyBackgroundDay()
     GLint duskTextureLoc = glGetUniformLocation(m_skyBackgroundDayShader->shaderProgram(), "duskTexture");
     glUniform1i(duskTextureLoc, 1);
 
-    GLint timeLoc = glGetUniformLocation(m_skyBackgroundDayShader->shaderProgram(), "time");
-    float time = std::max(float(m_time->currentHour() - 12) / 12.0f, 0.0f);
-    glUniform1f(timeLoc, time);
-
     GLint timeOrigLoc = glGetUniformLocation(m_skyBackgroundDayShader->shaderProgram(), "timeOrig");
 
     float timeOrig = float(m_time->currentHour()) + (float(m_time->currentMinute()) / 60.0);
     glUniform1f(timeOrigLoc, timeOrig);
 
     Debug::log(Debug::Area::StartupArea) << "timeOrig: " << (short)m_time->currentHour();
-
-    GLint heightLoc = glGetUniformLocation(m_skyBackgroundDayShader->shaderProgram(), "height");
-    glUniform1f(heightLoc, 1024.0f);
-    Debug::checkGLError();
-
 
     int index = 0;
 
