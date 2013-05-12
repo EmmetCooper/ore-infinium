@@ -30,9 +30,9 @@ Time::~Time()
 
 void Time::tick()
 {
-    uint8_t interval = 32;
-
-    m_second += interval;
+    uint8_t interval = 5;
+//FIXME: SECOND, set interval to 0 too
+    m_minute += interval;
 
     if (m_second >= 60) {
         ++m_minute;

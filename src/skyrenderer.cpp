@@ -272,6 +272,12 @@ void SkyRenderer::renderSkyBackgroundDay()
     float time = std::max(float(m_time->currentHour() - 12) / 12.0f, 0.0f);
     glUniform1f(timeLoc, time);
 
+    GLint timeOrigLoc = glGetUniformLocation(m_skyBackgroundDayShader->shaderProgram(), "timeOrig");
+    float timeOrig = float(m_time->currentHour());
+    glUniform1f(timeOrigLoc, timeOrig);
+
+    Debug::log(Debug::Area::StartupArea) << "timeOrig: " << (short)m_time->currentHour();
+
     GLint heightLoc = glGetUniformLocation(m_skyBackgroundDayShader->shaderProgram(), "height");
     glUniform1f(heightLoc, 1024.0f);
     Debug::checkGLError();
@@ -508,7 +514,7 @@ void SkyRenderer::update(const float elapsedTime)
     float newX = viewportCenter.x + cos(angle) * 400.0f;
     float newY = viewportCenter.y + sin(angle) * 400.0f;
 
-    Debug::log(Debug::StartupArea) << "m_time: " << m_time->toString();
+//    Debug::log(Debug::StartupArea) << "m_time: " << m_time->toString();
     // sun position
     m_celestialBodiesSprites.at(0).position = glm::vec2(newX, newY);
     ////////////
