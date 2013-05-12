@@ -273,7 +273,8 @@ void SkyRenderer::renderSkyBackgroundDay()
     glUniform1f(timeLoc, time);
 
     GLint timeOrigLoc = glGetUniformLocation(m_skyBackgroundDayShader->shaderProgram(), "timeOrig");
-    float timeOrig = float(m_time->currentHour());
+
+    float timeOrig = float(m_time->currentHour()) + (float(m_time->currentMinute()) / 60.0);
     glUniform1f(timeOrigLoc, timeOrig);
 
     Debug::log(Debug::Area::StartupArea) << "timeOrig: " << (short)m_time->currentHour();
