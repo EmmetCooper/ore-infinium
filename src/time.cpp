@@ -30,7 +30,7 @@ Time::~Time()
 
 void Time::tick()
 {
-    uint8_t interval = 5;
+    uint8_t interval = 1;
 //FIXME: SECOND, set interval to 0 too
     m_minute += interval;
 

@@ -43,7 +43,8 @@ void main()
 
     float t = timeOrig;
 
-    float offset = 0.0;
+    float offset = 7.0;
+    t = mod( t - offset, 24.0);
 
     float duskStart = 16.0 - offset;
     float duskEnd   = 19.0 - offset;
@@ -75,7 +76,6 @@ void main()
     btm = mix(btm, duskBtm, toDusk);
     btm = mix(btm, darkBtm, toDark);
     btm = mix(btm, dayBtm, toDay);
-
 
     fragColor = mix(top, btm, 1.0 - (frag_texcoord.y / 1.0));
 
