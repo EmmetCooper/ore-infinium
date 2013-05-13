@@ -101,7 +101,7 @@ void Client::initSDL()
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) != 0) {
         std::string error = SDL_GetError();
-        Debug::fatal(false, Debug::Area::StartupArea, "failure to initialize SDL error: " + error);
+        Debug::fatal(false, Debug::Area::ImportantArea, "failure to initialize SDL error: " + error);
     }
 
     m_window = SDL_CreateWindow("Ore Infinium", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
@@ -157,7 +157,7 @@ void Client::initSDL()
 
 #ifdef GLEW_KHR_debug
     if (!GLEW_KHR_debug) {
-        Debug::log(Debug::Area::ClientRendererArea) << "FIXME: GLEW_KHR_debug is not available, disabling OpenGL debug mode";
+        Debug::log(Debug::Area::ImportantArea) << "FIXME: GLEW_KHR_debug is not available, disabling OpenGL debug mode";
         assert(0);
     }
 
@@ -166,7 +166,7 @@ void Client::initSDL()
     glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, 0, GL_TRUE);
 #endif
 
-    Debug::fatal(enet_initialize() == 0, Debug::Area::StartupArea, "An error occurred during ENet init (network init failure");
+    Debug::fatal(enet_initialize() == 0, Debug::Area::ImportantArea, "An error occurred during ENet init (network init failure");
 
     glClearColor(0.f, .5f, 0.f, 1.0f);
 
