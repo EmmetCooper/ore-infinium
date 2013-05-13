@@ -89,54 +89,54 @@ void ContactListener::checkEndContact(ContactListener::BodyUserData* userData)
     }
 }
 
-QueryCallback::QueryCallback(b2World* world)
-: m_world(world)
-{
-
-}
-
-std::set<b2Fixture*> QueryCallback::fixturesAtPoint(const b2Vec2& point)
-{
-    std::set<b2Fixture*> fixturesAtPoint;
-
-    for (b2Fixture* fixture : m_fixtures) {
-       if (fixture->TestPoint(point)) {
-            fixturesAtPoint.insert(fixture);
-       }
-    }
-
-    m_fixtures.clear();
-
-    return fixturesAtPoint;
-}
-
-std::set<b2Fixture*> QueryCallback::fixtures()
-{
-    std::set<b2Fixture*> fixturesInRange;
-
-    for (b2Fixture* fixture : m_fixtures) {
-        fixturesInRange.insert(fixture);
-    }
-
-    m_fixtures.clear();
-
-    return fixturesInRange;
-}
-
-
-bool QueryCallback::ReportFixture(b2Fixture* fixture)
-{
-    Debug::log(Debug::ServerEntityLogicArea) << "FIXTURE REPORTING";
-
-    if (fixture->GetUserData() == nullptr) {
-        return true;
-    }
-
-   ContactListener::BodyUserData* userData = static_cast<ContactListener::BodyUserData*>(fixture->GetUserData());
-
-   if (userData->type == m_searchType) {
-        m_fixtures.push_back(fixture);
-    }
-
-    return true;
-}
+// FIXME: dead code from b2 port QueryCallback::QueryCallback(b2World* world)
+// FIXME: dead code from b2 port : m_world(world)
+// FIXME: dead code from b2 port {
+// FIXME: dead code from b2 port
+// FIXME: dead code from b2 port }
+// FIXME: dead code from b2 port
+// FIXME: dead code from b2 port std::set<b2Fixture*> QueryCallback::fixturesAtPoint(const b2Vec2& point)
+// FIXME: dead code from b2 port {
+// FIXME: dead code from b2 port     std::set<b2Fixture*> fixturesAtPoint;
+// FIXME: dead code from b2 port
+// FIXME: dead code from b2 port     for (b2Fixture* fixture : m_fixtures) {
+// FIXME: dead code from b2 port        if (fixture->TestPoint(point)) {
+// FIXME: dead code from b2 port             fixturesAtPoint.insert(fixture);
+// FIXME: dead code from b2 port        }
+// FIXME: dead code from b2 port     }
+// FIXME: dead code from b2 port
+// FIXME: dead code from b2 port     m_fixtures.clear();
+// FIXME: dead code from b2 port
+// FIXME: dead code from b2 port     return fixturesAtPoint;
+// FIXME: dead code from b2 port }
+// FIXME: dead code from b2 port
+// FIXME: dead code from b2 port std::set<b2Fixture*> QueryCallback::fixtures()
+// FIXME: dead code from b2 port {
+// FIXME: dead code from b2 port     std::set<b2Fixture*> fixturesInRange;
+// FIXME: dead code from b2 port
+// FIXME: dead code from b2 port     for (b2Fixture* fixture : m_fixtures) {
+// FIXME: dead code from b2 port         fixturesInRange.insert(fixture);
+// FIXME: dead code from b2 port     }
+// FIXME: dead code from b2 port
+// FIXME: dead code from b2 port     m_fixtures.clear();
+// FIXME: dead code from b2 port
+// FIXME: dead code from b2 port     return fixturesInRange;
+// FIXME: dead code from b2 port }
+// FIXME: dead code from b2 port
+// FIXME: dead code from b2 port
+// FIXME: dead code from b2 port bool QueryCallback::ReportFixture(b2Fixture* fixture)
+// FIXME: dead code from b2 port {
+// FIXME: dead code from b2 port     Debug::log(Debug::ServerEntityLogicArea) << "FIXTURE REPORTING";
+// FIXME: dead code from b2 port
+// FIXME: dead code from b2 port     if (fixture->GetUserData() == nullptr) {
+// FIXME: dead code from b2 port         return true;
+// FIXME: dead code from b2 port     }
+// FIXME: dead code from b2 port
+// FIXME: dead code from b2 port    ContactListener::BodyUserData* userData = static_cast<ContactListener::BodyUserData*>(fixture->GetUserData());
+// FIXME: dead code from b2 port
+// FIXME: dead code from b2 port    if (userData->type == m_searchType) {
+// FIXME: dead code from b2 port         m_fixtures.push_back(fixture);
+// FIXME: dead code from b2 port     }
+// FIXME: dead code from b2 port
+// FIXME: dead code from b2 port     return true;
+// FIXME: dead code from b2 port }
