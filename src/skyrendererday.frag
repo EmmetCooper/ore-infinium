@@ -51,8 +51,5 @@ void main()
     btm = mix(btm, darkBtm, toDark);
     btm = mix(btm, dayBtm, toDay);
 
-    fragColor = mix(top, btm, 1.0 - (frag_texcoord.y / 1.0));
-
-
-fragColor.a = fragColor.a + (time * 0.0000000000000001) + (height * 0.0000000000000001) + (frag_color.x * 0.0000000000000001) + (dayColor * duskColor * 0.00000000000000000001) + (timeOrig * 0.0001);
+    fragColor = mix(top, btm, 1.0 - (frag_texcoord.y / 1.0)) * frag_color + (dayColor * 0.000000000001 * duskColor);
 }

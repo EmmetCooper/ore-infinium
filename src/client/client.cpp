@@ -119,7 +119,7 @@ void Client::initSDL()
     // Request opengl 3.3 context.
     // FIXME: i *want 3.2, but Mesa 9 only has 3.0.. :(
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
 
     /* Turn on double buffering with a 24bit Z buffer.
