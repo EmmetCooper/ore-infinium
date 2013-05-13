@@ -1,8 +1,11 @@
 In order to use Ore Infinium, you must compile it..for now (I don't have time to make
 binaries each day). Before you can do that, you must install the following:
 
-IMPORTANT: this game requires at least OpenGL 3.2 or newer. You can figure this
-out usually by running 'glxinfo'. Mesa doesn't yet have 3.2 drivers.
+IMPORTANT: this game requires at least OpenGL 3.0 or newer. You can figure this
+out usually by running 'glxinfo'.
+
+Linux's Mesa drivers (9.x or so) work great in my experience, at least on an
+r600 chipset (AMD 6870).
 
 (so open source drivers won't work on Linux, for example. At least not until
 I can (hopefully) support older GL versions). All things in due time.
