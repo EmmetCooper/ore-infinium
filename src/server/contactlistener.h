@@ -52,31 +52,33 @@ private:
     static void checkEndContact(BodyUserData* userData);
 };
 
-class QueryCallback : public b2QueryCallback
-{
-public:
-    QueryCallback(b2World* world);
-
-    virtual bool ReportFixture(b2Fixture* fixture);
-
-    std::set<b2Fixture*> fixturesAtPoint(const b2Vec2& point);
-
-    std::set<b2Fixture*> fixtures();
-
-    /**
-     * Call this before calling QueryAABB, it will save all fixtures that meet the criteria
-     * so you can call fixtures() later on and retrieve that list.
-     */
-    void setFixtureSearchType(ContactListener::BodyType type) {
-        m_searchType = type;
-    }
-
-private:
-    b2World* m_world = nullptr;
-
-    ContactListener::BodyType m_searchType;
-
-    std::vector<b2Fixture*> m_fixtures;
-};
+//FIXME: dead code from b2 port
+//
+//class QueryCallback : public b2QueryCallback
+//{
+//public:
+//    QueryCallback(b2World* world);
+//
+//    virtual bool ReportFixture(b2Fixture* fixture);
+//
+//    std::set<b2Fixture*> fixturesAtPoint(const b2Vec2& point);
+//
+//    std::set<b2Fixture*> fixtures();
+//
+//    /**
+//     * Call this before calling QueryAABB, it will save all fixtures that meet the criteria
+//     * so you can call fixtures() later on and retrieve that list.
+//     */
+//    void setFixtureSearchType(ContactListener::BodyType type) {
+//        m_searchType = type;
+//    }
+//
+//private:
+//    b2World* m_world = nullptr;
+//
+//    ContactListener::BodyType m_searchType;
+//
+//    std::vector<b2Fixture*> m_fixtures;
+//};
 
 #endif
