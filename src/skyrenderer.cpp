@@ -475,10 +475,10 @@ void SkyRenderer::renderSkyBackgroundNight()
     GLint nightTextureLoc = glGetUniformLocation(m_skyBackgroundNightShader->shaderProgram(), "nightTexture");
     glUniform1i(nightTextureLoc, 0);
 
-    GLint timeOrigLoc = glGetUniformLocation(m_skyBackgroundNightShader->shaderProgram(), "timeOrig");
+    GLint timeOrigLoc = glGetUniformLocation(m_skyBackgroundNightShader->shaderProgram(), "time");
 
     float timeOrig = float(m_time->currentHour()) + (float(m_time->currentMinute()) / 60.0);
-    glUniform1f(timeOrigLoc, timeOrig);
+    glUniform1f(timeOrigLoc, timeOrig / 24.0);
 
     Debug::log(Debug::Area::StartupArea) << "timeOrig: " << (short)m_time->currentHour();
 
