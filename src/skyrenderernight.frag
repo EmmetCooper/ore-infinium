@@ -48,9 +48,9 @@ void main( void ) {
         vec2 position = (gl_FragCoord.xy);//+ - 0.5);// * resolution.xy) / resolution.yy;
 
         float color = pow(noise(gl_FragCoord.xy), 40.0) * 20.0;
-        float r1 = noise(gl_FragCoord.xy*noise(vec2(sin(time*.1))));
-        float r2 = noise(gl_FragCoord.xy*noise(vec2(cos(time*.1), sin(time*.1))));
-        float r3 = noise(gl_FragCoord.xy*noise(vec2(sin(time*.1), cos(time*.1))));
+        float r1 = noise(gl_FragCoord.xy*noise(vec2(sin(time*.00001))));
+        float r2 = noise(gl_FragCoord.xy*noise(vec2(cos(time*.00001), sin(time*.00001))));
+        float r3 = noise(gl_FragCoord.xy*noise(vec2(sin(time*.00001), cos(time*.00001))));
 
         fragColor = vec4(vec3(color*r1, color*r2, color*r3), 1.0);
 
