@@ -43,9 +43,11 @@ public:
 private:
     void initGL();
     void initGLSkyBackground();
+    void initGLSkyBackgroundNight();
     void initGLCelestialBodies();
 
     void renderSkyBackgroundDay();
+    void renderSkyBackgroundNight();
     void renderCelestialBodies();
 
     /* Each vertex is:
@@ -83,6 +85,10 @@ private:
     GLuint m_vboSkyBackground; // vertex buffer object
     GLuint m_eboSkyBackground; // element buffer object
 
+    GLuint m_vaoSkyBackgroundNight; // vertex array object
+    GLuint m_vboSkyBackgroundNight; // vertex buffer object
+    GLuint m_eboSkyBackgroundNight; // element buffer object
+
     GLuint m_vaoCelestialBodies; // vertex array object
     GLuint m_vboCelestialBodies; // vertex buffer object
     GLuint m_eboCelestialBodies; // element buffer object
@@ -91,13 +97,18 @@ private:
 
     // sun, moon
     uint16_t m_maxCelestialBodies = 2;
+
     uint16_t m_maxSkyBackgrounds= 1;
 
     Texture* m_celestialBodiesTexture = nullptr;
+
     Texture* m_skyBackgroundDayTexture = nullptr;
     Texture* m_skyBackgroundDuskTexture = nullptr;
+    Texture* m_skyBackgroundNightTexture = nullptr;
+
     Shader* m_celestialBodiesShader = nullptr;
     Shader* m_skyBackgroundDayShader = nullptr;
+    Shader* m_skyBackgroundNightShader = nullptr;
 
     //CloudSystem *m_cloudSystem = nullptr;
 
