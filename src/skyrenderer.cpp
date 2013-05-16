@@ -253,7 +253,7 @@ void SkyRenderer::initGLSkyBackgroundNight()
     glBindBuffer(GL_ARRAY_BUFFER, m_vboSkyBackgroundNight);
     glBufferData(
         GL_ARRAY_BUFFER,
-        m_maxSkyBackgrounds * 4 * sizeof(Vertex),
+        m_maxSkyBackgrounds * 4 * sizeof(VertexNoColor),
                  NULL,
                  GL_DYNAMIC_DRAW);
 
@@ -289,23 +289,9 @@ void SkyRenderer::initGLSkyBackgroundNight()
         2,
         GL_FLOAT,
         GL_FALSE,
-        sizeof(Vertex),
+        sizeof(VertexNoColor),
                           (const GLvoid*)buffer_offset);
     buffer_offset += sizeof(float) * 2;
-
-    GLint color_attrib = glGetAttribLocation(m_skyBackgroundNightShader->shaderProgram(), "color");
-
-    Debug::checkGLError();
-
-    glEnableVertexAttribArray(color_attrib);
-    glVertexAttribPointer(
-        color_attrib,
-        4,
-        GL_UNSIGNED_BYTE,
-        GL_TRUE,
-        sizeof(Vertex),
-                          (const GLvoid*)buffer_offset);
-    buffer_offset += sizeof(uint32_t);
 
     Debug::checkGLError();
 
@@ -316,7 +302,7 @@ void SkyRenderer::initGLSkyBackgroundNight()
         2,
         GL_FLOAT,
         GL_FALSE,
-        sizeof(Vertex),
+        sizeof(VertexNoColor),
                           (const GLvoid*)buffer_offset);
 
     glBindVertexArray(0);
@@ -486,7 +472,7 @@ void SkyRenderer::renderSkyBackgroundNight()
     int index = 0;
 
     // vertices that will be uploaded.
-    Vertex vertices[4];
+    VertexNoColor vertices[4];
 
     // vertices[n][0] -> X, and [1] -> Y
     // vertices[0] -> top left
@@ -518,16 +504,6 @@ void SkyRenderer::renderSkyBackgroundNight()
     vertices[3].y = y; // top right Y
 
     Debug::checkGLError();
-    // copy color to the buffer
-    for (size_t i = 0; i < sizeof(vertices) / sizeof(*vertices); i++) {
-        //        *colorp = color.bgra;
-        uint8_t red = 255;
-        uint8_t green = 255;
-        uint8_t blue = 255;
-        uint8_t alpha = 255;
-        int32_t color = red | (green << 8) | (blue << 16) | (alpha << 24);
-        vertices[i].color = color;
-    }
 
     const float spriteLeft = 0.0f;
     const float spriteRight = 1.0f;

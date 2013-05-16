@@ -63,6 +63,11 @@ private:
         float u, v;
     };
 
+    struct VertexNoColor {
+        float x, y;
+        float u, v;
+    };
+
     ///size of celestialBodies.png
     const int SPRITESHEET_WIDTH = 1024;
     const int SPRITESHEET_HEIGHT = 1024;
