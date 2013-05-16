@@ -102,8 +102,6 @@ GLuint TileRenderer::fboTexture()
 
 void TileRenderer::render()
 {
-//    m_shader->bindProgram();
-
     glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
     glBindRenderbuffer(GL_RENDERBUFFER, m_rb);
     glClearColor(0.f, 0.f, 0.f, 0.0f);
@@ -113,10 +111,9 @@ void TileRenderer::render()
         return;
     }
 
-//    Debug::log() << "OFFSET: " << offset.x << " Y : " << offset.y;
+    //Debug::log() << "OFFSET: " << offset.x << " Y : " << offset.y;
     Debug::checkGLError();
     glm::vec2 playerPosition = m_mainPlayer->position();
-    Debug::log(Debug::TileRendererArea) << "player pos x : " << playerPosition.x << " y: " << playerPosition.y;
 
     float tilesBeforeX = playerPosition.x / Block::BLOCK_SIZE;
     float tilesBeforeY = playerPosition.y / Block::BLOCK_SIZE;
@@ -137,10 +134,10 @@ void TileRenderer::render()
     const int startColumn = std::max(static_cast<int>(tilesBeforeX - (halfScreenMetersWidth / transformedTileSize)) - 2, 0);
     const int endColumn = std::min(static_cast<int>(tilesBeforeX + (halfScreenMetersWidth / transformedTileSize) + 2), static_cast<int>(WORLD_COLUMNCOUNT));
 
-    Debug:: log(Debug::TileRendererArea) << "tilesBeforeX: " << tilesBeforeX << " tilebeforeY: " << tilesBeforeY;
-    Debug:: log(Debug::TileRendererArea) << "halfScreenMetersHeight: " << halfScreenMetersHeight << " Width: " << halfScreenMetersWidth;
+    //Debug:: log(Debug::TileRendererArea) << "tilesBeforeX: " << tilesBeforeX << " tilebeforeY: " << tilesBeforeY;
+    //Debug:: log(Debug::TileRendererArea) << "halfScreenMetersHeight: " << halfScreenMetersHeight << " Width: " << halfScreenMetersWidth;
 
-    Debug:: log(Debug::TileRendererArea) << "starRow: " << startRow << "endrow: " << endRow << "startcol: " << startColumn << " endcol: " << endColumn;
+    //Debug:: log(Debug::TileRendererArea) << "starRow: " << startRow << "endrow: " << endRow << "startcol: " << startColumn << " endcol: " << endColumn;
 
     if (std::abs(startColumn) != startColumn) {
         Debug::log(Debug::TileRendererArea) << "FIXME, WENT INTO NEGATIVE COLUMN!!";
@@ -154,6 +151,8 @@ void TileRenderer::render()
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     const uint32_t totalTiles = (endRow - startRow) * (endColumn - startColumn);
     if (totalTiles > m_highestTileCount || m_firstRun) {
+        Debug::log(Debug::TileRendererArea) << "reallocating buffer!";
+
         m_firstRun = false;
         m_highestTileCount = totalTiles * 2;
 
