@@ -246,6 +246,34 @@ void SkyRenderer::initGLSkyBackground()
 
 void SkyRenderer::initGLSkyBackgroundNight()
 {
+    glGenFramebuffers(1, &m_fboNight);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_fboNight);
+
+    glGenRenderbuffers(1, &m_rbNight);
+    glBindRenderbuffer(GL_RENDERBUFFER, m_rbNight);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, Settings::instance()->windowWidth, Settings::instance()->windowHeight);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_rbNight);
+
+    GLenum buffers[] = { GL_COLOR_ATTACHMENT0 };
+    glDrawBuffers(1, buffers);
+
+    glGenTextures(1, &m_fboTextureNight);
+    glBindTexture(GL_TEXTURE_2D, m_fboTextureNight);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Settings::instance()->screenResolutionWidth, Settings::instance()->screenResolutionHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    // Attach the texture to the FBO
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_fboTextureNight, 0);
+
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    assert(status == GL_FRAMEBUFFER_COMPLETE);
+
+    //////////////
     glGenVertexArrays(1, &m_vaoSkyBackgroundNight);
     glBindVertexArray(m_vaoSkyBackgroundNight);
 
@@ -333,12 +361,17 @@ void SkyRenderer::renderSkyBackgroundDay()
     m_skyBackgroundDayTexture->bind();
     glActiveTexture(GL_TEXTURE1);
     m_skyBackgroundDuskTexture->bind();
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, m_fboTextureNight);
 
     GLint dayTextureLoc = glGetUniformLocation(m_skyBackgroundDayShader->shaderProgram(), "dayTexture");
     glUniform1i(dayTextureLoc, 0);
 
     GLint duskTextureLoc = glGetUniformLocation(m_skyBackgroundDayShader->shaderProgram(), "duskTexture");
     glUniform1i(duskTextureLoc, 1);
+
+    GLint nightTextureLoc = glGetUniformLocation(m_skyBackgroundDayShader->shaderProgram(), "nightTexture");
+    glUniform1i(nightTextureLoc, 2);
 
     GLint timeOrigLoc = glGetUniformLocation(m_skyBackgroundDayShader->shaderProgram(), "timeOrig");
 
@@ -358,11 +391,11 @@ void SkyRenderer::renderSkyBackgroundDay()
     // vertices[2] -> bottom right
     // vertices[3] -> top right
 
-    glm::vec2 spritePosition = glm::vec2(Settings::instance()->screenResolutionWidth * 0.5f, Settings::instance()->screenResolutionWidth * 0.5f);
+    glm::vec2 spritePosition = glm::vec2(0.0f, 0.0f);
 
-    glm::vec2 spriteSize = glm::vec2(SKY_TEXTURE_WIDTH, SKY_TEXTURE_HEIGHT);
+    glm::vec2 spriteSize = glm::vec2(Settings::instance()->screenResolutionWidth, Settings::instance()->screenResolutionHeight);
 
-    glm::vec4 rect = glm::vec4(spritePosition.x - (spriteSize.x * 0.5f), spritePosition.y - (spriteSize.x * 0.5f), spritePosition.x + (spriteSize.x * 0.5f), spritePosition.y + (spriteSize.y * 0.5f));
+    glm::vec4 rect = glm::vec4(spritePosition.x, spritePosition.y, spritePosition.x + spriteSize.x, spritePosition.y + spriteSize.y);
 
     float x = rect.x;
     float width = rect.z;
@@ -456,8 +489,14 @@ void SkyRenderer::renderSkyBackgroundNight()
 
     ////////////////////////////////////////////////// render... ////////////////////////////////////////////////
 
-    glActiveTexture(GL_TEXTURE0);
-    m_skyBackgroundNightTexture->bind();
+    glBindFramebuffer(GL_FRAMEBUFFER, m_fboNight);
+    glBindRenderbuffer(GL_RENDERBUFFER, m_rbNight);
+    glClearColor(0.f, 0.f, 0.f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+//FIXME: HACK
+//    glActiveTexture(GL_TEXTURE0);
+//    m_skyBackgroundNightTexture->bind();
 
     GLint nightTextureLoc = glGetUniformLocation(m_skyBackgroundNightShader->shaderProgram(), "nightTexture");
     glUniform1i(nightTextureLoc, 0);
@@ -480,11 +519,11 @@ void SkyRenderer::renderSkyBackgroundNight()
     // vertices[2] -> bottom right
     // vertices[3] -> top right
 
-    glm::vec2 spritePosition = glm::vec2(Settings::instance()->screenResolutionWidth * 0.5f, Settings::instance()->screenResolutionWidth * 0.5f);
+    glm::vec2 spritePosition = glm::vec2(0.0f, 0.0f);
 
-    glm::vec2 spriteSize = glm::vec2(SKY_TEXTURE_WIDTH, SKY_TEXTURE_HEIGHT);
+    glm::vec2 spriteSize = glm::vec2(Settings::instance()->screenResolutionWidth, Settings::instance()->screenResolutionHeight);
 
-    glm::vec4 rect = glm::vec4(spritePosition.x - (spriteSize.x * 0.5f), spritePosition.y - (spriteSize.x * 0.5f), spritePosition.x + (spriteSize.x * 0.5f), spritePosition.y + (spriteSize.y * 0.5f));
+    glm::vec4 rect = glm::vec4(spritePosition.x, spritePosition.y, spritePosition.x + spriteSize.x, spritePosition.y + spriteSize.y);
 
     float x = rect.x;
     float width = rect.z;
@@ -548,6 +587,10 @@ void SkyRenderer::renderSkyBackgroundNight()
     glDisable(GL_BLEND);
 
     glActiveTexture(GL_TEXTURE0);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
     Debug::checkGLError();
 }
 
@@ -706,9 +749,9 @@ void SkyRenderer::update(const float elapsedTime)
 
 void SkyRenderer::render()
 {
+    renderSkyBackgroundNight();
     renderSkyBackgroundDay();
     renderCelestialBodies();
-    renderSkyBackgroundNight();
 
  //   sf::VertexArray line(sf::Lines, 2);
  //   sf::Vector2f screen = sf::Vector2f(SCREEN_W/2, SCREEN_H/2);

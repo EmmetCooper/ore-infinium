@@ -98,6 +98,10 @@ private:
     GLuint m_vboCelestialBodies; // vertex buffer object
     GLuint m_eboCelestialBodies; // element buffer object
 
+    GLuint m_fboNight = 0;
+    GLuint m_fboTextureNight = 0;
+    GLuint m_rbNight = 0; //render buffer object
+
     std::vector<SpriteFrame> m_celestialBodiesSprites;
 
     // sun, moon

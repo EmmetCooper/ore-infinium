@@ -168,22 +168,22 @@ void TileRenderer::render()
             }
         }
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-    glBindVertexArray(m_vao);
-    glGenBuffers(1, &m_ebo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+        glBindVertexArray(m_vao);
+        glGenBuffers(1, &m_ebo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
 
-    glBufferData(
-        GL_ELEMENT_ARRAY_BUFFER,
-        indicesv.size() * sizeof(uint32_t),
-        indicesv.data(),
-        GL_STATIC_DRAW);
+        glBufferData(
+            GL_ELEMENT_ARRAY_BUFFER,
+            indicesv.size() * sizeof(uint32_t),
+            indicesv.data(),
+            GL_STATIC_DRAW);
 
-    glBufferData(
-        GL_ARRAY_BUFFER,
-        m_highestTileCount * 4 * sizeof(Vertex),
-        NULL,
-        GL_DYNAMIC_DRAW);
+        glBufferData(
+            GL_ARRAY_BUFFER,
+            m_highestTileCount * 4 * sizeof(Vertex),
+            NULL,
+            GL_DYNAMIC_DRAW);
     }
 
     int drawingRow = 0;

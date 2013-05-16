@@ -5,6 +5,7 @@ in vec4 frag_color;
 
 uniform float timeOrig;
 
+uniform sampler2D nightTexture;
 uniform sampler2D dayTexture;
 uniform sampler2D duskTexture;
 
@@ -14,6 +15,7 @@ void main()
 {
     vec4 dayColor = texture2D(dayTexture, frag_texcoord);
     vec4 duskColor = texture2D(duskTexture, frag_texcoord);
+    vec4 nightColor = texture2D(nightTexture, frag_texcoord);
 
     float t = timeOrig;
 
@@ -33,12 +35,12 @@ void main()
     float toDark = (clamp(t, darkStart, darkEnd) - darkStart) / (darkEnd - darkStart);
     float toDay  = (clamp(t, dayStart,   dayEnd) -  dayStart) / (dayEnd  -  dayStart);
 
-    vec4 dayTop  = vec4(0.0, 0.0, 1.0, 1.0);
-    vec4 dayBtm  = vec4(1.0, 1.0, 1.0, 1.0);
-    vec4 duskTop = vec4(0.5, 0.2, 0.0, 1.0);
-    vec4 duskBtm = vec4(0.8, 0.8, 0.8, 1.0);
-    vec4 darkTop = vec4(0.0, 0.0, 0.0, 1.0);
-    vec4 darkBtm = vec4(0.0, 0.0, 0.0, 1.0);
+    vec4 dayTop  = nightColor;//vec4(0.0, 0.0, 1.0, 1.0);
+    vec4 dayBtm  = nightColor;//vec4(1.0, 1.0, 1.0, 1.0);
+    vec4 duskTop = nightColor;//vec4(0.5, 0.2, 0.0, 1.0);
+    vec4 duskBtm = nightColor;//vec4(0.8, 0.8, 0.8, 1.0);
+    vec4 darkTop = nightColor;//vec4(0.0, 0.0, 0.0, 1.0);
+    vec4 darkBtm = nightColor;//vec4(0.0, 0.0, 0.0, 1.0);
 
     vec4 top = dayTop;
     vec4 btm = dayBtm;
@@ -51,5 +53,5 @@ void main()
     btm = mix(btm, darkBtm, toDark);
     btm = mix(btm, dayBtm, toDay);
 
-    fragColor = mix(top, btm, 1.0 - (frag_texcoord.y / 1.0)) * frag_color + (dayColor * 0.000000000001 * duskColor);
+    fragColor = mix(top, btm, 1.0 - (frag_texcoord.y / 1.0)) * frag_color + (dayColor * 0.000000000001 * duskColor * nightColor);
 }
