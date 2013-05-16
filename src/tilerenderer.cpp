@@ -184,20 +184,25 @@ void TileRenderer::render()
             GL_ARRAY_BUFFER,
             m_highestTileCount * 4 * sizeof(Vertex),
             NULL,
-            GL_DYNAMIC_DRAW);
+            GL_STREAM_DRAW);
     }
 
     int drawingRow = 0;
     int index = 0;
 
+    struct Quad {
+        Vertex vertices[4];
+    };
+
+    std::vector<Quad> quads;
     Debug::checkGLError();
     // [y*rowlength + x]
     for (int currentRow = startRow; currentRow < endRow; ++currentRow) {
         int drawingColumn = 0;
         for (int currentColumn = startColumn; currentColumn < endColumn; ++currentColumn) {
+            Quad quad;
 
             // vertices that will be uploaded.
-            Vertex vertices[4];
 
             // vertices[n][0] -> X, and [1] -> Y
             // vertices[0] -> top left
@@ -214,29 +219,29 @@ void TileRenderer::render()
             float y = positionY;
             float height = y  +  Block::BLOCK_SIZE;
 
-            vertices[0].x = x; // top left X
-            vertices[0].y = y; //top left Y
+            quad.vertices[0].x = x; // top left X
+            quad.vertices[0].y = y; //top left Y
 
-            vertices[1].x = x; // bottom left X
-            vertices[1].y = height; // bottom left Y
+            quad.vertices[1].x = x; // bottom left X
+            quad.vertices[1].y = height; // bottom left Y
 
-            vertices[2].x = width; // bottom right X
-            vertices[2].y = height; //bottom right Y
+            quad.vertices[2].x = width; // bottom right X
+            quad.vertices[2].y = height; //bottom right Y
 
-            vertices[3].x = width; // top right X
-            vertices[3].y = y; // top right Y
+            quad.vertices[3].x = width; // top right X
+            quad.vertices[3].y = y; // top right Y
 
             Debug::checkGLError();
 
             // copy color to the buffer
-            for (size_t i = 0; i < sizeof(vertices) / sizeof(*vertices); i++) {
+            for (size_t i = 0; i < sizeof(quad.vertices) / sizeof(*quad.vertices); i++) {
                 //        *colorp = color.bgra;
                 uint8_t red = 255;
                 uint8_t blue = 255;
                 uint8_t green = 255;
                 uint8_t alpha = 255;
                 int32_t color = red | (green << 8) | (blue << 16) | (alpha << 24);
-                vertices[i].color = color;
+                quad.vertices[i].color = color;
             }
 
             //tilesheet index/row, column
@@ -260,21 +265,16 @@ void TileRenderer::render()
             const float tileBottom = tileTop - tileHeight;
 
             // copy texcoords to the buffer
-            vertices[0].u = vertices[1].u = tileLeft;
-            vertices[0].v = vertices[3].v = tileTop;
-            vertices[1].v = vertices[2].v = tileBottom;
-            vertices[2].u = vertices[3].u = tileRight;
+            quad.vertices[0].u = quad.vertices[1].u = tileLeft;
+            quad.vertices[0].v = quad.vertices[3].v = tileTop;
+            quad.vertices[1].v = quad.vertices[2].v = tileBottom;
+            quad.vertices[2].u = quad.vertices[3].u = tileRight;
 
             // NOTE: block primitive type is in the perfect order that we need, so the first one (0) is at the top, and goes down and increases.
-            vertices[0].w = vertices[1].w = vertices[2].w = vertices[3].w = block.primitiveType;
+            quad.vertices[0].w = quad.vertices[1].w = quad.vertices[2].w = quad.vertices[3].w = block.primitiveType;
 
-            Debug::checkGLError();
-            // finally upload everything to the actual vbo
-            glBufferSubData(
-                GL_ARRAY_BUFFER,
-                sizeof(vertices) * index,
-                sizeof(vertices),
-                vertices);
+            quads.push_back(quad);
+
             Debug::checkGLError();
 
             ++index;
@@ -283,7 +283,12 @@ void TileRenderer::render()
         ++drawingRow;
     }
 
-    Debug::checkGLError();
+    glBufferData(
+        GL_ARRAY_BUFFER,
+        quads.size() * sizeof(Quad),
+        &quads[0],
+        GL_STREAM_DRAW);
+
     ////////////////////////////////FINALLY RENDER IT ALL //////////////////////////////////////////
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -292,16 +297,15 @@ void TileRenderer::render()
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     glBindVertexArray(m_vao);
 
-    Debug::checkGLError();
 
     m_shader->bindProgram();
 
     Debug::checkGLError();
-//    Debug::log() << "RENDERING TILECOUNT: " << m_tileCount;
+    //Debug::log() << "RENDERING TILECOUNT: " << m_tileCount;
 
     glDrawElements(
         GL_TRIANGLES,
-        6 * (index), // 6 indices per 2 triangles
+        6 * (quads.size()), // 6 indices per 2 triangles
         GL_UNSIGNED_INT,
         (const GLvoid*)0);
 
