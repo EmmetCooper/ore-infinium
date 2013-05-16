@@ -56,7 +56,7 @@ TileRenderer::TileRenderer(World* world, Camera* camera, Entities::Player* mainP
     glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
     const GLint level = 0;
-    glTexImage3D(GL_TEXTURE_2D_ARRAY, level, GL_RGBA, Block::BLOCK_SIZE_PIXELS, Block::BLOCK_SIZE_PIXELS, Block::blockTypeMap.size(), 0, GL_RGBA, GL_UNSIGNED_BYTE, 0 /* if it's null it tells GL we will send in 2D images as elements one by one, later */);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, level, GL_RGBA, Block::BLOCK_SIZE_PIXELS, Block::BLOCK_SIZE_PIXELS, Block::blockTypeMap.size(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr /* if it's null it tells GL we will send in 2D images as elements one by one, later */);
 
     const GLint xoffset = 0;
     const GLint yoffset = 0;
