@@ -35,10 +35,10 @@ void main()
     float toDark = (clamp(t, darkStart, darkEnd) - darkStart) / (darkEnd - darkStart);
     float toDay  = (clamp(t, dayStart,   dayEnd) -  dayStart) / (dayEnd  -  dayStart);
 
-    vec4 dayTop  = nightColor;//vec4(0.0, 0.0, 1.0, 1.0);
-    vec4 dayBtm  = nightColor;//vec4(1.0, 1.0, 1.0, 1.0);
-    vec4 duskTop = nightColor;//vec4(0.5, 0.2, 0.0, 1.0);
-    vec4 duskBtm = nightColor;//vec4(0.8, 0.8, 0.8, 1.0);
+    vec4 dayTop  = vec4(0.0, 0.0, 1.0, 1.0);
+    vec4 dayBtm  = vec4(1.0, 1.0, 1.0, 1.0);
+    vec4 duskTop = vec4(0.5, 0.2, 0.0, 1.0);
+    vec4 duskBtm = vec4(0.8, 0.8, 0.8, 1.0);
     vec4 darkTop = nightColor;//vec4(0.0, 0.0, 0.0, 1.0);
     vec4 darkBtm = nightColor;//vec4(0.0, 0.0, 0.0, 1.0);
 
