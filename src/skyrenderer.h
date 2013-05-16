@@ -102,6 +102,10 @@ private:
     GLuint m_fboTextureNight = 0;
     GLuint m_rbNight = 0; //render buffer object
 
+    GLuint m_fboSky = 0;
+    GLuint m_fboTextureSky = 0;
+    GLuint m_rbSky = 0; //render buffer object
+
     std::vector<SpriteFrame> m_celestialBodiesSprites;
 
     // sun, moon

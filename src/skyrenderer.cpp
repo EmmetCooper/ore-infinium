@@ -164,6 +164,35 @@ void SkyRenderer::initGLCelestialBodies()
 
 void SkyRenderer::initGLSkyBackground()
 {
+    glGenFramebuffers(1, &m_fboSky);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_fboSky);
+
+    glGenRenderbuffers(1, &m_rbSky);
+    glBindRenderbuffer(GL_RENDERBUFFER, m_rbSky);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, Settings::instance()->windowWidth, Settings::instance()->windowHeight);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_rbSky);
+
+    GLenum buffers[] = { GL_COLOR_ATTACHMENT0 };
+    glDrawBuffers(1, buffers);
+
+    glGenTextures(1, &m_fboTextureSky);
+    glBindTexture(GL_TEXTURE_2D, m_fboTextureSky);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Settings::instance()->screenResolutionWidth, Settings::instance()->screenResolutionHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    // Attach the texture to the FBO
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_fboTextureSky, 0);
+
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    assert(status == GL_FRAMEBUFFER_COMPLETE);
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     glGenVertexArrays(1, &m_vaoSkyBackground);
     glBindVertexArray(m_vaoSkyBackground);
 
@@ -355,6 +384,11 @@ void SkyRenderer::renderSkyBackgroundDay()
     int mvpLoc = glGetUniformLocation(m_skyBackgroundDayShader->shaderProgram(), "mvp");
     glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, &mvp[0][0]);
 
+    glBindFramebuffer(GL_FRAMEBUFFER, m_fboSky);
+    glBindRenderbuffer(GL_RENDERBUFFER, m_rbSky);
+    glClearColor(0.f, 0.f, 0.f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
     ////////////////////////////////////////////////// render... ////////////////////////////////////////////////
 
     glActiveTexture(GL_TEXTURE0);
@@ -468,8 +502,22 @@ void SkyRenderer::renderSkyBackgroundDay()
 
     glDisable(GL_BLEND);
 
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
     glActiveTexture(GL_TEXTURE0);
     Debug::checkGLError();
+
+    //////////// render it to backbuffer //////////////////////////
+
+    // read from day fbo
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fboSky);
+
+    //draw to backbuffer
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glBlitFramebuffer(0, 0, Settings::instance()->screenResolutionWidth, Settings::instance()->screenResolutionHeight, 0, 0, Settings::instance()->screenResolutionWidth, Settings::instance()->screenResolutionHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void SkyRenderer::renderSkyBackgroundNight()
