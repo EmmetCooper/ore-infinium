@@ -169,6 +169,8 @@ void TileRenderer::render()
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
         glBindVertexArray(m_vao);
+
+        glDeleteBuffers(1, &m_ebo);
         glGenBuffers(1, &m_ebo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
 
