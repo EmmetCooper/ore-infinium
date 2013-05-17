@@ -104,6 +104,10 @@ public:
     void removeJumpContact();
     void jump();
 
+    //FIXME: ...store a list of indices of blocks that are owned and look those up in a map by the index we want to see ifi t's owned.
+    //e.g. pick a block, ask "do we own this index we're trying to pick", yes? -> destroy that and remove player "ownage".
+    //    uint16_t playerOwned = 1;
+
 public:
     // radius indicating how many pixels out the player can pick blocks
     static constexpr float blockPickingRadius = Block::BLOCK_SIZE * 8.0f;
