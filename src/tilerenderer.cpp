@@ -70,9 +70,9 @@ TileRenderer::TileRenderer(World* world, Camera* camera, Entities::Player* mainP
     }
 
     for (size_t i = 0; i < Block::wallTypeMap.size(); ++i) {
-        Image image(Block::blockTypeMap.at(i).texture);
+        Image image(Block::wallTypeMap.at(i).texture);
 
-        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, level, xoffset, yoffset, i, Block::BLOCK_SIZE_PIXELS, Block::BLOCK_SIZE_PIXELS, depth, GL_BGRA, GL_UNSIGNED_BYTE, image.bytes());
+        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, level, xoffset, yoffset, (lastTexture + i), Block::BLOCK_SIZE_PIXELS, Block::BLOCK_SIZE_PIXELS, depth, GL_BGRA, GL_UNSIGNED_BYTE, image.bytes());
     }
 }
 

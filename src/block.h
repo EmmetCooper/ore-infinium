@@ -39,10 +39,10 @@ public:
      * NOTE: MUST be in sync with index of m_blockTextures
      */
     enum BlockType {
-        Null = 0,
-        Dirt,
-        Stone,
-        Copper
+        NullBlockType = 0,
+        DirtBlockType,
+        StoneBlockType,
+        CopperBlockType
     };
 
     /**
@@ -53,12 +53,13 @@ public:
      * And yes, this does mean that static walls may eventually conflict with user creatable/placeable walls. But we'll just upgrade to shorts then.
      */
     enum WallType {
-       DirtWallType = 0,
+        NullWallType = 0,
+        DirtWallType = 1,
     };
 
     enum BlockFlags {
         /// theoretically more things belong in here. except i ran out of ideas :(
-        OnFireBlockFlag = 1 << 1,
+        OnFireBlockFlag = 1 << 0,
     };
 
     // height is the same as width (they're square)
@@ -97,8 +98,6 @@ public:
     };
 
     static std::map<uint8_t, WallStruct> wallTypeMap;
-
-
 
     /**
      * A lookup table to represent the 0-255 possibilities for a tile being surrounded,
@@ -143,12 +142,15 @@ public:
     uint8_t primitiveType = 0;
 
     /**
-     * 1:1 correspondence to the primitive type.
-     *
-     * EXCEPT! Starting at @sa WALLTYPE_MAX
-     * and counting backwards
+     * 1:1 correspondence to the primitive type. just that it's rendered in the background with a darker color.
      */
     uint8_t wallType = 0;
+
+    /**
+     * if != 0 (WallType::Null), then this is an "underground wall tile" and the user cannot remove/add/change it in any way.
+     * @sa WallType
+     */
+    uint8_t permanentWallType = 0;
 
     /// NOTE: block ownership is stored in the Player class, which just stores a list of indices of tiles which the player 'owns'.
 

@@ -32,10 +32,10 @@ void Block::update()
 }
 
 std::map<uint8_t, Block::BlockStruct> Block::blockTypeMap = {
-    { BlockType::Null, BlockStruct("../textures/null.png", false) },
-    { BlockType::Dirt, BlockStruct("../textures/dirt.png", true) },
-    { BlockType::Stone, BlockStruct("../textures/stone.png", true) },
-    { BlockType::Copper, BlockStruct("../textures/copper.png", true) }
+    { BlockType::NullBlockType, BlockStruct("../textures/null.png", false) },
+    { BlockType::DirtBlockType, BlockStruct("../textures/dirt.png", true) },
+    { BlockType::StoneBlockType, BlockStruct("../textures/stone.png", true) },
+    { BlockType::CopperBlockType, BlockStruct("../textures/copper.png", true) }
 };
 
 std::map<uint8_t, Block::WallStruct> Block::wallTypeMap = {

@@ -202,7 +202,7 @@ void World::addPlayer(Entities::Player* player)
                 index = column * WORLD_ROWCOUNT + row;
                 assert(index < WORLD_ROWCOUNT * WORLD_COLUMNCOUNT);
                 Block& block = m_blocks[index];
-                block.primitiveType = Block::BlockType::Null;
+                block.primitiveType = Block::BlockType::NullBlockType;
             }
         }
 
@@ -531,7 +531,7 @@ void World::generateWorld()
         for (int column = 0; column < WORLD_COLUMNCOUNT; ++column) {
             int index = column * WORLD_ROWCOUNT + lastRow;
             Block& block = m_blocks[index];
-            block.primitiveType = Block::BlockType::Null;
+            block.primitiveType = Block::BlockType::NullBlockType;
         }
     }
 
@@ -549,7 +549,7 @@ void World::generateWorld()
             int index = column * WORLD_ROWCOUNT + row;
             Block& block = m_blocks[index];
 
-            if (block.primitiveType != Block::BlockType::Null) {
+            if (block.primitiveType != Block::BlockType::NullBlockType) {
                 block.wallType =  Block::WALLTYPE_MAX - static_cast<uint8_t>(Block::WallType::DirtWallType);
             }
         }
@@ -816,14 +816,14 @@ void World::attackTilePhysicsObjectCallback(cpShape* shape, cpFloat t, cpVect n,
     ContactListener::BlockWrapper* blockWrapper = static_cast<ContactListener::BlockWrapper*>(userData->data);
     Block* block = blockWrapper->block;
 
-    if (block->primitiveType == Block::BlockType::Null) {
+    if (block->primitiveType == Block::BlockType::NullBlockType) {
         return;
     }
 
     World* world = static_cast<World*>(data);
 
     //FIXME: decrement health..
-    block->primitiveType = Block::BlockType::Null;
+    block->primitiveType = Block::BlockType::NullBlockType;
 
     world->m_tileShapesToDestroy.push_back(shape);
     cpSpaceAddPostStepCallback(world->m_cpSpace, &World::tileRemovedPostStepCallback, nullptr, world);
