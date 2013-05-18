@@ -38,6 +38,11 @@ std::map<uint8_t, Block::BlockStruct> Block::blockTypeMap = {
     { BlockType::Copper, BlockStruct("../textures/copper.png", true) }
 };
 
+std::map<uint8_t, Block::WallStruct> Block::wallTypeMap = {
+    { WallType::DirtWallType, WallStruct("../textures/tileWalls/dirtWallType.png") }
+};
+
+
 std::map<uint8_t, uint8_t> Block::tileMeshingTable = {
     { 0, 0 }, { 1, 1 }, { 2, 2 }, { 3, 2 },
     { 4, 3 }, { 5, 4 }, { 6, 2 }, { 7, 2 },

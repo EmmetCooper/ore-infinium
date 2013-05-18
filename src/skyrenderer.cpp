@@ -412,8 +412,6 @@ void SkyRenderer::renderSkyBackgroundDay()
     float timeOrig = float(m_time->currentHour()) + (float(m_time->currentMinute()) / 60.0);
     glUniform1f(timeOrigLoc, timeOrig);
 
-    Debug::log(Debug::Area::StartupArea) << "timeOrig: " << (short)m_time->currentHour();
-
     int index = 0;
 
     // vertices that will be uploaded.

@@ -304,6 +304,10 @@ void World::render()
 
     //TODO render tilemap..
 
+    if (Settings::instance()->debugRendererFlags & Debug::RenderingDebug::SkyRenderingPassDebug) {
+        m_sky->render();
+    }
+
     //set our view so that the player will stay relative to the view, in the center.
     //HACK    m_window->setView(*m_view);
    m_lightRenderer->renderToFBO();
@@ -318,9 +322,6 @@ void World::render()
     m_spriteSheetRenderer->renderCharacters();
 
     m_quadTreeRenderer->render();
-    if (Settings::instance()->debugRendererFlags & Debug::RenderingDebug::SkyRenderingPassDebug) {
-        m_sky->render();
-    }
 
     renderCrosshair();
 }
@@ -528,13 +529,29 @@ void World::generateWorld()
     // 200 rows of "sky"
     for (; lastRow < 15; ++lastRow) {
         for (int column = 0; column < WORLD_COLUMNCOUNT; ++column) {
-            m_blocks[column * WORLD_ROWCOUNT + lastRow].primitiveType = 0;
+            int index = column * WORLD_ROWCOUNT + lastRow;
+            Block& block = m_blocks[index];
+            block.primitiveType = Block::BlockType::Null;
         }
     }
 
     for (; lastRow < WORLD_ROWCOUNT; ++lastRow) {
         for (int column = 0; column < WORLD_COLUMNCOUNT; ++column) {
-            m_blocks[column * WORLD_ROWCOUNT + lastRow].primitiveType = distribution(rand);
+            int index = column * WORLD_ROWCOUNT + lastRow;
+            Block& block = m_blocks[index];
+            block.primitiveType = distribution(rand);
+        }
+    }
+
+    /// set the wall type for each "underground" tile. null ones are ignored.
+    for (int row = 0; row < WORLD_ROWCOUNT; ++row) {
+        for (int column = 0; column < WORLD_COLUMNCOUNT; ++column) {
+            int index = column * WORLD_ROWCOUNT + row;
+            Block& block = m_blocks[index];
+
+            if (block.primitiveType != Block::BlockType::Null) {
+                block.wallType =  Block::WALLTYPE_MAX - static_cast<uint8_t>(Block::WallType::DirtWallType);
+            }
         }
     }
 

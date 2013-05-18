@@ -53,10 +53,7 @@ public:
      * And yes, this does mean that static walls may eventually conflict with user creatable/placeable walls. But we'll just upgrade to shorts then.
      */
     enum WallType {
-       DirtWallTypeLeft = 0,
-       DirtWallTypeRight = 1,
-       DirtWallTypeDown = 2,
-       DirtWallTypeUp = 3
+       DirtWallType = 0,
     };
 
     enum BlockFlags {
@@ -74,7 +71,7 @@ public:
     /**
      * Determines the starting point for the walls, to begin counting backwards to determine the constant/fixed "underground" wall textures
      */
-    static constexpr uint32_t WALLTYPE_MAX = std::numeric_limits<uint8_t>::max();
+    static constexpr uint8_t WALLTYPE_MAX = std::numeric_limits<uint8_t>::max();
 
     struct BlockStruct {
         BlockStruct(const char *_texture, bool _collides) {
@@ -91,6 +88,17 @@ public:
     };
 
     static std::map<uint8_t, BlockStruct> blockTypeMap;
+
+        struct WallStruct {
+        WallStruct(const char *_texture) {
+            texture = _texture;
+        };
+        const char* texture;
+    };
+
+    static std::map<uint8_t, WallStruct> wallTypeMap;
+
+
 
     /**
      * A lookup table to represent the 0-255 possibilities for a tile being surrounded,
@@ -111,12 +119,6 @@ public:
      * |********|*********|***********
      */
     static std::map<uint8_t, uint8_t> tileMeshingTable;
-
-    /**
-     * 0-255, 0 obviously meaning this block is marked as to be destroyed.
-     * higher values are for more "difficult" to break block types. e.g. sand has a very low number.
-     */
-    uint8_t health = 255;
 
     /**
      * Which mesh sprite to use, aka subsprite.
