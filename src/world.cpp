@@ -549,9 +549,7 @@ void World::generateWorld()
             int index = column * WORLD_ROWCOUNT + row;
             Block& block = m_blocks[index];
 
-            if (block.primitiveType != Block::BlockType::NullBlockType) {
-                block.wallType =  Block::WallType::DirtWallType;
-            }
+            block.wallType =  Block::WallType::DirtWallType;
         }
     }
 

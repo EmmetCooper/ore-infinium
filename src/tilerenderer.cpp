@@ -277,7 +277,13 @@ void TileRenderer::render()
             quad.vertices[2].u = quad.vertices[3].u = tileRight;
 
             // NOTE: block primitive type is in the perfect order that we need, so the first one (0) is at the top, and goes down and increases.
-            quad.vertices[0].w = quad.vertices[1].w = quad.vertices[2].w = quad.vertices[3].w = block.primitiveType;
+            float z = block.primitiveType;
+
+            if (block.wallType != Block::WallType::NullWallType && block.primitiveType == Block::BlockType::NullBlockType) {
+                z = Block::blockTypes.size() + block.wallType;
+            }
+
+            quad.vertices[0].w = quad.vertices[1].w = quad.vertices[2].w = quad.vertices[3].w = z;
 
             quads.push_back(quad);
 
