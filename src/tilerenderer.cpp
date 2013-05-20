@@ -56,23 +56,22 @@ TileRenderer::TileRenderer(World* world, Camera* camera, Entities::Player* mainP
     glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
     const GLint level = 0;
-    glTexImage3D(GL_TEXTURE_2D_ARRAY, level, GL_RGBA, Block::BLOCK_SIZE_PIXELS, Block::BLOCK_SIZE_PIXELS, Block::blockTypeMap.size(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr /* if it's null it tells GL we will send in 2D images as elements one by one, later */);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, level, GL_RGBA, Block::BLOCK_SIZE_PIXELS, Block::BLOCK_SIZE_PIXELS, Block::blockTypes.size() + Block::wallTypes.size(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr /* if it's null it tells GL we will send in 2D images as elements one by one, later */);
 
     const GLint xoffset = 0;
     const GLint yoffset = 0;
     const GLsizei depth = 1;
 
-    size_t lastTexture = 0;
-    for (; lastTexture < Block::blockTypeMap.size(); ++lastTexture) {
-        Image image(Block::blockTypeMap.at(lastTexture).texture);
+    for (size_t i = 0; i < Block::blockTypes.size(); ++i) {
+        Image image(Block::blockTypes.at(i).texture);
 
-        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, level, xoffset, yoffset, lastTexture, Block::BLOCK_SIZE_PIXELS, Block::BLOCK_SIZE_PIXELS, depth, GL_BGRA, GL_UNSIGNED_BYTE, image.bytes());
+        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, level, xoffset, yoffset, i, Block::BLOCK_SIZE_PIXELS, Block::BLOCK_SIZE_PIXELS, depth, GL_BGRA, GL_UNSIGNED_BYTE, image.bytes());
     }
 
-    for (size_t i = 0; i < Block::wallTypeMap.size(); ++i) {
-        Image image(Block::wallTypeMap.at(i).texture);
+    for (size_t i = 0; i < Block::wallTypes.size(); ++i) {
+        Image image(Block::wallTypes.at(i).texture);
 
-        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, level, xoffset, yoffset, (lastTexture + i), Block::BLOCK_SIZE_PIXELS, Block::BLOCK_SIZE_PIXELS, depth, GL_BGRA, GL_UNSIGNED_BYTE, image.bytes());
+        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, level, xoffset, yoffset, (Block::blockTypes.size() + i), Block::BLOCK_SIZE_PIXELS, Block::BLOCK_SIZE_PIXELS, depth, GL_BGRA, GL_UNSIGNED_BYTE, image.bytes());
     }
 }
 

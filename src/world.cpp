@@ -550,7 +550,7 @@ void World::generateWorld()
             Block& block = m_blocks[index];
 
             if (block.primitiveType != Block::BlockType::NullBlockType) {
-                block.wallType =  Block::WALLTYPE_MAX - static_cast<uint8_t>(Block::WallType::DirtWallType);
+                block.wallType =  Block::WallType::DirtWallType;
             }
         }
     }

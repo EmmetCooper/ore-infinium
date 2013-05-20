@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+#include <vector>
 #include <assert.h>
 
 Block::Block()
@@ -31,16 +32,33 @@ void Block::update()
 
 }
 
-std::map<uint8_t, Block::BlockStruct> Block::blockTypeMap = {
+std::vector<Block::BlockStruct> Block::blockTypes;
+std::vector<Block::WallStruct> Block::wallTypes;
+
+void Block::initBlockTypes() {
+    blockTypes.resize(4);
+    blockTypes.at(BlockType::NullBlockType) = BlockStruct("../textures/null.png", false);
+    blockTypes.at(BlockType::DirtBlockType) = BlockStruct("../textures/dirt.png", true);
+    blockTypes.at(BlockType::StoneBlockType) = BlockStruct("../textures/stone.png", true);
+    blockTypes.at(BlockType::CopperBlockType) = BlockStruct("../textures/copper.png", true);
+
+    wallTypes.resize(2);
+    wallTypes.at(WallType::NullWallType) = WallStruct("../textures/null.png");
+    wallTypes.at(WallType::DirtWallType) = WallStruct("../textures/tileWalls/dirtWallType.png");
+}
+
+/*
+std::vector<Block::WallStruct> Block::wallTypes = {
+    { WallType::DirtWallType, WallStruct("../textures/tileWalls/dirtWallType.png") }
+};
+
+std::vector<Block::BlockStruct> Block::blockTypes = {
     { BlockType::NullBlockType, BlockStruct("../textures/null.png", false) },
     { BlockType::DirtBlockType, BlockStruct("../textures/dirt.png", true) },
     { BlockType::StoneBlockType, BlockStruct("../textures/stone.png", true) },
     { BlockType::CopperBlockType, BlockStruct("../textures/copper.png", true) }
 };
-
-std::map<uint8_t, Block::WallStruct> Block::wallTypeMap = {
-    { WallType::DirtWallType, WallStruct("../textures/tileWalls/dirtWallType.png") }
-};
+*/
 
 
 std::map<uint8_t, uint8_t> Block::tileMeshingTable = {

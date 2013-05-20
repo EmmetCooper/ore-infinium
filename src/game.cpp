@@ -69,6 +69,7 @@ void Game::abort_game(const char* message)
 
 void Game::init()
 {
+    Block::initBlockTypes();
     m_client = new Client();
 
     tick();

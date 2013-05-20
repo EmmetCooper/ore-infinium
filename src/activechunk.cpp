@@ -78,7 +78,7 @@ m_cpSpace(cpWorldSpace)
             assert(index < WORLD_ROWCOUNT * WORLD_COLUMNCOUNT);
             Block& block = m_blocks->at(index);
 
-            if ( Block::blockTypeMap.at(block.primitiveType).collides == false) {
+            if ( Block::blockTypes.at(block.primitiveType).collides == false) {
                 //skip over tiles which are not marked as collideable types. obviously, no physics bodies need to be generated for such cases.
                 continue;
             }
