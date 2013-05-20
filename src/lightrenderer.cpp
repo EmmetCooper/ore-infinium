@@ -63,6 +63,9 @@ LightRenderer::~LightRenderer()
     glDeleteRenderbuffers(1, &m_rb);
     glDeleteTextures(1, &m_fboTexture);
     glDeleteTextures(1, &m_torchLightTexture);
+
+    delete m_shader;
+    delete m_shaderPassthrough;
 }
 
 void LightRenderer::setCamera(Camera* camera)
