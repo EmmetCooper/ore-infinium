@@ -69,7 +69,35 @@ m_time(time)
 SkyRenderer::~SkyRenderer()
 {
     delete m_celestialBodiesShader;
+    delete m_skyBackgroundDayShader;
+    delete m_skyBackgroundNightShader;
+
     delete m_celestialBodiesTexture;
+    delete m_skyBackgroundDuskTexture;
+    delete m_skyBackgroundDayTexture;
+    delete m_skyBackgroundNightTexture;
+
+    delete m_time;
+
+    glDeleteTextures(1, &m_fboTextureNight);
+    glDeleteTextures(1, &m_fboTextureSky);
+
+    glDeleteBuffers(1, &m_vboCelestialBodies);
+    glDeleteBuffers(1, &m_vboSkyBackground);
+    glDeleteBuffers(1, &m_vboSkyBackgroundNight);
+
+    glDeleteBuffers(1, &m_eboCelestialBodies);
+    glDeleteBuffers(1, &m_eboSkyBackground);
+    glDeleteBuffers(1, &m_eboSkyBackgroundNight);
+
+    glDeleteVertexArrays(1, &m_vaoCelestialBodies);
+    glDeleteVertexArrays(1, &m_vaoSkyBackground);
+    glDeleteVertexArrays(1, &m_vaoSkyBackgroundNight);
+
+    glDeleteFramebuffers(1, &m_fboNight);
+    glDeleteFramebuffers(1, &m_fboSky);
+    glDeleteRenderbuffers(1, &m_rbNight);
+    glDeleteRenderbuffers(1, &m_rbSky);
 }
 
 void SkyRenderer::initGL()
