@@ -82,10 +82,11 @@ TileRenderer::~TileRenderer()
 
     glDeleteVertexArrays(1, &m_vao);
 
-    glDeleteTextures(1, &m_tileMapTexture);
-
     glDeleteFramebuffers(1, &m_fbo);
+    glDeleteRenderbuffers(1, &m_rb);
+
     glDeleteTextures(1, &m_fboTexture);
+    glDeleteTextures(1, &m_tileMapTexture);
 
     delete m_shader;
 }
