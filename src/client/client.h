@@ -160,6 +160,7 @@ private:
     PhysicsDebugRenderer* m_physicsDebugRenderer = nullptr;
 
     bool m_playerJumpRequested = false;
+    bool m_renderGUI = true;
 
     bool m_initialPlayersReceivedFinished = false;
 

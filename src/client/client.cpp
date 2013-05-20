@@ -229,6 +229,7 @@ void Client::render(double frameTime)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    if (m_renderGUI) {
     if (m_world && m_mainPlayer) {
         m_world->render();
     }
@@ -273,9 +274,12 @@ void Client::render(double frameTime)
         }
     }
 
-    m_gui->render();
-    drawDebugText(frameTime);
+    if (m_renderGUI) {
+        m_gui->render();
+        drawDebugText(frameTime);
+    }
 
+    }
     SDL_GL_SwapWindow(m_window);
 }
 
@@ -354,6 +358,8 @@ void Client::handleInputEvents()
                 ss << distribution(rand);
 
                 startMultiplayerHost(ss.str());
+            } else if (event.key.keysym.sym == SDLK_F10) {
+                m_renderGUI = !m_renderGUI;
             } else if (event.key.keysym.sym == SDLK_F11) {
                if (m_debugSettings == nullptr) {
                     m_debugSettings = new DebugSettings(this);
