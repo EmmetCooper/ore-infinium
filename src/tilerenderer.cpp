@@ -240,17 +240,6 @@ void TileRenderer::render()
 
             Debug::checkGLError();
 
-            // copy color to the buffer
-            for (size_t i = 0; i < sizeof(quad.vertices) / sizeof(*quad.vertices); i++) {
-                //        *colorp = color.bgra;
-                uint8_t red = 255;
-                uint8_t blue = 255;
-                uint8_t green = 255;
-                uint8_t alpha = 255;
-                int32_t color = red | (green << 8) | (blue << 16) | (alpha << 24);
-                quad.vertices[i].color = color;
-            }
-
             //tilesheet index/row, column
             int row = 0;
             int column = 0;
@@ -280,8 +269,25 @@ void TileRenderer::render()
             // NOTE: block primitive type is in the perfect order that we need, so the first one (0) is at the top, and goes down and increases.
             float z = block.primitiveType;
 
+            uint8_t red = 255;
+            uint8_t blue = 255;
+            uint8_t green = 255;
+            uint8_t alpha = 255;
+
             if (block.wallType != Block::WallType::NullWallType && block.primitiveType == Block::BlockType::NullBlockType) {
                 z = Block::blockTypes.size() + block.wallType;
+
+                red = 120;
+                blue = 120;
+                green = 120;
+            }
+
+            int32_t color = red | (green << 8) | (blue << 16) | (alpha << 24);
+
+            // copy color to the buffer
+            for (size_t i = 0; i < sizeof(quad.vertices) / sizeof(*quad.vertices); i++) {
+                //        *colorp = color.bgra;
+                quad.vertices[i].color = color;
             }
 
             quad.vertices[0].w = quad.vertices[1].w = quad.vertices[2].w = quad.vertices[3].w = z;
