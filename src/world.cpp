@@ -80,8 +80,8 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         m_spriteSheetRenderer = new SpriteSheetRenderer(m_camera);
 //FIXME:        m_spriteSheetRenderer->registerSprite(m_uselessEntity);
 
-        m_quadTreeRenderer = new QuadTreeRenderer(m_camera);
-        m_quadTreeRenderer->addQuadTree(m_torchesQuadTree);
+//FIXME:unused         m_quadTreeRenderer = new QuadTreeRenderer(m_camera);
+//FIXME:        m_quadTreeRenderer->addQuadTree(m_torchesQuadTree);
 
         m_tileRenderer = new TileRenderer(this, m_camera, m_mainPlayer);
 
@@ -105,8 +105,8 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
     //client doesn't actually load/generate any world
     if (m_server) {
-        cpVect halfWorld = cpv(Block::BLOCK_SIZE * WORLD_COLUMNCOUNT * 0.5f, Block::BLOCK_SIZE * WORLD_ROWCOUNT * 0.5f);
-        m_torchesQuadTree = new QuadTree(nullptr, halfWorld, halfWorld);
+        cpBB bb = cpBBNew(0.0, Block::BLOCK_SIZE * WORLD_ROWCOUNT, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, 0.0);
+        m_torchesQuadTree = new QuadTree(nullptr, bb);
 
 //        cpVect gravity = cpv(0, -100);
         cpVect gravity = cpv(0.0, 9.8);
@@ -321,7 +321,7 @@ void World::render()
     m_spriteSheetRenderer->renderEntities();
     m_spriteSheetRenderer->renderCharacters();
 
-    m_quadTreeRenderer->render();
+//FIXME unused    m_quadTreeRenderer->render();
 
     renderCrosshair();
 }
@@ -669,10 +669,10 @@ void World::itemPrimaryActivated(Entities::Player* player, Item* item)
 {
     if (item->placeable()) {
         // place the item in the world (append to entity list)
-        //TODO: if it's dynamic_cast a Torch, then put it in torch list
-
+        attemptItemPlacement(player);
     }
 
+    assert(item);
     item->activatePrimary();
 }
 
@@ -684,9 +684,9 @@ void World::itemSecondaryActivated(Entities::Player* player, Item* item)
 void World::handlePlayerLeftMouse(Entities::Player* player)
 {
     //TODO: HANDLE INVENTORY AND TAKE THAT INTO ACCOUNT
-     performBlockAttack(player);
+  //   performBlockAttack(player);
      //FIXME:
-    return;
+ //   return;
 
     // FIXME: HACK: perform the action based on what type of thing is equipped.
     // if it's a sword we attack shit, if it's a pickaxe we attack blocks. for now, lets
@@ -694,10 +694,12 @@ void World::handlePlayerLeftMouse(Entities::Player* player)
     QuickBarInventory* inventory = player->quickBarInventory();
     Item* item = inventory->item(inventory->equippedIndex());
 
-    //these items are placeable
-    if (item != nullptr && item->placeable()) {
-//        attemptItemPlacement(player);
+    // null if there's no item equipped (empty slot)
+    if (item == nullptr) {
+        return;
     }
+
+    itemPrimaryActivated(player, item);;
 }
 
 void World::attemptItemPlacement(Entities::Player* player)
@@ -709,10 +711,7 @@ void World::attemptItemPlacement(Entities::Player* player)
         return;
     }
 
-    if (item->stackSize() == 0) {
-        Debug::log(Debug::ServerEntityLogicArea) << "server: well that's odd, was told that we should place an item, but the item is valid/hanging around, but has no stack size..so it's a count of 0...shouldn't happen.";
-        return;
-    }
+    Debug::fatal(item->stackSize() != 0, Debug::Area::ServerEntityLogicArea, "server: well that's odd, was told that we should place an item, but the item is valid/hanging around, but has no stack size..so it's a count of 0...shouldn't happen.");
 
     if (player->canPlaceItem() == false) {
         // FIXME: has an arbitrary delay between item placement timings, i'm not sure if this is even needed..maybe.

@@ -20,35 +20,15 @@
 
 #include "src/entity.h"
 
-struct cpVect;
+#include <chipmunk/chipmunk.h>
+
 struct cpBB;
-//
-//struct AABB {
-//    AABB(cpVect _center, cpVect _halfDimension) : center(_center), halfDimension(_halfDimension) {}
-//
-//    bool containsPoint(Entity* entity) {
-//        //FIXME: HACK
-////        cpVect p(entity->position().x, entity->position().y);
-////        return ((p.x > center.x - halfDimension.x && p.x <= center.x + halfDimension.x) &&
-////                (p.y > center.y - halfDimension.y && p.y <= center.y + halfDimension.y));
-//    }
-//
-//    bool intersectsAABB(AABB other) {
-//        return (((other.center.x - other.halfDimension.x > center.x - halfDimension.x && other.center.x - other.halfDimension.x < center.x + halfDimension.x) ||
-//                 (other.center.x + other.halfDimension.x > center.x - halfDimension.x && other.center.x + other.halfDimension.x < center.x + halfDimension.x)) &&
-//                ((other.center.y - other.halfDimension.y > center.y - halfDimension.y && other.center.y - other.halfDimension.y < center.y + halfDimension.y) ||
-//                 (other.center.y + other.halfDimension.y > center.y - halfDimension.y && other.center.y + other.halfDimension.y < center.y + halfDimension.y)));
-//                  //FIXME: HACK
-//    }
-//
-//    cpVect center;
-//    cpVect halfDimension;
-//};
+struct cpVect;
 
 class QuadTree {
 public:
-    QuadTree(QuadTree* parent, cpVect center, cpVect halfDimension);
-    QuadTree(QuadTree* parent, cpVect center, cpVect halfDimension, size_t nodeCapacity);
+    QuadTree(QuadTree* parent, cpBB bb);
+    QuadTree(QuadTree* parent, cpBB bb, size_t nodeCapacity);
 
     bool insert(Entity* entity);
     void subdivide();
@@ -56,7 +36,7 @@ public:
 
     void clear();
 
-//    AABB m_boundary;
+    cpBB m_boundary;
     size_t m_nodeCapacity;
 
     // leaves

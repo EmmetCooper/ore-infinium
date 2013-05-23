@@ -22,30 +22,28 @@
 
 #include <assert.h>
 
-QuadTree::QuadTree(QuadTree* parent, cpVect _center, cpVect _halfDimension)
-    : //m_boundary(_center, _halfDimension), HACK:
+QuadTree::QuadTree(QuadTree* parent, cpBB bb)
+    : m_boundary(bb),
       m_nodeCapacity(4),
       m_parent(parent)
 {
-    NW = NE = SW = SE = nullptr;
     m_points.reserve(m_nodeCapacity);
 }
 
-QuadTree::QuadTree(QuadTree* parent, cpVect _center, cpVect _halfDimension, size_t _nodeCapacity)
-    : //HACK: m_boundary(_center, _halfDimension),
+QuadTree::QuadTree(QuadTree* parent, cpBB bb, size_t _nodeCapacity)
+    : m_boundary(bb),
       m_nodeCapacity(_nodeCapacity),
       m_parent(parent)
 {
-    NW = NE = SW = SE = nullptr;
     m_points.reserve(m_nodeCapacity);
 }
 
 bool QuadTree::insert(Entity * entity)
 {
     Debug::assertf(entity, "quadtree insertion error, entity to insert was null (horrible api abuse)");
-//HACK    if (!m_boundary.containsPoint(entity)) {
-//HACK        return false;
-//HACK    }
+    if (!cpBBContainsVect(m_boundary, cpv(entity->position().x, entity->position().y))) {
+        return false;
+    }
 
     if (m_points.size() < m_nodeCapacity) {
         m_points.push_back(entity);
@@ -77,16 +75,12 @@ bool QuadTree::insert(Entity * entity)
 }
 
 void QuadTree::subdivide() {
-    /*
-     * HACK:
-    cpVect center = m_boundary.center;
-    cpVect newDim(m_boundary.halfDimension.x / 2, m_boundary.halfDimension.y / 2);
-
-    NW = new QuadTree(this, b2Vec2(center.x - newDim.x, center.y - newDim.y), newDim);
-    NE = new QuadTree(this, b2Vec2(center.x + newDim.x, center.y - newDim.y), newDim);
-    SW = new QuadTree(this, b2Vec2(center.x - newDim.x, center.y + newDim.y), newDim);
-    SE = new QuadTree(this, b2Vec2(center.x + newDim.x, center.y + newDim.y), newDim);
-    */
+    // create four children which fully divide this quad into four quads of equal area
+    cpVect quarterSize = cpv(m_boundary.r * 0.25, m_boundary.b * 0.25);
+    NW = new QuadTree(this, cpBBNew(m_boundary.l, m_boundary.t + quarterSize.y, m_boundary.l + quarterSize.x, m_boundary.t));
+    NE = new QuadTree(this, cpBBNew(m_boundary.l + quarterSize.x, m_boundary.t + quarterSize.y, m_boundary.r - quarterSize.x, m_boundary.t));
+    SW = new QuadTree(this, cpBBNew(m_boundary.l, m_boundary.b, m_boundary.l + quarterSize.x, m_boundary.b - quarterSize.y));
+    SE = new QuadTree(this, cpBBNew(m_boundary.l + quarterSize.x, m_boundary.b, m_boundary.r, m_boundary.t + quarterSize.y));
 }
 
 void QuadTree::queryRange(std::vector<Entity*> & list, cpBB range) {
