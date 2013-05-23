@@ -667,13 +667,14 @@ void World::itemQuickBarInventoryDropped(Entities::Player* player, Item* item, u
 
 void World::itemPrimaryActivated(Entities::Player* player, Item* item)
 {
+    assert(item);
+
     if (item->placeable()) {
         // place the item in the world (append to entity list)
         attemptItemPlacement(player);
+    } else {
+        item->activatePrimary();
     }
-
-    assert(item);
-    item->activatePrimary();
 }
 
 void World::itemSecondaryActivated(Entities::Player* player, Item* item)
