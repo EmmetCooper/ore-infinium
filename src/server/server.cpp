@@ -31,6 +31,7 @@
 #include <src/torch.h>
 #include <src/quickbarinventory.h>
 #include <src/globals.h>
+#include <src/tool.h>
 #include "src/../config.h"
 
 #include <google/protobuf/stubs/common.h>
@@ -462,11 +463,15 @@ Entities::Player* Server::createPlayer(const std::string& playerName)
     std::uniform_int_distribution<> distribution(1, 64);
 
     //TODO: load the player's inventory from file..for now, initialize *the whole thing* with bullshit
-    for (uint8_t i = 0; i < quickBarInventory->maxEquippedSlots(); ++i) {
+    for (uint8_t i = 0; i < 2; ++i) {
         Torch *torch = new Torch(glm::vec2(0, 0));
         torch->setStackSize(distribution(rand));
         quickBarInventory->setSlot(i, torch);
     }
+//
+    Tool *tool = new Tool(glm::vec2(0, 0));
+    tool->setToolType(Tool::ToolType::PickAxe);
+//    quickBarInventory->setSlot(2, tool);
 
     m_world->addPlayer(player);
 

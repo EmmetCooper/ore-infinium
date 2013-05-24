@@ -38,7 +38,7 @@ public:
        Bucket /// ?
     };
 
-    enum Material {
+    enum ToolMaterial {
        Wood,
        Stone,
        Steel,
@@ -71,9 +71,19 @@ public:
         m_primaryAttackDelay = delay;
     }
 
+    void setToolType(ToolType toolType) {
+        m_toolType = toolType;
+    }
+
+    void setToolMaterial(ToolMaterial toolMaterial) {
+        m_toolMaterial = toolMaterial;
+    }
+
 private:
     uint32_t m_primaryAttackDelay = 0;
-    Timer* m_primaryAttackTimer = nullptr;
+
+    uint32_t m_toolType = 0;
+    uint32_t m_toolMaterial = 0;
 
     /// meters
     float m_attackRadius = 10.0f;

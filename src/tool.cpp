@@ -26,16 +26,14 @@ Tool::Tool(const glm::vec2& position): Item("torch1Ground1")
     Item::setPosition(position);
     Item::setName("Tool-licious");
     Item::setDetails("a motherfucking tool");
-    Item::m_maximumStackSize = 32;
+    Item::m_maximumStackSize = 1;
+    Item::m_stackSize = 1;
     Item::m_type = Item::ItemType::Tool;
     Item::m_properties = Item::ItemProperties::Consumable;
-
-    m_primaryAttackTimer = new Timer();
 }
 
 Tool::~Tool()
 {
-    delete m_primaryAttackTimer;
 }
 
 Item* Tool::duplicate()
