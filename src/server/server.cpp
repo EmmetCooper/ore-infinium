@@ -468,7 +468,7 @@ Entities::Player* Server::createPlayer(const std::string& playerName)
         torch->setStackSize(distribution(rand));
         quickBarInventory->setSlot(i, torch);
     }
-//
+
     Tool *tool = new Tool(glm::vec2(0, 0));
     tool->setToolType(Tool::ToolType::PickAxe);
 //    quickBarInventory->setSlot(2, tool);

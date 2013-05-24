@@ -131,7 +131,9 @@ void QuickBarMenu::selectSlot(uint8_t index)
 
     currentElement->SetProperty("background-color", Rocket::Core::Property(selectedColor, Rocket::Core::Property::COLOUR));
 
-    showSwitchedTooltip(currentElement, index);
+    if (m_inventory->item(index) != nullptr) {
+        showSwitchedTooltip(currentElement, index);
+    }
 
     m_client->sendQuickBarInventorySlotSelectRequest(index);
 }
