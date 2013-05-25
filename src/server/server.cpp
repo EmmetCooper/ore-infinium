@@ -471,7 +471,8 @@ Entities::Player* Server::createPlayer(const std::string& playerName)
 
     Tool *tool = new Tool(glm::vec2(0, 0));
     tool->setToolType(Tool::ToolType::PickAxe);
-//    quickBarInventory->setSlot(2, tool);
+    tool->setToolMaterial(Tool::ToolMaterial::Wood);
+    quickBarInventory->setSlot(2, tool);
 
     m_world->addPlayer(player);
 
@@ -494,7 +495,7 @@ void Server::sendPlayerMove(Entities::Player* player)
 
 void Server::sendPlayerQuickBarInventory(Entities::Player* player, uint8_t index)
 {
-    Item* item = player->quickBarInventory()->item(index);
+    Item *item = player->quickBarInventory()->item(index);
 
     if (item == nullptr) {
         Debug::log(Debug::Area::ServerInventoryArea) << "warning, BAD SHIT HAPPENED, server tried sending a player's quickbar inventory but an element was nullptr, which means we didn't send as much as we should have, so the client is empty for this element index..VERY BAD SHIT";
@@ -511,10 +512,17 @@ void Server::sendPlayerQuickBarInventory(Entities::Player* player, uint8_t index
     message.set_index(index);
 
     switch (item->type()) {
-    case Item::ItemType::Torch:
-        Torch* torch = dynamic_cast<Torch*>(item);
+    case Item::ItemType::Torch: {
+        Torch *torch = dynamic_cast<Torch*>(item);
         message.set_radius(torch->radius());
         break;
+    }
+
+    case Item::ItemType::Tool: {
+        Tool *tool = dynamic_cast<Tool*>(item);
+        message.set_tooltype(tool->toolType());
+        message.set_material(tool->toolMaterial());
+    }
     }
 
     // search for the client associated with this player

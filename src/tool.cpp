@@ -43,6 +43,25 @@ Item* Tool::duplicate()
     return tool;
 }
 
+void Tool::setToolType(uint32_t toolType) {
+    m_toolType = toolType;
+    computeFrame();
+}
+
+void Tool::setToolMaterial(uint32_t toolMaterial) {
+    m_toolMaterial = toolMaterial;
+    computeFrame();
+}
+
+void Tool::computeFrame()
+{
+    if (m_toolType == ToolType::PickAxe) {
+        if (m_toolMaterial == ToolMaterial::Wood) {
+            setFrameName("pickaxeWooden1");
+        }
+    }
+}
+
 void Tool::activatePrimary()
 {
     //TODO: decrement duraability
@@ -50,4 +69,5 @@ void Tool::activatePrimary()
 
 void Tool::activateSecondary()
 {
+
 }

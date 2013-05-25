@@ -33,13 +33,13 @@ public:
     ~Tool();
 
     enum ToolType {
-       PickAxe,
+       PickAxe = 0,
        Axe,
        Bucket /// ?
     };
 
     enum ToolMaterial {
-       Wood,
+       Wood = 0,
        Stone,
        Steel,
        Diamond
@@ -63,27 +63,23 @@ public:
         m_attackRadius = radius;
     }
 
-    float primaryAttackDelay() const {
-        return m_primaryAttackDelay;
+    void setToolType(uint32_t toolType);
+    void setToolMaterial(uint32_t toolMaterial);
+
+    uint32_t toolType() {
+        return m_toolType;
     }
 
-    void setPrimaryAttackDelay(uint32_t delay) {
-        m_primaryAttackDelay = delay;
-    }
-
-    void setToolType(ToolType toolType) {
-        m_toolType = toolType;
-    }
-
-    void setToolMaterial(ToolMaterial toolMaterial) {
-        m_toolMaterial = toolMaterial;
+    uint32_t toolMaterial() {
+        return m_toolMaterial;
     }
 
 private:
-    uint32_t m_primaryAttackDelay = 0;
+    void computeFrame();
 
-    uint32_t m_toolType = 0;
-    uint32_t m_toolMaterial = 0;
+private:
+    uint32_t m_toolType = ToolType::PickAxe;
+    uint32_t m_toolMaterial = ToolMaterial::Wood;
 
     /// meters
     float m_attackRadius = 10.0f;

@@ -39,6 +39,7 @@
 #include "src/debug.h"
 #include <src/item.h>
 #include <src/torch.h>
+#include <src/tool.h>
 #include "src/../config.h"
 
 #include <random>
@@ -60,7 +61,7 @@ Client::Client()
 
     m_debugMenu = new DebugMenu(this);
     m_debugMenu->show();
-
+    startMultiplayerHost("SOME PLAYER NAME");
 //dws    std::stringstream ss;
 //    ss << "Player";
 //    std::random_device device;
@@ -823,7 +824,17 @@ void Client::receiveQuickBarInventoryItem(const std::string& packetContents)
         baseItem = torch;
         break;
     }
+
+    case Item::ItemType::Tool: {
+        Tool *tool = new Tool(position);
+        tool->setToolMaterial(message.material());
+        tool->setToolType(message.tooltype());
+
+        baseItem = tool;
     }
+    }
+
+    Debug::assertf(baseItem, "client received a quickbar inventory item, but doesn't know how to generate it");
 
     //NOTE: we don't give a shit about position and such, the server doesn't even send that
     //in inventory scenarios, since it doesn't matter.

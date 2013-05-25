@@ -11,5 +11,11 @@
  -  frameName: crosshairPickingActive
     x: 3
     y: 38
-    width: 56
-    height: 56
+    width: 16
+    height: 16
+
+ -  frameName: pickaxeWooden1
+    x: 79
+    y: 32
+    width: 32
+    height: 50

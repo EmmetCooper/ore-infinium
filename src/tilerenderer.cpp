@@ -187,11 +187,11 @@ void TileRenderer::render()
             indicesv.data(),
             GL_STATIC_DRAW);
 
-        glBufferData(
-            GL_ARRAY_BUFFER,
-            m_highestTileCount * 4 * sizeof(Vertex),
-            NULL,
-            GL_STREAM_DRAW);
+//        glBufferData(
+//            GL_ARRAY_BUFFER,
+//            m_highestTileCount * 4 * sizeof(Vertex),
+//            NULL,
+//            GL_STREAM_DRAW);
     }
 
     int drawingRow = 0;
