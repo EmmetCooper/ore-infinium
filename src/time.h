@@ -33,23 +33,23 @@ public:
      */
     void tick();
 
-    void setTime(uint8_t hour, uint8_t minute) { setHour(hour); setMinute(minute); }
+    void setTime(uint8_t hour, uint8_t minute, uint8_t second) { setHour(hour); setMinute(minute); setSecond(second); }
 
-    void setHour(uint8_t hour) { assert(hour <= 23 && hour > 0); m_hour = hour; }
+    void setHour(uint8_t hour) { assert(hour <= 23 && hour >= 0); m_hour = hour; }
 
     void setMinute(uint8_t minute) { assert(minute <= 59 && minute >= 0); m_minute = minute; }
 
     void setSecond(uint8_t second) { assert(second <= 59 && second >= 0); m_second = second; }
 
-    uint8_t currentHour() { return m_hour; }
-    uint8_t currentMinute() { return m_minute; }
-    uint8_t currentSecond() { return m_second; }
+    uint8_t hour() const { return m_hour; }
+    uint8_t minute() const { return m_minute; }
+    uint8_t second() const { return m_second; }
 
     /**
      * Returns the current time as a formatted string.
      * e.g. 12:45, 23:59, 00:00. 24-hour clock.
      */
-    std::string toString();
+    std::string toString() const;
 
 private:
 

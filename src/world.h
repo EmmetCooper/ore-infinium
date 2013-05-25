@@ -137,6 +137,15 @@ public:
         return m_cpSpace;
     }
 
+    const Time& worldTime() const {
+        return *m_time;
+    };
+
+    /**
+     * Only valid for the client, to change the world time based on what it received over the net..
+     */
+    void clientWorldTimeChanged(uint8_t hour, uint8_t minute, uint8_t second);
+
     //create containers of various entities, and implement a tile system
     //game.cpp calls into this each tick, which this descends downward into each entity
 private:

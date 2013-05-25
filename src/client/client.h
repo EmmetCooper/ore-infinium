@@ -119,6 +119,7 @@ private:
     void receivePlayerMove(const std::string& packetContents);
     void receiveChunk(const std::string& packetContents);
     void receiveItemSpawned(const std::string& packetContents);
+    void receiveWorldTimeChanged(const std::string& packetContents);
     void receiveQuickBarInventoryItem(const std::string& packetContents);
     void receiveQuickBarInventoryItemCountChanged(const std::string& packetContents);
 

@@ -30,6 +30,7 @@ class World;
 class Player;
 class Chunk;
 class Client;
+class Time;
 
 class Server
 {
@@ -59,6 +60,8 @@ public:
     void sendWorldChunk(Chunk* chunk);
     void sendItemSpawned(Item* item);
     void sendQuickBarInventoryItemCountChanged(Entities::Player* player, uint8_t index, uint8_t newCount);
+
+    void sendWorldTimeChanged();
 
     /**
      * Should be called when player's quickbarinventory has been modified at @p index,

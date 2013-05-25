@@ -688,6 +688,13 @@ void Client::processMessage(ENetEvent& event)
     case Packet::ItemSpawnedFromServerPacket:
         receiveItemSpawned(packetContents);
         break;
+
+    case Packet::WorldTimeChangedFromServerPacket:
+        receiveWorldTimeChanged(packetContents);
+        break;
+
+    default:
+        Debug::assertf(false, "Client failure, unhandled packet type received from server, it needs implemented apparently.");
     }
 
     enet_packet_destroy(event.packet);
@@ -788,6 +795,14 @@ void Client::receiveChunk(const std::string& packetContents)
     Chunk chunk(message.startx(), message.starty(), message.endx(), message.endy(), &blocks);
 
     m_world->loadChunk(&chunk);
+}
+
+void Client::receiveWorldTimeChanged(const std::string& packetContents)
+{
+    PacketBuf::WorldTimeChangedFromServer message;
+    Packet::deserialize(packetContents, &message);
+
+    m_world->clientWorldTimeChanged(message.hour(), message.minute(), message.second());
 }
 
 void Client::receiveQuickBarInventoryItemCountChanged(const std::string& packetContents)

@@ -437,7 +437,7 @@ void SkyRenderer::renderSkyBackgroundDay()
 
     GLint timeOrigLoc = glGetUniformLocation(m_skyBackgroundDayShader->shaderProgram(), "timeOrig");
 
-    float timeOrig = float(m_time->currentHour()) + (float(m_time->currentMinute()) / 60.0);
+    float timeOrig = float(m_time->hour()) + (float(m_time->minute()) / 60.0);
     glUniform1f(timeOrigLoc, timeOrig);
 
     int index = 0;
@@ -579,8 +579,6 @@ void SkyRenderer::renderSkyBackgroundNight()
 
     float time = float(SDL_GetTicks());
     glUniform1f(timeLoc, time);
-
-    Debug::log(Debug::Area::StartupArea) << "timeOrig: " << (short)m_time->currentHour();
 
     int index = 0;
 
@@ -796,9 +794,9 @@ void SkyRenderer::update(const float elapsedTime)
     assert(m_time);
 
     glm::vec2 viewportCenter = glm::vec2(1600/2, 900/2);
-    const double hour = m_time->currentHour();
-    const double minute = m_time->currentMinute();
-    const double second = m_time->currentSecond();
+    const double hour = m_time->hour();
+    const double minute = m_time->minute();
+    const double second = m_time->second();
 
     ///// SUN
     double timeAngle = 360.0 * (double(hour) * 60.0 + double(minute) + double(second) / 60.0) / (24.0 * 60.0);

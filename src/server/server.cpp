@@ -28,6 +28,7 @@
 #include <src/camera.h>
 #include <src/world.h>
 #include <src/chunk.h>
+#include <src/time.h>
 #include <src/torch.h>
 #include <src/quickbarinventory.h>
 #include <src/globals.h>
@@ -196,6 +197,8 @@ void Server::processMessage(ENetEvent& event)
                 sendPlayerQuickBarInventory(m_clients[event.peer], index);
             }
             break;
+
+            sendWorldTimeChanged();
         }
 
         case Packet::ConnectionEventType::DisconnectedInvalidPlayerName:
@@ -491,6 +494,18 @@ void Server::sendPlayerMove(Entities::Player* player)
     Debug::log(Debug::NetworkServerContinuousArea) << "Sending player move, position x: " << player->position().x << " y: " << player->position().y;
 
     Packet::sendPacketBroadcast(m_server, &message, Packet::FromServerPacketContents::PlayerMoveFromServerPacket, ENET_PACKET_FLAG_UNSEQUENCED);
+}
+
+void Server::sendWorldTimeChanged()
+{
+    const Time& time = m_world->worldTime();
+
+    PacketBuf::WorldTimeChangedFromServer message;
+    message.set_hour(time.hour());
+    message.set_minute(time.minute());
+    message.set_second(time.second());
+
+    Packet::sendPacketBroadcast(m_server, &message, Packet::FromServerPacketContents::WorldTimeChangedFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
 }
 
 void Server::sendPlayerQuickBarInventory(Entities::Player* player, uint8_t index)

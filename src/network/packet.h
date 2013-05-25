@@ -81,7 +81,8 @@ public:
         ChunkFromServerPacket,
 
         /// when a new item has been spawned in the world (dropped or placed)
-        ItemSpawnedFromServerPacket
+        ItemSpawnedFromServerPacket,
+        WorldTimeChangedFromServerPacket
     };
 
     enum ConnectionEventType {

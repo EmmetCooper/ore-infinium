@@ -49,9 +49,10 @@ void Time::tick()
     }
 
     assert(m_minute <= 59 && m_second <= 59);
+    assert(m_hour <= 23);
 }
 
-std::string Time::toString()
+std::string Time::toString() const
 {
     std::stringstream ss;
     ss << short(m_hour) << ":";

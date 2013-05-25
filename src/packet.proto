@@ -15,6 +15,12 @@ message ChatMessageFromClient {
     optional string message = 1;
 }
 
+message WorldTimeChangedFromServer {
+    optional uint32 hour = 1;
+    optional uint32 minute = 2;
+    optional uint32 second = 3;
+}
+
 message ChatMessageFromServer {
     optional string playerName = 1;
     optional string message = 2;

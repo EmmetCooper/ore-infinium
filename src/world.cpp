@@ -101,7 +101,7 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
     }
 
     m_time = new Time();
-    m_time->setTime(13, 59);
+    m_time->setTime(13, 59, 0);
 
     //client doesn't actually load/generate any world
     if (m_server) {
@@ -352,8 +352,6 @@ void World::update(double elapsedTime)
     //FIXME: MAKE IT CENTER ON THE CENTER OF THE PLAYER SPRITE
     //only occurs on client side, obviously the server doesn't need to do this stuff
     if (m_client) {
-        //HACK: FIXME receive it over the net, obviously.
-        m_time->tick();
         m_sky->update(elapsedTime);
     }
 
@@ -366,8 +364,11 @@ void World::update(double elapsedTime)
         }
     }
 
+    //NOTE: both client and server tick their time. just that the client gets it sync'ed once at connect and further timejumps
+    m_time->tick();
+
     if (m_server) {
-        m_time->tick();
+
         updateTilePhysicsObjects();
 
         cpSpaceStep(m_cpSpace, FIXED_TIMESTEP);
@@ -375,6 +376,8 @@ void World::update(double elapsedTime)
         if (m_server->client() && m_server->client()->physicsDebugRenderer()) {
             static bool physicsRenderingFlushNeeded = true;
 
+            /// so that we don't flood the renderer with mutex/sync issues..since that's the slowest part
+            /// obviously only applicable to physics debug rendering, when client is hosting the server.
             if (m_physicsRendererFlushTimer.milliseconds() >= 500) {
                 m_server->client()->physicsDebugRenderer()->iterateShapesInSpace(m_cpSpace);
                 m_physicsRendererFlushTimer.reset();
@@ -776,6 +779,11 @@ void World::spawnItem(Item* item)
     }
 
     m_spriteSheetRenderer->registerSprite(item);
+}
+
+void World::clientWorldTimeChanged(uint8_t hour, uint8_t minute, uint8_t second)
+{
+    m_time->setTime(hour, minute, second);
 }
 
 void World::tileRemovedPostStepCallback(cpSpace* space, void* obj, void* data)
