@@ -154,7 +154,6 @@ void TileRenderer::render()
         assert(0);
     }
 
-    //TODO: needs improvement, it's a bit of a hack to buffer blank data then subdata
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     const uint32_t totalTiles = (endRow - startRow) * (endColumn - startColumn);
     if (totalTiles > m_highestTileCount || m_firstRun) {
@@ -174,7 +173,6 @@ void TileRenderer::render()
             }
         }
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
         glBindVertexArray(m_vao);
 
         glDeleteBuffers(1, &m_ebo);
@@ -186,12 +184,6 @@ void TileRenderer::render()
             indicesv.size() * sizeof(uint32_t),
             indicesv.data(),
             GL_STATIC_DRAW);
-
-//        glBufferData(
-//            GL_ARRAY_BUFFER,
-//            m_highestTileCount * 4 * sizeof(Vertex),
-//            NULL,
-//            GL_STREAM_DRAW);
     }
 
     int drawingRow = 0;
@@ -285,7 +277,7 @@ void TileRenderer::render()
             int32_t color = red | (green << 8) | (blue << 16) | (alpha << 24);
 
             // copy color to the buffer
-            for (size_t i = 0; i < sizeof(quad.vertices) / sizeof(*quad.vertices); i++) {
+            for (size_t i = 0; i < 4; i++) {
                 //        *colorp = color.bgra;
                 quad.vertices[i].color = color;
             }
@@ -315,7 +307,6 @@ void TileRenderer::render()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     glBindVertexArray(m_vao);
-
 
     m_shader->bindProgram();
 
