@@ -818,7 +818,7 @@ void World::tileRemovedPostStepCallback(cpSpace* space, void* obj, void* data)
     world->m_tileShapesToDestroy.clear();
 }
 
-void World::attackTilePhysicsObjectCallback(cpShape* shape, cpFloat t, cpVect n, void *data)
+void World::attackTilePhysicsObjectCallback(cpShape* shape, void *data)
 {
     ContactListener::BodyUserData* userData = static_cast<ContactListener::BodyUserData*>(cpShapeGetUserData(shape));
     assert(userData);
@@ -854,14 +854,12 @@ void World::attackTilePhysicsObject(const glm::vec2& positionToAttack, Entities:
 {
     //HACK: this presents an issue..we need to notify, upon tile destruction, to the corresponding active chunk, that this tile has been removed so it doesn't attempt to delete that shit.
 
-    cpVect start = cpv(player->position().x, player->position().y);
-    cpVect end = cpv(positionToAttack.x, positionToAttack.y);
+    cpVect point = cpv(positionToAttack.x, positionToAttack.y);
 
     cpLayers layers = CP_ALL_LAYERS;
     cpGroup group = CP_NO_GROUP;
 
-    cpSpaceSegmentQuery(m_cpSpace, start, end, layers, group, &World::attackTilePhysicsObjectCallback, this);
-
+    cpSpacePointQuery(m_cpSpace, point, layers, group, &World::attackTilePhysicsObjectCallback, this);
 
 //     FIXME:
 //    b2AABB aabb;
