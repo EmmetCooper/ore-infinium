@@ -249,7 +249,7 @@ void DecoratorSpriteSheet::RenderElement(Rocket::Core::Element* element, Rocket:
     const float spriteLeft = textureX;
     const float spriteRight = spriteLeft + textureWidth;
     const float spriteTop = (textureY);
-    const float spriteBottom = textureHeight;
+    const float spriteBottom = textureY + textureHeight;
 
     // copy texcoords to the buffer
     vertices[0].u = vertices[1].u = spriteLeft;

@@ -42,6 +42,7 @@
 #include "timer.h"
 #include "quadtree.h"
 #include "activechunk.h"
+#include "tool.h"
 
 #include <chipmunk/chipmunk.h>
 
@@ -134,6 +135,10 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
     if (m_client) {
         m_sky = new SkyRenderer(this, m_camera, m_time);
+        Tool* tool = new Tool(glm::vec2(2350/PIXELS_PER_METER, 1410/ PIXELS_PER_METER));
+        tool->setToolMaterial(Tool::ToolMaterial::Wood);
+        tool->setToolType(Tool::ToolType::PickAxe);
+        m_spriteSheetRenderer->registerSprite(tool);
     }
 }
 
