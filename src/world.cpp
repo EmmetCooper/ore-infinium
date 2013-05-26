@@ -135,10 +135,11 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
     if (m_client) {
         m_sky = new SkyRenderer(this, m_camera, m_time);
-        Tool* tool = new Tool(glm::vec2(2350/PIXELS_PER_METER, 1410/ PIXELS_PER_METER));
-        tool->setToolMaterial(Tool::ToolMaterial::Wood);
-        tool->setToolType(Tool::ToolType::PickAxe);
-        m_spriteSheetRenderer->registerSprite(tool);
+        //FIXME: remove, junk
+        //Tool* tool = new Tool(glm::vec2(2350/PIXELS_PER_METER, 1410/ PIXELS_PER_METER));
+        //tool->setToolMaterial(Tool::ToolMaterial::Wood);
+        //tool->setToolType(Tool::ToolType::PickAxe);
+        //m_spriteSheetRenderer->registerSprite(tool);
     }
 }
 
@@ -681,6 +682,13 @@ void World::itemPrimaryActivated(Entities::Player* player, Item* item)
         // place the item in the world (append to entity list)
         attemptItemPlacement(player);
     } else {
+        if (item->type() == Item::ItemType::Tool) {
+            Tool* tool = dynamic_cast<Tool*>(item);
+            if (tool->toolType() == Tool::ToolType::PickAxe) {
+                performBlockAttack(player);
+            }
+        }
+
         item->activatePrimary();
     }
 }
@@ -692,11 +700,6 @@ void World::itemSecondaryActivated(Entities::Player* player, Item* item)
 
 void World::handlePlayerLeftMouse(Entities::Player* player)
 {
-    //TODO: HANDLE INVENTORY AND TAKE THAT INTO ACCOUNT
-  //   performBlockAttack(player);
-     //FIXME:
- //   return;
-
     // FIXME: HACK: perform the action based on what type of thing is equipped.
     // if it's a sword we attack shit, if it's a pickaxe we attack blocks. for now, lets
     // just try to place the equipped object in the world
