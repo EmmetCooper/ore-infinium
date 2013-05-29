@@ -22,6 +22,7 @@
 
 #include <chipmunk/chipmunk.h>
 
+class QuadTreeRenderer;
 struct cpBB;
 struct cpVect;
 
@@ -31,10 +32,12 @@ public:
     QuadTree(QuadTree* parent, cpBB bb, size_t nodeCapacity);
 
     bool insert(Entity* entity);
-    void subdivide();
     void queryRange(std::vector<Entity*> & emptyInputList, cpBB bb);
 
     void clear();
+
+private:
+    void subdivide();
 
     cpBB m_boundary;
     size_t m_nodeCapacity;
@@ -49,6 +52,8 @@ public:
 
     // data
     std::vector<Entity*> m_points;
+
+    friend class QuadTreeRenderer;
 };
 
 #endif // __QUADTREE__
