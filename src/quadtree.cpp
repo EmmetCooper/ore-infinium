@@ -42,6 +42,7 @@ bool QuadTree::insert(Entity * entity)
 {
     Debug::assertf(entity, "quadtree insertion error, entity to insert was null (horrible api abuse)");
     if (!cpBBContainsVect(m_boundary, cpv(entity->position().x, entity->position().y))) {
+//        Debug::log(Debug::ImportantArea) << "enttity position x: " << entity->position().x << " y: " << entity->position().y << " bounding box does not contain it. BB left: " << m_boundary.l << " right: " << m_boundary.r << " bottom: " << m_boundary.b << " top: " << m_boundary.t;
         return false;
     }
 
@@ -85,9 +86,11 @@ void QuadTree::subdivide() {
 
 void QuadTree::queryRange(std::vector<Entity*>* list, cpBB range) {
     if (!cpBBIntersects(range, m_boundary)) {
+        Debug::log(Debug::Area::ImportantArea) << "INTERSECTION FAILURE";
        return; //return unchanged (empty) list.
     }
 
+        Debug::log(Debug::Area::ImportantArea) << "INTERSECTION SUCCASS";
 
     if (NW == nullptr) {
         return ;

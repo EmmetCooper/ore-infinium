@@ -106,7 +106,7 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
     //client doesn't actually load/generate any world
     if (m_server) {
-        cpBB bb = cpBBNew(0.0, Block::BLOCK_SIZE * WORLD_ROWCOUNT, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, 0.0);
+        cpBB bb = cpBBNew(0.0, 0.0, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, Block::BLOCK_SIZE * WORLD_ROWCOUNT);
         m_torchesQuadTree = new QuadTree(nullptr, bb);
 
 //        cpVect gravity = cpv(0, -100);
@@ -375,8 +375,11 @@ void World::update(double elapsedTime)
 
     if (m_server) {
         std::vector<Entity*> list;
-        cpBB bb = cpBBNew(0, 0, 0, 0);
+        cpBB bb = cpBBNew(0.0, 0.0,WORLD_COLUMNCOUNT* Block::BLOCK_SIZE,  WORLD_ROWCOUNT * Block::BLOCK_SIZE);
         m_torchesQuadTree->queryRange(&list, bb);
+
+        Debug::log(Debug::ImportantArea) << "server torch count: " << m_torches.size();
+        Debug::log(Debug::ImportantArea) << "server torch quadtree query: " << list.size();
 
         updateTilePhysicsObjects();
 
