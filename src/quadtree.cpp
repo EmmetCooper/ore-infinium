@@ -83,7 +83,7 @@ void QuadTree::subdivide() {
     SE = new QuadTree(this, cpBBNew(m_boundary.l + quarterSize.x, m_boundary.b, m_boundary.r, m_boundary.t + quarterSize.y));
 }
 
-void QuadTree::queryRange(std::vector<Entity*> & list, cpBB range) {
+void QuadTree::queryRange(std::vector<Entity*>* list, cpBB range) {
     if (!cpBBIntersects(range, m_boundary)) {
        return; //return unchanged (empty) list.
     }
@@ -96,7 +96,7 @@ void QuadTree::queryRange(std::vector<Entity*> & list, cpBB range) {
     for (size_t i = 0; i < m_points.size(); ++i) {
        const glm::vec2& position = m_points[i]->position();
         if (cpBBContainsVect(m_boundary, cpv(position.x, position.y))) {
-            list.push_back(m_points[i]);
+            list->push_back(m_points[i]);
         }
     }
 

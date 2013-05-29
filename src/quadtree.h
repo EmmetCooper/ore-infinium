@@ -32,7 +32,7 @@ public:
     QuadTree(QuadTree* parent, cpBB bb, size_t nodeCapacity);
 
     bool insert(Entity* entity);
-    void queryRange(std::vector<Entity*> & emptyInputList, cpBB bb);
+    void queryRange(std::vector<Entity*>* emptyInputList, cpBB bb);
 
     void clear();
 

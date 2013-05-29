@@ -374,7 +374,9 @@ void World::update(double elapsedTime)
     m_time->tick();
 
     if (m_server) {
-//        m_torchesQuadTree->queryRange();
+        std::vector<Entity*> list;
+        cpBB bb = cpBBNew(0, 0, 0, 0);
+        m_torchesQuadTree->queryRange(&list, bb);
 
         updateTilePhysicsObjects();
 
