@@ -460,17 +460,14 @@ Entities::Player* Server::createPlayer(const std::string& playerName)
     QuickBarInventory* quickBarInventory = new QuickBarInventory();
     player->setQuickBarInventory(quickBarInventory);
 
-    std::random_device device;
-    std::mt19937 rand(device());
-    //FIXME: convert to 1, n
-    std::uniform_int_distribution<> distribution(1, 64);
-
     //TODO: load the player's inventory from file..for now, initialize *the whole thing* with bullshit
-    for (uint8_t i = 0; i < 2; ++i) {
-        Torch *torch = new Torch(glm::vec2(0, 0));
-        torch->setStackSize(distribution(rand));
-        quickBarInventory->setSlot(i, torch);
-    }
+    Torch *torch = new Torch(glm::vec2(0, 0));
+    torch->setStackSize(64);
+    quickBarInventory->setSlot(0, torch);
+
+    Torch *torch2 = new Torch(glm::vec2(0, 0));
+    torch2->setStackSize(64);
+    quickBarInventory->setSlot(1, torch2);
 
     Tool *tool = new Tool(glm::vec2(0, 0));
     tool->setToolType(Tool::ToolType::PickAxe);
