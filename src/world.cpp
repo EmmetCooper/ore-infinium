@@ -374,6 +374,7 @@ void World::update(double elapsedTime)
     m_time->tick();
 
     if (m_server) {
+//        m_torchesQuadTree->queryRange();
 
         updateTilePhysicsObjects();
 
