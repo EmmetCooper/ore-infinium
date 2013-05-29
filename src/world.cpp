@@ -549,16 +549,7 @@ void World::generateWorld()
             int index = column * WORLD_ROWCOUNT + lastRow;
             Block& block = m_blocks[index];
             block.primitiveType = distribution(rand);
-        }
-    }
-
-    /// set the wall type for each "underground" tile. null ones are ignored.
-    for (int row = 0; row < WORLD_ROWCOUNT; ++row) {
-        for (int column = 0; column < WORLD_COLUMNCOUNT; ++column) {
-            int index = column * WORLD_ROWCOUNT + row;
-            Block& block = m_blocks[index];
-
-            block.wallType =  Block::WallType::DirtWallType;
+            block.wallType = Block::WallType::DirtWallType;
         }
     }
 

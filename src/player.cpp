@@ -106,7 +106,7 @@ void Player::createPhysicsBody(World* world, const glm::vec2& position)
     cpSpaceAddBody(space, m_body);
     cpBodySetPos(m_body, cpv(position.x, position.y));
 
-    cpShape *groundShape = cpCircleShapeNew(m_body , size.y * 0.25, cpvzero);
+    cpShape *groundShape = cpCircleShapeNew(m_body , size.y * 0.25, cpv(0, size.y * 0.25));
     cpShapeSetUserData(groundShape, userData);
     cpShapeSetFriction(groundShape, 17.5);
 
