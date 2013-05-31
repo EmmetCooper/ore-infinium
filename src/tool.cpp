@@ -43,12 +43,14 @@ Item* Tool::duplicate()
     return tool;
 }
 
-void Tool::setToolType(uint32_t toolType) {
+void Tool::setToolType(uint32_t toolType)
+{
     m_toolType = toolType;
     computeFrame();
 }
 
-void Tool::setToolMaterial(uint32_t toolMaterial) {
+void Tool::setToolMaterial(uint32_t toolMaterial)
+{
     m_toolMaterial = toolMaterial;
     computeFrame();
 }

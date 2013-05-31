@@ -26,7 +26,7 @@ bool contains(const std::string& str)
 {
     for (size_t i = 0; i < args.size(); ++i) {
         if (args[i] == str) {
-        return true;
+            return true;
         }
     }
 

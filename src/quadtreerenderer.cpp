@@ -59,8 +59,8 @@ void QuadTreeRenderer::initGL()
     glBufferData(
         GL_ARRAY_BUFFER,
         m_maxVBOSize * 4 * sizeof(Vertex),
-                 NULL,
-                 GL_DYNAMIC_DRAW);
+        NULL,
+        GL_DYNAMIC_DRAW);
 
     Debug::checkGLError();
 
@@ -80,8 +80,8 @@ void QuadTreeRenderer::initGL()
     glBufferData(
         GL_ELEMENT_ARRAY_BUFFER,
         indicesv.size()*sizeof(uint32_t),
-                 indicesv.data(),
-                 GL_STATIC_DRAW);
+        indicesv.data(),
+        GL_STATIC_DRAW);
 
     Debug::checkGLError();
 
@@ -95,7 +95,7 @@ void QuadTreeRenderer::initGL()
         GL_FLOAT,
         GL_FALSE,
         sizeof(Vertex),
-                          (const GLvoid*)buffer_offset);
+        (const GLvoid*)buffer_offset);
     buffer_offset += sizeof(float) * 2;
 
     GLint color_attrib = glGetAttribLocation(m_shader->shaderProgram(), "color");
@@ -109,7 +109,7 @@ void QuadTreeRenderer::initGL()
         GL_UNSIGNED_BYTE,
         GL_TRUE,
         sizeof(Vertex),
-                          (const GLvoid*)buffer_offset);
+        (const GLvoid*)buffer_offset);
     buffer_offset += sizeof(uint32_t);
 
     Debug::checkGLError();
@@ -179,8 +179,8 @@ void QuadTreeRenderer::uploadVertices(QuadTree *tree)
     glBufferSubData(
         GL_ARRAY_BUFFER,
         sizeof(vertices) * m_index,
-                    sizeof(vertices),
-                    vertices);
+        sizeof(vertices),
+        vertices);
 
     ++m_index;
 
@@ -193,7 +193,7 @@ void QuadTreeRenderer::uploadVertices(QuadTree *tree)
 void QuadTreeRenderer::render()
 {
     m_index = 0;
-    for (QuadTree* tree : m_trees) {
+    for (QuadTree * tree : m_trees) {
         uploadVertices(tree);
     }
     Debug::log(Debug::ClientRendererArea) << "tree index count: " << m_index;
@@ -217,8 +217,8 @@ void QuadTreeRenderer::render()
     glDrawElements(
         GL_TRIANGLES,
         6 * (m_index + 1), // 6 indices per 2 triangles
-                   GL_UNSIGNED_INT,
-                   (const GLvoid*)0);
+        GL_UNSIGNED_INT,
+        (const GLvoid*)0);
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 

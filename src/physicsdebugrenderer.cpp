@@ -95,7 +95,7 @@ void PhysicsDebugRenderer::initGLPolygons()
         GL_FLOAT,
         GL_FALSE,
         sizeof(Vertex),
-                          (const GLvoid*)0
+        (const GLvoid*)0
     );
     buffer_offset += sizeof(float) * 2;
     Debug::checkGLError();
@@ -111,7 +111,7 @@ void PhysicsDebugRenderer::initGLPolygons()
         GL_UNSIGNED_BYTE,
         GL_TRUE,
         sizeof(Vertex),
-                          (const GLvoid*)buffer_offset);
+        (const GLvoid*)buffer_offset);
     buffer_offset += sizeof(uint32_t);
 
     glGenBuffers(1, &m_iboPolygons);
@@ -141,7 +141,7 @@ void PhysicsDebugRenderer::initGLSolidPolygons()
         GL_FLOAT,
         GL_FALSE,
         sizeof(Vertex),
-                          (const GLvoid*)0
+        (const GLvoid*)0
     );
     buffer_offset += sizeof(float) * 2;
     Debug::checkGLError();
@@ -157,7 +157,7 @@ void PhysicsDebugRenderer::initGLSolidPolygons()
         GL_UNSIGNED_BYTE,
         GL_TRUE,
         sizeof(Vertex),
-                          (const GLvoid*)buffer_offset);
+        (const GLvoid*)buffer_offset);
     buffer_offset += sizeof(uint32_t);
 
     glGenBuffers(1, &m_iboSolidPolygons);
@@ -187,7 +187,7 @@ void PhysicsDebugRenderer::initGLSolidCircles()
         GL_FLOAT,
         GL_FALSE,
         sizeof(Vertex),
-                          (const GLvoid*)0
+        (const GLvoid*)0
     );
     buffer_offset += sizeof(float) * 2;
     Debug::checkGLError();
@@ -203,7 +203,7 @@ void PhysicsDebugRenderer::initGLSolidCircles()
         GL_UNSIGNED_BYTE,
         GL_TRUE,
         sizeof(Vertex),
-                          (const GLvoid*)buffer_offset);
+        (const GLvoid*)buffer_offset);
     buffer_offset += sizeof(uint32_t);
 
     glGenBuffers(1, &m_iboSolidCircles);
@@ -233,7 +233,7 @@ void PhysicsDebugRenderer::initGLSegments()
         GL_FLOAT,
         GL_FALSE,
         sizeof(Vertex),
-                          (const GLvoid*)0
+        (const GLvoid*)0
     );
     buffer_offset += sizeof(float) * 2;
     Debug::checkGLError();
@@ -249,7 +249,7 @@ void PhysicsDebugRenderer::initGLSegments()
         GL_UNSIGNED_BYTE,
         GL_TRUE,
         sizeof(Vertex),
-                          (const GLvoid*)buffer_offset);
+        (const GLvoid*)buffer_offset);
     buffer_offset += sizeof(uint32_t);
 
     glGenBuffers(1, &m_iboSegments);
@@ -261,7 +261,7 @@ void PhysicsDebugRenderer::initGLSegments()
 }
 
 void PhysicsDebugRenderer::DrawPolygon(const cpVect* vertices, int32_t vertexCount, PhysicsDebugRenderer::Color color)
-    //const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
+//const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
 {
 //    const size_t iboOffset = m_verticesPolygons.size();
 //
@@ -316,27 +316,27 @@ void PhysicsDebugRenderer::DrawSolidPolygon(const cpVect* vertices, int32_t vert
 //FIXME: the circle calls need to be fixed to not run a draw call each polygon count
 //void PhysicsDebugRenderer::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color)
 //{
- //   assert(0);
-    /*
-    const float32 k_segments = 16.0f;
-    int vertexCount=16;
-    const float32 k_increment = 2.0f * b2_pi / k_segments;
-    float32 theta = 0.0f;
+//   assert(0);
+/*
+const float32 k_segments = 16.0f;
+int vertexCount=16;
+const float32 k_increment = 2.0f * b2_pi / k_segments;
+float32 theta = 0.0f;
 
-    GLdouble                         glVertices[vertexCount*2];
-    for (int32 i = 0; i < k_segments; ++i)
-    {
-        b2Vec2 v = center + radius * b2Vec2(cosf(theta), sinf(theta));
-        glVertices[i*2]=v.x;
-        glVertices[i*2+1]=v.y;
-        theta += k_increment;
-    }
+GLdouble                         glVertices[vertexCount*2];
+for (int32 i = 0; i < k_segments; ++i)
+{
+    b2Vec2 v = center + radius * b2Vec2(cosf(theta), sinf(theta));
+    glVertices[i*2]=v.x;
+    glVertices[i*2+1]=v.y;
+    theta += k_increment;
+}
 
-    glColor4f(color.r, color.g, color.b,1);
-    glVertexPointer(2, GL_DOUBLE, 0, glVertices);
+glColor4f(color.r, color.g, color.b,1);
+glVertexPointer(2, GL_DOUBLE, 0, glVertices);
 
-    glDrawArrays(GL_TRIANGLE_FAN, 0, vertexCount);
-    */
+glDrawArrays(GL_TRIANGLE_FAN, 0, vertexCount);
+*/
 //}
 
 void PhysicsDebugRenderer::DrawSolidCircle(cpVect center, cpFloat radius, cpFloat rotation, PhysicsDebugRenderer::Color color)
@@ -347,8 +347,7 @@ void PhysicsDebugRenderer::DrawSolidCircle(cpVect center, cpFloat radius, cpFloa
     cpFloat theta = 0.0f;
 
     std::vector<Vertex> vertices;
-    for (uint32_t i = 0; i < k_segments; ++i)
-    {
+    for (uint32_t i = 0; i < k_segments; ++i) {
         cpVect v = cpv(radius * cosf(theta) + center.x, radius * sinf(theta) + center.y);
         Vertex vert;
         vert.x = v.x;
@@ -595,50 +594,51 @@ PhysicsDebugRenderer::Color PhysicsDebugRenderer::ColorFromHash(cpHashValue hash
     unsigned long val = (unsigned long)hash;
 
     // scramble the bits up using Robert Jenkins' 32 bit integer hash function
-    val = (val+0x7ed55d16) + (val<<12);
-    val = (val^0xc761c23c) ^ (val>>19);
-    val = (val+0x165667b1) + (val<<5);
-    val = (val+0xd3a2646c) ^ (val<<9);
-    val = (val+0xfd7046c5) + (val<<3);
-    val = (val^0xb55a4f09) ^ (val>>16);
+    val = (val + 0x7ed55d16) + (val << 12);
+    val = (val ^ 0xc761c23c) ^ (val >> 19);
+    val = (val + 0x165667b1) + (val << 5);
+    val = (val + 0xd3a2646c) ^ (val << 9);
+    val = (val + 0xfd7046c5) + (val << 3);
+    val = (val ^ 0xb55a4f09) ^ (val >> 16);
 
-    GLdouble r = (val>>0) & 0xFF;
-    GLdouble g = (val>>8) & 0xFF;
-    GLdouble b = (val>>16) & 0xFF;
+    GLdouble r = (val >> 0) & 0xFF;
+    GLdouble g = (val >> 8) & 0xFF;
+    GLdouble b = (val >> 16) & 0xFF;
 
     GLdouble max = cpfmax(cpfmax(r, g), b);
     GLdouble min = cpfmin(cpfmin(r, g), b);
     GLdouble intensity = 0.75;
 
     // Saturate and scale the color
-    if(min == max){
+    if (min == max) {
         return RGBAColor(intensity, 0.0, 0.0, alpha);
     } else {
-        GLdouble coef = alpha*intensity/(max - min);
+        GLdouble coef = alpha * intensity / (max - min);
         return RGBAColor(
-            (r - min)*coef,
-                         (g - min)*coef,
-                         (b - min)*coef,
-                         alpha
-        );
+                   (r - min) * coef,
+                   (g - min) * coef,
+                   (b - min) * coef,
+                   alpha
+               );
     }
 }
 
 inline void
-PhysicsDebugRenderer::glColor_from_color(Color color){
-  //FIXME: HACK:  glColor4fv((GLdouble *)&color);
+PhysicsDebugRenderer::glColor_from_color(Color color)
+{
+    //FIXME: HACK:  glColor4fv((GLdouble *)&color);
 }
 
 PhysicsDebugRenderer::Color PhysicsDebugRenderer::ColorForShape(cpShape *shape)
 {
-    if(cpShapeGetSensor(shape)){
+    if (cpShapeGetSensor(shape)) {
         return LAColor(1, 0);
     } else {
         cpBody *body = shape->body;
 
-        if(cpBodyIsSleeping(body)){
+        if (cpBodyIsSleeping(body)) {
             return LAColor(0.2, 1);
-        } else if(body->node.idleTime > shape->space->sleepTimeThreshold) {
+        } else if (body->node.idleTime > shape->space->sleepTimeThreshold) {
             return LAColor(0.66, 1);
         } else {
             return ColorFromHash(shape->hashid, SHAPE_ALPHA);
@@ -699,24 +699,24 @@ void PhysicsDebugRenderer::ChipmunkDebugDrawShape(cpShape *shape)
     cpBody *body = shape->body;
     Color color = ColorForShape(shape);
 
-    switch(shape->klass->type){
-        case CP_CIRCLE_SHAPE: {
-            cpCircleShape *circle = (cpCircleShape *)shape;
-            DrawSolidCircle(circle->tc, circle->r, body->a, color);
-            break;
-        }
-        case CP_SEGMENT_SHAPE: {
-            cpSegmentShape *seg = (cpSegmentShape *)shape;
+    switch (shape->klass->type) {
+    case CP_CIRCLE_SHAPE: {
+        cpCircleShape *circle = (cpCircleShape *)shape;
+        DrawSolidCircle(circle->tc, circle->r, body->a, color);
+        break;
+    }
+    case CP_SEGMENT_SHAPE: {
+        cpSegmentShape *seg = (cpSegmentShape *)shape;
 //                ChipmunkDebugDrawFatSegment(seg->ta, seg->tb, seg->r, LINE_COLOR, color);
-            break;
-        }
-        case CP_POLY_SHAPE: {
-            cpPolyShape *poly = (cpPolyShape *)shape;
-            //ChipmunkDebugDrawPolygon(poly->numVerts, poly->tVerts, LINE_COLOR, color);
-            DrawSolidPolygon(poly->tVerts, poly->numVerts, color);
-            break;
-        }
-        default: break;
+        break;
+    }
+    case CP_POLY_SHAPE: {
+        cpPolyShape *poly = (cpPolyShape *)shape;
+        //ChipmunkDebugDrawPolygon(poly->numVerts, poly->tVerts, LINE_COLOR, color);
+        DrawSolidPolygon(poly->tVerts, poly->numVerts, color);
+        break;
+    }
+    default: break;
     }
 }
 
@@ -747,20 +747,20 @@ static const GLdouble springVAR[] = {
     0.00f, 0.0f,
     0.20f, 0.0f,
     0.25f, 3.0f,
-    0.30f,-6.0f,
+    0.30f, -6.0f,
     0.35f, 6.0f,
-    0.40f,-6.0f,
+    0.40f, -6.0f,
     0.45f, 6.0f,
-    0.50f,-6.0f,
+    0.50f, -6.0f,
     0.55f, 6.0f,
-    0.60f,-6.0f,
+    0.60f, -6.0f,
     0.65f, 6.0f,
-    0.70f,-3.0f,
+    0.70f, -3.0f,
     0.75f, 6.0f,
     0.80f, 0.0f,
     1.00f, 0.0f,
 };
-static const int springVAR_count = sizeof(springVAR)/sizeof(GLdouble)/2;
+static const int springVAR_count = sizeof(springVAR) / sizeof(GLdouble) / 2;
 
 //void PhysicsDebugRenderer::drawConstraint(cpConstraint *constraint, void *unused)
 //{

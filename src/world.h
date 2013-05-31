@@ -35,7 +35,7 @@ class Time;
 struct cpBody;
 struct cpSpace;
 class ActiveChunk;
-class QuadTreeRenderer;
+//class QuadTreeRenderer;
 class QuadTree;
 class QueryCallback;
 class ContactListener;
@@ -227,7 +227,7 @@ private:
 
     TileRenderer* m_tileRenderer = nullptr;
     LightRenderer* m_lightRenderer = nullptr;
-    QuadTreeRenderer* m_quadTreeRenderer = nullptr;
+//    QuadTreeRenderer* m_quadTreeRenderer = nullptr;
     SpriteSheetRenderer* m_spriteSheetRenderer = nullptr;
 
     /// inclusive of m_mainEntities::Player as well.

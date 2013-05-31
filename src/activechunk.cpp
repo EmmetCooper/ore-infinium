@@ -34,19 +34,19 @@ bool DesiredChunk::operator==(const DesiredChunk& other) const
 
 bool DesiredChunk::operator<(const DesiredChunk& rhs) const
 {
-    if( this->row < rhs.row ) {
+    if (this->row < rhs.row) {
         return true;
     }
 
-    if( this->row > rhs.row ) {
+    if (this->row > rhs.row) {
         return false;
     }
 
-    if( this->column < rhs.column ) {
+    if (this->column < rhs.column) {
         return true;
     }
 
-    if( this->column > rhs.column ) {
+    if (this->column > rhs.column) {
         return false;
     }
 
@@ -54,8 +54,8 @@ bool DesiredChunk::operator<(const DesiredChunk& rhs) const
 }
 
 ActiveChunk::ActiveChunk(uint32_t row, uint32_t column, std::vector<Block>* blocks, cpSpace* cpWorldSpace) :
-m_blocks(blocks),
-m_cpSpace(cpWorldSpace)
+    m_blocks(blocks),
+    m_cpSpace(cpWorldSpace)
 {
     //create all tile physics objects within this area. pos is in chunk indices.
     int centerTileX = column * ACTIVECHUNK_SIZE;
@@ -78,7 +78,7 @@ m_cpSpace(cpWorldSpace)
             assert(index < WORLD_ROWCOUNT * WORLD_COLUMNCOUNT);
             Block& block = m_blocks->at(index);
 
-            if ( Block::blockTypes.at(block.primitiveType).collides == false) {
+            if (Block::blockTypes.at(block.primitiveType).collides == false) {
                 //skip over tiles which are not marked as collideable types. obviously, no physics bodies need to be generated for such cases.
                 continue;
             }
@@ -132,7 +132,7 @@ m_cpSpace(cpWorldSpace)
 
 ActiveChunk::~ActiveChunk()
 {
-    for (cpShape* shape : m_tileShapes) {
+    for (cpShape * shape : m_tileShapes) {
         ContactListener::BodyUserData* userData = static_cast<ContactListener::BodyUserData*>(cpShapeGetUserData(shape));
         ContactListener::BlockWrapper* blockWrapper = static_cast<ContactListener::BlockWrapper*>(userData->data);
 

@@ -35,7 +35,8 @@ void Block::update()
 std::vector<Block::BlockStruct> Block::blockTypes;
 std::vector<Block::WallStruct> Block::wallTypes;
 
-void Block::initBlockTypes() {
+void Block::initBlockTypes()
+{
     blockTypes.resize(4);
     blockTypes.at(BlockType::NullBlockType) = BlockStruct("../textures/null.png", false);
     blockTypes.at(BlockType::DirtBlockType) = BlockStruct("../textures/dirt.png", true);

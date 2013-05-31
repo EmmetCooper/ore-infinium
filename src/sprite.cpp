@@ -33,10 +33,10 @@ Sprite::Sprite(const std::string& frameName, SpriteSheetRenderer::SpriteSheetTyp
 
 Sprite::Sprite(const Sprite& entity)
     : m_sizeMeters(entity.m_sizeMeters),
-    m_spriteSheetType(entity.spriteSheetType()),
-    m_frameName(entity.frameName()),
-    m_position(entity.position()),
-    m_origin(entity.m_origin)
+      m_spriteSheetType(entity.spriteSheetType()),
+      m_frameName(entity.frameName()),
+      m_position(entity.position()),
+      m_origin(entity.m_origin)
 {
 }
 

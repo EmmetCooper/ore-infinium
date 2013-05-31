@@ -48,7 +48,7 @@ Game::Game(bool startupDebugLogging)
     GOOGLE_PROTOBUF_VERIFY_VERSION;
 
     if (m_startupDebugLogging) {
-       Settings::instance()->debugAreas |= Debug::Area::StartupArea;
+        Settings::instance()->debugAreas |= Debug::Area::StartupArea;
     }
 }
 
@@ -83,7 +83,7 @@ void Game::tick()
     std::chrono::system_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
 
     double accumulator = 0.0;
-    const double dt = (1.0/60.0) * 1000.0; // runs at 60 hz
+    const double dt = (1.0 / 60.0) * 1000.0; // runs at 60 hz
     double t = 0.0;
 
     double fps = 0.0;
@@ -116,8 +116,8 @@ void Game::tick()
         const double alpha = accumulator / dt;
 
         // sleep so we don't burn cpu
-      //  std::chrono::milliseconds timeUntilNextFrame(int(dt - accumulator));
-      //  std::this_thread::sleep_for(timeUntilNextFrame);
+        //  std::chrono::milliseconds timeUntilNextFrame(int(dt - accumulator));
+        //  std::this_thread::sleep_for(timeUntilNextFrame);
     }
 
     /*

@@ -49,7 +49,9 @@ public:
     void clearDirtyFlag(uint32_t dirtyFlag);
 
     virtual void createPhysicsBody(World* world, const glm::vec2& position);
-    cpBody* physicsBody() { return m_body; }
+    cpBody* physicsBody() {
+        return m_body;
+    }
 
     /**
      * Use only to reset the entities position to some other place.

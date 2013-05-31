@@ -33,16 +33,16 @@ public:
     ~Tool();
 
     enum ToolType {
-       PickAxe = 0,
-       Axe,
-       Bucket /// ?
+        PickAxe = 0,
+        Axe,
+        Bucket /// ?
     };
 
     enum ToolMaterial {
-       Wood = 0,
-       Stone,
-       Steel,
-       Diamond
+        Wood = 0,
+        Stone,
+        Steel,
+        Diamond
     };
 
     /**

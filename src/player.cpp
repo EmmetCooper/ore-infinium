@@ -49,16 +49,16 @@ Player::~Player()
 
 void Player::playerUpdateVelocity(cpBody* body, cpVect gravity, cpFloat damping, cpFloat dt)
 {
-    ContactListener::BodyUserData* userData = static_cast<ContactListener::BodyUserData*> (body->data);
-    Player* player = static_cast<Player*> (userData->data);
+    ContactListener::BodyUserData* userData = static_cast<ContactListener::BodyUserData*>(body->data);
+    Player* player = static_cast<Player*>(userData->data);
 
     float horizontalMovement = player->m_desiredVelocity.x * 300.0;
     cpShapeSetSurfaceVelocity(player->m_footShape, cpv(horizontalMovement, 0.0));
 
     if (!player->m_feetOnGround) {
-       cpFloat desiredVelocity = player->m_desiredVelocity.x * 300.0;
-       cpFloat playerAirAccel = 8.5;
-       body->v.x = cpflerpconst(body->v.x, desiredVelocity, playerAirAccel*dt);
+        cpFloat desiredVelocity = player->m_desiredVelocity.x * 300.0;
+        cpFloat playerAirAccel = 8.5;
+        body->v.x = cpflerpconst(body->v.x, desiredVelocity, playerAirAccel * dt);
     }
 
     cpBodyUpdateVelocity(body, gravity, damping, dt);
@@ -148,15 +148,15 @@ void Player::createPhysicsBody(World* world, const glm::vec2& position)
 
     //////////// LOWER BODY
 
- //   b2CircleShape lowerCircleShape;
- //   b2FixtureDef lowerCircleDef;
- //   lowerCircleDef.shape = &lowerCircleShape;
- //   lowerCircleDef.friction = 0.0f;
- //
- //   lowerCircleShape.m_radius = 0.3f;
- //   lowerCircleShape.m_p = b2Vec2(0.0f, 0.1f);
- //
- //   m_body->CreateFixture(&lowerCircleDef);
+//   b2CircleShape lowerCircleShape;
+//   b2FixtureDef lowerCircleDef;
+//   lowerCircleDef.shape = &lowerCircleShape;
+//   lowerCircleDef.friction = 0.0f;
+//
+//   lowerCircleShape.m_radius = 0.3f;
+//   lowerCircleShape.m_p = b2Vec2(0.0f, 0.1f);
+//
+//   m_body->CreateFixture(&lowerCircleDef);
 
     ///////// FOOT
 
@@ -190,7 +190,7 @@ void Player::jump()
         if (m_jumpTimer->milliseconds() >= m_jumpDelay) {
 //            if (m_jumpContacts > 0) {
             if (m_feetOnGround) {
-            cpVect currentVelocity = cpBodyGetVel(m_body);
+                cpVect currentVelocity = cpBodyGetVel(m_body);
 
                 cpFloat velocityChange = -5.0;
 
@@ -200,7 +200,7 @@ void Player::jump()
 
                 m_jumpTimer->reset();
                 cpBodyApplyImpulse(m_body, cpv(0, impulse), cpvzero);
-           }
+            }
         }
     }
 }

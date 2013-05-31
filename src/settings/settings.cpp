@@ -29,16 +29,16 @@ Settings* Settings::instance()
 }
 
 Settings::Settings()
-: debugAreas(Debug::Area::ImportantArea | Debug::Area::ShadersArea),
-  debugRendererFlags(
-      //turn some useful shit on by default. and some important shit.
-    Debug::RenderingDebug::TileRenderingPassDebug |
-    Debug::RenderingDebug::LightRenderingPassDebug |
-    Debug::RenderingDebug::SkyRenderingPassDebug
+    : debugAreas(Debug::Area::ImportantArea | Debug::Area::ShadersArea),
+      debugRendererFlags(
+          //turn some useful shit on by default. and some important shit.
+          Debug::RenderingDebug::TileRenderingPassDebug |
+          Debug::RenderingDebug::LightRenderingPassDebug |
+          Debug::RenderingDebug::SkyRenderingPassDebug
 //    Debug::RenderingDebug::Box2DAABBRenderingDebug |
 //    Debug::RenderingDebug::Box2DJointRenderingDebug |
-|    Debug::RenderingDebug::Box2DShapeRenderingDebug
-    )
+          |    Debug::RenderingDebug::Box2DShapeRenderingDebug
+      )
 {
 
 }

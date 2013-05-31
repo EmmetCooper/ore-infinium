@@ -24,9 +24,12 @@
 
 #include <iostream>
 
-namespace google {
-namespace protobuf {
-namespace io {
+namespace google
+{
+namespace protobuf
+{
+namespace io
+{
 class CodedOutputStream;
 class StringOutputStream;
 }
@@ -92,7 +95,8 @@ public:
         DisconnectedInvalidPlayerName
     };
 
-    enum class PacketCompression {
+    enum class PacketCompression
+    {
         CompressedPacket,
         UncompressedPacket
     };

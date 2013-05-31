@@ -340,15 +340,15 @@ void Server::sendInitialWorldChunk(ENetPeer* peer)
     int32_t startX = std::max(centerX - maxWidth, 0);
     int32_t endX = (centerX) + maxWidth;
 
-   int32_t startY = std::max(centerY - maxHeight, 0);
-   int32_t endY = (centerY) + maxHeight;
+    int32_t startY = std::max(centerY - maxHeight, 0);
+    int32_t endY = (centerY) + maxHeight;
 
-   player->loadedChunksStartRow = startY;
-   player->loadedChunksEndRow = endY;
-   player->loadedChunksStartColumn = startX;
-   player->loadedChunksEndColumn = endX;
+    player->loadedChunksStartRow = startY;
+    player->loadedChunksEndRow = endY;
+    player->loadedChunksStartColumn = startX;
+    player->loadedChunksEndColumn = endX;
 
-   Debug::log(Debug::NetworkServerInitialArea) << " INITIAL CHUNK: startx: " << startX << " starty: " << startY << "end x: " << endX << " endY: " << endY;
+    Debug::log(Debug::NetworkServerInitialArea) << " INITIAL CHUNK: startx: " << startX << " starty: " << startY << "end x: " << endX << " endY: " << endY;
 
     message.set_startx(startX);
     message.set_endx(endX);
@@ -448,7 +448,7 @@ Entities::Player* Server::createPlayer(const std::string& playerName)
 
     //HACK FIXME: HOLY FUCK BACKMAN this is fucked horribly until physics integration is 100% complete. both of these have to be at the same position, and that simpyl shouldn't be needed..
     // if you don't set oen of them, BAD SHIT HAPPENS
-    float posX = 2500.0f/PIXELS_PER_METER;
+    float posX = 2500.0f / PIXELS_PER_METER;
     float posY = 5 * Block::BLOCK_SIZE; //start at the overground
     Debug::log(Debug::Area::NetworkServerInitialArea) << "CREATING PLAYER, SETTING PLAYER POS X : " << posX << " Y : " << posY;
 

@@ -98,7 +98,7 @@ void Client::initSDL()
     SDL_GetVersion(&linked);
 
     Debug::log(Debug::Area::StartupArea) << "Compiled against SDL version: " << int(compiled.major) << "." << int(compiled.minor) << "-" << int(compiled.patch) <<
-                                    " Running (linked) against version: " << int(linked.major) << "." << int(linked.minor) << "-" << int(linked.patch);
+                                         " Running (linked) against version: " << int(linked.major) << "." << int(linked.minor) << "-" << int(linked.patch);
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) != 0) {
         std::string error = SDL_GetError();
@@ -145,10 +145,10 @@ void Client::initSDL()
     Debug::checkGLError();
     Debug::assertf(glewInit() == GLEW_OK, "glewInit returned !GLEW_OK. No GL context can be formed..bailing out");
 
-   Debug::log(Debug::Area::StartupArea) << "Platform: Driver Vendor: " << glGetString(GL_VENDOR);
-   Debug::log(Debug::Area::StartupArea) << "Platform: Renderer: " << glGetString(GL_RENDERER);
-   Debug::log(Debug::Area::StartupArea) << "OpenGL Version: " << glGetString(GL_VERSION);
-   Debug::log(Debug::Area::StartupArea) << "GLSL Version: " << glGetString(GL_SHADING_LANGUAGE_VERSION);
+    Debug::log(Debug::Area::StartupArea) << "Platform: Driver Vendor: " << glGetString(GL_VENDOR);
+    Debug::log(Debug::Area::StartupArea) << "Platform: Renderer: " << glGetString(GL_RENDERER);
+    Debug::log(Debug::Area::StartupArea) << "OpenGL Version: " << glGetString(GL_VERSION);
+    Debug::log(Debug::Area::StartupArea) << "GLSL Version: " << glGetString(GL_SHADING_LANGUAGE_VERSION);
 
     Debug::checkGLError();
 
@@ -231,54 +231,54 @@ void Client::render(double frameTime)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (m_renderGUI) {
-    if (m_world && m_mainPlayer) {
-        m_world->render();
-    }
+        if (m_world && m_mainPlayer) {
+            m_world->render();
+        }
 
-    // only a client-hosted server has a chance of seeing any debug shit
-    if (m_server) {
-        if (!m_physicsDebugRenderer && m_world && m_world->spriteSheetRenderer()) {
-            m_physicsDebugRenderer = new PhysicsDebugRenderer(m_world->spriteSheetRenderer()->camera());
-            // physics debug renderer first init...
+        // only a client-hosted server has a chance of seeing any debug shit
+        if (m_server) {
+            if (!m_physicsDebugRenderer && m_world && m_world->spriteSheetRenderer()) {
+                m_physicsDebugRenderer = new PhysicsDebugRenderer(m_world->spriteSheetRenderer()->camera());
+                // physics debug renderer first init...
 //            m_box2DWorld->SetDebugDraw(m_physicsDebugRenderer);
+            }
+
+            if (m_physicsDebugRenderer) {
+
+                int rendererFlags = 0;
+                int settingsFlags = Settings::instance()->debugRendererFlags;
+                bool drawingRequired = false;
+
+                if (settingsFlags & Debug::RenderingDebug::Box2DAABBRenderingDebug) {
+                    // rendererFlags |= b2Draw::e_aabbBit;
+                    drawingRequired = true;
+                }
+
+                if (settingsFlags & Debug::RenderingDebug::Box2DShapeRenderingDebug) {
+                    //  rendererFlags |= b2Draw::e_shapeBit;
+                    drawingRequired = true;
+                }
+
+                if (settingsFlags & Debug::RenderingDebug::Box2DCenterOfMassRenderingDebug) {
+                    //   rendererFlags |= b2Draw::e_centerOfMassBit;
+                    drawingRequired = true;
+                }
+
+                if (settingsFlags & Debug::RenderingDebug::Box2DJointRenderingDebug) {
+                    //    rendererFlags |= b2Draw::e_jointBit;
+                    drawingRequired = true;
+                }
+
+                if (drawingRequired) {
+                    m_physicsDebugRenderer->render();
+                }
+            }
         }
 
-        if (m_physicsDebugRenderer) {
-
-            int rendererFlags = 0;
-            int settingsFlags = Settings::instance()->debugRendererFlags;
-            bool drawingRequired = false;
-
-            if (settingsFlags & Debug::RenderingDebug::Box2DAABBRenderingDebug) {
-               // rendererFlags |= b2Draw::e_aabbBit;
-                drawingRequired = true;
-            }
-
-            if (settingsFlags & Debug::RenderingDebug::Box2DShapeRenderingDebug) {
-              //  rendererFlags |= b2Draw::e_shapeBit;
-                drawingRequired = true;
-            }
-
-            if (settingsFlags & Debug::RenderingDebug::Box2DCenterOfMassRenderingDebug) {
-             //   rendererFlags |= b2Draw::e_centerOfMassBit;
-                drawingRequired = true;
-            }
-
-            if (settingsFlags & Debug::RenderingDebug::Box2DJointRenderingDebug) {
-            //    rendererFlags |= b2Draw::e_jointBit;
-                drawingRequired = true;
-            }
-
-            if (drawingRequired) {
-                m_physicsDebugRenderer->render();
-            }
+        if (m_renderGUI) {
+            m_gui->render();
+            drawDebugText(frameTime);
         }
-    }
-
-    if (m_renderGUI) {
-        m_gui->render();
-        drawDebugText(frameTime);
-    }
 
     }
     SDL_GL_SwapWindow(m_window);
@@ -362,16 +362,16 @@ void Client::handleInputEvents()
             } else if (event.key.keysym.sym == SDLK_F10) {
                 m_renderGUI = !m_renderGUI;
             } else if (event.key.keysym.sym == SDLK_F11) {
-               if (m_debugSettings == nullptr) {
+                if (m_debugSettings == nullptr) {
                     m_debugSettings = new DebugSettings(this);
                     m_debugSettings->show();
-               } else {
-                   if (m_debugSettings->visible()) {
+                } else {
+                    if (m_debugSettings->visible()) {
                         m_debugSettings->hide();
-                   } else {
+                    } else {
                         m_debugSettings->show();
-                   }
-               }
+                    }
+                }
             }
             break;
 

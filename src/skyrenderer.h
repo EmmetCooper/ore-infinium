@@ -76,14 +76,14 @@ private:
 
     struct SpriteFrame {
         /// screen position of said object
-       glm::vec2 position;
-       /// size in meters
-       glm::vec2 sizeMeters;
+        glm::vec2 position;
+        /// size in meters
+        glm::vec2 sizeMeters;
 
-       /// uv position, within spritesheet texture.
-       glm::vec2 texturePosition;
-       /// uv size, within spritesheet texture.
-       glm::vec2 textureSize;
+        /// uv position, within spritesheet texture.
+        glm::vec2 texturePosition;
+        /// uv size, within spritesheet texture.
+        glm::vec2 textureSize;
     };
 
     GLuint m_vaoSkyBackground; // vertex array object
@@ -111,7 +111,7 @@ private:
     // sun, moon
     uint16_t m_maxCelestialBodies = 2;
 
-    uint16_t m_maxSkyBackgrounds= 1;
+    uint16_t m_maxSkyBackgrounds = 1;
 
     Texture* m_celestialBodiesTexture = nullptr;
 

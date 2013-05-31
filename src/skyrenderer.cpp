@@ -32,12 +32,12 @@
 #include <SDL_timer.h>
 
 SkyRenderer::SkyRenderer(World* world, Camera* camera, Time* time) :
-m_camera(camera),
-m_time(time)
+    m_camera(camera),
+    m_time(time)
 {
     m_celestialBodiesShader = new Shader("skyrenderer.vert", "skyrenderer.frag");
     m_skyBackgroundDayShader = new Shader("skyrendererday.vert", "skyrendererday.frag");
-   m_skyBackgroundNightShader = new Shader("skyrenderernight.vert", "skyrenderernight.frag");
+    m_skyBackgroundNightShader = new Shader("skyrenderernight.vert", "skyrenderernight.frag");
 
     m_celestialBodiesTexture = new Texture("../textures/celestialBodies.png");
     m_celestialBodiesTexture->generate(Texture::TextureFilterNearest);
@@ -117,8 +117,8 @@ void SkyRenderer::initGLCelestialBodies()
     glBufferData(
         GL_ARRAY_BUFFER,
         m_maxCelestialBodies * 4 * sizeof(Vertex),
-                 NULL,
-                 GL_DYNAMIC_DRAW);
+        NULL,
+        GL_DYNAMIC_DRAW);
 
     Debug::checkGLError();
 
@@ -138,8 +138,8 @@ void SkyRenderer::initGLCelestialBodies()
     glBufferData(
         GL_ELEMENT_ARRAY_BUFFER,
         indicesv.size()*sizeof(uint32_t),
-                 indicesv.data(),
-                 GL_STATIC_DRAW);
+        indicesv.data(),
+        GL_STATIC_DRAW);
 
     Debug::checkGLError();
 
@@ -153,7 +153,7 @@ void SkyRenderer::initGLCelestialBodies()
         GL_FLOAT,
         GL_FALSE,
         sizeof(Vertex),
-                          (const GLvoid*)buffer_offset);
+        (const GLvoid*)buffer_offset);
     buffer_offset += sizeof(float) * 2;
 
     GLint color_attrib = glGetAttribLocation(m_celestialBodiesShader->shaderProgram(), "color");
@@ -167,7 +167,7 @@ void SkyRenderer::initGLCelestialBodies()
         GL_UNSIGNED_BYTE,
         GL_TRUE,
         sizeof(Vertex),
-                          (const GLvoid*)buffer_offset);
+        (const GLvoid*)buffer_offset);
     buffer_offset += sizeof(uint32_t);
 
     Debug::checkGLError();
@@ -180,7 +180,7 @@ void SkyRenderer::initGLCelestialBodies()
         GL_FLOAT,
         GL_FALSE,
         sizeof(Vertex),
-                          (const GLvoid*)buffer_offset);
+        (const GLvoid*)buffer_offset);
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -229,8 +229,8 @@ void SkyRenderer::initGLSkyBackground()
     glBufferData(
         GL_ARRAY_BUFFER,
         m_maxSkyBackgrounds * 4 * sizeof(Vertex),
-                 NULL,
-                 GL_DYNAMIC_DRAW);
+        NULL,
+        GL_DYNAMIC_DRAW);
 
     Debug::checkGLError();
 
@@ -250,8 +250,8 @@ void SkyRenderer::initGLSkyBackground()
     glBufferData(
         GL_ELEMENT_ARRAY_BUFFER,
         indicesv.size()*sizeof(uint32_t),
-                 indicesv.data(),
-                 GL_STATIC_DRAW);
+        indicesv.data(),
+        GL_STATIC_DRAW);
 
     Debug::checkGLError();
 
@@ -265,7 +265,7 @@ void SkyRenderer::initGLSkyBackground()
         GL_FLOAT,
         GL_FALSE,
         sizeof(Vertex),
-                          (const GLvoid*)buffer_offset);
+        (const GLvoid*)buffer_offset);
     buffer_offset += sizeof(float) * 2;
 
     GLint color_attrib = glGetAttribLocation(m_skyBackgroundDayShader->shaderProgram(), "color");
@@ -279,7 +279,7 @@ void SkyRenderer::initGLSkyBackground()
         GL_UNSIGNED_BYTE,
         GL_TRUE,
         sizeof(Vertex),
-                          (const GLvoid*)buffer_offset);
+        (const GLvoid*)buffer_offset);
     buffer_offset += sizeof(uint32_t);
 
     Debug::checkGLError();
@@ -292,7 +292,7 @@ void SkyRenderer::initGLSkyBackground()
         GL_FLOAT,
         GL_FALSE,
         sizeof(Vertex),
-                          (const GLvoid*)buffer_offset);
+        (const GLvoid*)buffer_offset);
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -339,8 +339,8 @@ void SkyRenderer::initGLSkyBackgroundNight()
     glBufferData(
         GL_ARRAY_BUFFER,
         m_maxSkyBackgrounds * 4 * sizeof(VertexNoColor),
-                 NULL,
-                 GL_DYNAMIC_DRAW);
+        NULL,
+        GL_DYNAMIC_DRAW);
 
     Debug::checkGLError();
 
@@ -360,8 +360,8 @@ void SkyRenderer::initGLSkyBackgroundNight()
     glBufferData(
         GL_ELEMENT_ARRAY_BUFFER,
         indicesv.size()*sizeof(uint32_t),
-                 indicesv.data(),
-                 GL_STATIC_DRAW);
+        indicesv.data(),
+        GL_STATIC_DRAW);
 
     Debug::checkGLError();
 
@@ -375,7 +375,7 @@ void SkyRenderer::initGLSkyBackgroundNight()
         GL_FLOAT,
         GL_FALSE,
         sizeof(VertexNoColor),
-                          (const GLvoid*)buffer_offset);
+        (const GLvoid*)buffer_offset);
     buffer_offset += sizeof(float) * 2;
 
     Debug::checkGLError();
@@ -388,7 +388,7 @@ void SkyRenderer::initGLSkyBackgroundNight()
         GL_FLOAT,
         GL_FALSE,
         sizeof(VertexNoColor),
-                          (const GLvoid*)buffer_offset);
+        (const GLvoid*)buffer_offset);
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -502,8 +502,8 @@ void SkyRenderer::renderSkyBackgroundDay()
     glBufferSubData(
         GL_ARRAY_BUFFER,
         sizeof(vertices) * index,
-                    sizeof(vertices),
-                    vertices);
+        sizeof(vertices),
+        vertices);
 
     ////////////////////////////////FINALLY RENDER IT ALL //////////////////////////////////////////
     glEnable(GL_BLEND);
@@ -518,8 +518,8 @@ void SkyRenderer::renderSkyBackgroundDay()
     glDrawElements(
         GL_TRIANGLES,
         6 * (m_maxSkyBackgrounds), // 6 indices per 2 triangles
-                GL_UNSIGNED_INT,
-                (const GLvoid*)0);
+        GL_UNSIGNED_INT,
+        (const GLvoid*)0);
 
     m_skyBackgroundDayShader->unbindProgram();
     glBindVertexArray(0);
@@ -632,8 +632,8 @@ void SkyRenderer::renderSkyBackgroundNight()
     glBufferSubData(
         GL_ARRAY_BUFFER,
         sizeof(vertices) * index,
-                    sizeof(vertices),
-                    vertices);
+        sizeof(vertices),
+        vertices);
 
     ////////////////////////////////FINALLY RENDER IT ALL //////////////////////////////////////////
     glEnable(GL_BLEND);
@@ -648,8 +648,8 @@ void SkyRenderer::renderSkyBackgroundNight()
     glDrawElements(
         GL_TRIANGLES,
         6 * (m_maxSkyBackgrounds), // 6 indices per 2 triangles
-                GL_UNSIGNED_INT,
-                (const GLvoid*)0);
+        GL_UNSIGNED_INT,
+        (const GLvoid*)0);
 
     m_skyBackgroundNightShader->unbindProgram();
     glBindVertexArray(0);
@@ -757,8 +757,8 @@ void SkyRenderer::renderCelestialBodies()
         glBufferSubData(
             GL_ARRAY_BUFFER,
             sizeof(vertices) * index,
-                        sizeof(vertices),
-                        vertices);
+            sizeof(vertices),
+            vertices);
 
         ++index;
     }
@@ -776,8 +776,8 @@ void SkyRenderer::renderCelestialBodies()
     glDrawElements(
         GL_TRIANGLES,
         6 * (m_celestialBodiesSprites.size()), // 6 indices per 2 triangles
-                   GL_UNSIGNED_INT,
-                   (const GLvoid*)0);
+        GL_UNSIGNED_INT,
+        (const GLvoid*)0);
 
     m_celestialBodiesShader->unbindProgram();
     glBindVertexArray(0);
@@ -793,7 +793,7 @@ void SkyRenderer::update(const float elapsedTime)
 {
     assert(m_time);
 
-    glm::vec2 viewportCenter = glm::vec2(1600/2, 900/2);
+    glm::vec2 viewportCenter = glm::vec2(1600 / 2, 900 / 2);
     const double hour = m_time->hour();
     const double minute = m_time->minute();
     const double second = m_time->second();
@@ -810,7 +810,7 @@ void SkyRenderer::update(const float elapsedTime)
     ////////////
 
     //////////// MOON
-    angle = (timeAngle + 180.0 ) * (M_PI / 180);
+    angle = (timeAngle + 180.0) * (M_PI / 180);
     newX = viewportCenter.x + cos(angle) * 400.0f;
     newY = viewportCenter.y + sin(angle) * 400.0f;
 
@@ -825,21 +825,21 @@ void SkyRenderer::render()
     renderSkyBackgroundDay();
     renderCelestialBodies();
 
- //   sf::VertexArray line(sf::Lines, 2);
- //   sf::Vector2f screen = sf::Vector2f(SCREEN_W/2, SCREEN_H/2);
- //   line.append(sf::Vertex(screen));
- //   line.append(sf::Vertex(m_sunPosition));
- //   m_window->draw(line);
- //
- //   // sunrise at 7 am, sunset at 7am..
- //   const unsigned char hour = Time::instance()->currentHour();
- //
- //   // 7am, 7pm
- //   if (hour >= 7 && hour < 19) {
- //       m_window->draw(m_sunSprite);
- //       m_sunSprite.render(m_window);
- //   } else {
- //       m_window->draw(m_moonSprite);
- //       m_moonSprite.render(m_window);
- //   }
+//   sf::VertexArray line(sf::Lines, 2);
+//   sf::Vector2f screen = sf::Vector2f(SCREEN_W/2, SCREEN_H/2);
+//   line.append(sf::Vertex(screen));
+//   line.append(sf::Vertex(m_sunPosition));
+//   m_window->draw(line);
+//
+//   // sunrise at 7 am, sunset at 7am..
+//   const unsigned char hour = Time::instance()->currentHour();
+//
+//   // 7am, 7pm
+//   if (hour >= 7 && hour < 19) {
+//       m_window->draw(m_sunSprite);
+//       m_sunSprite.render(m_window);
+//   } else {
+//       m_window->draw(m_moonSprite);
+//       m_moonSprite.render(m_window);
+//   }
 }

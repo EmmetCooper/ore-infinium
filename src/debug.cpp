@@ -233,197 +233,197 @@ LogStream::~LogStream()
 
     areaString.append("\e[36;40m");
     switch (m_area) {
-        case Debug::Area::ClientRendererArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::ClientRendererArea) == false) {
-                return;
-            }
+    case Debug::Area::ClientRendererArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::ClientRendererArea) == false) {
+            return;
+        }
 
-            areaString.append("[ClientRendererArea]");
-            break;
+        areaString.append("[ClientRendererArea]");
+        break;
 
-        case Debug::Area::TileRendererArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::TileRendererArea) == false) {
-                return;
-            }
+    case Debug::Area::TileRendererArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::TileRendererArea) == false) {
+            return;
+        }
 
-            areaString.append("[TileRendererArea]");
-            break;
+        areaString.append("[TileRendererArea]");
+        break;
 
-        case Debug::Area::SpriteSheetRendererArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::SpriteSheetRendererArea) == false) {
-                return;
-            }
+    case Debug::Area::SpriteSheetRendererArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::SpriteSheetRendererArea) == false) {
+            return;
+        }
 
-            areaString.append("[SpriteSheetRendererArea]");
-            break;
+        areaString.append("[SpriteSheetRendererArea]");
+        break;
 
-        case Debug::Area::LightingRendererArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::LightingRendererArea) == false) {
-                return;
-            }
+    case Debug::Area::LightingRendererArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::LightingRendererArea) == false) {
+            return;
+        }
 
-            areaString.append("[LightingRendererArea]");
-            break;
+        areaString.append("[LightingRendererArea]");
+        break;
 
-        case Debug::Area::PhysicsArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::PhysicsArea) == false) {
-                return;
-            }
+    case Debug::Area::PhysicsArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::PhysicsArea) == false) {
+            return;
+        }
 
-            areaString.append("[PhysicsArea]");
-            break;
+        areaString.append("[PhysicsArea]");
+        break;
 
-        case Debug::Area::AudioArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::AudioArea) == false) {
-                return;
-            }
+    case Debug::Area::AudioArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::AudioArea) == false) {
+            return;
+        }
 
-            areaString.append("[AudioArea]");
-            break;
+        areaString.append("[AudioArea]");
+        break;
 
-        case Debug::Area::AudioLoaderArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::AudioLoaderArea) == false) {
-                return;
-            }
+    case Debug::Area::AudioLoaderArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::AudioLoaderArea) == false) {
+            return;
+        }
 
-            areaString.append("[AudioLoaderArea]");
-            break;
+        areaString.append("[AudioLoaderArea]");
+        break;
 
-        case Debug::Area::GUILoggerArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::GUILoggerArea) == false) {
-                return;
-            }
+    case Debug::Area::GUILoggerArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::GUILoggerArea) == false) {
+            return;
+        }
 
-            areaString.append("[GUILoggerArea]");
-            break;
+        areaString.append("[GUILoggerArea]");
+        break;
 
-        case Debug::Area::ShadersArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::ShadersArea) == false) {
-                return;
-            }
+    case Debug::Area::ShadersArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::ShadersArea) == false) {
+            return;
+        }
 
-            areaString.append("[ShadersArea]");
-            break;
+        areaString.append("[ShadersArea]");
+        break;
 
-        case Debug::Area::NetworkClientInitialArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::NetworkClientInitialArea) == false) {
-                return;
-            }
+    case Debug::Area::NetworkClientInitialArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::NetworkClientInitialArea) == false) {
+            return;
+        }
 
-            areaString.append("[NetworkClientInitialArea]");
-            break;
+        areaString.append("[NetworkClientInitialArea]");
+        break;
 
-        case Debug::Area::NetworkServerInitialArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::NetworkServerInitialArea) == false) {
-                return;
-            }
+    case Debug::Area::NetworkServerInitialArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::NetworkServerInitialArea) == false) {
+            return;
+        }
 
-            areaString.append("[NetworkServerInitialArea]");
-            break;
+        areaString.append("[NetworkServerInitialArea]");
+        break;
 
-        case Debug::Area::NetworkClientContinuousArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::NetworkClientContinuousArea) == false) {
-                return;
-            }
+    case Debug::Area::NetworkClientContinuousArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::NetworkClientContinuousArea) == false) {
+            return;
+        }
 
-            areaString.append("[NetworkClientContinuousArea]");
-            break;
+        areaString.append("[NetworkClientContinuousArea]");
+        break;
 
-        case Debug::Area::NetworkServerContinuousArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::NetworkServerContinuousArea) == false) {
-                return;
-            }
+    case Debug::Area::NetworkServerContinuousArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::NetworkServerContinuousArea) == false) {
+            return;
+        }
 
-            areaString.append("[NetworkServerContinuousArea]");
-            break;
+        areaString.append("[NetworkServerContinuousArea]");
+        break;
 
-        case Debug::Area::ClientInventoryArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::ClientInventoryArea) == false) {
-                return;
-            }
+    case Debug::Area::ClientInventoryArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::ClientInventoryArea) == false) {
+            return;
+        }
 
-            areaString.append("[ClientInventoryArea]");
-            break;
+        areaString.append("[ClientInventoryArea]");
+        break;
 
-        case Debug::Area::ServerInventoryArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::ServerInventoryArea) == false) {
-                return;
-            }
+    case Debug::Area::ServerInventoryArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::ServerInventoryArea) == false) {
+            return;
+        }
 
-            areaString.append("[ServerInventoryArea]");
-            break;
+        areaString.append("[ServerInventoryArea]");
+        break;
 
-        case Debug::Area::ServerEntityLogicArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::ServerEntityLogicArea) == false) {
-                return;
-            }
+    case Debug::Area::ServerEntityLogicArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::ServerEntityLogicArea) == false) {
+            return;
+        }
 
-            areaString.append("[ServerEntityLogicArea]");
-            break;
+        areaString.append("[ServerEntityLogicArea]");
+        break;
 
-        case Debug::Area::ImageLoaderArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::ImageLoaderArea) == false) {
-                return;
-            }
+    case Debug::Area::ImageLoaderArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::ImageLoaderArea) == false) {
+            return;
+        }
 
-            areaString.append("[ImageLoaderArea]");
-            break;
+        areaString.append("[ImageLoaderArea]");
+        break;
 
-        case Debug::Area::WorldGeneratorArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::WorldGeneratorArea) == false) {
-                return;
-            }
+    case Debug::Area::WorldGeneratorArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::WorldGeneratorArea) == false) {
+            return;
+        }
 
-            areaString.append("[WorldGeneratorArea]");
-            break;
+        areaString.append("[WorldGeneratorArea]");
+        break;
 
-        case Debug::Area::WorldLoaderArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::WorldLoaderArea) == false) {
-                return;
-            }
+    case Debug::Area::WorldLoaderArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::WorldLoaderArea) == false) {
+            return;
+        }
 
-            areaString.append("[WorldLoaderArea]");
-            break;
+        areaString.append("[WorldLoaderArea]");
+        break;
 
-        case Debug::Area::ClientEntityCreationArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::ClientEntityCreationArea) == false) {
-                return;
-            }
+    case Debug::Area::ClientEntityCreationArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::ClientEntityCreationArea) == false) {
+            return;
+        }
 
-            areaString.append("[ClientEntityCreationArea]");
-            break;
+        areaString.append("[ClientEntityCreationArea]");
+        break;
 
-        case Debug::Area::ServerEntityCreationArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::ServerEntityCreationArea) == false) {
-                return;
-            }
+    case Debug::Area::ServerEntityCreationArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::ServerEntityCreationArea) == false) {
+            return;
+        }
 
-            areaString.append("[ServerEntityCreationArea]");
-            break;
+        areaString.append("[ServerEntityCreationArea]");
+        break;
 
-        case Debug::Area::SettingsArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::SettingsArea) == false) {
-                return;
-            }
+    case Debug::Area::SettingsArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::SettingsArea) == false) {
+            return;
+        }
 
-            areaString.append("[SettingsArea]");
-            break;
+        areaString.append("[SettingsArea]");
+        break;
 
-        case Debug::Area::StartupArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::StartupArea) == false) {
-                return;
-            }
+    case Debug::Area::StartupArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::StartupArea) == false) {
+            return;
+        }
 
-            areaString.append("[StartupArea]");
-            break;
+        areaString.append("[StartupArea]");
+        break;
 
-        case Debug::Area::ImportantArea:
-            if ((Settings::instance()->debugAreas & Debug::Area::ImportantArea) == false) {
-                return;
-            }
+    case Debug::Area::ImportantArea:
+        if ((Settings::instance()->debugAreas & Debug::Area::ImportantArea) == false) {
+            return;
+        }
 
-            areaString.append("[ImportantArea]");
-            break;
+        areaString.append("[ImportantArea]");
+        break;
     }
 
     areaString.append("\e[36;40m\e[0m");

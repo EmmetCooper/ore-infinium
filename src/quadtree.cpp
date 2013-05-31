@@ -22,114 +22,161 @@
 
 #include <assert.h>
 
-QuadTree::QuadTree(QuadTree* parent, cpBB bb)
-    : m_boundary(bb),
-      m_nodeCapacity(4),
-      m_parent(parent)
+QuadTree::QuadTree() :
+    m_left(0),
+    m_right(0),
+    m_top(0),
+    m_bottom(0),
+    m_numObjectsToGrow(4),
+    m_nodes(0),
+    m_isLeaf(true),
+    m_parent(nullptr)
 {
-    m_points.reserve(m_nodeCapacity);
 }
 
-QuadTree::QuadTree(QuadTree* parent, cpBB bb, size_t _nodeCapacity)
-    : m_boundary(bb),
-      m_nodeCapacity(_nodeCapacity),
-      m_parent(parent)
+QuadTree::QuadTree(double left, double right, double top, double bottom, QuadTree* parent, uint32_t _numObjectsToGrow) :
+    m_left(left),
+    m_right(right),
+    m_top(top),
+    m_bottom(bottom),
+    m_numObjectsToGrow(_numObjectsToGrow),
+    m_nodes(0),
+    m_isLeaf(true),
+    m_parent(parent)
 {
-    m_points.reserve(m_nodeCapacity);
 }
 
-bool QuadTree::insert(Entity * entity)
+QuadTree::~QuadTree()
 {
-    Debug::assertf(entity, "quadtree insertion error, entity to insert was null (horrible api abuse)");
-    if (!cpBBContainsVect(m_boundary, cpv(entity->position().x, entity->position().y))) {
-//        Debug::log(Debug::ImportantArea) << "enttity position x: " << entity->position().x << " y: " << entity->position().y << " bounding box does not contain it. BB left: " << m_boundary.l << " right: " << m_boundary.r << " bottom: " << m_boundary.b << " top: " << m_boundary.t;
-        return false;
+    if (!m_isLeaf) {
+        delete [] m_nodes;
     }
-
-    if (m_points.size() < m_nodeCapacity) {
-        m_points.push_back(entity);
-        return true;
-    }
-
-    if (NW == nullptr) {
-        subdivide();
-    }
-
-    if (NW->insert(entity)) {
-        return true;
-    }
-
-    if (NE->insert(entity)) {
-        return true;
-    }
-
-    if (SW->insert(entity)) {
-        return true;
-    }
-
-    if (SE->insert(entity)) {
-        return true;
-    }
-
-    assert(false);
-    return false; // should never happen
 }
 
-void QuadTree::subdivide() {
-    // create four children which fully divide this quad into four quads of equal area
-    cpVect quarterSize = cpv(m_boundary.r * 0.25, m_boundary.b * 0.25);
-    NW = new QuadTree(this, cpBBNew(m_boundary.l, m_boundary.t + quarterSize.y, m_boundary.l + quarterSize.x, m_boundary.t));
-    NE = new QuadTree(this, cpBBNew(m_boundary.l + quarterSize.x, m_boundary.t + quarterSize.y, m_boundary.r - quarterSize.x, m_boundary.t));
-    SW = new QuadTree(this, cpBBNew(m_boundary.l, m_boundary.b, m_boundary.l + quarterSize.x, m_boundary.b - quarterSize.y));
-    SE = new QuadTree(this, cpBBNew(m_boundary.l + quarterSize.x, m_boundary.b, m_boundary.r, m_boundary.t + quarterSize.y));
-}
+void QuadTree::insert(Entity* entity)
+{
+    if (m_isLeaf) {
+        m_entities.push_back(entity);
 
-void QuadTree::queryRange(std::vector<Entity*>* list, cpBB range) {
-    if (!cpBBIntersects(range, m_boundary)) {
-        Debug::log(Debug::Area::ImportantArea) << "INTERSECTION FAILURE";
-       return; //return unchanged (empty) list.
+        bool reachedMaxObjects = (m_entities.size() == m_numObjectsToGrow);
+
+        if (reachedMaxObjects) {
+            createLeaves();
+            moveObjectsToLeaves();
+            m_isLeaf = false;
+        }
+        return;
     }
 
-        Debug::log(Debug::Area::ImportantArea) << "INTERSECTION SUCCASS";
-
-    if (NW == nullptr) {
-        return ;
-    }
-
-    for (size_t i = 0; i < m_points.size(); ++i) {
-       const glm::vec2& position = m_points[i]->position();
-        if (cpBBContainsVect(m_boundary, cpv(position.x, position.y))) {
-            list->push_back(m_points[i]);
+    for (int n = 0; n < NodeCount; ++n) {
+        if (m_nodes[n].contains(entity)) {
+            m_nodes[n].insert(entity);
+            return;
         }
     }
 
-    NW->queryRange(list, range);
-    NE->queryRange(list, range);
-    SW->queryRange(list, range);
-    SE->queryRange(list, range);
+    m_entities.push_back(entity);
 }
 
-// scan the tree and remove all node/Item*
-void QuadTree::clear() {
-    if (this == nullptr) {
-        return ;
+void QuadTree::clear()
+{
+    m_entities.clear();
+
+    if (!m_isLeaf) {
+        for (int n = 0; n < NodeCount; ++n) {
+            m_nodes[n].clear();
+        }
+    }
+}
+
+std::vector<Entity*> QuadTree::queryRange(double x, double y, double width, double height)
+{
+    if (m_isLeaf) {
+        return m_entities;
     }
 
-    m_points.clear();
+    std::vector<Entity*> returnedObjects;
+    std::vector<Entity*> childObjects;
 
-    NW->clear();
-    delete NW;
-    NW = nullptr;
+    if (!m_entities.empty()) {
+        returnedObjects.insert(returnedObjects.end(), m_entities.begin(), m_entities.end());
+    }
 
-    NE->clear();
-    delete NE;
-    NE = nullptr;
+    for (int n = 0; n < NodeCount; ++n) {
+        if (m_nodes[n].containsRect(x, y, width, height)) {
+            childObjects = m_nodes[n].queryRange(x, y, width, height);
+            returnedObjects.insert(returnedObjects.end(), childObjects.begin(), childObjects.end());
+            break;
+        }
+    }
 
-    SW->clear();
-    delete SW;
-    SW = nullptr;
-
-    SE->clear();
-    delete SE;
-    SE = nullptr;
+    return returnedObjects;
 }
+
+bool QuadTree::contains(Entity* entity)
+{
+    const glm::vec2& position = entity->position();
+    const glm::vec2& size = entity->sizeMeters();
+
+    return  position.x > m_left &&
+            (position.x + size.x) < m_right &&
+            position.y > m_top &&
+            (position.y + size.y) < m_bottom;
+}
+
+bool QuadTree::containsRect(double x, double y, double width, double height)
+{
+    return (x >= m_left && x <= m_right) &&
+           (y >= m_top && y <= m_bottom) &&
+           (width <= m_right && height <= m_bottom);
+}
+
+void QuadTree::createLeaves()
+{
+    m_nodes = new QuadTree[4];
+    m_nodes[NW] = QuadTree(m_left, (m_left + m_right) / 2.0, m_top, (m_top + m_bottom) / 2.0, this, m_numObjectsToGrow);
+    m_nodes[NE] = QuadTree((m_left + m_right) / 2.0, m_right, m_top, (m_top + m_bottom) / 2.0, this, m_numObjectsToGrow);
+    m_nodes[SW] = QuadTree(m_left, (m_left + m_right) / 2.0, (m_top + m_bottom) / 2.0, m_bottom, this, m_numObjectsToGrow);
+    m_nodes[SE] = QuadTree((m_left + m_right) / 2.0, m_right, (m_top + m_bottom) / 2.0, m_bottom, this, m_numObjectsToGrow);
+}
+
+void QuadTree::moveObjectsToLeaves()
+{
+    for (int n = 0; n < NodeCount; ++n) {
+        for (size_t m = 0; m < m_entities.size(); ++m) {
+            if (m_nodes[n].contains(m_entities[m])) {
+
+                m_nodes[n].insert(m_entities[m]);
+                m_entities.erase(m_entities.begin() + m);
+                --m;
+            }
+        }
+    }
+}
+
+//
+//void QuadTree::queryRange(std::vector<Entity*>* list, cpBB range) {
+//    if (!cpBBIntersects(range, m_boundary)) {
+//        Debug::log(Debug::Area::ImportantArea) << "INTERSECTION FAILURE";
+//       return; //return unchanged (empty) list.
+//    }
+//
+//    Debug::log(Debug::Area::ImportantArea) << "INTERSECTION SUCCASS";
+//
+//    for (size_t i = 0; i < m_points.size(); ++i) {
+//       const glm::vec2& position = m_points[i]->position();
+//        if (cpBBContainsVect(m_boundary, cpv(position.x, position.y))) {
+//            list->push_back(m_points[i]);
+//        }
+//    }
+//
+//    if (NW == nullptr) {
+//        return;
+//    }
+//
+//    NW->queryRange(list, range);
+//    NE->queryRange(list, range);
+//    SW->queryRange(list, range);
+//    SE->queryRange(list, range);
+//}
+//

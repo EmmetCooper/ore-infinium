@@ -58,20 +58,22 @@ public:
 
     void render();
 
-    uint32_t shapeCount() { return m_shapeCount; }
+    uint32_t shapeCount() {
+        return m_shapeCount;
+    }
 
-    const Color LINE_COLOR = {200.0/255.0, 210.0/255.0, 230.0/255.0, 1.0};
+    const Color LINE_COLOR = {200.0 / 255.0, 210.0 / 255.0, 230.0 / 255.0, 1.0};
     const Color CONSTRAINT_COLOR = {0.0, 0.75, 0.0, 1.0};
     const float SHAPE_ALPHA = 1.0;
 
     float ChipmunkDebugDrawPointLineScale = 1.0;
 
-    static inline Color RGBAColor(float r, float g, float b, float a){
+    static inline Color RGBAColor(float r, float g, float b, float a) {
         Color color = {r, g, b, a};
         return color;
     }
 
-    static inline Color LAColor(float l, float a){
+    static inline Color LAColor(float l, float a) {
         Color color = {l, l, l, a};
         return color;
     }
@@ -84,7 +86,7 @@ public:
     void glColor_from_color(Color color);
     Color ColorFromHash(cpHashValue hash, float alpha);
 
-   void ChipmunkDebugDrawShape(cpShape *shape);
+    void ChipmunkDebugDrawShape(cpShape *shape);
 
     /**
      * Should be called ONLY by the server thread, iterates over the space and finds what it has to draw, switches a mutex, adds it to a list

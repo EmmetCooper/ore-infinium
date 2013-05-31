@@ -26,34 +26,60 @@ class QuadTreeRenderer;
 struct cpBB;
 struct cpVect;
 
-class QuadTree {
+class QuadTree
+{
 public:
-    QuadTree(QuadTree* parent, cpBB bb);
-    QuadTree(QuadTree* parent, cpBB bb, size_t nodeCapacity);
+    enum Node {
+        NW = 0,
+        NE,
+        SW,
+        SE,
+        NodeCount
+    };
 
-    bool insert(Entity* entity);
-    void queryRange(std::vector<Entity*>* emptyInputList, cpBB bb);
+public:
+    QuadTree();
+    QuadTree(double left, double right, double top, double bottom, QuadTree* parent = nullptr, uint32_t numObjectsToGrow = 3);
+
+    ~QuadTree();
+
+    void insert(Entity* entity);
 
     void clear();
 
+    std::vector<Entity*> queryRange(double x, double y, double width, double height);
+
 private:
-    void subdivide();
+    double m_left;
+    double m_right;
+    double m_top;
+    double m_bottom;
 
-    cpBB m_boundary;
-    size_t m_nodeCapacity;
+    uint32_t m_numObjectsToGrow;
 
-    // leaves
-    QuadTree* NW = nullptr;
-    QuadTree* NE = nullptr;
-    QuadTree* SW = nullptr;
-    QuadTree* SE = nullptr;
+    QuadTree* m_nodes;
+
+    bool m_isLeaf;
+
+    bool contains(Entity* entity);
+    bool containsRect(double x, double y, double width, double height);
+
+    void createLeaves();
+    void moveObjectsToLeaves();
+
+
+//    void queryRange(std::vector<Entity*>* emptyInputList, cpBB bb);
+
+//    void clear();
 
     QuadTree *m_parent = nullptr;
 
     // data
-    std::vector<Entity*> m_points;
+    std::vector<Entity*> m_entities;
 
     friend class QuadTreeRenderer;
 };
+
+
 
 #endif // __QUADTREE__

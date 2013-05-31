@@ -28,8 +28,7 @@ class LogStream;
 class Debug
 {
 public:
-    enum Area
-    {
+    enum Area {
         //WARNING: UPDATE THE DEBUG SETTINGS GUI (RML AND CPP) WHEN YOU ADD A FLAG
         ClientRendererArea = 1 << 0,
         TileRendererArea = 1 << 1,
@@ -62,8 +61,7 @@ public:
      * Otherwise it won't do anything.
      */
     //WARNING: UPDATE THE DEBUG SETTINGS GUI (RML AND CPP) WHEN YOU ADD A FLAG
-    enum RenderingDebug
-    {
+    enum RenderingDebug {
         GUIRenderingDebug = 1 << 0,
         LightRenderingPassDebug = 1 << 1,
         TileRenderingPassDebug = 1 << 2,

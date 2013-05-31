@@ -27,18 +27,16 @@
 struct cpSpace;
 struct cpShape;
 
-struct DesiredChunk
-{
-    DesiredChunk(uint32_t _row, uint32_t _column) : row(_row), column(_column)
-    {
+struct DesiredChunk {
+    DesiredChunk(uint32_t _row, uint32_t _column) : row(_row), column(_column) {
 
     }
 
     bool operator==(const DesiredChunk& other) const;
     bool operator<(const DesiredChunk& rhs) const;
 
-   uint32_t row;
-   uint32_t column;
+    uint32_t row;
+    uint32_t column;
 };
 
 class ActiveChunk

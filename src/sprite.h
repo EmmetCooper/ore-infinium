@@ -71,7 +71,7 @@ public:
     }
 
     void setSizeMeters(float x, float y) {
-       m_sizeMeters = glm::vec2(x, y);
+        m_sizeMeters = glm::vec2(x, y);
     }
 
     /**

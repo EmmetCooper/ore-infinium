@@ -88,20 +88,20 @@ Packet::PacketCompression Packet::serializeStreamContents(google::protobuf::io::
 
     //FIXME: SECURITY: packet exception is not caught if the packet claims it's compressed but boost's zlib fails
     switch (compressed) {
-        case PacketCompression::CompressedPacket: {
+    case PacketCompression::CompressedPacket: {
         std::stringstream uncompressedStream(contentsString);
         std::string compressedString = compress(&uncompressedStream);
 
         coded_out.WriteVarint32(contentsString.size());
         coded_out.WriteString(compressedString);
         break;
-        }
+    }
 
-        case PacketCompression::UncompressedPacket: {
+    case PacketCompression::UncompressedPacket: {
         coded_out.WriteVarint32(contentsString.size());
         coded_out.WriteString(contentsString);
         break;
-        }
+    }
     }
 
     return compressed;
@@ -110,41 +110,41 @@ Packet::PacketCompression Packet::serializeStreamContents(google::protobuf::io::
 std::string Packet::compress(std::stringstream* in)
 {
     Debug::log(Debug::NetworkServerContinuousArea) << "compressing packet..precompressed size: " << in->str().size();
-   /////////////////////////////////////////////////////////////////////////////////////////////
-   boost::iostreams::filtering_streambuf<boost::iostreams::input> out;
-   std::stringstream compressedStream;
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    boost::iostreams::filtering_streambuf<boost::iostreams::input> out;
+    std::stringstream compressedStream;
 
-   boost::iostreams::zlib_params params;
-   params.level = boost::iostreams::zlib::best_compression;
+    boost::iostreams::zlib_params params;
+    params.level = boost::iostreams::zlib::best_compression;
 
-   out.push(boost::iostreams::zlib_compressor(params));
-   out.push(*in);
+    out.push(boost::iostreams::zlib_compressor(params));
+    out.push(*in);
 
-   boost::iostreams::copy(out, compressedStream);
-   /////////////////////////////////////////////////////////////////////////////////////////////
+    boost::iostreams::copy(out, compressedStream);
+    /////////////////////////////////////////////////////////////////////////////////////////////
     Debug::log(Debug::NetworkServerContinuousArea) << "compressing packet..compressed size: " << compressedStream.str().size();
 
-   return compressedStream.str();
+    return compressedStream.str();
 }
 
 std::string Packet::decompress(std::stringstream* in)
 {
-   /////////////////////////////////////////////////////////////////////////////////////////////
-   boost::iostreams::filtering_streambuf<boost::iostreams::input> inbuf;
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    boost::iostreams::filtering_streambuf<boost::iostreams::input> inbuf;
 
-   std::stringstream decompressedStream;
+    std::stringstream decompressedStream;
 
-   boost::iostreams::zlib_params params;
+    boost::iostreams::zlib_params params;
 
-   inbuf.push(boost::iostreams::zlib_decompressor(params));
-   inbuf.push(*in);
+    inbuf.push(boost::iostreams::zlib_decompressor(params));
+    inbuf.push(*in);
 
-   std::stringstream compressed;
-   boost::iostreams::copy(inbuf, decompressedStream);
+    std::stringstream compressed;
+    boost::iostreams::copy(inbuf, decompressedStream);
 
-   /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////
 
-   return decompressedStream.str();
+    return decompressedStream.str();
 }
 
 uint32_t Packet::deserializePacketType(const std::string& packet)
@@ -215,7 +215,7 @@ void Packet::deserialize(const std::string& packetToDeserialize, google::protobu
     } else {
         // we need to decompress the packet contents before giving it to protobuf to deserialize
         //seek to the end of the header so everything after is the contents
-        std::string rawContentsRemaining = packetToDeserialize.substr(coded_in.CurrentPosition(), packetToDeserialize.size() );
+        std::string rawContentsRemaining = packetToDeserialize.substr(coded_in.CurrentPosition(), packetToDeserialize.size());
 
         std::stringstream compressedStream(rawContentsRemaining);
 

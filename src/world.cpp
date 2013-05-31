@@ -33,7 +33,7 @@
 #include "tilerenderer.h"
 #include "lightrenderer.h"
 #include "physicsdebugrenderer.h"
-#include "quadtreerenderer.h"
+//#include "quadtreerenderer.h"
 
 #include "skyrenderer.h"
 #include "src/time.h"
@@ -106,8 +106,7 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
     //client doesn't actually load/generate any world
     if (m_server) {
-        cpBB bb = cpBBNew(0.0, 0.0, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, Block::BLOCK_SIZE * WORLD_ROWCOUNT);
-        m_torchesQuadTree = new QuadTree(nullptr, bb);
+        m_torchesQuadTree = new QuadTree(0.0, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, 0.0, Block::BLOCK_SIZE * WORLD_ROWCOUNT);
 
 //        cpVect gravity = cpv(0, -100);
         cpVect gravity = cpv(0.0, 9.8);
@@ -124,7 +123,7 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         saveWorld();
 
         // FIXME: load torches (this doesn't actually do anything but is in theory what we'll need to load shit)
-        for (auto* t :m_torches) {
+        for (auto * t : m_torches) {
             m_torchesQuadTree->insert(t);
         }
 
@@ -150,7 +149,7 @@ World::~World()
     delete m_lightRenderer;
     delete m_sky;
 
-    for (auto* torch : m_torches) {
+    for (auto * torch : m_torches) {
         delete torch;
     }
     m_torches.clear();
@@ -162,7 +161,7 @@ World::~World()
     }
     m_activeChunks.clear();
 
-    for (auto* entity : m_entities) {
+    for (auto * entity : m_entities) {
         delete entity;
     }
     m_entities.clear();
@@ -171,7 +170,7 @@ World::~World()
     delete m_mainPlayer;
     delete m_torchesQuadTree;
 
-    for (auto* player : m_players) {
+    for (auto * player : m_players) {
         delete player;
     }
     m_players.clear();
@@ -230,8 +229,8 @@ void World::updateTilePhysicsObjects()
     // holds the chunks that every player wants to have activated. made unique after it's done adding
     std::list<DesiredChunk> desiredChunks;
 
-    for (Entities::Player* player : m_players) {
-    // mark which chunks we want to be activated within this players viewport
+    for (Entities::Player * player : m_players) {
+        // mark which chunks we want to be activated within this players viewport
 
         float blockSize = Block::BLOCK_SIZE;
         glm::ivec2 centerTile = glm::ivec2(int(ceil(player->position().x / blockSize)), int(ceil(player->position().y / blockSize)));
@@ -254,18 +253,18 @@ void World::updateTilePhysicsObjects()
     }
 
 //    Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE pre-removal: " << desiredChunks.size();
- //   Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE post-removal: " << desiredChunks.size();
+//   Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE post-removal: " << desiredChunks.size();
 
     // set all refcounts to 0
-    for (auto& activeChunk : m_activeChunks) {
+    for (auto & activeChunk : m_activeChunks) {
         activeChunk.second->refcount = 0;
     }
 
     // increment the refcount for each one we need
-    for (auto& d : desiredChunks) {
+    for (auto & d : desiredChunks) {
 
         auto it = m_activeChunks.find(d);
-        if (it== m_activeChunks.end()) {
+        if (it == m_activeChunks.end()) {
             // active chunk does not exist, create it!
             ActiveChunk* activeChunk = new ActiveChunk(d.row, d.column, &m_blocks, m_cpSpace);
             m_activeChunks[d] = activeChunk;
@@ -278,7 +277,7 @@ void World::updateTilePhysicsObjects()
     }
 
     // delete all active chunks with a refcount of 0
-    for (auto& activeChunk : m_activeChunks) {
+    for (auto & activeChunk : m_activeChunks) {
         if (activeChunk.second->refcount == 0) {
             delete activeChunk.second;
             m_activeChunks.erase(activeChunk.first);
@@ -316,7 +315,7 @@ void World::render()
 
     //set our view so that the player will stay relative to the view, in the center.
     //HACK    m_window->setView(*m_view);
-   m_lightRenderer->renderToFBO();
+    m_lightRenderer->renderToFBO();
 
     m_tileRenderer->render();
 
@@ -374,13 +373,6 @@ void World::update(double elapsedTime)
     m_time->tick();
 
     if (m_server) {
-        std::vector<Entity*> list;
-        cpBB bb = cpBBNew(0.0, 0.0,WORLD_COLUMNCOUNT* Block::BLOCK_SIZE,  WORLD_ROWCOUNT * Block::BLOCK_SIZE);
-        m_torchesQuadTree->queryRange(&list, bb);
-
-        Debug::log(Debug::ImportantArea) << "server torch count: " << m_torches.size();
-        Debug::log(Debug::ImportantArea) << "server torch quadtree query: " << list.size();
-
         updateTilePhysicsObjects();
 
         cpSpaceStep(m_cpSpace, FIXED_TIMESTEP);
@@ -595,9 +587,9 @@ void World::saveWorld()
     std::stringstream compressed;
     boost::iostreams::copy(out, compressed);
 
-  //  out.push(file);
- //   char data[5] = {'a', 'b', 'c', 'd', 'e'};
-//    boost::iostreams::copy(boost::iostreams::basic_array_source<char>(data, sizeof(data)), out);
+    //  out.push(file);
+    //   char data[5] = {'a', 'b', 'c', 'd', 'e'};
+    //    boost::iostreams::copy(boost::iostreams::basic_array_source<char>(data, sizeof(data)), out);
 
     std::ofstream file("TESTWORLDDATA", std::ios::binary);
     file << compressed.str();
@@ -728,6 +720,10 @@ void World::attemptItemPlacement(Entities::Player* player)
         // all placed at the same position.
         return;
     }
+    std::vector<Entity*> list = m_torchesQuadTree->queryRange(0.0, 0.0, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, Block::BLOCK_SIZE * WORLD_ROWCOUNT);
+
+    Debug::log(Debug::ImportantArea) << "server torch count: " << m_torches.size();
+    Debug::log(Debug::ImportantArea) << "server torch quadtree query: " << list.size();
 
     //use player's placement timing and such.
     player->placeItem();
@@ -796,7 +792,7 @@ void World::tileRemovedPostStepCallback(cpSpace* space, void* obj, void* data)
     assert(space);
     World* world = static_cast<World*>(data);
 
-    for (cpShape* shape : world->m_tileShapesToDestroy) {
+    for (cpShape * shape : world->m_tileShapesToDestroy) {
         ContactListener::BodyUserData* userData = static_cast<ContactListener::BodyUserData*>(cpShapeGetUserData(shape));
 
         ContactListener::BlockWrapper* blockWrapper = static_cast<ContactListener::BlockWrapper*>(userData->data);

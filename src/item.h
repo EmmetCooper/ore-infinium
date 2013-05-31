@@ -152,7 +152,7 @@ public:
     }
 
     uint32_t maximumStackSize() const {
-       return m_maximumStackSize;
+        return m_maximumStackSize;
     }
 
 protected:
