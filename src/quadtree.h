@@ -57,24 +57,19 @@ private:
 
     uint32_t m_numObjectsToGrow;
 
-    QuadTree* m_nodes;
+    QuadTree* m_nodes = nullptr;
 
     bool m_isLeaf;
 
     bool contains(Entity* entity);
-    bool containsRect(double x, double y, double width, double height);
+    bool containsPoint(double x, double y, double width, double height);
 
     void createLeaves();
     void moveObjectsToLeaves();
 
 
-//    void queryRange(std::vector<Entity*>* emptyInputList, cpBB bb);
-
-//    void clear();
-
     QuadTree *m_parent = nullptr;
 
-    // data
     std::vector<Entity*> m_entities;
 
     friend class QuadTreeRenderer;

@@ -29,8 +29,7 @@ QuadTree::QuadTree() :
     m_bottom(0),
     m_numObjectsToGrow(4),
     m_nodes(0),
-    m_isLeaf(true),
-    m_parent(nullptr)
+    m_isLeaf(true)
 {
 }
 
@@ -40,10 +39,10 @@ QuadTree::QuadTree(double left, double right, double top, double bottom, QuadTre
     m_top(top),
     m_bottom(bottom),
     m_numObjectsToGrow(_numObjectsToGrow),
-    m_nodes(0),
     m_isLeaf(true),
     m_parent(parent)
 {
+//    Debug::log(Debug::ImportantArea) << "quadtree ctor, left: " << left << " right: " << right << " top: " << top << " bottom: " << bottom;
 }
 
 QuadTree::~QuadTree()
@@ -75,7 +74,8 @@ void QuadTree::insert(Entity* entity)
         }
     }
 
-    m_entities.push_back(entity);
+    assert(false); // should not happen
+//    m_entities.push_back(entity);
 }
 
 void QuadTree::clear()
@@ -103,10 +103,9 @@ std::vector<Entity*> QuadTree::queryRange(double x, double y, double width, doub
     }
 
     for (int n = 0; n < NodeCount; ++n) {
-        if (m_nodes[n].containsRect(x, y, width, height)) {
+        if (m_nodes[n].containsPoint(x, y, width, height)) {
             childObjects = m_nodes[n].queryRange(x, y, width, height);
             returnedObjects.insert(returnedObjects.end(), childObjects.begin(), childObjects.end());
-            break;
         }
     }
 
@@ -119,16 +118,16 @@ bool QuadTree::contains(Entity* entity)
     const glm::vec2& size = entity->sizeMeters();
 
     return  position.x > m_left &&
-            (position.x + size.x) < m_right &&
-            position.y > m_top &&
-            (position.y + size.y) < m_bottom;
+            (position.x + size.x) < m_right ;//&&
+//            position.y > m_top &&
+ //           (position.y + size.y) < m_bottom;
 }
 
-bool QuadTree::containsRect(double x, double y, double width, double height)
+bool QuadTree::containsPoint(double x, double y, double width, double height)
 {
     return (x >= m_left && x <= m_right) &&
-           (y >= m_top && y <= m_bottom) &&
-           (width <= m_right && height <= m_bottom);
+           (y >= m_top && y <= m_bottom);// &&
+   //        (width <= m_right && height <= m_bottom);
 }
 
 void QuadTree::createLeaves()
@@ -153,30 +152,3 @@ void QuadTree::moveObjectsToLeaves()
         }
     }
 }
-
-//
-//void QuadTree::queryRange(std::vector<Entity*>* list, cpBB range) {
-//    if (!cpBBIntersects(range, m_boundary)) {
-//        Debug::log(Debug::Area::ImportantArea) << "INTERSECTION FAILURE";
-//       return; //return unchanged (empty) list.
-//    }
-//
-//    Debug::log(Debug::Area::ImportantArea) << "INTERSECTION SUCCASS";
-//
-//    for (size_t i = 0; i < m_points.size(); ++i) {
-//       const glm::vec2& position = m_points[i]->position();
-//        if (cpBBContainsVect(m_boundary, cpv(position.x, position.y))) {
-//            list->push_back(m_points[i]);
-//        }
-//    }
-//
-//    if (NW == nullptr) {
-//        return;
-//    }
-//
-//    NW->queryRange(list, range);
-//    NE->queryRange(list, range);
-//    SW->queryRange(list, range);
-//    SE->queryRange(list, range);
-//}
-//
