@@ -15,66 +15,61 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
-#ifndef __QUADTREE__
-#define __QUADTREE__
+#ifndef SPATIALHASH_H
+#define SPATIALHASH_H
 
 #include "src/entity.h"
 
 #include <chipmunk/chipmunk.h>
 
-class QuadTreeRenderer;
-struct cpBB;
-struct cpVect;
+#include <unordered_map>
 
-class QuadTree
+//class SpatialHashRenderer;
+
+class SpatialHash
 {
 public:
-    enum Node {
-        NW = 0,
-        NE,
-        SW,
-        SE,
-        NodeCount
-    };
-
-public:
-    QuadTree();
-    QuadTree(double left, double right, double top, double bottom, QuadTree* parent = nullptr, uint32_t numObjectsToGrow = 3);
-
-    ~QuadTree();
+    /**
+     * @p cellSize the optimal cell size to divide this hash rectangle into. WARNING:
+     * a non-optimal cellSize will yield poor performance. So it's best to be slightly bigger than the average
+     * size of items it will contain.
+     */
+    SpatialHash(double x, double y, double width, double height, double cellSize);
+    ~SpatialHash();
 
     void insert(Entity* entity);
-
     void clear();
 
-    std::vector<Entity*> queryRange(double x, double y, double width, double height);
-
 private:
-    double m_left;
-    double m_right;
-    double m_top;
-    double m_bottom;
+    struct EntityList {
+       std::vector<Entity*> list;
+       //TODO: is there something else I need in here? I feel like there could be..
+    };
 
-    uint32_t m_numObjectsToGrow;
+    struct Key {
+        int x;
+        int y;
+    };
 
-    QuadTree* m_nodes = nullptr;
+    struct KeyHash {
+        std::size_t operator()(const Key& k) const
+        {
+            std::hash<int> h;
+            return h(k.x) ^ (h(k.y) << 1);
+        }
+    };
 
-    bool m_isLeaf;
+    struct KeyEqual {
+        bool operator()(const Key& lhs, const Key& rhs) const
+        {
+            return lhs.x == rhs.x && lhs.y == rhs.y;
+        }
+    };
 
-    bool contains(Entity* entity);
-    bool containsPoint(double x, double y, double width, double height);
-
-    void createLeaves();
-    void moveObjectsToLeaves();
-
-
-    QuadTree *m_parent = nullptr;
-
-    std::vector<Entity*> m_entities;
-
-    friend class QuadTreeRenderer;
+    std::unordered_map<Key, std::string, KeyHash, KeyEqual> map;
+//    friend class SpatialHashRenderer;
 };
 
 
 
-#endif // __QUADTREE__
+#endif

@@ -7,7 +7,6 @@ activechunk.cpp
 block.cpp
 camera.cpp
 chunk.cpp
-collisionmap.cpp
 debug.cpp
 entity.cpp
 game.cpp
@@ -28,7 +27,7 @@ time.cpp
 item.cpp
 quickbarinventory.cpp
 timer.cpp
-quadtree.cpp
+spatialhash.cpp
 #quadtreerenderer.cpp
 tool.cpp
 

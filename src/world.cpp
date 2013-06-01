@@ -40,7 +40,7 @@
 #include "settings/settings.h"
 #include "quickbarinventory.h"
 #include "timer.h"
-#include "quadtree.h"
+#include "spatialhash.h"
 #include "activechunk.h"
 #include "tool.h"
 
@@ -106,7 +106,9 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
     //client doesn't actually load/generate any world
     if (m_server) {
-        m_torchesQuadTree = new QuadTree(0.0, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, 0.0, Block::BLOCK_SIZE * WORLD_ROWCOUNT);
+        float x = Block::BLOCK_SIZE * WORLD_COLUMNCOUNT;
+        float y = Block::BLOCK_SIZE * WORLD_ROWCOUNT;
+//HACK: FIXME:        m_torchesQuadTree = new QuadTree(QuadTree::XY(x / 2.0, y / 2.0), QuadTree::XY(x / 2.0, y / 2.0));
 
 //        cpVect gravity = cpv(0, -100);
         cpVect gravity = cpv(0.0, 9.8);
@@ -124,7 +126,7 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
         // FIXME: load torches (this doesn't actually do anything but is in theory what we'll need to load shit)
         for (auto * t : m_torches) {
-            m_torchesQuadTree->insert(t);
+//FIXME:            m_torchesQuadTree->insert(t);
         }
 
         Debug::log(Debug::WorldLoaderArea) << "World is x: " << (WORLD_COLUMNCOUNT * Block::BLOCK_SIZE) << " y: " << (WORLD_ROWCOUNT * Block::BLOCK_SIZE) << " meters big";
@@ -168,7 +170,7 @@ World::~World()
 
     delete m_blockPickingCrosshair;
     delete m_mainPlayer;
-    delete m_torchesQuadTree;
+//FIXME:    delete m_torchesQuadTree;
 
     for (auto * player : m_players) {
         delete player;
@@ -720,7 +722,11 @@ void World::attemptItemPlacement(Entities::Player* player)
         // all placed at the same position.
         return;
     }
-    std::vector<Entity*> list = m_torchesQuadTree->queryRange(0.0, 0.0, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, Block::BLOCK_SIZE * WORLD_ROWCOUNT);
+    std::vector<Entity*> list;
+    float x = player->position().x;//Block::BLOCK_SIZE * WORLD_COLUMNCOUNT;
+    float y =player->position().y; //Block::BLOCK_SIZE * WORLD_ROWCOUNT;
+
+//FIXME:    m_torchesQuadTree->queryRange(list, QuadTree::AABB(QuadTree::XY(x / 2.0, y / 2.0), QuadTree::XY(500, 500)));
 
     Debug::log(Debug::ImportantArea) << "server torch count: " << m_torches.size();
     Debug::log(Debug::ImportantArea) << "server torch quadtree query: " << list.size();
@@ -742,7 +748,7 @@ void World::attemptItemPlacement(Entities::Player* player)
         Torch* newTorch = dynamic_cast<Torch*>(torch->duplicate());
         newTorch->setStackSize(1);
         m_torches.push_back(newTorch);
-        m_torchesQuadTree->insert(torch);
+//FIXME:        m_torchesQuadTree->insert(torch);
 
         //send the new inventory item count to this player's client.
         m_server->sendQuickBarInventoryItemCountChanged(player, inventory->equippedIndex(), torch->stackSize());

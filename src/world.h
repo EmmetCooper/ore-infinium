@@ -36,7 +36,7 @@ struct cpBody;
 struct cpSpace;
 class ActiveChunk;
 //class QuadTreeRenderer;
-class QuadTree;
+//class QuadTree;
 class QueryCallback;
 class ContactListener;
 class LightRenderer;
@@ -215,7 +215,7 @@ private:
 
     std::vector<Entity*> m_entities;
     std::vector<Torch*> m_torches;
-    QuadTree* m_torchesQuadTree = nullptr;
+//FIXME:    QuadTree* m_torchesQuadTree = nullptr;
 
     Sprite* m_blockPickingCrosshair = nullptr;
 
