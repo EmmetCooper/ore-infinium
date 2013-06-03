@@ -52,7 +52,7 @@ void SpatialHash::insert(Sprite* object)
     uint32_t cellY = position.y / m_cellSize;
     Key* key = new Key(cellX, cellY);
 
-    m_objects.at(*key).list.push_back(object);
+    m_objects[*key].list.push_back(object);
 
     object->m_spatialHashKey = key;
 }

@@ -58,6 +58,8 @@ settings/settings.cpp
 
 network/packet.cpp
 ${CMAKE_CURRENT_BINARY_DIR}/packet.pb.cc
+
+unittest.cpp
 )
 
 include(FindPkgConfig)

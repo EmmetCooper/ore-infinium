@@ -18,6 +18,8 @@
 #include "game.h"
 #include "config.h"
 
+#include "src/unittest.h"
+
 #include <iostream>
 
 std::vector<std::string> args;
@@ -52,12 +54,20 @@ int main(int argc, char* argv[])
             std::cout << "--authors Show author information" << '\n';
             std::cout << "-d --debug Start the game with core debug areas enabled. This applies to initial logging as it starts up. After it finishes starting, you can use an ingame UI to enable logging areas." << '\n';
 
+            std::cout << '\n' << '\n' << '\n' << "----------------------------------------- debug methods -----------------------------------------" << '\n';
+            std::cout << "--test-spatial-hash Runs various unit tests on the spatial hash to verify there are no regressions, report and exit." << '\n';
+
             exit(0);
         } else if (contains("--authors")) {
             std::cout << "Lead Developer - Shaun Reich <sreich@kde.org>\n";
             exit(0);
         } else if (contains("-d") || contains("--debug")) {
             startupDebugEnabled = true;
+        } else if (contains("--test-spatial-hash")) {
+            UnitTest* t = new UnitTest();
+            t->testSpatialHash();
+            delete t;
+            exit(0);
         }
     }
 
