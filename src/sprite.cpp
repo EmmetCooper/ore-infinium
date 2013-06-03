@@ -17,6 +17,7 @@
 
 #include "sprite.h"
 
+#include "src/spatialhash.h"
 #include "spritesheetrenderer.h"
 #include "game.h"
 
@@ -42,5 +43,6 @@ Sprite::Sprite(const Sprite& entity)
 
 Sprite::~Sprite()
 {
-
+    delete m_spatialHashKey;
+    m_spatialHashKey = nullptr;
 }

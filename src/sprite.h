@@ -19,12 +19,14 @@
 #define SPRITE_H
 
 #include "spritesheetrenderer.h"
+#include "spatialhash.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <string>
 
+class SpatialHash;
 class Item;
 
 class Sprite
@@ -89,8 +91,10 @@ public:
     void setPosition(const glm::vec2& vector) {
         m_position = vector;
     }
+
     void setPosition(float x, float y) {
         m_position = glm::vec2(x, y);
+        m_spatialHash->objectMoved(this);
     }
 
     glm::vec2 position() const {
@@ -106,6 +110,8 @@ private:
 private:
     SpriteSheetRenderer::SpriteSheetType m_spriteSheetType;
 
+    SpatialHash* m_spatialHash = nullptr;
+
     std::string m_frameName;
 
     // position is in meters as is everything else the game deals with. size is in meters as well, converted from pixels.
@@ -113,6 +119,10 @@ private:
 
     glm::vec2 m_origin;
 
+    /// utilized only by spatial index for speedy lookups (removals as well as findings)
+    SpatialHash::Key *m_spatialHashKey = nullptr;
+
+    friend class SpatialHash;
     friend SpriteSheetRenderer;
     friend Item;
 };

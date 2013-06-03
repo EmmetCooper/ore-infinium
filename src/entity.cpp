@@ -24,10 +24,10 @@
 
 #include <chipmunk/chipmunk.h>
 
+
 Entity::Entity(const std::string& frameName, SpriteSheetRenderer::SpriteSheetType spriteSheetType)
     : Sprite(frameName, spriteSheetType)
 {
-
 }
 
 Entity::Entity(const Entity& entity) : Sprite(entity)
@@ -64,9 +64,15 @@ void Entity::update(double elapsedTime, World* world)
         //Debug::log(Debug::Area::ServerEntityLogicArea) << "Sprites present position is: x: " << position().x << " y: " << position().y << " SETTING SPRITE POSITION TO X: " << m_body->GetPosition().x << " Y : " << m_body->GetPosition().y;
 
         const cpVect& pos = cpBodyGetPos(m_body);
-        glm::vec2 position = glm::vec2(pos.x, pos.y);
 
-        this->setPosition(position);
+        const glm::vec2& position = glm::vec2(pos.x, pos.y);
+        const glm::vec2& positionPrevious = Sprite::position();
+
+        // small but unnoticeable number (hopefully). Avoids the need to reupdate the spatial position for no reason.
+        if (position.x > (positionPrevious.x + 0.005) || position.x < (positionPrevious.x) ||
+            position.y > (positionPrevious.y + 0.005) || position.y < (positionPrevious.y)) {
+            this->setPosition(position);
+        }
 
 //        glm::vec2 desiredVelocity = m_velocity * glm::vec2(350, 300);
 //
@@ -80,7 +86,6 @@ void Entity::update(double elapsedTime, World* world)
 //        cpVect impulse = cpv(mass * velocityChange, 0.0);
 //
 //        cpBodyApplyImpulse(m_body, impulse, cpvzero);
-//
     }
 }
 

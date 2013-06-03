@@ -21,6 +21,8 @@
 #include "sprite.h"
 #include <glm/core/type.hpp>
 
+#include "spatialhash.h"
+
 struct cpBody;
 struct cpShape;
 
@@ -92,13 +94,8 @@ private:
     glm::vec2 m_velocity = glm::vec2(0, 0);
     uint32_t m_dirtyFlags = 0;
 
-    /// utilized only by collision map for speedy lookups (insertions and removals as well as findings)
-    int m_index = -1;
-
     std::string m_name;
     std::string m_details;
-
-    friend class CollisionMap;
 };
 
 #endif
