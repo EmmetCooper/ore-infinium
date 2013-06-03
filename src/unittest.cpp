@@ -21,6 +21,7 @@
 
 #include "src/spatialhash.h"
 #include "torch.h"
+#include <thread>
 
 UnitTest::UnitTest()
 {
@@ -34,13 +35,29 @@ UnitTest::~UnitTest()
 
 void UnitTest::testSpatialHash()
 {
-    SpatialHash* hash = new SpatialHash(0, 0, 85000, 85000, 5, 100);
+    std::cout << "beginning spatial hash test in 5..4..3...2...1" << '\n';
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    std::cout << "beginning!" << '\n';
 
-    const int max = 2;//50000;
+    const double width = 85000;
+    const double height = 85000;
+    SpatialHash* hash = new SpatialHash(0, 0, width, height, 5, 100);
+
+    const int max = 50000;
     for (int i = 0; i < max; ++i) {
         Torch* torch = new Torch(glm::vec2(i, i));
         hash->insert(torch);
     }
 
+    std::cout << "added test items! sleeping for 5 seconds" << '\n';
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    std::cout << "Sleep done; querying entire range" << '\n';
+
+    hash->queryRange(0, 0, width, height);
+
+    std::cout << "Range query finished" << '\n';
+
+    std::cout << "spatial hash test finished, sleeping for 5 seconds" << '\n';
+    std::this_thread::sleep_for(std::chrono::seconds(5));
     delete hash;
 }

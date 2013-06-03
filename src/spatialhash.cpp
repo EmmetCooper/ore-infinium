@@ -109,8 +109,13 @@ std::vector<Sprite*> SpatialHash::queryRange(double x, double y, double width, d
         for (uint32_t x = startX; x <= endX; x += 1) {
             Key key(x, y);
 
-            for (auto* object : m_objects.at(key).list) {
-                results.push_back(object);
+            auto it = m_objects.find(key);
+
+            //FIXME: double look up :(
+            if (it != m_objects.end()) {
+                for (auto* object : m_objects.at(key).list) {
+                    results.push_back(object);
+                }
             }
         }
     }
