@@ -103,15 +103,25 @@ void SpatialHash::queryRange(std::vector<Sprite*> *results, double x, double y, 
     uint32_t endX = x2 / m_cellSize;
     uint32_t endY = y2 / m_cellSize;
 
+    cpBB queryBB = cpBBNew(x, y, x2, y2);
+
     for (uint32_t y = startY; y <= endY; y += 1) {
         for (uint32_t x = startX; x <= endX; x += 1) {
             Key key(x, y);
 
+            // if the cell exists (and therefore more likely to have something in it)
             auto it = m_objects.find(key);
 
             if (it != m_objects.end()) {
                 for (auto* object : it->second.list) {
-                    results->push_back(object);
+
+                    const glm::vec2& position = object->position();
+                    const glm::vec2& size = object->sizeMeters();
+                    cpBB objectBB = cpBBNew(position.x, position.y, position.x + size.x, position.y + size.y);
+
+                    if (cpBBIntersects(objectBB, queryBB)) {
+                        results->push_back(object);
+                    }
                 }
             }
         }
