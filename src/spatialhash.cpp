@@ -24,14 +24,14 @@
 
 #include <assert.h>
 
-SpatialHash::SpatialHash(double x, double y, double width, double height, double cellSize, size_t reserve) :
+SpatialHash::SpatialHash(double x, double y, double x2, double y2, double cellSize, size_t reserve) :
     m_cellSize(cellSize),
-    m_width(width),
-    m_height(height),
+    m_x2(x2),
+    m_y2(y2),
     m_x(x),
     m_y(y)
 {
-    assert(width > x && height > y && (cellSize > 0.0));
+    assert(x2 > x && y2 > y && (cellSize > 0.0));
     m_objects.reserve(reserve);
 }
 
@@ -46,7 +46,7 @@ void SpatialHash::insert(Sprite* object)
     object->m_spatialHash = this;
 
     const glm::vec2& position = object->position();
-    assert(position.x >= m_x && position.x <= m_width && position.y >= m_y && position.y <= m_height);
+    assert(position.x >= m_x && position.x <= m_x2 && position.y >= m_y && position.y <= m_y2);
 
     uint32_t cellX = position.x / m_cellSize;
     uint32_t cellY = position.y / m_cellSize;
@@ -95,15 +95,13 @@ void SpatialHash::clear()
 
 }
 
-std::vector<Sprite*> SpatialHash::queryRange(double x, double y, double width, double height)
+void SpatialHash::queryRange(std::vector<Sprite*> *results, double x, double y, double x2, double y2)
 {
     uint32_t startX = x / m_cellSize;
     uint32_t startY = y / m_cellSize;
 
-    uint32_t endX = width / m_cellSize;
-    uint32_t endY = height / m_cellSize;
-
-    std::vector<Sprite*> results;
+    uint32_t endX = x2 / m_cellSize;
+    uint32_t endY = y2 / m_cellSize;
 
     for (uint32_t y = startY; y <= endY; y += 1) {
         for (uint32_t x = startX; x <= endX; x += 1) {
@@ -111,14 +109,11 @@ std::vector<Sprite*> SpatialHash::queryRange(double x, double y, double width, d
 
             auto it = m_objects.find(key);
 
-            //FIXME: double look up :(
             if (it != m_objects.end()) {
-                for (auto* object : m_objects.at(key).list) {
-                    results.push_back(object);
+                for (auto* object : it->second.list) {
+                    results->push_back(object);
                 }
             }
         }
     }
-
-    return results;
 }

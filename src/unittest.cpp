@@ -41,7 +41,7 @@ void UnitTest::testSpatialHash()
 
     const double width = 85000;
     const double height = 85000;
-    SpatialHash* hash = new SpatialHash(0, 0, width, height, 5, 100);
+    SpatialHash* hash = new SpatialHash(0, 0, width, height, 50, 100);
 
     const int max = 50000;
     for (int i = 0; i < max; ++i) {
@@ -53,9 +53,10 @@ void UnitTest::testSpatialHash()
     std::this_thread::sleep_for(std::chrono::seconds(5));
     std::cout << "Sleep done; querying entire range" << '\n';
 
-    hash->queryRange(0, 0, width, height);
+    std::vector<Sprite*> results;
+    hash->queryRange(&results, 0, 0, width, height);
 
-    std::cout << "Range query finished" << '\n';
+    std::cout << "Range query finished. Full query count, was: " << results.size() << " should be: " << max << '\n';
 
     std::cout << "spatial hash test finished, sleeping for 5 seconds" << '\n';
     std::this_thread::sleep_for(std::chrono::seconds(5));

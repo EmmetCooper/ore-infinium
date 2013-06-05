@@ -44,7 +44,7 @@ public:
     void remove(Sprite* object);
     void clear();
 
-    std::vector<Sprite*> queryRange(double x, double y, double width, double height);
+    void queryRange(std::vector<Sprite*> *results, double x, double y, double width, double height);
 
     struct Key {
         uint32_t x;
@@ -80,8 +80,8 @@ private:
     std::unordered_map<Key, ObjectList, KeyHash, KeyEqual> m_objects;
 
     double m_cellSize;
-    double m_width;
-    double m_height;
+    double m_x2;
+    double m_y2;
     double m_x;
     double m_y;
 
