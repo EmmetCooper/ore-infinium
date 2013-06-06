@@ -35,13 +35,15 @@ UnitTest::~UnitTest()
 
 void UnitTest::testSpatialHash()
 {
-    std::cout << "beginning spatial hash test in 5..4..3...2...1" << '\n';
-    std::this_thread::sleep_for(std::chrono::seconds(5));
+    std::cout << "beginning spatial hash test in 3 seconds" << '\n';
+    std::this_thread::sleep_for(std::chrono::seconds(3));
     std::cout << "beginning!" << '\n';
 
-    const double width = 85000;
-    const double height = 85000;
-    SpatialHash* hash = new SpatialHash(0, 0, width, height, 50, 100);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    const double width = 85000.0;
+    const double height = 85000.0;
+    SpatialHash* hash = new SpatialHash(0.0, 0.0, width, height, 50.0, 100.0);
 
     const int max = 50000;
     for (int i = 0; i < max; ++i) {
@@ -49,16 +51,87 @@ void UnitTest::testSpatialHash()
         hash->insert(torch);
     }
 
-    std::cout << "added test items! sleeping for 5 seconds" << '\n';
-    std::this_thread::sleep_for(std::chrono::seconds(5));
+    std::cout << "added test items! sleeping for 3 seconds" << '\n';
+    std::this_thread::sleep_for(std::chrono::seconds(3));
     std::cout << "Sleep done; querying entire range" << '\n';
 
     std::vector<Sprite*> results;
-    hash->queryRange(&results, 0, 0, width, height);
+    hash->queryRange(&results, 0.0, 0.0, width, height);
 
     std::cout << "Range query finished. Full query count, was: " << results.size() << " should be: " << max << '\n';
+
+    results.clear();
+    delete hash;
+    hash = nullptr;
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    std::cout << "sleeping for 3 seconds" << '\n';
+    std::this_thread::sleep_for(std::chrono::seconds(3));
+    std::cout << "Sleep done; adding test items for next range query" << '\n';
+
+    hash = new SpatialHash(0.0, 0.0, width, height, 5.0, 100.0);
+
+    {
+        Torch* torch = new Torch(glm::vec2(5.0, 5.0));
+        torch->setSizeMeters(4.0, 4.0);
+        hash->insert(torch);
+    }
+
+    {
+        Torch* torch = new Torch(glm::vec2(6.0, 6.0));
+        torch->setSizeMeters(4.0, 4.0);
+        hash->insert(torch);
+    }
+
+    {
+        Torch* torch = new Torch(glm::vec2(10.0, 10.0));
+        torch->setSizeMeters(4.0, 4.0);
+        hash->insert(torch);
+    }
+
+    std::cout << "done; sleeping for 3 seconds" << '\n';
+    std::this_thread::sleep_for(std::chrono::seconds(3));
+    std::cout << "Sleep done; querying range, verifying the propery query results due to the size of the objects instead of positions" << '\n';
+
+    hash->queryRange(&results, 0.0, 0.0, 5.0, 5.0);
+
+    std::cout << "Range query finished. Query count, was: " << results.size() << " should be: " << "1" << '\n';
+
+    results.clear();
+    delete hash;
+    hash = nullptr;
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    std::cout << "sleeping for 3 seconds" << '\n';
+    std::this_thread::sleep_for(std::chrono::seconds(3));
+    std::cout << "Sleep done; adding test items for next range query" << '\n';
+
+    hash = new SpatialHash(0.0, 0.0, width, height, 5.0, 100.0);
+
+    {
+        Torch* torch = new Torch(glm::vec2(1000.0, 1000.0));
+        torch->setSizeMeters(500.0, 500.0);
+        hash->insert(torch);
+    }
+
+    {
+        Torch* torch = new Torch(glm::vec2(6.0, 6.0));
+        torch->setSizeMeters(4.0, 4.0);
+        hash->insert(torch);
+    }
+
+    std::cout << "done; sleeping for 3 seconds" << '\n';
+    std::this_thread::sleep_for(std::chrono::seconds(3));
+    std::cout << "Sleep done; querying range, verifying the propery query results due to the size of the objects instead of positions" << '\n';
+
+    hash->queryRange(&results, 1400.0, 1400.0, 2000.0, 2000.0);
+
+    std::cout << "Range query finished. Query count, was: " << results.size() << " should be: " << "1" << '\n';
 
     std::cout << "spatial hash test finished, sleeping for 5 seconds" << '\n';
     std::this_thread::sleep_for(std::chrono::seconds(5));
     delete hash;
+    hash = nullptr;
 }
