@@ -173,6 +173,7 @@ private:
     * From scratch, create a randomly generated tileset and store it in our array
     */
     void generateWorld();
+    void generateVegetation();
 
     void calculateAttackPosition();
 
@@ -215,6 +216,7 @@ private:
 
     std::vector<Entity*> m_entities;
     std::vector<Torch*> m_torches;
+    SpatialHash* m_treesSpatialHash = nullptr;
 //FIXME:    QuadTree* m_torchesQuadTree = nullptr;
 
     Sprite* m_blockPickingCrosshair = nullptr;

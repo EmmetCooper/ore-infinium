@@ -43,6 +43,7 @@
 #include "spatialhash.h"
 #include "activechunk.h"
 #include "tool.h"
+#include "vegetation.h"
 
 #include <chipmunk/chipmunk.h>
 
@@ -76,6 +77,8 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
     m_uselessEntity->setPosition(2300 / PIXELS_PER_METER, 1400 / PIXELS_PER_METER);
     m_entities.insert(m_entities.end(), m_uselessEntity);
 
+    m_treesSpatialHash = new SpatialHash(0.0, 0.0, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, Block::BLOCK_SIZE * WORLD_ROWCOUNT, 8.0, 4000);
+
     if (!m_server) {
         m_camera = new Camera();
         m_spriteSheetRenderer = new SpriteSheetRenderer(m_camera);
@@ -90,6 +93,8 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         Torch* torch = new Torch(glm::vec2(2400 / PIXELS_PER_METER, 1420 / PIXELS_PER_METER));
         m_torches.push_back(torch);
         m_spriteSheetRenderer->registerSprite(torch);
+        //HACK
+        generateVegetation();
 
         m_blockPickingCrosshair = new Sprite("crosshairPickingActive", SpriteSheetRenderer::SpriteSheetType::Entity);
         m_spriteSheetRenderer->registerSprite(m_blockPickingCrosshair);
@@ -141,6 +146,7 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         //tool->setToolMaterial(Tool::ToolMaterial::Wood);
         //tool->setToolType(Tool::ToolType::PickAxe);
         //m_spriteSheetRenderer->registerSprite(tool);
+        //HACK:
     }
 }
 
@@ -170,6 +176,7 @@ World::~World()
 
     delete m_blockPickingCrosshair;
     delete m_mainPlayer;
+    delete m_treesSpatialHash;
 //FIXME:    delete m_torchesQuadTree;
 
     for (auto * player : m_players) {
@@ -553,9 +560,35 @@ void World::generateWorld()
         }
     }
 
+//FIXME:    generateVegetation();
+
     generateTileMeshes();
 
     Debug::log(Debug::Area::WorldGeneratorArea) << "Time taken for world generation: " << timer.milliseconds() << " milliseconds";
+}
+
+void World::generateVegetation()
+{
+    for (int column = (int)(40 * Block::BLOCK_SIZE); column < (int)(80 * BLOCK_SIZE)/*column < WORLD_COLUMNCOUNT*/; column += 5) {
+        for (int row = 0; row < 20; /* not much further than where the sky stops */ ++row) {
+
+            int index = column * WORLD_ROWCOUNT + row;
+//            if (m_blocks[index].primitiveType != Block::BlockType::NullBlockType) {
+                Vegetation* tree = new Vegetation("tree1", SpriteSheetRenderer::SpriteSheetType::Entity);
+                tree->setPosition(column * Block::BLOCK_SIZE, row * Block::BLOCK_SIZE);
+//k                tree->setPosition( glm::vec2(2400 / PIXELS_PER_METER, 1350 / PIXELS_PER_METER));
+//                m_treesSpatialHash->insert(tree);
+
+                    //HACK;
+
+                //HACK FUCK YEAH
+//                if (m_spriteSheetRenderer) {
+                    m_spriteSheetRenderer->registerSprite(tree);
+ //               }
+  //              continue;
+ //           }
+        }
+    }
 }
 
 void World::saveWorld()

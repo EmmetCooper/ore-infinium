@@ -162,8 +162,8 @@ private:
     glm::mat4 m_modelMatrix;
     glm::mat4 m_projectionMatrix;
 
-    uint32_t m_maxSpriteCount = 2200;
-    uint32_t m_maxEntityCount = 2200;
+    uint32_t m_maxSpriteCount = 22000;
+    uint32_t m_maxEntityCount = 22000;
 
     const uint32_t SPRITESHEET_HEIGHT = 512;
     const uint32_t SPRITESHEET_WIDTH = 512;
