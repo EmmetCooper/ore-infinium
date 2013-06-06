@@ -22,6 +22,7 @@
 
 #include <chipmunk/chipmunk.h>
 
+#include <set>
 #include <assert.h>
 
 SpatialHash::SpatialHash(double x, double y, double x2, double y2, double cellSize, size_t reserve) :
@@ -46,15 +47,26 @@ void SpatialHash::insert(Sprite* object)
     object->m_spatialHash = this;
 
     const glm::vec2& position = object->position();
+    const glm::vec2& size = object->sizeMeters();
+
+    // verify that the object at least resides within the bounds of this spatial hash...
     assert(position.x >= m_x && position.x <= m_x2 && position.y >= m_y && position.y <= m_y2);
 
-    uint32_t cellX = position.x / m_cellSize;
-    uint32_t cellY = position.y / m_cellSize;
-    Key* key = new Key(cellX, cellY);
+    uint32_t startX = position.x / m_cellSize;
+    uint32_t startY = position.y / m_cellSize;
+    uint32_t endX = (position.x + size.x) / m_cellSize;
+    uint32_t endY = (position.y + size.y) / m_cellSize;
 
-    m_objects[*key].list.push_back(object);
+    for (uint32_t cellY = startY; cellY <= endY; cellY += 1) {
+        for (uint32_t cellX = startX; cellX <= endX; cellX += 1) {
 
-    object->m_spatialHashKey = key;
+            Key key(cellX, cellY);
+
+            m_objects[key].list.push_back(object);
+
+            object->m_spatialHashKeys.push_back(key);
+        }
+    }
 }
 
 void SpatialHash::remove(Sprite* object)
@@ -62,20 +74,20 @@ void SpatialHash::remove(Sprite* object)
     assert(object);
 
     object->m_spatialHash = nullptr;
-    Key* key = object->m_spatialHashKey;
 
-    SpatialHash::ObjectList& value = m_objects.at(*key);
-    value.list.remove(object);
+    for (auto& key : object->m_spatialHashKeys) {
+        SpatialHash::ObjectList& value = m_objects.at(key);
+        value.list.remove(object);
+    }
 
-    delete key;
-    object->m_spatialHashKey = nullptr;
+    object->m_spatialHashKeys.clear();
 }
 
 void SpatialHash::objectMoved(Sprite* object)
 {
     assert(object);
 
-    if (object->m_spatialHashKey == nullptr) {
+    if (object->m_spatialHashKeys.size() == 0) {
        return;
     }
 
@@ -95,7 +107,7 @@ void SpatialHash::clear()
 
 }
 
-void SpatialHash::queryRange(std::vector<Sprite*> *results, double x, double y, double x2, double y2)
+void SpatialHash::queryRange(std::set<Sprite*> *results, double x, double y, double x2, double y2)
 {
     uint32_t startX = x / m_cellSize;
     uint32_t startY = y / m_cellSize;
@@ -119,8 +131,8 @@ void SpatialHash::queryRange(std::vector<Sprite*> *results, double x, double y, 
                     const glm::vec2& size = object->sizeMeters();
                     cpBB objectBB = cpBBNew(position.x, position.y, position.x + size.x, position.y + size.y);
 
-                    if (cpBBIntersects(objectBB, queryBB)) {
-                        results->push_back(object);
+                    if (cpBBIntersects(queryBB, objectBB)) {
+                        results->insert(object);
                     }
                 }
             }

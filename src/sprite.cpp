@@ -43,6 +43,6 @@ Sprite::Sprite(const Sprite& entity)
 
 Sprite::~Sprite()
 {
-    delete m_spatialHashKey;
-    m_spatialHashKey = nullptr;
+    m_spatialHash->remove(this);
+    //vector clear is handled by spatial hash, just in case they want to remove it but not delete the thingy.
 }

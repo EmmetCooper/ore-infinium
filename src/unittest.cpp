@@ -21,6 +21,8 @@
 
 #include "src/spatialhash.h"
 #include "torch.h"
+
+#include <set>
 #include <thread>
 
 UnitTest::UnitTest()
@@ -55,7 +57,7 @@ void UnitTest::testSpatialHash()
     std::this_thread::sleep_for(std::chrono::seconds(3));
     std::cout << "Sleep done; querying entire range" << '\n';
 
-    std::vector<Sprite*> results;
+    std::set<Sprite*> results;
     hash->queryRange(&results, 0.0, 0.0, width, height);
 
     std::cout << "Range query finished. Full query count, was: " << results.size() << " should be: " << max << '\n';
@@ -112,14 +114,14 @@ void UnitTest::testSpatialHash()
 
     {
         Torch* torch = new Torch(glm::vec2(1000.0, 1000.0));
-        torch->setSizeMeters(500.0, 500.0);
+        torch->setSizeMeters(800.0, 800.0);
         hash->insert(torch);
     }
 
     {
-        Torch* torch = new Torch(glm::vec2(6.0, 6.0));
-        torch->setSizeMeters(4.0, 4.0);
-        hash->insert(torch);
+//        Torch* torch = new Torch(glm::vec2(6.0, 6.0));
+//        torch->setSizeMeters(4.0, 4.0);
+//        hash->insert(torch);
     }
 
     std::cout << "done; sleeping for 3 seconds" << '\n';

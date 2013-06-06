@@ -120,7 +120,7 @@ private:
     glm::vec2 m_origin;
 
     /// utilized only by spatial index for speedy lookups (removals as well as findings)
-    SpatialHash::Key *m_spatialHashKey = nullptr;
+    std::vector<SpatialHash::Key> m_spatialHashKeys;
 
     friend class SpatialHash;
     friend SpriteSheetRenderer;

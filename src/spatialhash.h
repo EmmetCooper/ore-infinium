@@ -21,6 +21,7 @@
 #include <chipmunk/chipmunk.h>
 
 #include <vector>
+#include <set>
 #include <list>
 #include <unordered_map>
 
@@ -44,7 +45,7 @@ public:
     void remove(Sprite* object);
     void clear();
 
-    void queryRange(std::vector<Sprite*> *results, double x, double y, double width, double height);
+    void queryRange(std::set<Sprite*> *results, double x, double y, double width, double height);
 
     struct Key {
         uint32_t x;
