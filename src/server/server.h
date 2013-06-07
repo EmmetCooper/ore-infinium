@@ -45,6 +45,10 @@ public:
 
     static constexpr int MAXPLAYERS = 8;
 
+    /**
+     * Returns the client that started this server. This is ONLY VALID if it's a self-hosted server/client session.
+     * Use world's m_client for indication that the world is in client mode, instead.
+     */
     Client* client() {
         return m_client;
     }
@@ -69,6 +73,17 @@ public:
      */
     void sendPlayerQuickBarInventory(Entities::Player* player, uint8_t index);
 
+    /**
+     * Sends a big (greater than viewport-sized) chunk to the player and updates the classes
+     * internal storage of where the last loaded chunk was.
+     *
+     * This should be called when the player reaches a certain distance from the last loaded chunk for that client,
+     * but not too late otherwise there will be pop-in.
+     *
+     * NOTE: internally looks up the peer for player and calls @sa sendLargeWorldChunk
+     */
+    void sendLargeWorldChunkForPlayer(Entities::Player* player);
+
 private:
     /**
      * If the client validated successfully, also creates a player and appends client and player
@@ -86,8 +101,9 @@ private:
     void sendChatMessage(const std::string& message, const std::string& playerName);
     void sendInitialPlayerData(ENetPeer* peer, Entities::Player* player);
     void sendInitialPlayerDataFinished(ENetPeer* peer);
-    void sendInitialWorldChunk(ENetPeer* peer);
+    void sendLargeWorldChunk(ENetPeer* peer);
 
+    ENetPeer* peerForPlayer(Entities::Player* player);
 
     Entities::Player* createPlayer(const std::string& playerName);
 

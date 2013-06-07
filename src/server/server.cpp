@@ -189,7 +189,7 @@ void Server::processMessage(ENetEvent& event)
             }
 
             sendInitialPlayerDataFinished(event.peer);
-            sendInitialWorldChunk(event.peer);
+            sendLargeWorldChunk(event.peer);
 
             // tell our (this) player/client what his quickbar inventory contains (send all items within it)
             uint8_t maxIndex = m_clients[event.peer]->quickBarInventory()->maxEquippedSlots();
@@ -324,7 +324,12 @@ void Server::sendInitialPlayerDataFinished(ENetPeer* peer)
     Packet::sendPacket(peer, &message, Packet::FromServerPacketContents::InitialPlayerDataFinishedFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
 }
 
-void Server::sendInitialWorldChunk(ENetPeer* peer)
+void Server::sendLargeWorldChunkForPlayer(Entities::Player* player)
+{
+    sendLargeWorldChunk(peerForPlayer(player));
+}
+
+void Server::sendLargeWorldChunk(ENetPeer* peer)
 {
     PacketBuf::Chunk message;
 
@@ -343,10 +348,8 @@ void Server::sendInitialWorldChunk(ENetPeer* peer)
     int32_t startY = std::max(centerY - maxHeight, 0);
     int32_t endY = (centerY) + maxHeight;
 
-    player->loadedChunksStartRow = startY;
-    player->loadedChunksEndRow = endY;
-    player->loadedChunksStartColumn = startX;
-    player->loadedChunksEndColumn = endX;
+    player->lastLoadedChunkX = centerX;
+    player->lastLoadedChunkY = centerY;
 
     Debug::log(Debug::NetworkServerInitialArea) << " INITIAL CHUNK: startx: " << startX << " starty: " << startY << "end x: " << endX << " endY: " << endY;
 
@@ -399,6 +402,21 @@ void Server::sendWorldChunk(Chunk* chunk)
     Packet::sendPacketCompressedBroadcast(m_server, &message, Packet::FromServerPacketContents::ChunkFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
 }
 
+/// search for the client associated with this player
+ENetPeer* Server::peerForPlayer(Entities::Player* player)
+{
+    ENetPeer* peer = nullptr;
+    for (auto c : m_clients) {
+        if (c.second == player) {
+            peer = c.first;
+            break;
+        }
+    }
+
+    assert(peer);
+    return peer;
+}
+
 void Server::sendItemSpawned(Item* item)
 {
     PacketBuf::Item message;
@@ -428,16 +446,7 @@ void Server::sendQuickBarInventoryItemCountChanged(Entities::Player* player, uin
     message.set_index(index);
     message.set_newcount(newCount);
 
-    // search for the client associated with this player
-    ENetPeer* peer = nullptr;
-    for (auto c : m_clients) {
-        if (c.second == player) {
-            peer = c.first;
-            break;
-        }
-    }
-
-    Packet::sendPacket(peer, &message, Packet::FromServerPacketContents::QuickBarInventoryItemCountChangedFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
+    Packet::sendPacket(peerForPlayer(player), &message, Packet::FromServerPacketContents::QuickBarInventoryItemCountChangedFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
 }
 
 Entities::Player* Server::createPlayer(const std::string& playerName)

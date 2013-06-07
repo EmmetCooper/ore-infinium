@@ -121,7 +121,6 @@ private:
     static void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);
     static void checkEachArbiter(cpBody* body, cpArbiter* arbiter, void* data);
 
-
     uint32_t m_maxHealth = 2500;
     uint32_t m_health = m_maxHealth;
 
@@ -153,15 +152,13 @@ private:
     bool m_mouseLeftButtonHeld = false;
     bool m_mouseRightButtonHeld = false;
 
-    uint32_t loadedChunksStartRow = 0;
-    uint32_t loadedChunksEndRow = 0;
-    uint32_t loadedChunksStartColumn = 0;
-    uint32_t loadedChunksEndColumn = 0;
-
-    /// tiles marked within this range are within a reasonable range of the players viewport and should be
-    /// simulated (e.g. have tile physics objects between here).
-    glm::ivec2 activeTileRangeStart = glm::ivec2(0, 0);
-    glm::ivec2 activeTileRangeEnd = glm::ivec2(0, 0);
+    /**
+     * Used by the server, if the current position of the player varies enough against this to need
+     * a new chunk to be sent, the server will send it out.
+     * NOTE: this refers to the center of the viewport and of the loaded area
+     */
+    uint32_t lastLoadedChunkX = 0;
+    uint32_t lastLoadedChunkY = 0;
 
     // if > 0 means something is touching our feet, so we can jump.
     uint32_t m_jumpContacts = 0;
