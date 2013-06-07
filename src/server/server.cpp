@@ -335,8 +335,8 @@ void Server::sendLargeWorldChunk(ENetPeer* peer)
 
     Entities::Player* player = m_clients[peer];
 
-    int32_t centerX = static_cast<uint32_t>(player->position().x / Block::BLOCK_SIZE);
-    int32_t centerY = static_cast<uint32_t>(player->position().y / Block::BLOCK_SIZE);
+    int32_t centerX = static_cast<int32_t>(player->position().x / Block::BLOCK_SIZE);
+    int32_t centerY = static_cast<int32_t>(player->position().y / Block::BLOCK_SIZE);
 
     int32_t maxWidth = static_cast<int32_t>(MAX_VIEWPORT_WIDTH * 0.5);
     int32_t maxHeight = static_cast<int32_t>(MAX_VIEWPORT_HEIGHT * 0.5);
@@ -348,8 +348,7 @@ void Server::sendLargeWorldChunk(ENetPeer* peer)
     int32_t startY = std::max(centerY - maxHeight, 0);
     int32_t endY = (centerY) + maxHeight;
 
-    player->lastLoadedChunkX = centerX;
-    player->lastLoadedChunkY = centerY;
+    player->lastLoadedChunk = glm::ivec2(centerX, centerY);
 
     Debug::log(Debug::NetworkServerInitialArea) << " INITIAL CHUNK: startx: " << startX << " starty: " << startY << "end x: " << endX << " endY: " << endY;
 

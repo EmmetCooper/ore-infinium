@@ -157,8 +157,7 @@ private:
      * a new chunk to be sent, the server will send it out.
      * NOTE: this refers to the center of the viewport and of the loaded area
      */
-    uint32_t lastLoadedChunkX = 0;
-    uint32_t lastLoadedChunkY = 0;
+    glm::ivec2 lastLoadedChunk = glm::ivec2(0, 0);
 
     // if > 0 means something is touching our feet, so we can jump.
     uint32_t m_jumpContacts = 0;
