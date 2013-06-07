@@ -280,6 +280,7 @@ private:
 
     friend class TileRenderer;
     friend class Server;
+    friend class Client;
 };
 
 #endif

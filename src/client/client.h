@@ -113,6 +113,7 @@ private:
     void poll();
 
     void processMessage(ENetEvent& event);
+
     void receiveChatMessage(const std::string& packetContents);
     void receiveInitialPlayerData(const std::string& packetContents);
     void receivePlayerDisconnected(const std::string& packetContents);
@@ -122,6 +123,7 @@ private:
     void receiveWorldTimeChanged(const std::string& packetContents);
     void receiveQuickBarInventoryItem(const std::string& packetContents);
     void receiveQuickBarInventoryItemCountChanged(const std::string& packetContents);
+    void receiveInitialVegetationSpawning(const std::string& packetContents);
 
 ///////////////////////////////////////////////
 

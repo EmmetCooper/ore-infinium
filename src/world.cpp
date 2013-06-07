@@ -93,8 +93,6 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         Torch* torch = new Torch(glm::vec2(2400 / PIXELS_PER_METER, 1420 / PIXELS_PER_METER));
         m_torches.push_back(torch);
         m_spriteSheetRenderer->registerSprite(torch);
-        //HACK
-        generateVegetation();
 
         m_blockPickingCrosshair = new Sprite("crosshairPickingActive", SpriteSheetRenderer::SpriteSheetType::Entity);
         m_spriteSheetRenderer->registerSprite(m_blockPickingCrosshair);
@@ -567,7 +565,7 @@ void World::generateWorld()
         }
     }
 
-//FIXME:    generateVegetation();
+    generateVegetation();
 
     generateTileMeshes();
 
@@ -584,16 +582,9 @@ void World::generateVegetation()
                 Vegetation* tree = new Vegetation("tree1", SpriteSheetRenderer::SpriteSheetType::Entity);
                 tree->setPosition(column * Block::BLOCK_SIZE, row * Block::BLOCK_SIZE);
 //k                tree->setPosition( glm::vec2(2400 / PIXELS_PER_METER, 1350 / PIXELS_PER_METER));
-//                m_treesSpatialHash->insert(tree);
+                m_treesSpatialHash->insert(tree);
 
                     //HACK;
-
-                //HACK FUCK YEAH
-//                if (m_spriteSheetRenderer) {
-                    m_spriteSheetRenderer->registerSprite(tree);
- //               }
-  //              continue;
- //           }
         }
     }
 }

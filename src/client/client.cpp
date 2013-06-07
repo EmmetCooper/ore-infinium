@@ -40,6 +40,7 @@
 #include <src/item.h>
 #include <src/torch.h>
 #include <src/tool.h>
+#include <src/vegetation.h>
 #include "src/../config.h"
 
 #include <random>
@@ -693,6 +694,10 @@ void Client::processMessage(ENetEvent& event)
         receiveWorldTimeChanged(packetContents);
         break;
 
+    case Packet::InitialVegetationSpawningFromServerPacket:
+        receiveInitialVegetationSpawning(packetContents);
+        break;
+
     default:
         Debug::assertf(false, "Client failure, unhandled packet type received from server, it needs implemented apparently.");
     }
@@ -894,4 +899,19 @@ void Client::receiveItemSpawned(const std::string& packetContents)
     baseItem->setState(message.itemstate());
 
     m_world->spawnItem(baseItem);
+}
+
+void Client::receiveInitialVegetationSpawning(const std::string& packetContents)
+{
+    PacketBuf::InitialVegetationSpawn message;
+    Packet::deserialize(packetContents, &message);
+
+    assert(message.x_size() == message.y_size());
+
+    for (int i = 0; i < message.x_size(); ++i) {
+        Vegetation* tree = new Vegetation("tree1", SpriteSheetRenderer::SpriteSheetType::Entity);
+        tree->setPosition(message.x(i), message.y(i));
+        m_world->m_treesSpatialHash->insert(tree);
+        m_world->m_spriteSheetRenderer->registerSprite(tree);
+    }
 }

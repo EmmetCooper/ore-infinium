@@ -189,17 +189,18 @@ void Server::processMessage(ENetEvent& event)
             }
 
             sendInitialPlayerDataFinished(event.peer);
-            sendLargeWorldChunk(event.peer);
+//HACK: FIXME:  unneeded            sendLargeWorldChunk(event.peer);
 
             // tell our (this) player/client what his quickbar inventory contains (send all items within it)
             uint8_t maxIndex = m_clients[event.peer]->quickBarInventory()->maxEquippedSlots();
             for (uint8_t index = 0; index < maxIndex; ++index) {
                 sendPlayerQuickBarInventory(m_clients[event.peer], index);
             }
-            break;
 
             sendWorldTime(event.peer);
             sendInitialVegetationSpawn(event.peer);
+
+            break;
         }
 
         case Packet::ConnectionEventType::DisconnectedInvalidPlayerName:
@@ -573,7 +574,7 @@ void Server::sendPlayerQuickBarInventory(Entities::Player* player, uint8_t index
 void Server::sendInitialVegetationSpawn(ENetPeer* peer)
 {
     std::set<Sprite*> results;
-    m_world->m_treesSpatialHash->queryRange(&results, 0, 0, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, Block::BLOCK_SIZE * WORLD_ROWCOUNT);
+    m_world->m_treesSpatialHash->queryRange(&results, 0.0, 0.0, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, Block::BLOCK_SIZE * WORLD_ROWCOUNT);
 
     PacketBuf::InitialVegetationSpawn message;
 
@@ -582,6 +583,5 @@ void Server::sendInitialVegetationSpawn(ENetPeer* peer)
         message.add_x(pos.x);
         message.add_y(pos.y);
     }
-
-    Packet::sendPacketCompressed(peer, &message, Packet::QuickBarInventoryItemFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
+    Packet::sendPacketCompressed(peer, &message, Packet::InitialVegetationSpawningFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
 }
