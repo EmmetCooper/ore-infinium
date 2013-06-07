@@ -574,7 +574,7 @@ void World::generateWorld()
 
 void World::generateVegetation()
 {
-    for (int column = (int)(40 * Block::BLOCK_SIZE); column < WORLD_COLUMNCOUNT; column += 15) {
+    for (int column = 0; column < WORLD_COLUMNCOUNT; column += 15) {
         for (int row = 0; row < 20; /* not much further than where the sky stops */ ++row) {
 
             int index = column * WORLD_ROWCOUNT + row;
