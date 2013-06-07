@@ -574,17 +574,16 @@ void World::generateWorld()
 
 void World::generateVegetation()
 {
-    for (int column = (int)(40 * Block::BLOCK_SIZE); column < (int)(80 * BLOCK_SIZE)/*column < WORLD_COLUMNCOUNT*/; column += 5) {
+    for (int column = (int)(40 * Block::BLOCK_SIZE); column < WORLD_COLUMNCOUNT; column += 15) {
         for (int row = 0; row < 20; /* not much further than where the sky stops */ ++row) {
 
             int index = column * WORLD_ROWCOUNT + row;
-//            if (m_blocks[index].primitiveType != Block::BlockType::NullBlockType) {
+            if (m_blocks[index].primitiveType != Block::BlockType::NullBlockType) {
                 Vegetation* tree = new Vegetation("tree1", SpriteSheetRenderer::SpriteSheetType::Entity);
                 tree->setPosition(column * Block::BLOCK_SIZE, row * Block::BLOCK_SIZE);
-//k                tree->setPosition( glm::vec2(2400 / PIXELS_PER_METER, 1350 / PIXELS_PER_METER));
                 m_treesSpatialHash->insert(tree);
-
-                    //HACK;
+                break;
+            }
         }
     }
 }
