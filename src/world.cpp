@@ -418,12 +418,9 @@ void World::update(double elapsedTime)
                 player->clearDirtyFlag(Entity::DirtyFlags::PositionDirty);
 
                 const glm::ivec2& currentChunkPosition = glm::ivec2(static_cast<int>(player->position().x / Block::BLOCK_SIZE), static_cast<int>(player->position().y / Block::BLOCK_SIZE));
-//                const glm::vec2& currentChunk
-
-                Debug::log(Debug::ImportantArea) << " distance from last chunk loaded: " <<
-                glm::distance(currentChunkPosition, player->lastLoadedChunk);
 
                 if (glm::distance(currentChunkPosition, player->lastLoadedChunk) > 20) {
+                    Debug::log(Debug::ImportantArea) << " server sending large world chunk..: ";
                     m_server->sendLargeWorldChunkForPlayer(player);
                 }
             }

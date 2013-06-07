@@ -103,6 +103,16 @@ message Item {
     optional uint32 toolType = 11;
 }
 
+message InitialVegetationSpawn {
+    repeated float x = 1;
+    repeated float y = 2;
+}
+
+message Vegetation {
+    optional float x = 1;
+    optional float y = 2;
+}
+
 message ItemCountChanged {
     optional uint32 index = 1;
     optional uint32 newCount = 2;

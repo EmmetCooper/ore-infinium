@@ -85,7 +85,9 @@ public:
 
         /// when a new item has been spawned in the world (dropped or placed)
         ItemSpawnedFromServerPacket,
-        WorldTimeChangedFromServerPacket
+        WorldTimeChangedFromServerPacket,
+
+        InitialVegetationSpawningFromServerPacket
     };
 
     enum ConnectionEventType {

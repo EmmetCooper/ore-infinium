@@ -279,6 +279,7 @@ private:
     Time* m_time = nullptr;
 
     friend class TileRenderer;
+    friend class Server;
 };
 
 #endif

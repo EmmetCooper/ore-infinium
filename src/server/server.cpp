@@ -198,7 +198,8 @@ void Server::processMessage(ENetEvent& event)
             }
             break;
 
-            sendWorldTimeChanged();
+            sendWorldTime(event.peer);
+            sendInitialVegetationSpawn(event.peer);
         }
 
         case Packet::ConnectionEventType::DisconnectedInvalidPlayerName:
@@ -513,6 +514,18 @@ void Server::sendWorldTimeChanged()
     Packet::sendPacketBroadcast(m_server, &message, Packet::FromServerPacketContents::WorldTimeChangedFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
 }
 
+void Server::sendWorldTime(ENetPeer* peer)
+{
+    const Time& time = m_world->worldTime();
+
+    PacketBuf::WorldTimeChangedFromServer message;
+    message.set_hour(time.hour());
+    message.set_minute(time.minute());
+    message.set_second(time.second());
+
+    Packet::sendPacket(peer, &message, Packet::FromServerPacketContents::WorldTimeChangedFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
+}
+
 void Server::sendPlayerQuickBarInventory(Entities::Player* player, uint8_t index)
 {
     Item *item = player->quickBarInventory()->item(index);
@@ -557,3 +570,18 @@ void Server::sendPlayerQuickBarInventory(Entities::Player* player, uint8_t index
     Packet::sendPacketCompressed(peer, &message, Packet::QuickBarInventoryItemFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
 }
 
+void Server::sendInitialVegetationSpawn(ENetPeer* peer)
+{
+    std::set<Sprite*> results;
+    m_world->m_treesSpatialHash->queryRange(&results, 0, 0, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, Block::BLOCK_SIZE * WORLD_ROWCOUNT);
+
+    PacketBuf::InitialVegetationSpawn message;
+
+    for (Sprite* sprite : results) {
+        const glm::vec2& pos = sprite->position();
+        message.add_x(pos.x);
+        message.add_y(pos.y);
+    }
+
+    Packet::sendPacketCompressed(peer, &message, Packet::QuickBarInventoryItemFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
+}
