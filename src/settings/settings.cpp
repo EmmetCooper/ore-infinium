@@ -37,7 +37,7 @@ Settings::Settings()
           Debug::RenderingDebug::SkyRenderingPassDebug
 //    Debug::RenderingDebug::Box2DAABBRenderingDebug |
 //    Debug::RenderingDebug::Box2DJointRenderingDebug |
-          |    Debug::RenderingDebug::Box2DShapeRenderingDebug
+//          |    Debug::RenderingDebug::Box2DShapeRenderingDebug
       )
 {
 
