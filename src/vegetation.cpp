@@ -20,5 +20,5 @@
 
 Vegetation::Vegetation(const std::string& frameName, SpriteSheetRenderer::SpriteSheetType spriteSheetType): Entity(frameName, spriteSheetType)
 {
-
+    m_sizeMeters = glm::vec2(1.0, 2.0);
 }

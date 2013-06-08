@@ -580,7 +580,11 @@ void World::generateVegetation()
             int index = column * WORLD_ROWCOUNT + row;
             if (m_blocks[index].primitiveType != Block::BlockType::NullBlockType) {
                 Vegetation* tree = new Vegetation("tree1", SpriteSheetRenderer::SpriteSheetType::Entity);
-                tree->setPosition(column * Block::BLOCK_SIZE, row * Block::BLOCK_SIZE);
+                float x = column * Block::BLOCK_SIZE;
+                float y = row * Block::BLOCK_SIZE;
+                y -= tree->sizeMeters().y;
+                Debug::log(Debug::ImportantArea) <<  "TREE SIZE METERS: " << tree->sizeMeters().y;
+                tree->setPosition(x, y);
                 m_treesSpatialHash->insert(tree);
                 break;
             }
