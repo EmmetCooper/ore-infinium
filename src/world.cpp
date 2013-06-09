@@ -65,6 +65,7 @@
 #include <boost/iostreams/copy.hpp>
 #include <boost/iostreams/filter/zlib.hpp>
 #include <glm/core/func_common.hpp>
+#include <FreeImage.h>
 
 World::World(Entities::Player* mainPlayer, Client* client, Server* server)
     : m_mainPlayer(mainPlayer),
@@ -539,6 +540,7 @@ void World::loadWorld()
 
 void World::generateWorld()
 {
+    generateNoise();
     Debug::log(Debug::Area::WorldGeneratorArea) << "Generating a new world.";
 
     Timer timer;
@@ -568,7 +570,6 @@ void World::generateWorld()
         }
     }
 
-    generateNoise();
 
     generateVegetation();
 
@@ -590,8 +591,8 @@ void World::generateNoise()
 
     module::ScaleBias flatTerrain;
     flatTerrain.SetSourceModule (0, baseFlatTerrain);
-    flatTerrain.SetScale (0.125);
-    flatTerrain.SetBias (-0.75);
+//    flatTerrain.SetScale (0.1);
+ //   flatTerrain.SetBias (-0.75);
 
 
     module::Perlin terrainType;
@@ -602,36 +603,46 @@ void World::generateNoise()
     finalTerrain.SetSourceModule (0, flatTerrain);
     finalTerrain.SetSourceModule (1, mountainTerrain);
     finalTerrain.SetControlModule (terrainType);
-    finalTerrain.SetBounds (0.0, 6.0);
+    finalTerrain.SetBounds (0.0, 1.0);
 //    finalTerrain.SetEdgeFalloff (0.125);
 
-    utils::NoiseMap heightMap;
-    utils::NoiseMapBuilderPlane heightMapBuilder;
-    heightMapBuilder.SetSourceModule (finalTerrain);
-//    heightMapBuilder.SetSourceModule (baseFlatTerrain);
-//    heightMapBuilder.SetSourceModule (mountainTerrain);
-    heightMapBuilder.SetDestNoiseMap (heightMap);
-    heightMapBuilder.SetDestSize (256, 256);
-    heightMapBuilder.SetBounds (0.0, 10.0, 1.0, 5.0);
-    heightMapBuilder.Build ();
+    const int width = WORLD_COLUMNCOUNT;
+    const int height = WORLD_ROWCOUNT;
 
-    utils::RendererImage renderer;
-    utils::Image image;
-    renderer.SetSourceNoiseMap (heightMap);
-    renderer.SetDestImage (image);
-    renderer.ClearGradient ();
-    renderer.AddGradientPoint (0.00, utils::Color ( 255, 0,   0, 255));
-    renderer.AddGradientPoint (3.00, utils::Color (255, 255, 255, 255));
-    renderer.EnableLight ();
-    renderer.SetLightContrast (3.0);
-    renderer.SetLightBrightness (2.0);
-    renderer.Render ();
+    FIBITMAP* bitmap = FreeImage_Allocate(width, height, 24);
 
-    utils::WriterBMP writer;
-    writer.SetSourceImage (image);
-    writer.SetDestFilename ("tutorial.bmp");
-    writer.WriteDestFile ();
+    RGBQUAD color;
+    uint32_t row = 0;
+    uint32_t column = 0;
 
+    for (row = 0; row < height; ++row) {
+        for (column = 0; column < width; ++column) {
+
+            int value = finalTerrain.GetValue(floor(column / 16.0), floor(row / 16.0), 5.0) * 0.5 + 1;
+
+            assert(value >= 0);
+
+            for (int i = 0; i < 16; ++i) {
+                color.rgbRed = 0;
+                color.rgbBlue = 0;
+
+    //            Debug::log(Debug::ImportantArea) << "VAL: " << value;
+
+                if (value == 1) {
+                    color.rgbGreen = 255;
+                } else {
+                    color.rgbGreen = 0;
+                }
+
+                FreeImage_SetPixelColor(bitmap, column, row, &color);
+                column++;
+            }
+        }
+    }
+
+    FreeImage_Save(FIF_JPEG, bitmap, "world.jpg", 0);
+
+    exit(0);
 }
 
 void World::generateVegetation()
