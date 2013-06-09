@@ -34,6 +34,7 @@ tool.cpp
 
 #cloudsystem.cpp
 #sky.cpp
+noiseutils.cpp
 
 client/client.cpp
 client/gui/chatdialog.cpp
@@ -107,6 +108,7 @@ ${ENET_INCLUDE_DIRS}
 ${PROTOBUF_INCLUDE_DIR}
 ${CHIPMUNK_INCLUDE_DIR}
 ${Boost_INCLUDE_DIR}
+${LIBNOISE_INCLUDE_DIR}
 )
 
 target_link_libraries(
@@ -125,6 +127,7 @@ ${ENET_LIBRARIES}
 ${PROTOBUF_LIBRARY}
 ${CHIPMUNK_LIBRARIES}
 ${Boost_LIBRARIES}
+${LIBNOISE_LIBRARY}
 )
 
 # CPack packaging

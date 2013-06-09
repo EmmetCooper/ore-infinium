@@ -47,6 +47,9 @@
 
 #include <chipmunk/chipmunk.h>
 
+#include <noise/noise.h>
+#include "noiseutils.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -565,11 +568,70 @@ void World::generateWorld()
         }
     }
 
+    generateNoise();
+
     generateVegetation();
 
     generateTileMeshes();
 
     Debug::log(Debug::Area::WorldGeneratorArea) << "Time taken for world generation: " << timer.milliseconds() << " milliseconds";
+}
+
+void World::generateNoise()
+{
+    std::random_device device;
+    std::mt19937 rand(device());
+    std::uniform_int_distribution<> distribution(0, INT_MAX);
+
+    module::RidgedMulti mountainTerrain;
+
+    module::Billow baseFlatTerrain;
+    baseFlatTerrain.SetFrequency (2.0);
+
+    module::ScaleBias flatTerrain;
+    flatTerrain.SetSourceModule (0, baseFlatTerrain);
+    flatTerrain.SetScale (0.125);
+    flatTerrain.SetBias (-0.75);
+
+
+    module::Perlin terrainType;
+    terrainType.SetFrequency (0.5);
+    terrainType.SetPersistence (0.25);
+
+    module::Select finalTerrain;
+    finalTerrain.SetSourceModule (0, flatTerrain);
+    finalTerrain.SetSourceModule (1, mountainTerrain);
+    finalTerrain.SetControlModule (terrainType);
+    finalTerrain.SetBounds (0.0, 6.0);
+//    finalTerrain.SetEdgeFalloff (0.125);
+
+    utils::NoiseMap heightMap;
+    utils::NoiseMapBuilderPlane heightMapBuilder;
+    heightMapBuilder.SetSourceModule (finalTerrain);
+//    heightMapBuilder.SetSourceModule (baseFlatTerrain);
+//    heightMapBuilder.SetSourceModule (mountainTerrain);
+    heightMapBuilder.SetDestNoiseMap (heightMap);
+    heightMapBuilder.SetDestSize (256, 256);
+    heightMapBuilder.SetBounds (0.0, 10.0, 1.0, 5.0);
+    heightMapBuilder.Build ();
+
+    utils::RendererImage renderer;
+    utils::Image image;
+    renderer.SetSourceNoiseMap (heightMap);
+    renderer.SetDestImage (image);
+    renderer.ClearGradient ();
+    renderer.AddGradientPoint (0.00, utils::Color ( 255, 0,   0, 255));
+    renderer.AddGradientPoint (3.00, utils::Color (255, 255, 255, 255));
+    renderer.EnableLight ();
+    renderer.SetLightContrast (3.0);
+    renderer.SetLightBrightness (2.0);
+    renderer.Render ();
+
+    utils::WriterBMP writer;
+    writer.SetSourceImage (image);
+    writer.SetDestFilename ("tutorial.bmp");
+    writer.WriteDestFile ();
+
 }
 
 void World::generateVegetation()
@@ -583,7 +645,7 @@ void World::generateVegetation()
                 float x = column * Block::BLOCK_SIZE;
                 float y = row * Block::BLOCK_SIZE;
                 y -= tree->sizeMeters().y;
-                Debug::log(Debug::ImportantArea) <<  "TREE SIZE METERS: " << tree->sizeMeters().y;
+
                 tree->setPosition(x, y);
                 m_treesSpatialHash->insert(tree);
                 break;
@@ -764,7 +826,7 @@ void World::attemptItemPlacement(Entities::Player* player)
 //FIXME:    m_torchesQuadTree->queryRange(list, QuadTree::AABB(QuadTree::XY(x / 2.0, y / 2.0), QuadTree::XY(500, 500)));
 
     Debug::log(Debug::ImportantArea) << "server torch count: " << m_torches.size();
-    Debug::log(Debug::ImportantArea) << "server torch quadtree query: " << list.size();
+//    Debug::log(Debug::ImportantArea) << "server torch quadtree query: " << list.size();
 
     //use player's placement timing and such.
     player->placeItem();
