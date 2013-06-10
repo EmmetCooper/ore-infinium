@@ -540,7 +540,6 @@ void World::loadWorld()
 
 void World::generateWorld()
 {
-    generateNoise();
     Debug::log(Debug::Area::WorldGeneratorArea) << "Generating a new world.";
 
     Timer timer;
@@ -553,6 +552,7 @@ void World::generateWorld()
     int lastRow = 0;
 
     // 200 rows of "sky"
+    /*
     for (; lastRow < 15; ++lastRow) {
         for (int column = 0; column < WORLD_COLUMNCOUNT; ++column) {
             int index = column * WORLD_ROWCOUNT + lastRow;
@@ -560,16 +560,8 @@ void World::generateWorld()
             block.primitiveType = Block::BlockType::NullBlockType;
         }
     }
-
-    for (; lastRow < WORLD_ROWCOUNT; ++lastRow) {
-        for (int column = 0; column < WORLD_COLUMNCOUNT; ++column) {
-            int index = column * WORLD_ROWCOUNT + lastRow;
-            Block& block = m_blocks[index];
-            block.primitiveType = distribution(rand);
-            block.wallType = Block::WallType::DirtWallType;
-        }
-    }
-
+    */
+    generateNoise();
 
     generateVegetation();
 
@@ -614,7 +606,25 @@ void World::generateNoise()
     add.SetSourceModule(0, finalTerrain);
     add.SetSourceModule(1, perlin3);
 
+    for (int row = 15; row < WORLD_ROWCOUNT; ++row) {
+        for (int column = 0; column < WORLD_COLUMNCOUNT; ++column) {
+            const int value = add.GetValue(column, row, 2.0) * 0.5 + 1;
 
+            int index = column * WORLD_ROWCOUNT + row;
+            Block& block = m_blocks[index];
+
+            if (value > 0.1) {
+                block.primitiveType = Block::BlockType::DirtBlockType;
+                block.wallType = Block::WallType::DirtWallType;
+            } else {
+                block.wallType = Block::WallType::DirtWallType;
+            }
+        }
+    }
+
+    /////////////////// done generating dirt world
+
+    /*
 //    const int width = WORLD_COLUMNCOUNT * 16 /  5;// / 2;
     const int height = WORLD_ROWCOUNT * 16 /  45;// / 6;
 
@@ -649,8 +659,7 @@ void World::generateNoise()
     }
 
     FreeImage_Save(FIF_JPEG, bitmap, "world.jpg", 0);
-
-    exit(0);
+    */
 }
 
 void World::generateVegetation()
