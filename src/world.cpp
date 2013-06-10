@@ -585,30 +585,33 @@ void World::generateNoise()
     std::uniform_int_distribution<> distribution(0, INT_MAX);
 
    module::RidgedMulti mod;
-   mod.SetFrequency(.03);
- //
-    module::Billow flat;
-    flat.SetFrequency (.1);
-//
+   mod.SetFrequency(.02);
 
-//
-//
+    module::Perlin flat;
+    flat.SetFrequency(0.01);
+
     module::Perlin perlin;
-    perlin.SetFrequency(0.05);
-    perlin.SetLacunarity(1.5);
+    perlin.SetFrequency(0.08);
+    perlin.SetLacunarity(0.5);
     perlin.SetPersistence(0.05);
     perlin.SetNoiseQuality(noise::QUALITY_BEST);
 
-    module::ScaleBias final;
-    final.SetSourceModule (0, perlin);
-    final.SetBias (0.35);
 //
    module::Select finalTerrain;
-    finalTerrain.SetSourceModule(0, perlin);
+    finalTerrain.SetSourceModule(0, flat);
     finalTerrain.SetSourceModule(1, mod);
-    finalTerrain.SetControlModule(flat);
-    finalTerrain.SetBounds (0.0, 1000.0);
-    finalTerrain.SetEdgeFalloff (0.125);
+    finalTerrain.SetControlModule(perlin);
+    finalTerrain.SetBounds(.01, 1000);
+
+    module::Perlin perlin2;
+    perlin2.SetFrequency(0.02);
+//    perlin2.SetLacunarity(0.5);
+//    perlin2.SetPersistence(0.05);
+    perlin2.SetNoiseQuality(noise::QUALITY_BEST);
+
+    module::Multiply add;
+    add.SetSourceModule(0, finalTerrain);
+    add.SetSourceModule(1, perlin2);
 //
 //    const int width = WORLD_COLUMNCOUNT * 16 /  5;// / 2;
     const int height = WORLD_ROWCOUNT * 16 /  45;// / 6;
@@ -624,7 +627,7 @@ void World::generateNoise()
     for (row = 0; row < height; ++row) {
         for (column = 0; column < width; ++column) {
 
-            int value = finalTerrain.GetValue(round(column / 16.0), round(row / 16.0), 5.0) * 0.5 + 1;
+            int value = add.GetValue(round(column / 16.0), round(row / 16.0), 2.0) * 0.5 + 1;
 
             assert(value >= 0);
 
