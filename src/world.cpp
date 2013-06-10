@@ -584,31 +584,31 @@ void World::generateNoise()
     std::mt19937 rand(device());
     std::uniform_int_distribution<> distribution(0, INT_MAX);
 
- //   module::RidgedMulti solidTerrain;
- //   solidTerrain.SetFrequency(.3);
+   module::RidgedMulti mod;
+   mod.SetFrequency(.03);
  //
- //   module::Billow baseFlatTerrain;
- //   baseFlatTerrain.SetFrequency (.2);
+    module::Billow flat;
+    flat.SetFrequency (.1);
 //
 
 //
 //
     module::Perlin perlin;
-    perlin.SetFrequency(0.1);
+    perlin.SetFrequency(0.05);
     perlin.SetLacunarity(1.5);
-    perlin.SetPersistence(0.15);
+    perlin.SetPersistence(0.05);
     perlin.SetNoiseQuality(noise::QUALITY_BEST);
 
     module::ScaleBias final;
     final.SetSourceModule (0, perlin);
-    final.SetBias (0.65);
+    final.SetBias (0.35);
 //
-//    module::Select finalTerrain;
-//    finalTerrain.SetSourceModule(0, solidTerrain);
-//    finalTerrain.SetSourceModule(1, baseFlatTerrain);
-//    finalTerrain.SetControlModule(terrainType);
-//    finalTerrain.SetBounds (0.0, 1000.0);
-//    finalTerrain.SetEdgeFalloff (0.125);
+   module::Select finalTerrain;
+    finalTerrain.SetSourceModule(0, perlin);
+    finalTerrain.SetSourceModule(1, mod);
+    finalTerrain.SetControlModule(flat);
+    finalTerrain.SetBounds (0.0, 1000.0);
+    finalTerrain.SetEdgeFalloff (0.125);
 //
 //    const int width = WORLD_COLUMNCOUNT * 16 /  5;// / 2;
     const int height = WORLD_ROWCOUNT * 16 /  45;// / 6;
@@ -624,7 +624,7 @@ void World::generateNoise()
     for (row = 0; row < height; ++row) {
         for (column = 0; column < width; ++column) {
 
-            int value = final.GetValue(round(column / 16.0), round(row / 16.0), 5.0) * 0.5 + 1;
+            int value = finalTerrain.GetValue(round(column / 16.0), round(row / 16.0), 5.0) * 0.5 + 1;
 
             assert(value >= 0);
 
