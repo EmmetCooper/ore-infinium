@@ -584,40 +584,37 @@ void World::generateNoise()
     std::mt19937 rand(device());
     std::uniform_int_distribution<> distribution(0, INT_MAX);
 
-    module::RidgedMulti mod;
-    mod.SetSeed(distribution(rand));
-    mod.SetFrequency(.02);
+    module::RidgedMulti ridgedMulti;
+    ridgedMulti.SetSeed(distribution(rand));
+    ridgedMulti.SetFrequency(0.02);
 
-    module::Perlin flat;
-    flat.SetSeed(distribution(rand));
-    flat.SetFrequency(0.01);
-
-    module::Perlin perlin;
-    perlin.SetSeed(distribution(rand));
-    perlin.SetFrequency(0.08);
-    perlin.SetLacunarity(0.5);
-    perlin.SetPersistence(0.05);
-    perlin.SetNoiseQuality(noise::QUALITY_BEST);
-
-//
-   module::Select finalTerrain;
-    finalTerrain.SetSourceModule(0, flat);
-    finalTerrain.SetSourceModule(1, mod);
-    finalTerrain.SetControlModule(perlin);
-    finalTerrain.SetBounds(.01, 1000);
+    module::Perlin perlin1;
+    perlin1.SetSeed(distribution(rand));
+    perlin1.SetFrequency(0.01);
 
     module::Perlin perlin2;
     perlin2.SetSeed(distribution(rand));
-    perlin2.SetFrequency(0.02);
-//    perlin2.SetLacunarity(0.5);
-//    perlin2.SetPersistence(0.05);
+    perlin2.SetFrequency(0.08);
+    perlin2.SetLacunarity(0.5);
+    perlin2.SetPersistence(0.05);
     perlin2.SetNoiseQuality(noise::QUALITY_BEST);
+
+    module::Select finalTerrain;
+    finalTerrain.SetSourceModule(0, perlin1);
+    finalTerrain.SetSourceModule(1, ridgedMulti);
+    finalTerrain.SetControlModule(perlin2);
+    finalTerrain.SetBounds(0.01, 1000);
+
+    module::Perlin perlin3;
+    perlin3.SetSeed(distribution(rand));
+    perlin3.SetFrequency(0.02);
+    perlin3.SetNoiseQuality(noise::QUALITY_BEST);
 
     module::Multiply add;
     add.SetSourceModule(0, finalTerrain);
-    add.SetSourceModule(1, perlin2);
+    add.SetSourceModule(1, perlin3);
 
-//
+
 //    const int width = WORLD_COLUMNCOUNT * 16 /  5;// / 2;
     const int height = WORLD_ROWCOUNT * 16 /  45;// / 6;
 
