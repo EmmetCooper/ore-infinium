@@ -584,13 +584,16 @@ void World::generateNoise()
     std::mt19937 rand(device());
     std::uniform_int_distribution<> distribution(0, INT_MAX);
 
-   module::RidgedMulti mod;
-   mod.SetFrequency(.02);
+    module::RidgedMulti mod;
+    mod.SetSeed(distribution(rand));
+    mod.SetFrequency(.02);
 
     module::Perlin flat;
+    flat.SetSeed(distribution(rand));
     flat.SetFrequency(0.01);
 
     module::Perlin perlin;
+    perlin.SetSeed(distribution(rand));
     perlin.SetFrequency(0.08);
     perlin.SetLacunarity(0.5);
     perlin.SetPersistence(0.05);
@@ -604,6 +607,7 @@ void World::generateNoise()
     finalTerrain.SetBounds(.01, 1000);
 
     module::Perlin perlin2;
+    perlin2.SetSeed(distribution(rand));
     perlin2.SetFrequency(0.02);
 //    perlin2.SetLacunarity(0.5);
 //    perlin2.SetPersistence(0.05);
@@ -612,6 +616,7 @@ void World::generateNoise()
     module::Multiply add;
     add.SetSourceModule(0, finalTerrain);
     add.SetSourceModule(1, perlin2);
+
 //
 //    const int width = WORLD_COLUMNCOUNT * 16 /  5;// / 2;
     const int height = WORLD_ROWCOUNT * 16 /  45;// / 6;
