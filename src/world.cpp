@@ -634,8 +634,7 @@ void World::generateNoise()
                     color.rgbGreen = 0;
                 }
 
-                FreeImage_SetPixelColor(bitmap, column, row, &color);
-                column++;
+                FreeImage_SetPixelColor(bitmap, column + i, row, &color);
             }
         }
     }
