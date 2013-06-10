@@ -584,30 +584,36 @@ void World::generateNoise()
     std::mt19937 rand(device());
     std::uniform_int_distribution<> distribution(0, INT_MAX);
 
-    module::RidgedMulti mountainTerrain;
+ //   module::RidgedMulti solidTerrain;
+ //   solidTerrain.SetFrequency(.3);
+ //
+ //   module::Billow baseFlatTerrain;
+ //   baseFlatTerrain.SetFrequency (.2);
+//
 
-    module::Billow baseFlatTerrain;
-    baseFlatTerrain.SetFrequency (2.0);
+//
+//
+    module::Perlin perlin;
+    perlin.SetFrequency(0.1);
+    perlin.SetLacunarity(1.5);
+    perlin.SetPersistence(0.15);
+    perlin.SetNoiseQuality(noise::QUALITY_BEST);
 
-    module::ScaleBias flatTerrain;
-    flatTerrain.SetSourceModule (0, baseFlatTerrain);
-//    flatTerrain.SetScale (0.1);
- //   flatTerrain.SetBias (-0.75);
-
-
-    module::Perlin terrainType;
-    terrainType.SetFrequency (0.5);
-    terrainType.SetPersistence (0.25);
-
-    module::Select finalTerrain;
-    finalTerrain.SetSourceModule (0, flatTerrain);
-    finalTerrain.SetSourceModule (1, mountainTerrain);
-    finalTerrain.SetControlModule (terrainType);
-    finalTerrain.SetBounds (0.0, 1.0);
+    module::ScaleBias final;
+    final.SetSourceModule (0, perlin);
+    final.SetBias (0.65);
+//
+//    module::Select finalTerrain;
+//    finalTerrain.SetSourceModule(0, solidTerrain);
+//    finalTerrain.SetSourceModule(1, baseFlatTerrain);
+//    finalTerrain.SetControlModule(terrainType);
+//    finalTerrain.SetBounds (0.0, 1000.0);
 //    finalTerrain.SetEdgeFalloff (0.125);
+//
+//    const int width = WORLD_COLUMNCOUNT * 16 /  5;// / 2;
+    const int height = WORLD_ROWCOUNT * 16 /  45;// / 6;
 
-    const int width = WORLD_COLUMNCOUNT;
-    const int height = WORLD_ROWCOUNT;
+    const int width = WORLD_COLUMNCOUNT * 16 /  10;// / 2;
 
     FIBITMAP* bitmap = FreeImage_Allocate(width, height, 24);
 
@@ -618,24 +624,22 @@ void World::generateNoise()
     for (row = 0; row < height; ++row) {
         for (column = 0; column < width; ++column) {
 
-            int value = finalTerrain.GetValue(floor(column / 16.0), floor(row / 16.0), 5.0) * 0.5 + 1;
+            int value = final.GetValue(round(column / 16.0), round(row / 16.0), 5.0) * 0.5 + 1;
 
             assert(value >= 0);
 
-            for (int i = 0; i < 16; ++i) {
-                color.rgbRed = 0;
-                color.rgbBlue = 0;
+            color.rgbRed = 0;
+            color.rgbBlue = 0;
 
-    //            Debug::log(Debug::ImportantArea) << "VAL: " << value;
+            //Debug::log(Debug::ImportantArea) << "VAL: " << value;
 
-                if (value == 1) {
-                    color.rgbGreen = 255;
-                } else {
-                    color.rgbGreen = 0;
-                }
-
-                FreeImage_SetPixelColor(bitmap, column + i, row, &color);
+            if (value > 0.1) {
+                color.rgbGreen = 255;
+            } else {
+                color.rgbGreen = 0;
             }
+
+            FreeImage_SetPixelColor(bitmap, column, row, &color);
         }
     }
 
