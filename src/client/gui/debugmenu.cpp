@@ -24,6 +24,7 @@
 #include <src/player.h>
 #include <src/settings/settings.h>
 #include <src/world.h>
+#include <src/time.h>
 
 #include <Rocket/Core.h>
 #include <Rocket/Controls.h>
@@ -129,13 +130,16 @@ void DebugMenu::update(double frameTime)
 
         std::string appender;
         if (depth >= 0) {
-            appender = "Below Sea Level";
+            appender = "below";
         } else if (depth < 0) {
-           appender = "Above Sea Level";
+           appender = "above";
         }
 
-       std::string underground = "Depth: " + std::to_string(depth) + " " + appender;
+       std::string underground = "Depth: " + std::to_string(depth) + " tiles " + appender + " sea level";
         m_debug->GetElementById("8")->SetInnerRML(underground.c_str());
+
+        const std::string time = "Time: " + m_client->world()->worldTime().toString();
+        m_debug->GetElementById("9")->SetInnerRML(time.c_str());
     }
 
     ss << "Physics Shape Count: " << m_physicsWorldShapeCount;
