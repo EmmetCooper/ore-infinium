@@ -637,7 +637,7 @@ void World::generateOres()
     perlin.SetPersistence(0.05);
     perlin.SetNoiseQuality(noise::QUALITY_BEST);
 
-    for (int row = WORLD_GROUND_BEGIN; row < WORLD_ROWCOUNT; ++row) {
+    for (int row = WORLD_UNDERGROUND_BEGIN; row < WORLD_ROWCOUNT; ++row) {
         for (int column = 0; column < WORLD_COLUMNCOUNT; ++column) {
             const int value = perlin.GetValue(column, row, 2.0) * 0.5 + 1;
 
