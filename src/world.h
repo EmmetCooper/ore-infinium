@@ -152,7 +152,7 @@ public:
      * Returns the increasing Y value of where the sky ends and the ground begins.
      * Tiles after this are considered "underground". It is level across the world.
      */
-    uint16_t seaLevel() {
+    static uint16_t seaLevel() {
         return WORLD_SEA_LEVEL;
     }
 

@@ -64,7 +64,7 @@ void DebugMenu::setCollapsed(bool collapsed)
 {
     m_collapsed = collapsed;
 
-    int height = 180;
+    int height = 190;
     int width = 34;
 
     if (!collapsed) {
@@ -125,9 +125,17 @@ void DebugMenu::update(double frameTime)
         ss.str("");
 
         m_debug->GetElementById("5")->SetInnerRML(playerString.c_str());
-        uint32_t depth = m_client->world()->seaLevel();
- //       const std::string& underground = "Depth: " + std::to_string(
-//        m_debug->GetElementById("8")->SetInnerRML(underround);
+        uint32_t depth = m_client->mainPlayer()->depthBelowSeaLevel();
+
+        std::string appender;
+        if (depth >= 0) {
+            appender = "Below Sea Level";
+        } else if (depth < 0) {
+           appender = "Above Sea Level";
+        }
+
+       std::string underground = "Depth: " + std::to_string(depth) + " " + appender;
+        m_debug->GetElementById("8")->SetInnerRML(underground.c_str());
     }
 
     ss << "Physics Shape Count: " << m_physicsWorldShapeCount;

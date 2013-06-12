@@ -111,7 +111,7 @@ public:
     /**
      * Returns the players depth in the world (how many units below sea level. Negative if above.
      */
-    uint32_t worldDepth();
+    uint32_t depthBelowSeaLevel();
 
     //FIXME: ...store a list of indices of blocks that are owned and look those up in a map by the index we want to see ifi t's owned.
     //e.g. pick a block, ask "do we own this index we're trying to pick", yes? -> destroy that and remove player "ownage".
