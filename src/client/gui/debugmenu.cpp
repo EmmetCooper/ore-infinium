@@ -23,6 +23,7 @@
 #include <src/debug.h>
 #include <src/player.h>
 #include <src/settings/settings.h>
+#include <src/world.h>
 
 #include <Rocket/Core.h>
 #include <Rocket/Controls.h>
@@ -124,7 +125,9 @@ void DebugMenu::update(double frameTime)
         ss.str("");
 
         m_debug->GetElementById("5")->SetInnerRML(playerString.c_str());
-        m_debug->GetElementById("8")->SetInnerRML("");
+        uint32_t depth = m_client->world()->seaLevel();
+ //       const std::string& underground = "Depth: " + std::to_string(
+//        m_debug->GetElementById("8")->SetInnerRML(underround);
     }
 
     ss << "Physics Shape Count: " << m_physicsWorldShapeCount;

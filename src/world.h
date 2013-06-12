@@ -60,7 +60,7 @@ static constexpr double FIXED_TIMESTEP = 1.0 / 60.0; // hertz
 static constexpr int32_t VELOCITY_ITERATIONS = 6;
 static constexpr int32_t POSITION_ITERATIONS = 2;
 
-static constexpr uint32_t WORLD_UNDERGROUND_BEGIN = 16;
+static constexpr uint32_t WORLD_SEA_LEVEL = 16;
 
 /*
  e.g. [ ] [ ] [ ] [ ] [ ]  ... 8400
@@ -148,6 +148,14 @@ public:
      */
     void clientWorldTimeChanged(uint8_t hour, uint8_t minute, uint8_t second);
 
+    /**
+     * Returns the increasing Y value of where the sky ends and the ground begins.
+     * Tiles after this are considered "underground". It is level across the world.
+     */
+    uint16_t seaLevel() {
+        return WORLD_SEA_LEVEL;
+    }
+
     //create containers of various entities, and implement a tile system
     //game.cpp calls into this each tick, which this descends downward into each entity
 private:
@@ -180,14 +188,6 @@ private:
     void generateOres();
 
     void calculateAttackPosition();
-
-    /**
-     * Returns the increasing Y value of where the sky ends and the ground begins.
-     * Tiles after this are considered "underground". It is level across the world.
-     */
-    uint16_t undergroundBegin() {
-        return WORLD_UNDERGROUND_BEGIN;
-    }
 
     /**
      * Attempts to pick a block at a position. Assumes caller checked inventory to see if it's possible.
