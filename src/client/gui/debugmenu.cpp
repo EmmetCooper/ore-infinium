@@ -63,7 +63,7 @@ void DebugMenu::setCollapsed(bool collapsed)
 {
     m_collapsed = collapsed;
 
-    int height = 150;
+    int height = 180;
     int width = 34;
 
     if (!collapsed) {
@@ -124,6 +124,7 @@ void DebugMenu::update(double frameTime)
         ss.str("");
 
         m_debug->GetElementById("5")->SetInnerRML(playerString.c_str());
+        m_debug->GetElementById("8")->SetInnerRML("");
     }
 
     ss << "Physics Shape Count: " << m_physicsWorldShapeCount;

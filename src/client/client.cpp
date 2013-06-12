@@ -570,7 +570,7 @@ void Client::startMultiplayerHost(const std::string& playername, unsigned int po
         m_playerName = playername;
 
         m_server = new Server();
-       
+
         if (m_worldViewingEnabled) {
             m_server->enableWorldViewing();
         }

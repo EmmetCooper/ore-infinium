@@ -60,6 +60,8 @@ static constexpr double FIXED_TIMESTEP = 1.0 / 60.0; // hertz
 static constexpr int32_t VELOCITY_ITERATIONS = 6;
 static constexpr int32_t POSITION_ITERATIONS = 2;
 
+static constexpr uint32_t WORLD_GROUND_BEGIN = 16;
+
 /*
  e.g. [ ] [ ] [ ] [ ] [ ]  ... 8400
         [ ] [ ] [ ] [ ] [ ]  ... 8400
@@ -178,6 +180,14 @@ private:
     void generateOres();
 
     void calculateAttackPosition();
+
+    /**
+     * Returns the increasing Y value of where the sky ends and the ground begins.
+     * Tiles after this are considered "underground". It is level across the world.
+     */
+    uint16_t groundTilesBegin() {
+        return WORLD_GROUND_BEGIN;
+    }
 
     /**
      * Attempts to pick a block at a position. Assumes caller checked inventory to see if it's possible.

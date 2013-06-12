@@ -92,6 +92,10 @@ public:
         return m_mainPlayer;
     }
 
+    World* world() {
+        return m_world;
+    }
+
 ///////////////// Network Communication ////////////////////
 public:
     void sendChatMessage(const std::string& message);
