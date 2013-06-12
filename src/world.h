@@ -175,6 +175,7 @@ private:
     void generateWorld();
     void generateVegetation();
     void generateNoise();
+    void generateOres();
 
     void calculateAttackPosition();
 

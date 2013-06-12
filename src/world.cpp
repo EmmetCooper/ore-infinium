@@ -562,6 +562,7 @@ void World::generateWorld()
     }
     */
     generateNoise();
+    generateOres();
 
     generateVegetation();
 
@@ -617,6 +618,34 @@ void World::generateNoise()
                 block.primitiveType = Block::BlockType::DirtBlockType;
                 block.wallType = Block::WallType::DirtWallType;
             } else {
+                block.wallType = Block::WallType::DirtWallType;
+            }
+        }
+    }
+}
+
+void World::generateOres()
+{
+    std::random_device device;
+    std::mt19937 rand(device());
+    std::uniform_int_distribution<> distribution(0, INT_MAX);
+
+    module::Perlin perlin;
+    perlin.SetSeed(distribution(rand));
+    perlin.SetFrequency(0.01);
+    perlin.SetLacunarity(0.5);
+    perlin.SetPersistence(0.05);
+    perlin.SetNoiseQuality(noise::QUALITY_BEST);
+
+    for (int row = 15; row < WORLD_ROWCOUNT; ++row) {
+        for (int column = 0; column < WORLD_COLUMNCOUNT; ++column) {
+            const int value = perlin.GetValue(column, row, 2.0) * 0.5 + 1;
+
+            int index = column * WORLD_ROWCOUNT + row;
+            Block& block = m_blocks[index];
+
+            if (value > 0.1 && block.primitiveType != Block::BlockType::NullBlockType) {
+                block.primitiveType = Block::BlockType::StoneBlockType;
                 block.wallType = Block::WallType::DirtWallType;
             }
         }

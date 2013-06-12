@@ -66,6 +66,10 @@ void Player::playerUpdateVelocity(cpBody* body, cpVect gravity, cpFloat damping,
 
 void Player::update(double elapsedTime, World* world)
 {
+    if (m_noClipEnabled) {
+        return;
+    }
+
     Entity::update(elapsedTime, world);
 
     m_feetOnGround = false;
@@ -90,6 +94,10 @@ void Player::checkEachArbiter(cpBody* body, cpArbiter* arbiter, void* data)
 
 void Player::createPhysicsBody(World* world, const glm::vec2& position)
 {
+    if (m_noClipEnabled) {
+        return;
+    }
+
     const glm::vec2 size = this->sizeMeters();
 
     cpSpace* space = world->cpWorldSpace();
@@ -182,10 +190,18 @@ void Player::createPhysicsBody(World* world, const glm::vec2& position)
 void Player::move(int32_t directionX, int32_t directionY)
 {
     m_desiredVelocity = glm::vec2(directionX * movementSpeed, directionY * movementSpeed);
+        if (m_noClipEnabled) {
+        return;
+    }
+
 }
 
 void Player::jump()
 {
+    if (m_noClipEnabled) {
+        return;
+    }
+
     if (m_body) {
         if (m_jumpTimer->milliseconds() >= m_jumpDelay) {
 //            if (m_jumpContacts > 0) {

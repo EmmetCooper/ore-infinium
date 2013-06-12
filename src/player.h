@@ -45,6 +45,10 @@ public:
     Player(const std::string& frameName);
     ~Player();
 
+    void enableNoClip() {
+        m_noClipEnabled = true;
+    }
+
 //    void handleEvent(const SDL_Event& event);
 
     void setName(const std::string& name);
@@ -172,6 +176,8 @@ private:
     cpShape* m_footShape = nullptr;
 
     glm::vec2 m_desiredVelocity = glm::vec2(0.0f, 0.0f);
+
+    bool m_noClipEnabled = false;
 
     friend Server;
     friend World;

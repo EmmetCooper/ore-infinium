@@ -45,6 +45,8 @@ public:
     Client();
     ~Client();
 
+    void init();
+
     void startSinglePlayer(const std::string& playername);
     /**
      * Starts a mutliplayer client only connection, aka connecting to a server, not hosting.
@@ -61,6 +63,10 @@ public:
     void render(double frameTime);
 
     void handlePlayerInput(SDL_Event& event);
+
+    void enableWorldViewing() {
+       m_worldViewingEnabled = true;
+    }
 
     const float FPS = 60.0;
 
@@ -164,8 +170,9 @@ private:
 
     bool m_playerJumpRequested = false;
     bool m_renderGUI = true;
-
     bool m_initialPlayersReceivedFinished = false;
+
+    bool m_worldViewingEnabled = false;
 
 private:
     ENetHost* m_client = nullptr;

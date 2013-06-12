@@ -49,6 +49,26 @@
 
 Client::Client()
 {
+
+}
+
+Client::~Client()
+{
+    enet_host_destroy(m_client);
+
+    delete m_mainPlayer;
+
+    // call this ONLY when linking with FreeImage as a static library
+#ifdef FREEIMAGE_LIB
+    FreeImage_DeInitialise();
+#endif
+
+    SDL_DestroyWindow(m_window);
+    SDL_Quit();
+}
+
+void Client::init()
+{
     initSDL();
 
     // call this ONLY when linking with FreeImage as a static library
@@ -72,21 +92,6 @@ Client::Client()
 //    ss << distribution(rand);
 //
 //    startMultiplayerHost(ss.str());
-}
-
-Client::~Client()
-{
-    enet_host_destroy(m_client);
-
-    delete m_mainPlayer;
-
-    // call this ONLY when linking with FreeImage as a static library
-#ifdef FREEIMAGE_LIB
-    FreeImage_DeInitialise();
-#endif
-
-    SDL_DestroyWindow(m_window);
-    SDL_Quit();
 }
 
 void Client::initSDL()
@@ -538,7 +543,8 @@ void Client::startSinglePlayer(const std::string& playername)
     m_playerName = playername;
 
     //create a local server, and connect to it.
-    m_server = new Server(1);
+    m_server = new Server();
+    m_server->init(1);
     m_serverThread = new std::thread(&Server::tick, m_server);
     connect();
 }
@@ -563,7 +569,13 @@ void Client::startMultiplayerHost(const std::string& playername, unsigned int po
     if (!m_server) {
         m_playerName = playername;
 
-        m_server = new Server(8 /* 8 players (max) */, port, this);
+        m_server = new Server();
+       
+        if (m_worldViewingEnabled) {
+            m_server->enableWorldViewing();
+        }
+
+        m_server->init(8 /* 8 players (max) */, port, this);
         m_serverThread = new std::thread(&Server::tick, m_server);
         connect();
     } else {

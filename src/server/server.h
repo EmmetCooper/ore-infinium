@@ -36,8 +36,13 @@ class Server
 {
 public:
     /// we use port 44543 for our server by default..
-    Server(unsigned int maxClients, unsigned int port = 44543, Client* client = nullptr);
+    Server();
     ~Server();
+
+    void init(uint8_t maxClients, uint32_t port = 44543, Client* client = nullptr);
+    void enableWorldViewing() {
+        m_worldViewingEnabled = true;
+    }
 
     void poll();
     void tick();
@@ -119,6 +124,8 @@ private:
     World* m_world = nullptr;
 
     Client* m_client = nullptr;
+
+    bool m_worldViewingEnabled = false;
 
 private:
     ENetHost* m_server = nullptr;

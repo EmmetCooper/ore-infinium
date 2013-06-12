@@ -38,6 +38,7 @@ bool contains(const std::string& str)
 int main(int argc, char* argv[])
 {
     bool startupDebugEnabled = false;
+    bool worldViewer = false;
 
     if (argc > 1) {
         //NOTE: we start at 1 because the first element(0) is app name.
@@ -68,11 +69,22 @@ int main(int argc, char* argv[])
             t->testSpatialHash();
             delete t;
             exit(0);
+        } else if (contains("--world-viewer")) {
+            worldViewer = true;
         }
     }
 
     std::cout << "Ore Infinium Version " << ore_infinium_VERSION_MAJOR << "." << ore_infinium_VERSION_MINOR << "\n";
 
-    Game game(startupDebugEnabled);
+    Game game;
+
+    if (startupDebugEnabled) {
+        game.enableStartupDebugLogging();
+    }
+
+    if (worldViewer) {
+        game.enableWorldViewer();
+    }
+
     game.init();
 }

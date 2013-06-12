@@ -40,16 +40,11 @@
 
 #include <assert.h>
 
-Game::Game(bool startupDebugLogging)
-    :   m_startupDebugLogging(startupDebugLogging)
+Game::Game()
 {
     // Verify that the version of the library that we linked against is
     // compatible with the version of the headers we compiled against.
     GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-    if (m_startupDebugLogging) {
-        Settings::instance()->debugAreas |= Debug::Area::StartupArea;
-    }
 }
 
 Game::~Game()
@@ -69,8 +64,18 @@ void Game::abort_game(const char* message)
 
 void Game::init()
 {
+    if (m_startupDebugLogging) {
+        Settings::instance()->debugAreas |= Debug::Area::StartupArea;
+    }
+
     Block::initBlockTypes();
     m_client = new Client();
+
+    if (m_worldViewerEnabled) {
+        m_client->enableWorldViewing();
+    }
+
+    m_client->init();
 
     tick();
     shutdown();

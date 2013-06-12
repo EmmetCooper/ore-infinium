@@ -50,9 +50,20 @@
 #include <algorithm>
 #include <SDL2/SDL.h>
 
-Server::Server(unsigned int maxClients, unsigned int port, Client* client) :
-    m_client(client)
+Server::Server()
 {
+
+}
+
+Server::~Server()
+{
+    enet_host_destroy(m_server);
+}
+
+void Server::init(uint8_t maxClients, uint32_t port, Client* client)
+{
+    m_client = client;
+
     Debug::log(Debug::Area::NetworkServerInitialArea) << "creating server at port: " << port;
 
     m_address.host = ENET_HOST_ANY;
@@ -66,11 +77,6 @@ Server::Server(unsigned int maxClients, unsigned int port, Client* client) :
     Debug::assertf(m_server, "failed to create ENet server");
 
     m_world = new World(nullptr, nullptr, this);
-}
-
-Server::~Server()
-{
-    enet_host_destroy(m_server);
 }
 
 void Server::tick()
@@ -455,6 +461,10 @@ Entities::Player* Server::createPlayer(const std::string& playerName)
     Entities::Player* player = new Entities::Player("player1Standing1");
     player->setName(playerName);
     player->setPlayerID(m_freePlayerID);
+
+    if (m_worldViewingEnabled) {
+        player->enableNoClip();
+    }
 
     //HACK FIXME: HOLY FUCK BACKMAN this is fucked horribly until physics integration is 100% complete. both of these have to be at the same position, and that simpyl shouldn't be needed..
     // if you don't set oen of them, BAD SHIT HAPPENS
