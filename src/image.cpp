@@ -55,7 +55,6 @@ void Image::loadImage(const std::string& filename)
 
     imageFormat = FreeImage_GetFileType(filename.c_str());
 
-
     //if still unknown, try to guess the file format from the file extension
     if (imageFormat == FIF_UNKNOWN) {
         imageFormat = FreeImage_GetFIFFromFilename(filename.c_str());

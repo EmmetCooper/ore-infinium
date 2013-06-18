@@ -24,6 +24,7 @@
 #include <assert.h>
 
 #include <vector>
+#include <sys/stat.h>
 
 #include "debug.h"
 #include "game.h"

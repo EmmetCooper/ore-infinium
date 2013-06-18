@@ -562,7 +562,7 @@ void World::generateWorld()
     }
     */
     generateNoise();
-    generateOres();
+//HACK: TAKES TOO LONG    generateOres();
 
     generateVegetation();
 
@@ -576,45 +576,46 @@ void World::generateNoise()
     std::random_device device;
     std::mt19937 rand(device());
     std::uniform_int_distribution<> distribution(0, INT_MAX);
-
-    module::RidgedMulti ridgedMulti;
-    ridgedMulti.SetSeed(distribution(rand));
-    ridgedMulti.SetFrequency(0.02);
-
-    module::Perlin perlin1;
-    perlin1.SetSeed(distribution(rand));
-    perlin1.SetFrequency(0.01);
-
-    module::Perlin perlin2;
-    perlin2.SetSeed(distribution(rand));
-    perlin2.SetFrequency(0.08);
-    perlin2.SetLacunarity(0.5);
-    perlin2.SetPersistence(0.05);
-    perlin2.SetNoiseQuality(noise::QUALITY_BEST);
-
-    module::Select finalTerrain;
-    finalTerrain.SetSourceModule(0, perlin1);
-    finalTerrain.SetSourceModule(1, ridgedMulti);
-    finalTerrain.SetControlModule(perlin2);
-    finalTerrain.SetBounds(0.01, 1000);
-
-    module::Perlin perlin3;
-    perlin3.SetSeed(distribution(rand));
-    perlin3.SetFrequency(0.02);
-    perlin3.SetNoiseQuality(noise::QUALITY_BEST);
-
-    module::Multiply add;
-    add.SetSourceModule(0, finalTerrain);
-    add.SetSourceModule(1, perlin3);
-
+    //because it's so fucking slow :(
+//HACK
+//HACK    module::RidgedMulti ridgedMulti;
+//HACK    ridgedMulti.SetSeed(distribution(rand));
+//HACK    ridgedMulti.SetFrequency(0.02);
+//HACK
+//HACK    module::Perlin perlin1;
+//HACK    perlin1.SetSeed(distribution(rand));
+//HACK    perlin1.SetFrequency(0.01);
+//HACK
+//HACK    module::Perlin perlin2;
+//HACK    perlin2.SetSeed(distribution(rand));
+//HACK    perlin2.SetFrequency(0.08);
+//HACK    perlin2.SetLacunarity(0.5);
+//HACK    perlin2.SetPersistence(0.05);
+//HACK    perlin2.SetNoiseQuality(noise::QUALITY_BEST);
+//HACK
+//HACK    module::Select finalTerrain;
+//HACK    finalTerrain.SetSourceModule(0, perlin1);
+//HACK    finalTerrain.SetSourceModule(1, ridgedMulti);
+//HACK    finalTerrain.SetControlModule(perlin2);
+//HACK    finalTerrain.SetBounds(0.01, 1000);
+//HACK
+//HACK    module::Perlin perlin3;
+//HACK    perlin3.SetSeed(distribution(rand));
+//HACK    perlin3.SetFrequency(0.02);
+//HACK    perlin3.SetNoiseQuality(noise::QUALITY_BEST);
+//HACK
+//HACK    module::Multiply add;
+//HACK    add.SetSourceModule(0, finalTerrain);
+//HACK    add.SetSourceModule(1, perlin3);
+//HACK
     for (int row = 15; row < WORLD_ROWCOUNT; ++row) {
         for (int column = 0; column < WORLD_COLUMNCOUNT; ++column) {
-            const int value = add.GetValue(column, row, 2.0) * 0.5 + 1;
+//            const int value = add.GetValue(column, row, 2.0) * 0.5 + 1;
 
             int index = column * WORLD_ROWCOUNT + row;
             Block& block = m_blocks[index];
 
-            if (value > 0.1) {
+            if (true) { //HACK:value > 0.1) {
                 block.primitiveType = Block::BlockType::DirtBlockType;
                 block.wallType = Block::WallType::DirtWallType;
             } else {
