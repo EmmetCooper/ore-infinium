@@ -52,6 +52,7 @@ public:
 
 private:
 
+    char* loadFile(const char* fname, GLint* fSize);
     bool check_program_link_status(GLuint obj);
     bool check_shader_compile_status(GLuint obj);
 
@@ -71,7 +72,7 @@ private:
 
     int buffercount = 2;
     // generate vbos and vaos
-    GLuint vao[buffercount], vbo[buffercount];
+    GLuint vao[2], vbo[2];
 
    GLint View_location;
     GLint Projection_location;

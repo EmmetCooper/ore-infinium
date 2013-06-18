@@ -20,7 +20,13 @@
 #include "src/world.h"
 #include "src/camera.h"
 #include "src/player.h"
+
 #include <SDL_timer.h>
+
+#include <fstream>
+
+#include <glm/core/func_common.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 ParticleRenderer::ParticleRenderer(World* world, Camera* camera, Entities::Player* mainPlayer)
 {
@@ -148,8 +154,6 @@ void ParticleRenderer::initGL()
     View_location = glGetUniformLocation(shader_program, "View");
     Projection_location = glGetUniformLocation(shader_program, "Projection");
 
-
-
     // the transform feedback shader only has a vertex shader
     std::string transform_vertex_source =
         "#version 330\n"
@@ -195,7 +199,7 @@ void ParticleRenderer::initGL()
     glCompileShader(transform_vertex_shader);
     if(!check_shader_compile_status(transform_vertex_shader))
     {
-        return 1;
+        exit(1);
     }
 
     // create program
@@ -218,9 +222,6 @@ void ParticleRenderer::initGL()
     dt_location = glGetUniformLocation(transform_shader_program, "dt");
     bounce_location = glGetUniformLocation(transform_shader_program, "bounce");
     seed_location = glGetUniformLocation(transform_shader_program, "seed");
-
-
-
 
     // randomly place particles in a cube
     std::vector<glm::vec3> vertexData(2*particles);
@@ -262,6 +263,33 @@ void ParticleRenderer::initGL()
     // "unbind" vao
     glBindVertexArray(0);
 
+}
+
+// loadFile - loads text file into char* fname
+// allocates memory - so need to delete after use
+// size of file returned in fSize
+char* ParticleRenderer::loadFile(const char* fname, GLint* fSize)
+{
+    std::ifstream::pos_type size;
+    char * memblock = 0;
+    std::string text;
+
+    std::ifstream file(fname, std::ios::in | std::ios::binary | std::ios::ate);
+    if (file.is_open()) {
+        size = file.tellg();
+        *fSize = (GLuint) size;
+
+        memblock = new char [size];
+        file.seekg(0, std::ios::beg);
+        file.read(memblock, size);
+        file.close();
+        text.assign(memblock);
+
+        Debug::log(Debug::Area::ShadersArea) << "shader : " << fname << " loaded successfully";
+    } else {
+        Debug::fatal(false,  Debug::Area::ShadersArea, "failed to load shader: " + std::string(fname));
+    }
+    return memblock;
 }
 
 void ParticleRenderer::render()

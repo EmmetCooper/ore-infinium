@@ -78,7 +78,6 @@ char* Shader::loadFile(const char* fname, GLint* fSize)
     char * memblock = 0;
     std::string text;
 
-    // file read based on example in cplusplus.com tutorial
     std::ifstream file(fname, std::ios::in | std::ios::binary | std::ios::ate);
     if (file.is_open()) {
         size = file.tellg();
