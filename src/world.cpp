@@ -754,15 +754,11 @@ void World::saveWorld()
     */
 
 //    file.close();
-
-
-
 }
 /*
 std::string
 compress
 (
-    const std::string& data
 )
 {
     std::stringstream compressed;

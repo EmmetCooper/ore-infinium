@@ -70,50 +70,32 @@ GLuint Shader::fragmentShader() const
     return m_fragmentShader;
 }
 
-// loadFile - loads text file into char* fname
-// allocates memory - so need to delete after use
-// size of file returned in fSize
-char* Shader::loadFile(const char* fname, GLint* fSize)
+std::string Shader::loadFile(const char* fileName)
 {
-    std::ifstream::pos_type size;
-    char * memblock = 0;
-    std::string text;
+    struct stat fileAttribute;
+    bool fileExists = stat(fileName, &fileAttribute) == 0;
+    Debug::fatal(fileExists, Debug::Area::ImageLoaderArea, "shader file failed to load, file does not exist. Filename: " + std::string(fileName));
 
-    std::ifstream file(fname, std::ios::in | std::ios::binary | std::ios::ate);
-    if (file.is_open()) {
-        size = file.tellg();
-        *fSize = (GLuint) size;
+    Debug::log(Debug::Area::ShadersArea) << "shader : " << fileName << " loaded successfully";
 
-        memblock = new char [size];
-        file.seekg(0, std::ios::beg);
-        file.read(memblock, size);
-        file.close();
-        text.assign(memblock);
+    std::ifstream in(fileName);
 
-        Debug::log(Debug::Area::ShadersArea) << "shader : " << fname << " loaded successfully";
-    } else {
-        Debug::fatal(false,  Debug::Area::ShadersArea, "failed to load shader: " + std::string(fname));
-    }
-    return memblock;
+    std::stringstream buffer;
+    buffer << in.rdbuf();
+
+    std::string contents(buffer.str());
+
+    return contents;
 }
 
 void Shader::loadShaders(const char* vertexShader, const char* fragmentShader)
 {
     m_vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
-    GLint vertLength;
-    GLint fragLength;
+    std::string vertSource = loadFile(vertexShader);
 
-    char* vertSource;
-    char* fragSource;
-
-    vertSource = loadFile(vertexShader, &vertLength);
-    fragSource = loadFile(fragmentShader, &fragLength);
-
-    const char* vertSourceConst = vertSource;
-    const char* fragSourceConst = fragSource;
-
-    glShaderSource(m_vertexShader, 1, &vertSourceConst, &vertLength);
+    const char* vertSourceArray = vertSource.c_str();
+    glShaderSource(m_vertexShader, 1, &vertSourceArray, nullptr);
     glCompileShader(m_vertexShader);
 
     if (!checkShaderCompileStatus(m_vertexShader)) {
@@ -124,7 +106,10 @@ void Shader::loadShaders(const char* vertexShader, const char* fragmentShader)
     }
 
     m_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(m_fragmentShader, 1, &fragSourceConst, &fragLength);
+
+    std::string fragSource = loadFile(fragmentShader);
+    const char* fragSourceArray = fragSource.c_str();
+    glShaderSource(m_fragmentShader, 1, &fragSourceArray, nullptr);
     glCompileShader(m_fragmentShader);
 
     if (!checkShaderCompileStatus(m_fragmentShader)) {
@@ -150,8 +135,6 @@ void Shader::loadShaders(const char* vertexShader, const char* fragmentShader)
         Debug::fatal(false, Debug::Area::ShadersArea, "shader program link FAILURE");
     }
 
-    delete [] vertSource;
-    delete [] fragSource;
 }
 
 bool Shader::checkShaderCompileStatus(GLuint obj)
