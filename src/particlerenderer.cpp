@@ -196,6 +196,7 @@ void ParticleRenderer::initGL()
 
     // "unbind" vao
     glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 }
 
@@ -258,7 +259,7 @@ void ParticleRenderer::render()
     glDisable(GL_RASTERIZER_DISCARD);
 
     // clear first
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // use the shader program
     glUseProgram(shader_program);
@@ -287,6 +288,9 @@ void ParticleRenderer::render()
 
     // advance buffer index
     current_buffer = (current_buffer + 1) % buffercount;
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 // helper to check and display for shader compiler errors

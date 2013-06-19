@@ -65,7 +65,6 @@ private:
     GLint bounce_location;
     GLint seed_location;
 
-
     GLuint transform_shader_program, transform_vertex_shader;
 
     GLuint shader_program, vertex_shader, geometry_shader, fragment_shader;
@@ -77,7 +76,7 @@ private:
    GLint View_location;
     GLint Projection_location;
 
-    const int particles = 128*1024 * 4;
+    const int particles = 128*1024 * 1;
 };
 
 #endif
