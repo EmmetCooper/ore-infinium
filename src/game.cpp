@@ -115,7 +115,6 @@ void Game::tick()
         //if (m_server) {
 
         //}
-
         m_client->render(frameTime);
 
         const double alpha = accumulator / dt;

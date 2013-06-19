@@ -94,7 +94,7 @@ void DebugMenu::update(double frameTime)
         limiter = 0;
 
         ss.str("");
-        ss << "FPS: " << (1000.0 / previousFrameTime) << " Frametime: " << (previousFrameTime / 1000.0);
+        ss << "FPS: " << (1000.0 / previousFrameTime) << " Frametime: " << (previousFrameTime) << " ms";
         fpsString = ss.str();
 
         m_debug->GetElementById("1")->SetInnerRML(fpsString.c_str());
