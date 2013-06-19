@@ -40,13 +40,13 @@ public:
     void bindProgram() const;
     void unbindProgram() const;
 
+    static std::string loadFile(const char* fileName);
 private:
 
     void loadShaders(const char* vertexShader, const char* fragmentShader);
     void printShaderInfoLog(GLuint shader);
     bool checkShaderCompileStatus(GLuint obj);
     bool checkProgramLinkStatus(GLuint obj);
-    std::string loadFile(const char* fileName);
 
     GLuint m_shaderProgram = 0;
     GLuint m_vertexShader = 0;

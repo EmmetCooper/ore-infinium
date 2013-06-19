@@ -49,6 +49,7 @@
 
 #include <noise/noise.h>
 #include "noiseutils.h"
+#include "particlerenderer.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -106,6 +107,8 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
         //FIXME: call each update, and make it only do visible ones
         m_lightRenderer->setTorches(&m_torches);
+
+        m_particleRenderer = new ParticleRenderer(this, m_camera, m_mainPlayer);
     }
 
     m_time = new Time();
@@ -157,6 +160,7 @@ World::~World()
     delete m_tileRenderer;
     delete m_spriteSheetRenderer;
     delete m_lightRenderer;
+    delete m_particleRenderer;
     delete m_sky;
 
     for (auto * torch : m_torches) {

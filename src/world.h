@@ -50,6 +50,7 @@ class CollisionMap;
 class Torch;
 class Item;
 class PhysicsDebugRenderer;
+class ParticleRenderer;
 
 //height
 static constexpr uint16_t WORLD_ROWCOUNT = 8400;
@@ -241,6 +242,7 @@ private:
 
     TileRenderer* m_tileRenderer = nullptr;
     LightRenderer* m_lightRenderer = nullptr;
+    ParticleRenderer* m_particleRenderer = nullptr;
 //    QuadTreeRenderer* m_quadTreeRenderer = nullptr;
     SpriteSheetRenderer* m_spriteSheetRenderer = nullptr;
 

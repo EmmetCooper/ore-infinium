@@ -20,6 +20,7 @@
 #include "src/world.h"
 #include "src/camera.h"
 #include "src/player.h"
+#include "shader.h"
 
 #include <SDL_timer.h>
 
@@ -30,7 +31,7 @@
 
 ParticleRenderer::ParticleRenderer(World* world, Camera* camera, Entities::Player* mainPlayer)
 {
-
+    initGL();
 }
 
 ParticleRenderer::~ParticleRenderer()
@@ -60,56 +61,22 @@ void ParticleRenderer::initGL()
     // shader source code
 
     // the vertex shader simply passes through data
-    std::string vertex_source =
-        "#version 330\n"
-        "layout(location = 0) in vec4 vposition;\n"
-        "void main() {\n"
-        "   gl_Position = vposition;\n"
-        "}\n";
+    std::string vertex_source = Shader::loadFile("particlerenderer.vert");
+
 
     // the geometry shader creates the billboard quads
-    std::string geometry_source =
-        "#version 330\n"
-        "uniform mat4 View;\n"
-        "uniform mat4 Projection;\n"
-        "layout (points) in;\n"
-        "layout (triangle_strip, max_vertices = 4) out;\n"
-        "out vec2 txcoord;\n"
-        "void main() {\n"
-        "   vec4 pos = View*gl_in[0].gl_Position;\n"
-        "   txcoord = vec2(-1,-1);\n"
-        "   gl_Position = Projection*(pos+0.2*vec4(txcoord,0,0));\n"
-        "   EmitVertex();\n"
-        "   txcoord = vec2( 1,-1);\n"
-        "   gl_Position = Projection*(pos+0.2*vec4(txcoord,0,0));\n"
-        "   EmitVertex();\n"
-        "   txcoord = vec2(-1, 1);\n"
-        "   gl_Position = Projection*(pos+0.2*vec4(txcoord,0,0));\n"
-        "   EmitVertex();\n"
-        "   txcoord = vec2( 1, 1);\n"
-        "   gl_Position = Projection*(pos+0.2*vec4(txcoord,0,0));\n"
-        "   EmitVertex();\n"
-        "}\n";
+    std::string geometry_source = Shader::loadFile("particlerenderer.gs");
 
     // the fragment shader creates a bell like radial color distribution
-    std::string fragment_source =
-        "#version 330\n"
-        "in vec2 txcoord;\n"
-        "layout(location = 0) out vec4 FragColor;\n"
-        "void main() {\n"
-        "   float s = 0.2*(1/(1+15.*dot(txcoord, txcoord))-1/16.);\n"
-        "   FragColor = s*vec4(0.9,0.5,0.0,1);\n"
-        "}\n";
+    std::string fragment_source = Shader::loadFile("particlerenderer.frag");
 
-    // we need these to properly pass the strings
-    const char *source;
-    int length;
 
     // create and compiler vertex shader
     vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-    source = vertex_source.c_str();
-    length = vertex_source.size();
-    glShaderSource(vertex_shader, 1, &source, &length);
+
+    const char* vertexArray = vertex_source.c_str();
+
+    glShaderSource(vertex_shader, 1, &vertexArray, nullptr);
     glCompileShader(vertex_shader);
     if(!check_shader_compile_status(vertex_shader))
     {
@@ -118,9 +85,9 @@ void ParticleRenderer::initGL()
 
     // create and compiler geometry shader
     geometry_shader = glCreateShader(GL_GEOMETRY_SHADER);
-    source = geometry_source.c_str();
-    length = geometry_source.size();
-    glShaderSource(geometry_shader, 1, &source, &length);
+
+    const char* geometryArray = geometry_source.c_str();
+    glShaderSource(geometry_shader, 1, &geometryArray, nullptr);
     glCompileShader(geometry_shader);
     if(!check_shader_compile_status(geometry_shader))
     {
@@ -129,9 +96,9 @@ void ParticleRenderer::initGL()
 
     // create and compiler fragment shader
     fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    source = fragment_source.c_str();
-    length = fragment_source.size();
-    glShaderSource(fragment_shader, 1, &source, &length);
+
+    const char* fragmentArray = fragment_source.c_str();
+    glShaderSource(fragment_shader, 1, &fragmentArray, nullptr);
     glCompileShader(fragment_shader);
     if(!check_shader_compile_status(fragment_shader))
     {
@@ -155,47 +122,14 @@ void ParticleRenderer::initGL()
     Projection_location = glGetUniformLocation(shader_program, "Projection");
 
     // the transform feedback shader only has a vertex shader
-    std::string transform_vertex_source =
-        "#version 330\n"
-        "uniform vec3 center[3];\n"
-        "uniform float radius[3];\n"
-        "uniform vec3 g;\n"
-        "uniform float dt;\n"
-        "uniform float bounce;\n"
-        "uniform int seed;\n"
-        "layout(location = 0) in vec3 inposition;\n"
-        "layout(location = 1) in vec3 invelocity;\n"
-        "out vec3 outposition;\n"
-        "out vec3 outvelocity;\n"
-
-        "float hash(int x) {\n"
-        "   x = x*12 + gl_VertexID*1 + seed*1;\n"
-        "   x = (x >> 13) ^ x;\n"
-        "   return ((x * (x * x * 2 + 19990303) + 1) & 0x7fffffff)/float(0x7fffffff-1);\n"
-        "}\n"
-
-        "void main() {\n"
-        "   outvelocity = invelocity;\n"
-        "   for(int j = 0;j<1;++j) {\n"
-        "       vec3 diff = inposition-center[j];\n"
-        "       float dist = length(diff);\n"
-        "       float vdot = dot(diff, invelocity);\n"
-        "       if(dist<radius[j] && vdot<0.0)\n"
-        "           outvelocity -= bounce*diff*vdot/(dist*dist);\n"
-        "   }\n"
-        "   outvelocity += dt*g;\n"
-        "   outposition = inposition + dt*outvelocity;\n"
-        "   if(outposition.y < -10.0)\n"
-        "   {\n"
-        "   }\n"
-        "}\n";
+    std::string transform_vertex_source = Shader::loadFile("particlerenderer_transform_fire.vert");
 
     // create and compiler vertex shader
     transform_vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-    source = transform_vertex_source.c_str();
-    length = transform_vertex_source.size();
 
-    glShaderSource(transform_vertex_shader, 1, &source, &length);
+    const char* transformVertexArray = transform_vertex_source.c_str();
+
+    glShaderSource(transform_vertex_shader, 1, &transformVertexArray, nullptr);
     glCompileShader(transform_vertex_shader);
     if(!check_shader_compile_status(transform_vertex_shader))
     {
@@ -263,33 +197,6 @@ void ParticleRenderer::initGL()
     // "unbind" vao
     glBindVertexArray(0);
 
-}
-
-// loadFile - loads text file into char* fname
-// allocates memory - so need to delete after use
-// size of file returned in fSize
-char* ParticleRenderer::loadFile(const char* fname, GLint* fSize)
-{
-    std::ifstream::pos_type size;
-    char * memblock = 0;
-    std::string text;
-
-    std::ifstream file(fname, std::ios::in | std::ios::binary | std::ios::ate);
-    if (file.is_open()) {
-        size = file.tellg();
-        *fSize = (GLuint) size;
-
-        memblock = new char [size];
-        file.seekg(0, std::ios::beg);
-        file.read(memblock, size);
-        file.close();
-        text.assign(memblock);
-
-        Debug::log(Debug::Area::ShadersArea) << "shader : " << fname << " loaded successfully";
-    } else {
-        Debug::fatal(false,  Debug::Area::ShadersArea, "failed to load shader: " + std::string(fname));
-    }
-    return memblock;
 }
 
 void ParticleRenderer::render()
