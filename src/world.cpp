@@ -341,6 +341,8 @@ void World::render()
     m_spriteSheetRenderer->renderEntities();
     m_spriteSheetRenderer->renderCharacters();
 
+    m_particleRenderer->render();
+
 //FIXME unused    m_quadTreeRenderer->render();
 
     renderCrosshair();
