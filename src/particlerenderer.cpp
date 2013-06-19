@@ -70,7 +70,6 @@ void ParticleRenderer::initGL()
     // the fragment shader creates a bell like radial color distribution
     std::string fragment_source = Shader::loadFile("particlerenderer.frag");
 
-
     // create and compiler vertex shader
     vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 
@@ -170,7 +169,7 @@ void ParticleRenderer::initGL()
         vertexData[2*i+0] = glm::vec3(0.0f,20.0f,0.0f) + 5.0f*vertexData[2*i+0];
 
         // initial velocity
-        vertexData[2*i+1] = glm::vec3(0,0,0);
+        vertexData[2*i+1] = glm::vec3(-900,0,0);
     }
 
 
@@ -224,13 +223,15 @@ void ParticleRenderer::render()
 
     // physical parameters
     float dt = 1.0f/60.0f;
-    glm::vec3 g(0.0f, -2.81f, 0.0f);
+    glm::vec3 g(0.0f, -9.81f, 0.0f);
     float bounce = 1.2f; // inelastic: 1.0f, elastic: 2.0f
 
     int current_buffer=0;
 
     // get the time in seconds
-    float t = SDL_GetTicks();
+    float t = SDL_GetTicks()/1000.0;
+
+    for (int i = 0; i < 2; ++i) {
 
     // use the transform shader program
     glUseProgram(transform_shader_program);
@@ -271,8 +272,8 @@ void ParticleRenderer::render()
     glm::mat4 View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -30.0f));
 
     // make the camera rotate around the origin
-//        View = glm::rotate(View, 30.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-//        View = glm::rotate(View, -22.5f*t, glm::vec3(0.0f, 1.0f, 0.0f));
+///        View = glm::rotate(View, 30.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+///        View = glm::rotate(View, -22.5f*t, glm::vec3(0.0f, 1.0f, 0.0f));
 
     // set the uniform
     glUniformMatrix4fv(View_location, 1, GL_FALSE, glm::value_ptr(View));
@@ -288,6 +289,7 @@ void ParticleRenderer::render()
 
     // advance buffer index
     current_buffer = (current_buffer + 1) % buffercount;
+    }
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
