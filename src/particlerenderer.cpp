@@ -20,6 +20,7 @@
 #include "src/world.h"
 #include "src/camera.h"
 #include "src/player.h"
+#include "src/texture.h"
 #include "shader.h"
 
 #include <SDL_timer.h>
@@ -70,104 +71,86 @@ void ParticleRenderer::initGL()
     // shader source code
 
     // the vertex shader simply passes through data
-//    std::string vertex_source = Shader::loadFile("particlerenderer.vert");
-//
-//
-//    // the geometry shader creates the billboard quads
-//    std::string geometry_source = Shader::loadFile("particlerenderer.gs");
-//
+    std::string vertex_source = Shader::loadFile("particlerenderer_smoke.vert");
+
 //    // the fragment shader creates a bell like radial color distribution
-//    std::string fragment_source = Shader::loadFile("particlerenderer.frag");
+    std::string fragment_source = Shader::loadFile("particlerenderer_smoke.frag");
 //
 //    // create and compiler vertex shader
-//    vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-//
-//    const char* vertexArray = vertex_source.c_str();
-//
-//    glShaderSource(vertex_shader, 1, &vertexArray, nullptr);
-//    glCompileShader(vertex_shader);
-//    if(!check_shader_compile_status(vertex_shader))
-//    {
-//        exit(1);
-//    }
-//
-//    // create and compiler geometry shader
-//    geometry_shader = glCreateShader(GL_GEOMETRY_SHADER);
-//
-//    const char* geometryArray = geometry_source.c_str();
-//    glShaderSource(geometry_shader, 1, &geometryArray, nullptr);
-//    glCompileShader(geometry_shader);
-//    if(!check_shader_compile_status(geometry_shader))
-//    {
-//        exit(1);
-//    }
-//
-//    // create and compiler fragment shader
-//    fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-//
-//    const char* fragmentArray = fragment_source.c_str();
-//    glShaderSource(fragment_shader, 1, &fragmentArray, nullptr);
-//    glCompileShader(fragment_shader);
-//    if(!check_shader_compile_status(fragment_shader))
-//    {
-//        exit(1);
-//    }
-//
-//    // create program
-//    shader_program = glCreateProgram();
-//
-//    // attach shaders
-//    glAttachShader(shader_program, vertex_shader);
-//    glAttachShader(shader_program, geometry_shader);
-//    glAttachShader(shader_program, fragment_shader);
-//
-//    // link the program and check for errors
-//    glLinkProgram(shader_program);
-//    check_program_link_status(shader_program);
-//
-//    // obtain location of projection uniform
-//    View_location = glGetUniformLocation(shader_program, "View");
-//    Projection_location = glGetUniformLocation(shader_program, "Projection");
-//
-//    // the transform feedback shader only has a vertex shader
-//    std::string transform_vertex_source = Shader::loadFile("particlerenderer_transform_fire.vert");
-//
-//    // create and compiler vertex shader
-//    transform_vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-//
-//    const char* transformVertexArray = transform_vertex_source.c_str();
-//
-//    glShaderSource(transform_vertex_shader, 1, &transformVertexArray, nullptr);
-//    glCompileShader(transform_vertex_shader);
-//    if(!check_shader_compile_status(transform_vertex_shader))
-//    {
-//        exit(1);
-//    }
-//
-//    // create program
-//    transform_shader_program = glCreateProgram();
-//
-//    // attach shaders
-//    glAttachShader(transform_shader_program, transform_vertex_shader);
-//
+    vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+
+    const char* vertexArray = vertex_source.c_str();
+
+    glShaderSource(vertex_shader, 1, &vertexArray, nullptr);
+    glCompileShader(vertex_shader);
+    if(!check_shader_compile_status(vertex_shader))
+    {
+        exit(1);
+    }
+
+    // create and compiler fragment shader
+    fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    const char* fragmentArray = fragment_source.c_str();
+    glShaderSource(fragment_shader, 1, &fragmentArray, nullptr);
+    glCompileShader(fragment_shader);
+    if(!check_shader_compile_status(fragment_shader))
+    {
+        exit(1);
+    }
+
+    Debug::checkGLError();
+    // create program
+    shader_program = glCreateProgram();
+
+    // attach shaders
+    glAttachShader(shader_program, vertex_shader);
+    glAttachShader(shader_program, fragment_shader);
+
+
 //    // specify transform feedback output
 //    const char *varyings[] = {"outposition", "outvelocity"};
-//    glTransformFeedbackVaryings(transform_shader_program, 2, varyings, GL_INTERLEAVED_ATTRIBS);
-//
-//    // link the program and check for errors
-//    glLinkProgram(transform_shader_program);
-//    check_program_link_status(transform_shader_program);
+//FIXME //    glTransformFeedbackVaryings(transform_shader_program, 2, varyings, GL_INTERLEAVED_ATTRIBS);
 //
 
+    const char * outputNames[] = { "Position", "Velocity", "StartTime" };
+    glTransformFeedbackVaryings(shader_program, 3, outputNames, GL_SEPARATE_ATTRIBS);
+
+    // link the program and check for errors
+    glLinkProgram(shader_program);
+    check_program_link_status(shader_program);
+
+    Debug::checkGLError();
+
+    //    if( ! prog.compileShaderFromFile("shader/smoke.vs",GLSLShader::VERTEX) )
+    //    {
+    //        printf("Vertex shader failed to compile!\n%s",
+    //               prog.log().c_str());
+    //        exit(1);
+    //    }
+    //    if( ! prog.compileShaderFromFile("shader/smoke.fs",GLSLShader::FRAGMENT))
+    //    {
+    //        printf("Fragment shader failed to compile!\n%s",
+    //               prog.log().c_str());
+    //        exit(1);
+    //    }
+    //
+    //    //////////////////////////////////////////////////////
+    //    // Setup the transform feedback (must be done before linking the program)
+    //    GLuint progHandle = prog.getHandle();
+
+    //    ///////////////////////////////////////////////////////
 
     /// FIXME: HACK: ///////////////
 
+    Debug::checkGLError();
     // Generate the buffers
     glGenBuffers(2, posBuf);    // position buffers
     glGenBuffers(2, velBuf);    // velocity buffers
     glGenBuffers(2, startTime); // Start time buffers
     glGenBuffers(1, &initVel);  // Initial velocity buffer (never changes, only need one)
 
+    Debug::checkGLError();
     // Allocate space for all buffers
     int size = nParticles * 3 * sizeof(float);
     glBindBuffer(GL_ARRAY_BUFFER, posBuf[0]);
@@ -185,6 +168,7 @@ void ParticleRenderer::initGL()
     glBindBuffer(GL_ARRAY_BUFFER, startTime[1]);
     glBufferData(GL_ARRAY_BUFFER, nParticles * sizeof(float), NULL, GL_DYNAMIC_COPY);
 
+    Debug::checkGLError();
     // Fill the first position buffer with zeroes
     GLfloat *data = new GLfloat[nParticles * 3];
     for( int i = 0; i < nParticles * 3; i += 3 ) {
@@ -193,6 +177,7 @@ void ParticleRenderer::initGL()
         data[i+2] = 0.0f;
     }
 
+    Debug::checkGLError();
     glBindBuffer(GL_ARRAY_BUFFER, posBuf[0]);
     glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 
@@ -236,6 +221,7 @@ void ParticleRenderer::initGL()
 
     delete [] data;
 
+    Debug::checkGLError();
     // Create vertex arrays for each set of buffers
     glGenVertexArrays(2, particleArray);
 
@@ -267,6 +253,7 @@ void ParticleRenderer::initGL()
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
     glEnableVertexAttribArray(1);
 
+    Debug::checkGLError();
     glBindBuffer(GL_ARRAY_BUFFER, startTime[1]);
     glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 0, NULL);
     glEnableVertexAttribArray(2);
@@ -294,24 +281,34 @@ void ParticleRenderer::initGL()
 
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
 
+    Debug::checkGLError();
     projection = glm::mat4(1.0f);
 
     angle = (float)( PI / 2.0f );
   model = glm::mat4(1.0f);
 
+    Debug::checkGLError();
     const char * texName = "../media/texture/smoke.bmp";
 
+    m_smokeTexture = new Texture("../textures/smoke.bmp");
+    m_smokeTexture->generate(Texture::TextureFilterNearest);
+
+    Debug::checkGLError();
    // setMatrices();
 }
 
 void ParticleRenderer::render()
 {
+    float t = SDL_GetTicks();
+    deltaT = t - time;
+    time = t;
+
+    Debug::checkGLError();
+
+    glUseProgram(shader_program);
     glEnable(GL_PROGRAM_POINT_SIZE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    GLint texLoc = glGetUniformLocation(shader_program, "ParticleTex");
-    glUniform1i(texLoc, 0);
 
     GLint lifetimeLoc = glGetUniformLocation(shader_program, "ParticleLifetime");
     glUniform1f(lifetimeLoc, 6.0f);
@@ -322,6 +319,12 @@ void ParticleRenderer::render()
 
     glActiveTexture(GL_TEXTURE0);
 
+    m_smokeTexture->bind();
+
+    GLint texLoc = glGetUniformLocation(shader_program, "ParticleTex");
+    glUniform1i(texLoc, 0);
+
+    Debug::checkGLError();
     // Update pass
     GLint passTypeLoc = glGetUniformLocation(shader_program, "passType");
 
@@ -337,6 +340,7 @@ void ParticleRenderer::render()
 
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, feedback[drawBuf]);
 
+    Debug::checkGLError();
     glBeginTransformFeedback(GL_POINTS);
     glBindVertexArray(particleArray[1-drawBuf]);
     glDrawArrays(GL_POINTS, 0, nParticles);
@@ -356,16 +360,22 @@ void ParticleRenderer::render()
 
     glDrawArrays(GL_POINTS, 0, nParticles);
 
+    Debug::checkGLError();
     // Swap buffers
     drawBuf = 1 - drawBuf;
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glUseProgram(0);
+    Debug::checkGLError();
+
+    glActiveTexture(GL_TEXTURE0);
 }
 
 void ParticleRenderer::pushMatrix()
 {
 
+    Debug::checkGLError();
     glm::mat4 mvp = view * model;
 //    prog.setUniform("MVP", projection * mv);
 //    glm::mat4 mvp =  m_orthoMatrix * m_viewMatrix;
@@ -413,8 +423,7 @@ bool ParticleRenderer::check_program_link_status(GLuint obj)
 
 //void SceneSmoke::update( float t )
 //{
-//    deltaT = t - time;
-//    time = t;
+//
 //}
 //
 //void SceneSmoke::compileAndLinkShader()
