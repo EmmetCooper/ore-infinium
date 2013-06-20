@@ -30,6 +30,7 @@
 #include <string>
 #include <vector>
 
+class Texture;
 class Image;
 
 namespace Entities
@@ -77,6 +78,21 @@ private:
     GLint Projection_location;
 
     const int particles = 128*1024 * 1;
+
+
+    float angle;
+    float time = 0.0f;
+    float deltaT = 0.0f;
+    int width, height;
+
+    GLuint posBuf[2], velBuf[2];
+    GLuint particleArray[2];
+    GLuint feedback[2], initVel, startTime[2];
+    GLuint drawBuf = 1;
+    GLuint query;
+    GLuint renderSub, updateSub;
+
+    Texture* m_smokeTexture = nullptr;
 };
 
 #endif

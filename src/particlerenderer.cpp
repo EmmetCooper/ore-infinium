@@ -149,137 +149,195 @@ void ParticleRenderer::initGL()
     glLinkProgram(transform_shader_program);
     check_program_link_status(transform_shader_program);
 
-    center_location = glGetUniformLocation(transform_shader_program, "center");
-    radius_location = glGetUniformLocation(transform_shader_program, "radius");
-    g_location = glGetUniformLocation(transform_shader_program, "g");
-    dt_location = glGetUniformLocation(transform_shader_program, "dt");
-    bounce_location = glGetUniformLocation(transform_shader_program, "bounce");
-    seed_location = glGetUniformLocation(transform_shader_program, "seed");
 
-    // randomly place particles in a cube
-    std::vector<glm::vec3> vertexData(2*particles);
-    for(int i = 0;i<particles;++i)
-    {
-        // initial position
-        vertexData[2*i+0] = glm::vec3(
-                                0.5f,
-                                0.5f,
-                                0.0);
-        vertexData[2*i+0] = glm::vec3(0.0f,20.0f,0.0f) + 5.0f*vertexData[2*i+0];
+    /// FIXME: HACK: ///////////////
 
-        // initial velocity
-        vertexData[2*i+1] = glm::vec3(0,0,0);
+        nParticles = 1000;
+
+    // Generate the buffers
+    glGenBuffers(2, posBuf);    // position buffers
+    glGenBuffers(2, velBuf);    // velocity buffers
+    glGenBuffers(2, startTime); // Start time buffers
+    glGenBuffers(1, &initVel);  // Initial velocity buffer (never changes, only need one)
+
+    // Allocate space for all buffers
+    int size = nParticles * 3 * sizeof(float);
+    glBindBuffer(GL_ARRAY_BUFFER, posBuf[0]);
+    glBufferData(GL_ARRAY_BUFFER, size, NULL, GL_DYNAMIC_COPY);
+    glBindBuffer(GL_ARRAY_BUFFER, posBuf[1]);
+    glBufferData(GL_ARRAY_BUFFER, size, NULL, GL_DYNAMIC_COPY);
+    glBindBuffer(GL_ARRAY_BUFFER, velBuf[0]);
+    glBufferData(GL_ARRAY_BUFFER, size, NULL, GL_DYNAMIC_COPY);
+    glBindBuffer(GL_ARRAY_BUFFER, velBuf[1]);
+    glBufferData(GL_ARRAY_BUFFER, size, NULL, GL_DYNAMIC_COPY);
+    glBindBuffer(GL_ARRAY_BUFFER, initVel);
+    glBufferData(GL_ARRAY_BUFFER, size, NULL, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, startTime[0]);
+    glBufferData(GL_ARRAY_BUFFER, nParticles * sizeof(float), NULL, GL_DYNAMIC_COPY);
+    glBindBuffer(GL_ARRAY_BUFFER, startTime[1]);
+    glBufferData(GL_ARRAY_BUFFER, nParticles * sizeof(float), NULL, GL_DYNAMIC_COPY);
+
+    // Fill the first position buffer with zeroes
+    GLfloat *data = new GLfloat[nParticles * 3];
+    for( int i = 0; i < nParticles * 3; i += 3 ) {
+        data[i] = 0.0f;
+        data[i+1] = 0.0f;
+        data[i+2] = 0.0f;
     }
 
+    glBindBuffer(GL_ARRAY_BUFFER, posBuf[0]);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 
-    glGenVertexArrays(buffercount, vao);
-    glGenBuffers(buffercount, vbo);
+    // Fill the first velocity buffer with random velocities
+    float theta, phi, velocity;
+    vec3 v(0.0f);
+    for( int i = 0; i < nParticles; i++ ) {
+        theta = glm::mix(0.0f, (float)PI / 1.5f, randFloat());
+        phi = glm::mix(0.0f, (float)TWOPI, randFloat());
 
-    for(int i = 0;i<buffercount;++i)
-    {
-        glBindVertexArray(vao[i]);
+        v.x = sinf(theta) * cosf(phi);
+        v.y = cosf(theta);
+        v.z = sinf(theta) * sinf(phi);
 
-        glBindBuffer(GL_ARRAY_BUFFER, vbo[i]);
+        velocity = glm::mix(0.1f,0.2f,randFloat());
+        v = glm::normalize(v) * velocity;
 
-        // fill with initial data
-        glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*vertexData.size(), &vertexData[0], GL_STATIC_DRAW);
-
-        // set up generic attrib pointers
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat), (char*)0 + 0*sizeof(GLfloat));
-        // set up generic attrib pointers
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat), (char*)0 + 3*sizeof(GLfloat));
+        data[3*i]   = v.x;
+        data[3*i+1] = v.y;
+        data[3*i+2] = v.z;
     }
+    glBindBuffer(GL_ARRAY_BUFFER,velBuf[0]);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
+    glBindBuffer(GL_ARRAY_BUFFER,initVel);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 
-    // "unbind" vao
+    // Fill the first start time buffer
+    delete [] data;
+    data = new GLfloat[nParticles];
+    float time = 0.0f;
+    float rate = 0.01f;
+    for( int i = 0; i < nParticles; i++ ) {
+        data[i] = time;
+        time += rate;
+    }
+    glBindBuffer(GL_ARRAY_BUFFER,startTime[0]);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, nParticles * sizeof(float), data);
+
+    glBindBuffer(GL_ARRAY_BUFFER,0);
+    delete [] data;
+
+    // Create vertex arrays for each set of buffers
+    glGenVertexArrays(2, particleArray);
+
+    // Set up particle array 0
+    glBindVertexArray(particleArray[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, posBuf[0]);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, velBuf[0]);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, startTime[0]);
+    glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 0, NULL);
+    glEnableVertexAttribArray(2);
+
+    glBindBuffer(GL_ARRAY_BUFFER, initVel);
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    glEnableVertexAttribArray(3);
+
+    // Set up particle array 1
+    glBindVertexArray(particleArray[1]);
+    glBindBuffer(GL_ARRAY_BUFFER, posBuf[1]);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, velBuf[1]);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, startTime[1]);
+    glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 0, NULL);
+    glEnableVertexAttribArray(2);
+
+    glBindBuffer(GL_ARRAY_BUFFER, initVel);
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    glEnableVertexAttribArray(3);
+
     glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+    // Setup the feedback objects
+    glGenTransformFeedbacks(2, feedback);
+
+    // Transform feedback 0
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, feedback[0]);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, posBuf[0]);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 1, velBuf[0]);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 2, startTime[0]);
+
+    // Transform feedback 1
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, feedback[1]);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, posBuf[1]);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 1, velBuf[1]);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 2, startTime[1]);
+
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
+
+    projection = mat4(1.0f);
+
+    angle = (float)( PI / 2.0f );
+    model = mat4(1.0f);
+
+    const char * texName = "../media/texture/smoke.bmp";
+    BMPReader::loadTex(texName);
+
+    setMatrices();
 }
 
 void ParticleRenderer::render()
 {
-
-    // we ar blending so no depth testing
-    glDisable(GL_DEPTH_TEST);
-
-    // enable blending
+    glEnable(GL_PROGRAM_POINT_SIZE);
     glEnable(GL_BLEND);
-    //  and set the blend function to result = 1*source + 1*destination
-    glBlendFunc(GL_ONE, GL_ONE);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    // define spheres for the particles to bounce off
-    const int spheres = 3;
-    glm::vec3 center[spheres];
-    float radius[spheres];
-    center[0] = glm::vec3(0,12,0);
-    radius[0] = 3;
-    center[1] = glm::vec3(-3,0,0);
-    radius[1] = 7;
-    center[2] = glm::vec3(5,-10,0);
-    radius[2] = 1;
+    prog.setUniform("ParticleTex", 0);
+    prog.setUniform("ParticleLifetime", 6.0f);
+    prog.setUniform("Accel", vec3(-0.1f,0.1f,0.0f));
 
-    // physical parameters
-    float dt = 1.0f/60.0f;
-    glm::vec3 g(0.0f, -9.81f, 0.0f);
-    float bounce = 1.2f; // inelastic: 1.0f, elastic: 2.0f
+    glActiveTexture(GL_TEXTURE0);
 
-    int current_buffer=0;
+    // Update pass
+    GLint passTypeLoc = glGetUniformLocation(prog.getHandle(), "passType");
 
-    for (int i = 0; i < 2; ++i) {
+    glUniform1i(passTypeLoc, 0);
 
-    // use the transform shader program
-    glUseProgram(transform_shader_program);
-
-    // set the uniforms
-    glUniform3fv(center_location, 3, reinterpret_cast<GLfloat*>(center));
-    glUniform1fv(radius_location, 3, reinterpret_cast<GLfloat*>(radius));
-    glUniform3fv(g_location, 1, glm::value_ptr(g));
-    glUniform1f(dt_location, dt);
-    glUniform1f(bounce_location, bounce);
-    glUniform1i(seed_location, std::rand());
-
-    // bind the current vao
-    glBindVertexArray(vao[(current_buffer+1)%buffercount]);
-
-    // bind transform feedback target
-    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, vbo[current_buffer]);
+    prog.setUniform("Time", time);
+    prog.setUniform("H", deltaT);
 
     glEnable(GL_RASTERIZER_DISCARD);
 
-    // perform transform feedback
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, feedback[drawBuf]);
+
     glBeginTransformFeedback(GL_POINTS);
-    glDrawArrays(GL_POINTS, 0, particles);
+    glBindVertexArray(particleArray[1-drawBuf]);
+    glDrawArrays(GL_POINTS, 0, nParticles);
     glEndTransformFeedback();
 
     glDisable(GL_RASTERIZER_DISCARD);
 
-    // use the shader program
-    glUseProgram(shader_program);
+    // Render pass
+    glUniform1i(passTypeLoc, 1);
+    glClear( GL_COLOR_BUFFER_BIT );
+    view = glm::lookAt(glm::vec3(3.0f * cos(angle),1.5f,3.0f * sin(angle)), glm::vec3(0.0f,1.5f,0.0f), glm::vec3(0.0f,1.0f,0.0f));
+    setMatrices();
 
-    // calculate ViewProjection matrix
-    glm::mat4 Projection = glm::perspective(90.0f, 4.0f / 3.0f, 0.1f, 100.f);
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
+    glBindVertexArray(particleArray[drawBuf]);
+    glDrawArrays(GL_POINTS, 0, nParticles);
 
-    // translate the world/view position
-    glm::mat4 View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -30.0f));
-
-    // set the uniform
-    glUniformMatrix4fv(View_location, 1, GL_FALSE, glm::value_ptr(View));
-    glUniformMatrix4fv(Projection_location, 1, GL_FALSE, glm::value_ptr(Projection));
-
-    // bind the current vao
-    glBindVertexArray(vao[current_buffer]);
-
-    // draw
-    glDrawArrays(GL_POINTS, 0, particles);
-
-    Debug::checkGLError();
-
-    // advance buffer index
-    current_buffer = (current_buffer + 1) % buffercount;
-    }
-
+    // Swap buffers
+    drawBuf = 1 - drawBuf;
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
@@ -316,4 +374,44 @@ bool ParticleRenderer::check_program_link_status(GLuint obj)
         return false;
     }
     return true;
+}
+
+/// ////////////////////////////////////////////////////////////////////////////////////////////
+
+void SceneSmoke::update( float t )
+{
+    deltaT = t - time;
+    time = t;
+}
+
+void SceneSmoke::compileAndLinkShader()
+{
+    if( ! prog.compileShaderFromFile("shader/smoke.vs",GLSLShader::VERTEX) )
+    {
+        printf("Vertex shader failed to compile!\n%s",
+               prog.log().c_str());
+        exit(1);
+    }
+    if( ! prog.compileShaderFromFile("shader/smoke.fs",GLSLShader::FRAGMENT))
+    {
+        printf("Fragment shader failed to compile!\n%s",
+               prog.log().c_str());
+        exit(1);
+    }
+
+    //////////////////////////////////////////////////////
+    // Setup the transform feedback (must be done before linking the program)
+    GLuint progHandle = prog.getHandle();
+    const char * outputNames[] = { "Position", "Velocity", "StartTime" };
+    glTransformFeedbackVaryings(progHandle, 3, outputNames, GL_SEPARATE_ATTRIBS);
+    ///////////////////////////////////////////////////////
+
+    if( ! prog.link() )
+    {
+        printf("Shader program failed to link!\n%s",
+               prog.log().c_str());
+        exit(1);
+    }
+
+    prog.use();
 }
