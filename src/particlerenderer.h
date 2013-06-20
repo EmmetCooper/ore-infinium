@@ -85,6 +85,7 @@ private:
     float deltaT = 0.0f;
     int width, height;
 
+    int nParticles = 1000;
     GLuint posBuf[2], velBuf[2];
     GLuint particleArray[2];
     GLuint feedback[2], initVel, startTime[2];

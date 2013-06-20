@@ -38,20 +38,20 @@ ParticleRenderer::~ParticleRenderer()
 {
     // delete the created objects
 
-    glDeleteVertexArrays(buffercount, vao);
-    glDeleteBuffers(buffercount, vbo);
-
-    glDetachShader(shader_program, vertex_shader);
-    glDetachShader(shader_program, geometry_shader);
-    glDetachShader(shader_program, fragment_shader);
-    glDeleteShader(vertex_shader);
-    glDeleteShader(geometry_shader);
-    glDeleteShader(fragment_shader);
-    glDeleteProgram(shader_program);
-
-    glDetachShader(transform_shader_program, transform_vertex_shader);
-    glDeleteShader(transform_vertex_shader);
-    glDeleteProgram(transform_shader_program);
+//    glDeleteVertexArrays(buffercount, vao);
+//    glDeleteBuffers(buffercount, vbo);
+//
+//    glDetachShader(shader_program, vertex_shader);
+//    glDetachShader(shader_program, geometry_shader);
+//    glDetachShader(shader_program, fragment_shader);
+//    glDeleteShader(vertex_shader);
+//    glDeleteShader(geometry_shader);
+//    glDeleteShader(fragment_shader);
+//    glDeleteProgram(shader_program);
+//
+//    glDetachShader(transform_shader_program, transform_vertex_shader);
+//    glDeleteShader(transform_vertex_shader);
+//    glDeleteProgram(transform_shader_program);
 
 }
 
@@ -152,8 +152,6 @@ void ParticleRenderer::initGL()
 
     /// FIXME: HACK: ///////////////
 
-        nParticles = 1000;
-
     // Generate the buffers
     glGenBuffers(2, posBuf);    // position buffers
     glGenBuffers(2, velBuf);    // velocity buffers
@@ -190,7 +188,7 @@ void ParticleRenderer::initGL()
 
     // Fill the first velocity buffer with random velocities
     float theta, phi, velocity;
-    vec3 v(0.0f);
+    glm::vec3 v(0.0f);
     for( int i = 0; i < nParticles; i++ ) {
         theta = glm::mix(0.0f, (float)PI / 1.5f, randFloat());
         phi = glm::mix(0.0f, (float)TWOPI, randFloat());
@@ -213,6 +211,7 @@ void ParticleRenderer::initGL()
 
     // Fill the first start time buffer
     delete [] data;
+
     data = new GLfloat[nParticles];
     float time = 0.0f;
     float rate = 0.01f;
@@ -224,6 +223,7 @@ void ParticleRenderer::initGL()
     glBufferSubData(GL_ARRAY_BUFFER, 0, nParticles * sizeof(float), data);
 
     glBindBuffer(GL_ARRAY_BUFFER,0);
+
     delete [] data;
 
     // Create vertex arrays for each set of buffers
@@ -284,15 +284,14 @@ void ParticleRenderer::initGL()
 
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
 
-    projection = mat4(1.0f);
+//    projection = mat4(1.0f);
 
-    angle = (float)( PI / 2.0f );
-    model = mat4(1.0f);
+ //   angle = (float)( PI / 2.0f );
+  //  model = mat4(1.0f);
 
     const char * texName = "../media/texture/smoke.bmp";
-    BMPReader::loadTex(texName);
 
-    setMatrices();
+   // setMatrices();
 }
 
 void ParticleRenderer::render()
@@ -301,14 +300,20 @@ void ParticleRenderer::render()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    prog.setUniform("ParticleTex", 0);
-    prog.setUniform("ParticleLifetime", 6.0f);
-    prog.setUniform("Accel", vec3(-0.1f,0.1f,0.0f));
+    GLint texLoc = glGetUniformLocation(shader_program, "ParticleTex");
+    glUniform1i(texLoc, 0);
+
+    GLint lifetimeLoc = glGetUniformLocation(shader_program, "ParticleLifetime");
+    glUniform1f(lifetimeLoc, 6.0f;
+
+
+    GLint accelLoc = glGetUniformLocation(shader_program, "Accel");
+    glUniform3f(accelLoc, -0.1f, 0.1f, 0.0f);
 
     glActiveTexture(GL_TEXTURE0);
 
     // Update pass
-    GLint passTypeLoc = glGetUniformLocation(prog.getHandle(), "passType");
+    GLint passTypeLoc = glGetUniformLocation(shader_program, "passType");
 
     glUniform1i(passTypeLoc, 0);
 
