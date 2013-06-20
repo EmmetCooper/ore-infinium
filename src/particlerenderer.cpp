@@ -70,12 +70,10 @@ void ParticleRenderer::initGL()
 
     // shader source code
 
-    // the vertex shader simply passes through data
     std::string vertex_source = Shader::loadFile("particlerenderer_smoke.vert");
 
-//    // the fragment shader creates a bell like radial color distribution
     std::string fragment_source = Shader::loadFile("particlerenderer_smoke.frag");
-//
+
 //    // create and compiler vertex shader
     vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 
@@ -121,25 +119,6 @@ void ParticleRenderer::initGL()
     check_program_link_status(shader_program);
 
     Debug::checkGLError();
-
-    //    if( ! prog.compileShaderFromFile("shader/smoke.vs",GLSLShader::VERTEX) )
-    //    {
-    //        printf("Vertex shader failed to compile!\n%s",
-    //               prog.log().c_str());
-    //        exit(1);
-    //    }
-    //    if( ! prog.compileShaderFromFile("shader/smoke.fs",GLSLShader::FRAGMENT))
-    //    {
-    //        printf("Fragment shader failed to compile!\n%s",
-    //               prog.log().c_str());
-    //        exit(1);
-    //    }
-    //
-    //    //////////////////////////////////////////////////////
-    //    // Setup the transform feedback (must be done before linking the program)
-    //    GLuint progHandle = prog.getHandle();
-
-    //    ///////////////////////////////////////////////////////
 
     /// FIXME: HACK: ///////////////
 
@@ -300,6 +279,7 @@ void ParticleRenderer::initGL()
 
 void ParticleRenderer::render()
 {
+
     float t = SDL_GetTicks();
     deltaT = t - time;
     time = t;
@@ -351,9 +331,13 @@ void ParticleRenderer::render()
 
     // Render pass
     glUniform1i(passTypeLoc, 1);
-    glClear( GL_COLOR_BUFFER_BIT );
+//    glClear( GL_COLOR_BUFFER_BIT );
+    view = glm::lookAt(glm::vec3(3.0f * cosf(angle),1.5f,3.0f * sinf(angle)), glm::vec3(0.0f,1.5f,0.0f), glm::vec3(0.0f,1.0f,0.0f));
+    float w = 1600;
+    float h = 900;
+    projection = glm::perspective(60.0f, (float)w/h, 0.3f, 100.0f);
+//    view = glm::mat4(1.0);
 
-    view = glm::mat4(1.0);//glm::lookAt(glm::vec3(3.0f * cosf(angle),1.5f,3.0f * sinf(angle)), glm::vec3(0.0f,1.5f,0.0f), glm::vec3(0.0f,1.0f,0.0f));
     pushMatrix();
 
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
@@ -381,8 +365,9 @@ void ParticleRenderer::pushMatrix()
 //    prog.setUniform("MVP", projection * mv);
 //    glm::mat4 mvp =  m_orthoMatrix * m_viewMatrix;
 
+    glm::mat4 final = projection* mvp;
     int mvpLoc = glGetUniformLocation(shader_program, "MVP");
-    glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, &mvp[0][0]);
+    glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, &final[0][0]);
 }
 
 

@@ -282,7 +282,7 @@ void Client::render(double frameTime)
     }
 
     if (m_renderGUI) {
-        m_gui->render();
+//        m_gui->render();
         drawDebugText(frameTime);
     }
 
