@@ -53,12 +53,12 @@ public:
 
 private:
 
-    char* loadFile(const char* fname, GLint* fSize);
     bool check_program_link_status(GLuint obj);
     bool check_shader_compile_status(GLuint obj);
 
     void initGL();
 
+    void pushMatrix();
     GLint center_location;
     GLint radius_location;
     GLint g_location;
@@ -80,10 +80,15 @@ private:
     const int particles = 128*1024 * 1;
 
 
+    glm::mat4 view;
+    glm::mat4 model;
+    glm::mat4 projection;
+
     float angle;
     float time = 0.0f;
     float deltaT = 0.0f;
     int width, height;
+
 
     int nParticles = 1000;
     GLuint posBuf[2], velBuf[2];
