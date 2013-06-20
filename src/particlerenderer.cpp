@@ -281,6 +281,8 @@ void ParticleRenderer::initGL()
 
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
 
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
     Debug::checkGLError();
     projection = glm::mat4(1.0f);
 
@@ -288,9 +290,8 @@ void ParticleRenderer::initGL()
   model = glm::mat4(1.0f);
 
     Debug::checkGLError();
-    const char * texName = "../media/texture/smoke.bmp";
 
-    m_smokeTexture = new Texture("../textures/smoke.bmp");
+    m_smokeTexture = new Texture("../textures/smoke.png");
     m_smokeTexture->generate(Texture::TextureFilterNearest);
 
     Debug::checkGLError();
@@ -352,7 +353,7 @@ void ParticleRenderer::render()
     glUniform1i(passTypeLoc, 1);
     glClear( GL_COLOR_BUFFER_BIT );
 
-    view = glm::lookAt(glm::vec3(3.0f * cosf(angle),1.5f,3.0f * sinf(angle)), glm::vec3(0.0f,1.5f,0.0f), glm::vec3(0.0f,1.0f,0.0f));
+    view = glm::mat4(1.0);//glm::lookAt(glm::vec3(3.0f * cosf(angle),1.5f,3.0f * sinf(angle)), glm::vec3(0.0f,1.5f,0.0f), glm::vec3(0.0f,1.0f,0.0f));
     pushMatrix();
 
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);

@@ -108,7 +108,6 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         //FIXME: call each update, and make it only do visible ones
         m_lightRenderer->setTorches(&m_torches);
 
-        m_particleRenderer = new ParticleRenderer(this, m_camera, m_mainPlayer);
     }
 
     m_time = new Time();
@@ -146,6 +145,7 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
     if (m_client) {
         m_sky = new SkyRenderer(this, m_camera, m_time);
+        m_particleRenderer = new ParticleRenderer(this, m_camera, m_mainPlayer);
         //FIXME: remove, junk
         //Tool* tool = new Tool(glm::vec2(2350/PIXELS_PER_METER, 1410/ PIXELS_PER_METER));
         //tool->setToolMaterial(Tool::ToolMaterial::Wood);
@@ -319,33 +319,33 @@ void World::render()
 
     m_lightRenderer->setRenderingEnabled(Settings::instance()->debugRendererFlags & Debug::RenderingDebug::LightRenderingPassDebug);
     m_tileRenderer->setRenderingEnabled(Settings::instance()->debugRendererFlags & Debug::RenderingDebug::TileRenderingPassDebug);
-
-    //Sky at bottom layer
-
-    //TODO render tilemap..
-
-    if (Settings::instance()->debugRendererFlags & Debug::RenderingDebug::SkyRenderingPassDebug) {
-//        m_sky->render();
-    }
-
-    //set our view so that the player will stay relative to the view, in the center.
-    //HACK    m_window->setView(*m_view);
-    m_lightRenderer->renderToFBO();
-
-    m_tileRenderer->render();
-
-    //FIXME: incorporate entities into the pre-lit gamescene FBO, then render lighting as last pass
-    m_lightRenderer->renderToBackbuffer();
-
-    //HACK    m_window->setView(m_window->getDefaultView());
-    m_spriteSheetRenderer->renderEntities();
-    m_spriteSheetRenderer->renderCharacters();
-
+//
+//    //Sky at bottom layer
+//
+//    //TODO render tilemap..
+//
+//    if (Settings::instance()->debugRendererFlags & Debug::RenderingDebug::SkyRenderingPassDebug) {
+////        m_sky->render();
+//    }
+//
+//    //set our view so that the player will stay relative to the view, in the center.
+//    //HACK    m_window->setView(*m_view);
+//    m_lightRenderer->renderToFBO();
+//
+//    m_tileRenderer->render();
+//
+//    //FIXME: incorporate entities into the pre-lit gamescene FBO, then render lighting as last pass
+//    m_lightRenderer->renderToBackbuffer();
+//
+//    //HACK    m_window->setView(m_window->getDefaultView());
+//    m_spriteSheetRenderer->renderEntities();
+//    m_spriteSheetRenderer->renderCharacters();
+//
     m_particleRenderer->render();
 
 //FIXME unused    m_quadTreeRenderer->render();
 
-    renderCrosshair();
+//    renderCrosshair();
 }
 
 void World::renderCrosshair()

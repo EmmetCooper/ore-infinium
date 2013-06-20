@@ -68,6 +68,9 @@ void Image::loadImage(const std::string& filename)
     //check that the plugin has reading capabilities for this file and load the file
     if (FreeImage_FIFSupportsReading(imageFormat)) {
         m_bitmap = FreeImage_Load(imageFormat, filename.c_str());
+    } else {
+        // we can't read this!
+        Debug::assertf(false , "failure to load image, we don't support reading that image type!");
     }
 
     Debug::fatal(m_bitmap, Debug::Area::ImageLoaderArea, "failure to load image, bitmap pointer invalid");
