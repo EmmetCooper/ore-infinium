@@ -174,7 +174,8 @@ void Client::initSDL()
 
     Debug::fatal(enet_initialize() == 0, Debug::Area::ImportantArea, "An error occurred during ENet init (network init failure");
 
-    glClearColor(0.f, .5f, 0.f, 1.0f);
+    //glClearColor(0.f, .5f, 0.f, 1.0f);
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
     glViewport(0, 0, Settings::instance()->windowWidth, Settings::instance()->windowHeight);
 
@@ -234,59 +235,57 @@ void Client::poll()
 
 void Client::render(double frameTime)
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    if (m_world && m_mainPlayer) {
+        m_world->render();
+    }
+
+    // only a client-hosted server has a chance of seeing any debug shit
+    if (m_server) {
+        if (!m_physicsDebugRenderer && m_world && m_world->spriteSheetRenderer()) {
+            m_physicsDebugRenderer = new PhysicsDebugRenderer(m_world->spriteSheetRenderer()->camera());
+            // physics debug renderer first init...
+//            m_box2DWorld->SetDebugDraw(m_physicsDebugRenderer);
+        }
+
+        if (m_physicsDebugRenderer) {
+
+            int rendererFlags = 0;
+            int settingsFlags = Settings::instance()->debugRendererFlags;
+            bool drawingRequired = false;
+
+            if (settingsFlags & Debug::RenderingDebug::Box2DAABBRenderingDebug) {
+                // rendererFlags |= b2Draw::e_aabbBit;
+                drawingRequired = true;
+            }
+
+            if (settingsFlags & Debug::RenderingDebug::Box2DShapeRenderingDebug) {
+                //  rendererFlags |= b2Draw::e_shapeBit;
+                drawingRequired = true;
+            }
+
+            if (settingsFlags & Debug::RenderingDebug::Box2DCenterOfMassRenderingDebug) {
+                //   rendererFlags |= b2Draw::e_centerOfMassBit;
+                drawingRequired = true;
+            }
+
+            if (settingsFlags & Debug::RenderingDebug::Box2DJointRenderingDebug) {
+                //    rendererFlags |= b2Draw::e_jointBit;
+                drawingRequired = true;
+            }
+
+            if (drawingRequired) {
+                m_physicsDebugRenderer->render();
+            }
+        }
+    }
 
     if (m_renderGUI) {
-        if (m_world && m_mainPlayer) {
-            m_world->render();
-        }
-
-        // only a client-hosted server has a chance of seeing any debug shit
-        if (m_server) {
-            if (!m_physicsDebugRenderer && m_world && m_world->spriteSheetRenderer()) {
-                m_physicsDebugRenderer = new PhysicsDebugRenderer(m_world->spriteSheetRenderer()->camera());
-                // physics debug renderer first init...
-//            m_box2DWorld->SetDebugDraw(m_physicsDebugRenderer);
-            }
-
-            if (m_physicsDebugRenderer) {
-
-                int rendererFlags = 0;
-                int settingsFlags = Settings::instance()->debugRendererFlags;
-                bool drawingRequired = false;
-
-                if (settingsFlags & Debug::RenderingDebug::Box2DAABBRenderingDebug) {
-                    // rendererFlags |= b2Draw::e_aabbBit;
-                    drawingRequired = true;
-                }
-
-                if (settingsFlags & Debug::RenderingDebug::Box2DShapeRenderingDebug) {
-                    //  rendererFlags |= b2Draw::e_shapeBit;
-                    drawingRequired = true;
-                }
-
-                if (settingsFlags & Debug::RenderingDebug::Box2DCenterOfMassRenderingDebug) {
-                    //   rendererFlags |= b2Draw::e_centerOfMassBit;
-                    drawingRequired = true;
-                }
-
-                if (settingsFlags & Debug::RenderingDebug::Box2DJointRenderingDebug) {
-                    //    rendererFlags |= b2Draw::e_jointBit;
-                    drawingRequired = true;
-                }
-
-                if (drawingRequired) {
-                    m_physicsDebugRenderer->render();
-                }
-            }
-        }
-
-        if (m_renderGUI) {
-            m_gui->render();
-            drawDebugText(frameTime);
-        }
-
+        m_gui->render();
+        drawDebugText(frameTime);
     }
+
     SDL_GL_SwapWindow(m_window);
 }
 
