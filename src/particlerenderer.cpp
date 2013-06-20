@@ -162,14 +162,13 @@ void ParticleRenderer::initGL()
     {
         // initial position
         vertexData[2*i+0] = glm::vec3(
-                                0.5f-float(std::rand())/RAND_MAX,
-                                0.5f-float(std::rand())/RAND_MAX,
-                                0.5f-float(std::rand())/RAND_MAX
-                            );
+                                0.5f,
+                                0.5f,
+                                0.0);
         vertexData[2*i+0] = glm::vec3(0.0f,20.0f,0.0f) + 5.0f*vertexData[2*i+0];
 
         // initial velocity
-        vertexData[2*i+1] = glm::vec3(-900,0,0);
+        vertexData[2*i+1] = glm::vec3(0,0,0);
     }
 
 
@@ -214,7 +213,7 @@ void ParticleRenderer::render()
     const int spheres = 3;
     glm::vec3 center[spheres];
     float radius[spheres];
-    center[0] = glm::vec3(0,12,1);
+    center[0] = glm::vec3(0,12,0);
     radius[0] = 3;
     center[1] = glm::vec3(-3,0,0);
     radius[1] = 7;
@@ -227,9 +226,6 @@ void ParticleRenderer::render()
     float bounce = 1.2f; // inelastic: 1.0f, elastic: 2.0f
 
     int current_buffer=0;
-
-    // get the time in seconds
-    float t = SDL_GetTicks()/1000.0;
 
     for (int i = 0; i < 2; ++i) {
 
@@ -259,9 +255,6 @@ void ParticleRenderer::render()
 
     glDisable(GL_RASTERIZER_DISCARD);
 
-    // clear first
-//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     // use the shader program
     glUseProgram(shader_program);
 
@@ -270,10 +263,6 @@ void ParticleRenderer::render()
 
     // translate the world/view position
     glm::mat4 View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -30.0f));
-
-    // make the camera rotate around the origin
-///        View = glm::rotate(View, 30.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-///        View = glm::rotate(View, -22.5f*t, glm::vec3(0.0f, 1.0f, 0.0f));
 
     // set the uniform
     glUniformMatrix4fv(View_location, 1, GL_FALSE, glm::value_ptr(View));
