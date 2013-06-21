@@ -263,7 +263,7 @@ void ParticleRenderer::initGL()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     Debug::checkGLError();
-    projection = glm::mat4(1.0f);
+//    projection = glm::mat4(1.0f);
 
     angle = (float)( PI / 2.0f );
   model = glm::mat4(1.0f);
@@ -279,10 +279,15 @@ void ParticleRenderer::initGL()
 
 void ParticleRenderer::render()
 {
+//    float t = SDL_GetTicks() / 1000.0;
 
-    float t = SDL_GetTicks();
+    static float t = 0.0f;
+    t += 1.0/60.0;
     deltaT = t - time;
     time = t;
+    Debug::log(Debug::ImportantArea) << t;
+//    deltaT = t - time;
+//    time = t;
 
     Debug::checkGLError();
 
@@ -340,6 +345,7 @@ void ParticleRenderer::render()
 
     pushMatrix();
 
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
     glBindVertexArray(particleArray[drawBuf]);
 
