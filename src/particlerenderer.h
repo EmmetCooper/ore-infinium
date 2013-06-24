@@ -62,12 +62,11 @@ private:
 
     GLuint transform_shader_program, transform_vertex_shader;
 
-    GLuint shader_program, vertex_shader, geometry_shader, fragment_shader;
+    GLuint m_shader_program, m_vertex_shader, geometry_shader, m_fragment_shader;
 
 
-    glm::mat4 view;
-    glm::mat4 model;
-    glm::mat4 projection;
+    glm::mat4 m_view;
+    glm::mat4 m_ortho;
 };
 
 #endif

@@ -32,6 +32,8 @@
 
 ParticleRenderer::ParticleRenderer(World* world, Camera* camera, Entities::Player* mainPlayer)
 {
+    m_ortho = glm::mat4(1.0f);
+    m_view = glm::mat4(1.0f);
     initGL();
 }
 
@@ -63,7 +65,6 @@ static float randFloat()
 
 void ParticleRenderer::initGL()
 {
-
     // shader source code
 
     std::string vertex_source = Shader::loadFile("particlerenderer_smoke.vert");
@@ -71,42 +72,42 @@ void ParticleRenderer::initGL()
     std::string fragment_source = Shader::loadFile("particlerenderer_smoke.frag");
 
 //    // create and compiler vertex shader
-    vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+    m_vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 
     const char* vertexArray = vertex_source.c_str();
 
-    glShaderSource(vertex_shader, 1, &vertexArray, nullptr);
-    glCompileShader(vertex_shader);
-    if(!check_shader_compile_status(vertex_shader))
+    glShaderSource(m_vertex_shader, 1, &vertexArray, nullptr);
+    glCompileShader(m_vertex_shader);
+    if(!check_shader_compile_status(m_vertex_shader))
     {
         exit(1);
     }
 
     // create and compiler fragment shader
-    fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+    m_fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 
     const char* fragmentArray = fragment_source.c_str();
-    glShaderSource(fragment_shader, 1, &fragmentArray, nullptr);
-    glCompileShader(fragment_shader);
-    if(!check_shader_compile_status(fragment_shader))
+    glShaderSource(m_fragment_shader, 1, &fragmentArray, nullptr);
+    glCompileShader(m_fragment_shader);
+    if(!check_shader_compile_status(m_fragment_shader))
     {
         exit(1);
     }
 
     Debug::checkGLError();
     // create program
-    shader_program = glCreateProgram();
+    m_shader_program = glCreateProgram();
 
     // attach shaders
-    glAttachShader(shader_program, vertex_shader);
-    glAttachShader(shader_program, fragment_shader);
+    glAttachShader(m_shader_program, m_vertex_shader);
+    glAttachShader(m_shader_program, m_fragment_shader);
 
     const char * outputNames[] = { "Position", "Velocity", "StartTime" };
-    glTransformFeedbackVaryings(shader_program, 3, outputNames, GL_SEPARATE_ATTRIBS);
+    glTransformFeedbackVaryings(m_shader_program, 3, outputNames, GL_SEPARATE_ATTRIBS);
 
     // link the program and check for errors
-    glLinkProgram(shader_program);
-    check_program_link_status(shader_program);
+    glLinkProgram(m_shader_program);
+    check_program_link_status(m_shader_program);
 
     Debug::checkGLError();
 
@@ -123,13 +124,10 @@ void ParticleRenderer::pushMatrix()
 {
 
     Debug::checkGLError();
-    glm::mat4 mvp = view * model;
-//    prog.setUniform("MVP", projection * mv);
-//    glm::mat4 mvp =  m_orthoMatrix * m_viewMatrix;
+    glm::mat4 mvp = m_ortho * m_view;
 
-    glm::mat4 final = projection* mvp;
-    int mvpLoc = glGetUniformLocation(shader_program, "MVP");
-    glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, &final[0][0]);
+    int mvpLoc = glGetUniformLocation(m_shader_program, "MVP");
+    glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, &mvp[0][0]);
 }
 
 
