@@ -80,7 +80,7 @@ void Texture::generate(Texture::TextureFilter textureFilter)
     Debug::assertf(bits, "Image::generate, could not gen texture, image bits are empty.");
 
     m_internal_format = GL_RGBA;
-    m_image_format = GL_RGBA;
+    m_image_format = GL_BGRA;
     m_level = 0;
     m_border = 0;
     glTexImage2D(GL_TEXTURE_2D, m_level, m_internal_format, m_width, m_height, m_border, m_image_format, GL_UNSIGNED_BYTE, bits);

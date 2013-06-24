@@ -59,46 +59,15 @@ private:
     void initGL();
 
     void pushMatrix();
-    GLint center_location;
-    GLint radius_location;
-    GLint g_location;
-    GLint dt_location;
-    GLint bounce_location;
-    GLint seed_location;
 
     GLuint transform_shader_program, transform_vertex_shader;
 
     GLuint shader_program, vertex_shader, geometry_shader, fragment_shader;
 
-    int buffercount = 2;
-    // generate vbos and vaos
-    GLuint vao[2], vbo[2];
-
-   GLint View_location;
-    GLint Projection_location;
-
-    const int particles = 128*1024 * 1;
-
 
     glm::mat4 view;
     glm::mat4 model;
     glm::mat4 projection;
-
-    float angle;
-    float time = 0.0f;
-    float deltaT = 0.0f;
-    int width, height;
-
-
-    int nParticles = 1000;
-    GLuint posBuf[2], velBuf[2];
-    GLuint particleArray[2];
-    GLuint feedback[2], initVel, startTime[2];
-    GLuint drawBuf = 1;
-    GLuint query;
-    GLuint renderSub, updateSub;
-
-    Texture* m_smokeTexture = nullptr;
 };
 
 #endif
