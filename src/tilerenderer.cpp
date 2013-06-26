@@ -45,7 +45,6 @@ TileRenderer::TileRenderer(World* world, Camera* camera, Entities::Player* mainP
     glGenTextures(1, &m_tileMapTexture);
     glBindTexture(GL_TEXTURE_2D_ARRAY, m_tileMapTexture);
 
-
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
     glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BASE_LEVEL, 0);
@@ -111,10 +110,16 @@ void TileRenderer::render()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
     glBindRenderbuffer(GL_RENDERBUFFER, m_rb);
+
+    //clear the framebuffer to black
     glClearColor(0.f, 0.f, 0.f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     if (!m_renderingEnabled) {
+        //don't forget, w need to unset that shit.
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
         return;
     }
 
