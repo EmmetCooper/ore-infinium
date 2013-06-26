@@ -293,7 +293,6 @@ void LightRenderer::renderToBackbuffer()
 
     Debug::checkGLError();
     // finally upload everything to the actual vbo
-    glBindBuffer(GL_ARRAY_BUFFER, m_vboBackbuffer);
     glBufferSubData(
         GL_ARRAY_BUFFER,
         sizeof(vertices) * 0,
@@ -303,9 +302,6 @@ void LightRenderer::renderToBackbuffer()
 
     Debug::checkGLError();
     ////////////////////////////////FINALLY RENDER IT ALL //////////////////////////////////////////
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_eboBackbuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, m_vboBackbuffer);
-    glBindVertexArray(m_vaoBackbuffer);
 
     Debug::checkGLError();
 
