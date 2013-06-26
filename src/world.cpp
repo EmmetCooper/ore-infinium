@@ -48,7 +48,6 @@
 #include <chipmunk/chipmunk.h>
 
 #include <noise/noise.h>
-#include "noiseutils.h"
 #include "particlerenderer.h"
 
 #include <stdio.h>
@@ -67,6 +66,9 @@
 #include <boost/iostreams/filter/zlib.hpp>
 #include <glm/core/func_common.hpp>
 #include <FreeImage.h>
+
+//HACK: thinkw e're going to go away from libnoise
+using namespace noise;
 
 World::World(Entities::Player* mainPlayer, Client* client, Server* server)
     : m_mainPlayer(mainPlayer),
@@ -108,7 +110,6 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
         //FIXME: call each update, and make it only do visible ones
         m_lightRenderer->setTorches(&m_torches);
-
     }
 
     m_time = new Time();

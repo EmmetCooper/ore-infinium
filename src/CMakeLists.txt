@@ -37,7 +37,6 @@ tool.cpp
 
 #cloudsystem.cpp
 #sky.cpp
-noiseutils.cpp
 
 client/client.cpp
 client/gui/chatdialog.cpp
