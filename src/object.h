@@ -40,7 +40,10 @@ public:
 
     void setPosition(float x, float y) {
         m_position = glm::vec2(x, y);
-        m_spatialHash->objectMoved(this);
+
+        if (m_spatialHash) {
+            m_spatialHash->objectMoved(this);
+        }
     }
 
     glm::vec2 position() const {

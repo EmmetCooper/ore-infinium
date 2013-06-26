@@ -30,6 +30,8 @@ Object::Object(const Object& entity)
 
 Object::~Object()
 {
-    m_spatialHash->remove(this);
+    if (m_spatialHash) {
+        m_spatialHash->remove(this);
+    }
     //vector clear is handled by spatial hash, just in case they want to remove it but not delete the thingy.
 }
