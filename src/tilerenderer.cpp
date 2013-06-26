@@ -132,11 +132,11 @@ void TileRenderer::render()
 
     // determine what the size of the tiles are but convert that to our zoom level
     const float blockSizePixels = Block::BLOCK_SIZE;
-    glm::vec4 tileSize = glm::vec4(blockSizePixels, 0, 0, 0);
+    glm::vec4 tileSize = glm::vec4(blockSizePixels, 0.0f, 0.0f, 0.0f);
     const float transformedTileSize = glm::vec4(m_camera->view() * tileSize).x;
 
-    float halfScreenMetersHeight = (Settings::instance()->screenResolutionHeight * 0.5) / PIXELS_PER_METER;
-    float halfScreenMetersWidth = (Settings::instance()->screenResolutionWidth * 0.5) / PIXELS_PER_METER;
+    float halfScreenMetersHeight = (Settings::instance()->screenResolutionHeight * 0.5) / static_cast<float>(PIXELS_PER_METER);
+    float halfScreenMetersWidth = (Settings::instance()->screenResolutionWidth * 0.5) / static_cast<float>(PIXELS_PER_METER);
 
     // -1 so that we render an additional row and column..to smoothly scroll
     const int startRow = std::max(static_cast<int>(tilesBeforeY - (halfScreenMetersHeight / transformedTileSize)) - 2, 0);
@@ -215,8 +215,8 @@ void TileRenderer::render()
             // vertices[2] -> bottom right
             // vertices[3] -> top right
 
-            float positionX = Block::BLOCK_SIZE * currentColumn;
-            float positionY = Block::BLOCK_SIZE * currentRow;
+            float positionX = Block::BLOCK_SIZE * float(currentColumn);
+            float positionY = Block::BLOCK_SIZE * float(currentRow);
 
             float x = positionX;
             float width = x +  Block::BLOCK_SIZE;
@@ -247,16 +247,10 @@ void TileRenderer::render()
             assert(blockIndex < WORLD_ROWCOUNT * WORLD_COLUMNCOUNT);
             Block& block = m_world->m_blocks[blockIndex];
 
-            const float tileWidth = 1.0f / float(Block::BLOCK_SIZE_PIXELS) * Block::BLOCK_SIZE_PIXELS;
-            const float tileHeight = 1.0f / float(Block::BLOCK_SIZE_PIXELS) * Block::BLOCK_SIZE_PIXELS;
-
-            float xPadding = 1.0f / float(Block::BLOCK_SIZE_PIXELS) * 1.0f * (float(column) + 1.0);
-            float yPadding = 1.0f / float(Block::BLOCK_SIZE_PIXELS) * 1.0f * (float(row) + 1.0);
-
-            const float tileLeft = (column *  tileWidth) + xPadding;
-            const float tileRight = tileLeft + tileWidth;
-            const float tileTop = 1.0f - ((row * tileHeight)) - yPadding;
-            const float tileBottom = tileTop - tileHeight;
+            const float tileLeft = 0.0f;
+            const float tileRight = 1.0f;
+            const float tileTop = 1.0f;
+            const float tileBottom = 0.0f;
 
             // copy texcoords to the buffer
             quad.vertices[0].u = quad.vertices[1].u = tileLeft;
