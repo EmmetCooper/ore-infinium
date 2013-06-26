@@ -63,6 +63,7 @@ static float randFloat()
     return ((float)rand() / RAND_MAX);
 }
 
+//TODO: fix the particle renderer, as it's not even started erally ;)
 void ParticleRenderer::initGL()
 {
     // shader source code
@@ -72,47 +73,75 @@ void ParticleRenderer::initGL()
     std::string fragment_source = Shader::loadFile("particlerenderer_smoke.frag");
 
 //    // create and compiler vertex shader
-    m_vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+    m_shaderSmokeVertex = glCreateShader(GL_VERTEX_SHADER);
 
     const char* vertexArray = vertex_source.c_str();
 
-    glShaderSource(m_vertex_shader, 1, &vertexArray, nullptr);
-    glCompileShader(m_vertex_shader);
-    if(!check_shader_compile_status(m_vertex_shader))
+    glShaderSource(m_shaderSmokeVertex, 1, &vertexArray, nullptr);
+    glCompileShader(m_shaderSmokeVertex);
+    if(!check_shader_compile_status(m_shaderSmokeVertex))
     {
         exit(1);
     }
 
     // create and compiler fragment shader
-    m_fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+    m_shaderSmokeFragment = glCreateShader(GL_FRAGMENT_SHADER);
 
     const char* fragmentArray = fragment_source.c_str();
-    glShaderSource(m_fragment_shader, 1, &fragmentArray, nullptr);
-    glCompileShader(m_fragment_shader);
-    if(!check_shader_compile_status(m_fragment_shader))
+    glShaderSource(m_shaderSmokeFragment, 1, &fragmentArray, nullptr);
+    glCompileShader(m_shaderSmokeFragment);
+    if(!check_shader_compile_status(m_shaderSmokeFragment))
     {
         exit(1);
     }
 
     Debug::checkGLError();
     // create program
-    m_shader_program = glCreateProgram();
+    m_shaderProgramSmoke = glCreateProgram();
 
     // attach shaders
-    glAttachShader(m_shader_program, m_vertex_shader);
-    glAttachShader(m_shader_program, m_fragment_shader);
+    glAttachShader(m_shaderProgramSmoke, m_shaderSmokeVertex);
+    glAttachShader(m_shaderProgramSmoke, m_shaderSmokeFragment);
 
-    const char * outputNames[] = { "Position", "Velocity", "StartTime" };
-    glTransformFeedbackVaryings(m_shader_program, 3, outputNames, GL_SEPARATE_ATTRIBS);
 
     // link the program and check for errors
-    glLinkProgram(m_shader_program);
-    check_program_link_status(m_shader_program);
+    glLinkProgram(m_shaderProgramSmoke);
+    check_program_link_status(m_shaderProgramSmoke);
 
     Debug::checkGLError();
 
-    /// FIXME: HACK: ///////////////
+    // --------- transform shader --------------------
+    std::string transform_vertex_source = Shader::loadFile("particlerenderer_smoke_transform.vert");
 
+//    // create and compiler vertex shader
+    m_shaderSmokeVertex = glCreateShader(GL_VERTEX_SHADER);
+
+    const char* vertexTransformArray = vertex_source.c_str();
+
+    glShaderSource(m_shaderSmokeVertex, 1, &vertexTransformArray, nullptr);
+    glCompileShader(m_shaderSmokeVertex);
+    if(!check_shader_compile_status(m_shaderSmokeVertex))
+    {
+        exit(1);
+    }
+
+    Debug::checkGLError();
+    // create program
+    m_shaderProgramSmoke = glCreateProgram();
+
+    // attach shaders
+    glAttachShader(m_shaderProgramSmoke, m_shaderSmokeVertex);
+
+
+    // link the program and check for errors
+    glLinkProgram(m_shaderProgramSmokeTransform);
+    check_program_link_status(m_shaderProgramSmokeTransform);
+
+    Debug::checkGLError();
+
+//
+//    const char * outputNames[] = { "Position", "Velocity", "StartTime" };
+//    glTransformFeedbackVaryings(m_shaderProgramSmoke, 3, outputNames, GL_INTERLEAVED_ATTRIBS);
 }
 
 void ParticleRenderer::render()
@@ -126,7 +155,7 @@ void ParticleRenderer::pushMatrix()
     Debug::checkGLError();
     glm::mat4 mvp = m_ortho * m_view;
 
-    int mvpLoc = glGetUniformLocation(m_shader_program, "MVP");
+    int mvpLoc = glGetUniformLocation(m_shaderProgramSmoke, "MVP");
     glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, &mvp[0][0]);
 }
 

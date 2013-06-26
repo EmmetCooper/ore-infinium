@@ -52,7 +52,6 @@ public:
     void render();
 
 private:
-
     bool check_program_link_status(GLuint obj);
     bool check_shader_compile_status(GLuint obj);
 
@@ -60,10 +59,9 @@ private:
 
     void pushMatrix();
 
-    GLuint transform_shader_program, transform_vertex_shader;
+    GLuint m_shaderProgramSmoke, m_shaderSmokeVertex, m_shaderSmokeFragment;
 
-    GLuint m_shader_program, m_vertex_shader, geometry_shader, m_fragment_shader;
-
+    GLuint m_shaderProgramSmokeTransform, m_shaderSmokeVertexTransform;
 
     glm::mat4 m_view;
     glm::mat4 m_ortho;
