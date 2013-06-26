@@ -154,7 +154,10 @@ void TileRenderer::render()
         assert(0);
     }
 
+    glBindVertexArray(m_vao);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+
     const uint32_t totalTiles = (endRow - startRow) * (endColumn - startColumn);
     if (totalTiles > m_highestTileCount || m_firstRun) {
         Debug::log(Debug::TileRendererArea) << "reallocating buffer!";
@@ -172,8 +175,6 @@ void TileRenderer::render()
                 indicesv.push_back(4 * j + indices[i]);
             }
         }
-
-        glBindVertexArray(m_vao);
 
         glDeleteBuffers(1, &m_ebo);
         glGenBuffers(1, &m_ebo);
@@ -303,10 +304,6 @@ void TileRenderer::render()
     ////////////////////////////////FINALLY RENDER IT ALL //////////////////////////////////////////
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    glBindVertexArray(m_vao);
 
     m_shader->bindProgram();
 
