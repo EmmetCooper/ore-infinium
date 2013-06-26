@@ -267,10 +267,10 @@ void SpriteSheetRenderer::renderCharacters()
         const float spriteBottom = spriteTop - textureHeight;
 
         // copy texcoords to the buffer
-        vertices[0].u = vertices[1].u = spriteLeft;
-        vertices[0].v = vertices[3].v = spriteTop;
-        vertices[1].v = vertices[2].v = spriteBottom;
-        vertices[2].u = vertices[3].u = spriteRight;
+        vertices[0].uv.x = vertices[1].uv.x = spriteLeft;
+        vertices[0].uv.y = vertices[3].uv.y = spriteTop;
+        vertices[1].uv.y = vertices[2].uv.y = spriteBottom;
+        vertices[2].uv.x = vertices[3].uv.x = spriteRight;
 
         // finally upload everything to the actual vbo
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
@@ -404,10 +404,10 @@ void SpriteSheetRenderer::renderEntities()
         const float spriteBottom = spriteTop - textureHeight;
 
         // copy texcoords to the buffer
-        vertices[0].u = vertices[1].u = spriteLeft;
-        vertices[0].v = vertices[3].v = spriteTop;
-        vertices[1].v = vertices[2].v = spriteBottom;
-        vertices[2].u = vertices[3].u = spriteRight;
+        vertices[0].uv.x = vertices[1].uv.x = spriteLeft;
+        vertices[0].uv.y = vertices[3].uv.y = spriteTop;
+        vertices[1].uv.y = vertices[2].uv.y = spriteBottom;
+        vertices[2].uv.x = vertices[3].uv.x = spriteRight;
 
         // finally upload everything to the actual vbo
         glBindBuffer(GL_ARRAY_BUFFER, m_vboEntities);

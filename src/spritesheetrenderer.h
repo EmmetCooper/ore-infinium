@@ -108,7 +108,7 @@ private:
     struct Vertex {
         glm::vec2 position;
         unsigned int color; // packed with 4 u8s (unsigned chars) for color
-        float u, v;
+        glm::vec2 uv;
     };
 
     void parseAllSpriteSheets();
