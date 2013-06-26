@@ -83,6 +83,7 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
     m_entities.insert(m_entities.end(), m_uselessEntity);
 
     m_treesSpatialHash = new SpatialHash(0.0, 0.0, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, Block::BLOCK_SIZE * WORLD_ROWCOUNT, 8.0, 4000);
+    m_waterSpatialHash = new SpatialHash(0.0, 0.0, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, Block::BLOCK_SIZE * WORLD_ROWCOUNT, Block::BLOCK_SIZE, SpatialHash::SpatialHashContents::ObjectSpatialHashContents, 4000);
 
     if (!m_server) {
         m_camera = new Camera();
@@ -146,12 +147,6 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
     if (m_client) {
         m_sky = new SkyRenderer(this, m_camera, m_time);
         m_particleRenderer = new ParticleRenderer(this, m_camera, m_mainPlayer);
-        //FIXME: remove, junk
-        //Tool* tool = new Tool(glm::vec2(2350/PIXELS_PER_METER, 1410/ PIXELS_PER_METER));
-        //tool->setToolMaterial(Tool::ToolMaterial::Wood);
-        //tool->setToolType(Tool::ToolType::PickAxe);
-        //m_spriteSheetRenderer->registerSprite(tool);
-        //HACK:
     }
 }
 
@@ -183,6 +178,7 @@ World::~World()
     delete m_blockPickingCrosshair;
     delete m_mainPlayer;
     delete m_treesSpatialHash;
+    delete m_waterSpatialHash;
 //FIXME:    delete m_torchesQuadTree;
 
     for (auto * player : m_players) {

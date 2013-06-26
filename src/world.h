@@ -230,6 +230,8 @@ private:
     std::vector<Entity*> m_entities;
     std::vector<Torch*> m_torches;
     SpatialHash* m_treesSpatialHash = nullptr;
+    SpatialHash* m_waterSpatialHash = nullptr;
+
 //FIXME:    QuadTree* m_torchesQuadTree = nullptr;
 
     Sprite* m_blockPickingCrosshair = nullptr;
