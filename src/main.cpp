@@ -15,6 +15,16 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
+//TODO: possible some of these may not be wanted, but what the hell, lets try it!
+#define GLM_PRECISION_HIGHP_FLOAT
+#define GLM_FORCE_CXX11
+#define GLM_FORCE_INLINE
+
+#include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
+#include <glm/gtc/noise.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "game.h"
 #include "config.h"
 

@@ -15,9 +15,6 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
-#define GLM_SWIZZLE
-#define GLM_FORCE_INLINE
-
 #include "game.h"
 
 #include "debug.h"
