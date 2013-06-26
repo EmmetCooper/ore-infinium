@@ -9,6 +9,7 @@ camera.cpp
 chunk.cpp
 debug.cpp
 entity.cpp
+fluidcell.cpp
 game.cpp
 image.cpp
 lightrenderer.cpp

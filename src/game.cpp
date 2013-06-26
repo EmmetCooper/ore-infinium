@@ -25,6 +25,8 @@
 #include "client/client.h"
 #include "server/server.h"
 
+#include "src/fluidcell.h"
+
 #include "settings/settings.h"
 
 #include <enet/enet.h>
@@ -69,6 +71,8 @@ void Game::init()
     }
 
     Block::initBlockTypes();
+    FluidCell::initFluidTypes();
+
     m_client = new Client();
 
     if (m_worldViewerEnabled) {

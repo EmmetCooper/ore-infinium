@@ -15,52 +15,29 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
-#ifndef FLUIDCELL_H
-#define FLUIDCELL_H
+#include "fluidcell.h"
 
-#include "object.h"
+std::vector<FluidCell::FluidProperties> FluidCell::fluidTypes;
 
-#include <glm/glm.hpp>
+FluidCell::FluidCell(const glm::ivec2& cell, FluidCell::FluidType type)
+: m_cellPosition(cell),
+  m_type(type)
 
-#include <stdint.h>
-#include <vector>
-
-class FluidCell : public Object
 {
-public:
-    enum FluidType {
-        Water = 0,
-        Lava = 1
-    };
 
-    /// MUST be called otherwise undefined behavior, to initialize the list of fluid types
-    static void initFluidTypes();
+}
 
-    struct FluidProperties {
-        float maxCompress = 0.0f;
-        float maxMass = 0.0f;
-        float minMass = 0.0f;
+FluidCell::~FluidCell()
+{
 
-        float bouyancy = 0.0f;
-        float damage = 0.0f;
-    };
+}
 
-    FluidCell(const glm::ivec2& cell, FluidType type);
-    ~FluidCell();
+void FluidCell::initFluidTypes()
+{
+    fluidTypes.resize(2);
+    FluidProperties waterProperty;
+    fluidTypes.at(FluidType::Water) = waterProperty;
 
-    void setCellPosition(const glm::ivec2& pos) {
-        m_cellPosition = pos;
-    }
-
-    glm::ivec2 cellPosition() {
-        return m_cellPosition;
-    }
-
-    static std::vector<FluidProperties> fluidTypes;
-
-private:
-    glm::ivec2 m_cellPosition = glm::ivec2(0, 0);
-    FluidType m_type;
-};
-
-#endif
+    FluidProperties lavaProperty;
+    fluidTypes.at(FluidType::Lava) = lavaProperty;
+}
