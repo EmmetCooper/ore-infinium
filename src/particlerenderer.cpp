@@ -34,7 +34,7 @@ ParticleRenderer::ParticleRenderer(World* world, Camera* camera, Entities::Playe
 {
     m_ortho = glm::mat4(1.0f);
     m_view = glm::mat4(1.0f);
-    initGL();
+//FIXME:    initGL();
 }
 
 ParticleRenderer::~ParticleRenderer()
