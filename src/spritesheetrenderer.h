@@ -106,7 +106,7 @@ private:
      * Each sprite has four vertices.
      * */
     struct Vertex {
-        float x, y;
+        glm::vec2 position;
         unsigned int color; // packed with 4 u8s (unsigned chars) for color
         float u, v;
     };

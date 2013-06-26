@@ -27,14 +27,13 @@
 #include "texture.h"
 #include "settings/settings.h"
 
+#include <yaml-cpp/yaml.h>
+
 #include <fstream>
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <sys/stat.h>
-
-#include <yaml-cpp/yaml.h>
 
 SpriteSheetRenderer::SpriteSheetRenderer(Camera* camera)
 {
@@ -232,17 +231,17 @@ void SpriteSheetRenderer::renderCharacters()
         float y = rect.y;
         float height = rect.w;
 
-        vertices[0].x = x; // top left X
-        vertices[0].y = y; //top left Y
+        vertices[0].position.x = x; // top left X
+        vertices[0].position.y = y; //top left Y
 
-        vertices[1].x = x; // bottom left X
-        vertices[1].y = height; // bottom left Y
+        vertices[1].position.x = x; // bottom left X
+        vertices[1].position.y = height; // bottom left Y
 
-        vertices[2].x = width; // bottom right X
-        vertices[2].y = height; //bottom right Y
+        vertices[2].position.x = width; // bottom right X
+        vertices[2].position.y = height; //bottom right Y
 
-        vertices[3].x = width; // top right X
-        vertices[3].y = y; // top right Y
+        vertices[3].position.x = width; // top right X
+        vertices[3].position.y = y; // top right Y
 
         Debug::checkGLError();
         // copy color to the buffer
@@ -350,17 +349,17 @@ void SpriteSheetRenderer::renderEntities()
         float y = rect.y;
         float height = rect.w;
 
-        vertices[0].x = x; // top left X
-        vertices[0].y = y; //top left Y
+        vertices[0].position.x = x; // top left X
+        vertices[0].position.y = y; //top left Y
 
-        vertices[1].x = x; // bottom left X
-        vertices[1].y = height; // bottom left Y
+        vertices[1].position.x = x; // bottom left X
+        vertices[1].position.y = height; // bottom left Y
 
-        vertices[2].x = width; // bottom right X
-        vertices[2].y = height; //bottom right Y
+        vertices[2].position.x = width; // bottom right X
+        vertices[2].position.y = height; //bottom right Y
 
-        vertices[3].x = width; // top right X
-        vertices[3].y = y; // top right Y
+        vertices[3].position.x = width; // top right X
+        vertices[3].position.y = y; // top right Y
 
         Debug::checkGLError();
 
@@ -508,7 +507,7 @@ void SpriteSheetRenderer::initGLCharacters()
         GL_FALSE,
         sizeof(Vertex),
         (const GLvoid*)buffer_offset);
-    buffer_offset += sizeof(float) * 2;
+    buffer_offset += sizeof(glm::vec2);
 
     GLint color_attrib = glGetAttribLocation(m_shader->shaderProgram(), "color");
 
@@ -546,18 +545,13 @@ void SpriteSheetRenderer::initGLCharacters()
 
 void SpriteSheetRenderer::initGLEntities()
 {
-
     /////////////////////////////// ENTITIES
     glGenVertexArrays(1, &m_vaoEntities);
     glBindVertexArray(m_vaoEntities);
 
     glGenBuffers(1, &m_vboEntities);
     glBindBuffer(GL_ARRAY_BUFFER, m_vboEntities);
-    glBufferData(
-        GL_ARRAY_BUFFER,
-        m_maxEntityCount * 4 * sizeof(Vertex),
-        NULL,
-        GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, m_maxEntityCount * 4 * sizeof(Vertex), NULL, GL_DYNAMIC_DRAW);
 
     Debug::checkGLError();
 
@@ -574,11 +568,7 @@ void SpriteSheetRenderer::initGLEntities()
 
     glGenBuffers(1, &m_eboEntities);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_eboEntities);
-    glBufferData(
-        GL_ELEMENT_ARRAY_BUFFER,
-        indicesv.size() * sizeof(uint32_t),
-        indicesv.data(),
-        GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesv.size() * sizeof(uint32_t), indicesv.data(), GL_STATIC_DRAW);
 
     Debug::checkGLError();
 
@@ -586,40 +576,23 @@ void SpriteSheetRenderer::initGLEntities()
 
     GLint pos_attrib = glGetAttribLocation(m_shader->shaderProgram(), "position");
     glEnableVertexAttribArray(pos_attrib);
-    glVertexAttribPointer(
-        pos_attrib,
-        2,
-        GL_FLOAT,
-        GL_FALSE,
-        sizeof(Vertex),
-        (const GLvoid*)buffer_offset);
-    buffer_offset += sizeof(float) * 2;
+    glVertexAttribPointer(pos_attrib, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)buffer_offset);
+
+    buffer_offset += sizeof(glm::vec2);
 
     GLint color_attrib = glGetAttribLocation(m_shader->shaderProgram(), "color");
 
     Debug::checkGLError();
 
     glEnableVertexAttribArray(color_attrib);
-    glVertexAttribPointer(
-        color_attrib,
-        4,
-        GL_UNSIGNED_BYTE,
-        GL_TRUE,
-        sizeof(Vertex),
-        (const GLvoid*)buffer_offset);
+    glVertexAttribPointer(color_attrib, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (const GLvoid*)buffer_offset);
     buffer_offset += sizeof(uint32_t);
 
     Debug::checkGLError();
 
     GLint texcoord_attrib = glGetAttribLocation(m_shader->shaderProgram(), "texcoord");
     glEnableVertexAttribArray(texcoord_attrib);
-    glVertexAttribPointer(
-        texcoord_attrib,
-        2,
-        GL_FLOAT,
-        GL_FALSE,
-        sizeof(Vertex),
-        (const GLvoid*)buffer_offset);
+    glVertexAttribPointer(texcoord_attrib, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)buffer_offset);
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
