@@ -1,5 +1,5 @@
 /******************************************************************************
- *   Copyright (C) 2012, 2013 by Shaun Reich <sreich@kde.org>                 *
+ *   Copyright (C) 2013 by Shaun Reich <sreich@kde.org>                       *
  *                                                                            *
  *   This program is free software; you can redistribute it and/or            *
  *   modify it under the terms of the GNU General Public License as           *
@@ -15,36 +15,16 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
-#include "sprite.h"
+#ifndef FLUIDCELL_H
+#define FLUIDCELL_H
 
-#include "src/spatialhash.h"
-#include "spritesheetrenderer.h"
-#include "game.h"
-
-Sprite::Sprite(const std::string& frameName, SpriteSheetRenderer::SpriteSheetType spriteSheetType) :
-    m_spriteSheetType(spriteSheetType)
+class FluidCell
 {
-    setFrameName(frameName);
-    /*
-        const glm::vec2 texSize = size();
-        m_origin = glm::vec2(texSize.x() * 0.5, texSize.y() * 0.5);
-        FIXME:
-    */
-}
+public:
+    FluidCell();
+    ~FluidCell();
 
-Sprite::Sprite(const Sprite& entity)
-    : m_sizeMeters(entity.m_sizeMeters),
-      m_spriteSheetType(entity.spriteSheetType()),
-      m_frameName(entity.frameName()),
-      m_position(entity.position()),
-      m_origin(entity.m_origin)
-{
-}
+private:
+};
 
-Sprite::~Sprite()
-{
-    if (m_spatialHash) {
-        m_spatialHash->remove(this);
-    }
-    //vector clear is handled by spatial hash, just in case they want to remove it but not delete the thingy.
-}
+#endif

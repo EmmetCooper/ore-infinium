@@ -30,6 +30,7 @@ quickbarinventory.cpp
 timer.cpp
 spatialhash.cpp
 vegetation.cpp
+object.cpp
 #quadtreerenderer.cpp
 tool.cpp
 

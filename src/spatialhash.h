@@ -25,27 +25,49 @@
 #include <list>
 #include <unordered_map>
 
-//class SpatialHashRenderer;
+//FIXME:class SpatialHashRenderer;
 
 class Sprite;
+class Object;
 
 class SpatialHash
 {
 public:
+    enum class SpatialHashContents {
+        SpriteSpatialHashContents,
+        ObjectSpatialHashContents
+    };
+
     /**
      * @p cellSize the optimal cell size to divide this hash rectangle into. WARNING:
      * a non-optimal cellSize will yield poor performance. So it's best to be slightly bigger than the average
      * size of items it will contain.
+     *
      */
     SpatialHash(double x, double y, double width, double height, double cellSize, size_t reserve = 100);
+
+    /**
+     * If @p contents is not specified, uses a different constructor and is assumed to be holding sprites, as that's the most common.
+     * @sa SpatialHashContents
+     * WARNING: cellSize must be exactly as big as the contents. Though size is not taken into account when it comes to querying, since
+     * it is meant for fluids only and other fixed-size content.
+     * Therefore, do not attempt to store any non-objects in here at the same time as sprites. Sprites take size into account, objects do not.
+     */
+    SpatialHash(double x, double y, double width, double height, double cellSize, SpatialHashContents contents, size_t reserve = 100);
     ~SpatialHash();
 
     void objectMoved(Sprite* object);
     void insert(Sprite* object);
     void remove(Sprite* object);
+
+    void objectMoved(Object* object);
+    void insert(Object* object);
+    void remove(Object* object);
+
     void clear();
 
-    void queryRange(std::set<Sprite*> *results, double x, double y, double width, double height);
+    void queryRange(std::set<Sprite*> *results, double x, double y, double x2, double y2);
+    void queryRange(std::set<Object*> *results, double x, double y, double x2, double y2);
 
     struct Key {
         uint32_t x;
@@ -57,11 +79,15 @@ public:
     };
 
 private:
-    struct ObjectList {
+    struct SpriteList {
        std::list<Sprite*> list;
        //TODO: is there something else I need in here? I feel like there could be..
     };
 
+    struct ObjectList {
+       std::list<Object*> list;
+       //TODO: is there something else I need in here? I feel like there could be..
+    };
 
     struct KeyHash {
         std::size_t operator()(const Key& k) const
@@ -78,7 +104,10 @@ private:
         }
     };
 
+    std::unordered_map<Key, SpriteList, KeyHash, KeyEqual> m_spriteObjects;
     std::unordered_map<Key, ObjectList, KeyHash, KeyEqual> m_objects;
+
+    SpatialHashContents m_contents = SpatialHashContents::SpriteSpatialHashContents;
 
     double m_cellSize;
     double m_x2;

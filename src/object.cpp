@@ -15,36 +15,21 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
-#include "sprite.h"
+#include "object.h"
 
 #include "src/spatialhash.h"
-#include "spritesheetrenderer.h"
-#include "game.h"
 
-Sprite::Sprite(const std::string& frameName, SpriteSheetRenderer::SpriteSheetType spriteSheetType) :
-    m_spriteSheetType(spriteSheetType)
-{
-    setFrameName(frameName);
-    /*
-        const glm::vec2 texSize = size();
-        m_origin = glm::vec2(texSize.x() * 0.5, texSize.y() * 0.5);
-        FIXME:
-    */
-}
-
-Sprite::Sprite(const Sprite& entity)
-    : m_sizeMeters(entity.m_sizeMeters),
-      m_spriteSheetType(entity.spriteSheetType()),
-      m_frameName(entity.frameName()),
-      m_position(entity.position()),
-      m_origin(entity.m_origin)
+Object::Object()
 {
 }
 
-Sprite::~Sprite()
+Object::Object(const Object& entity)
+    : m_position(entity.position())
 {
-    if (m_spatialHash) {
-        m_spatialHash->remove(this);
-    }
+}
+
+Object::~Object()
+{
+    m_spatialHash->remove(this);
     //vector clear is handled by spatial hash, just in case they want to remove it but not delete the thingy.
 }

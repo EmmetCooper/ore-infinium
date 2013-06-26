@@ -15,36 +15,48 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
-#include "sprite.h"
+#ifndef OBJECT_H
+#define OBJECT_H
 
-#include "src/spatialhash.h"
-#include "spritesheetrenderer.h"
-#include "game.h"
+#include "spatialhash.h"
 
-Sprite::Sprite(const std::string& frameName, SpriteSheetRenderer::SpriteSheetType spriteSheetType) :
-    m_spriteSheetType(spriteSheetType)
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+class SpatialHash;
+
+class Object
 {
-    setFrameName(frameName);
-    /*
-        const glm::vec2 texSize = size();
-        m_origin = glm::vec2(texSize.x() * 0.5, texSize.y() * 0.5);
-        FIXME:
-    */
-}
+public:
+    explicit Object();
 
-Sprite::Sprite(const Sprite& entity)
-    : m_sizeMeters(entity.m_sizeMeters),
-      m_spriteSheetType(entity.spriteSheetType()),
-      m_frameName(entity.frameName()),
-      m_position(entity.position()),
-      m_origin(entity.m_origin)
-{
-}
+    Object(const Object& sprite);
 
-Sprite::~Sprite()
-{
-    if (m_spatialHash) {
-        m_spatialHash->remove(this);
+    virtual ~Object();
+
+    void setPosition(const glm::vec2& vector) {
+        m_position = vector;
     }
-    //vector clear is handled by spatial hash, just in case they want to remove it but not delete the thingy.
-}
+
+    void setPosition(float x, float y) {
+        m_position = glm::vec2(x, y);
+        m_spatialHash->objectMoved(this);
+    }
+
+    glm::vec2 position() const {
+        return m_position;
+    }
+
+private:
+    SpatialHash* m_spatialHash = nullptr;
+
+    // position is in meters as is everything else the game deals with. size is in meters as well, converted from pixels.
+    glm::vec2 m_position;
+
+    /// utilized only by spatial index for speedy lookups (removals as well as findings)
+    std::vector<SpatialHash::Key> m_spatialHashKeys;
+
+    friend class SpatialHash;
+};
+
+#endif
