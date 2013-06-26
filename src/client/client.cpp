@@ -282,8 +282,8 @@ void Client::render(double frameTime)
     }
 
     if (m_renderGUI) {
-        m_gui->render();
         drawDebugText(frameTime);
+        m_gui->render();
     }
 
     SDL_GL_SwapWindow(m_window);

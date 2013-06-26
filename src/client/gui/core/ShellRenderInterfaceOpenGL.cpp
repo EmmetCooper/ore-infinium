@@ -66,6 +66,50 @@ void ShellRenderInterfaceOpenGL::initGL()
     glGenBuffers(1, &m_ebo);
     glGenBuffers(1, &m_vbo);
 
+    glBindVertexArray(m_vao);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    m_shader->bindProgram();
+    // vertices that will be uploaded.
+    size_t buffer_offset = 0;
+
+    GLint pos_attrib = glGetAttribLocation(m_shader->shaderProgram(), "position");
+    glEnableVertexAttribArray(pos_attrib);
+    glVertexAttribPointer(
+        pos_attrib,
+        2,
+        GL_FLOAT,
+        GL_FALSE,
+        sizeof(Rocket::Core::Vertex),
+        (const GLvoid*)buffer_offset
+    );
+
+    buffer_offset += sizeof(float) * 2;
+
+    GLint color_attrib = glGetAttribLocation(m_shader->shaderProgram(), "color");
+
+    glEnableVertexAttribArray(color_attrib);
+    glVertexAttribPointer(
+        color_attrib,
+        4,
+        GL_UNSIGNED_BYTE,
+        GL_TRUE,
+        sizeof(Rocket::Core::Vertex),
+        (const GLvoid*)buffer_offset
+    );
+    buffer_offset += sizeof(uint32_t);
+
+    GLint texcoord_attrib = glGetAttribLocation(m_shader->shaderProgram(), "texcoord");
+    glEnableVertexAttribArray(texcoord_attrib);
+    glVertexAttribPointer(
+        texcoord_attrib,
+        2,
+        GL_FLOAT,
+        GL_FALSE,
+        sizeof(Rocket::Core::Vertex),
+        (const GLvoid*)buffer_offset
+    );
+
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -125,45 +169,6 @@ void ShellRenderInterfaceOpenGL::RenderGeometry(Rocket::Core::Vertex* vertices, 
     glBindVertexArray(m_vao);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    // vertices that will be uploaded.
-    size_t buffer_offset = 0;
-
-    GLint pos_attrib = glGetAttribLocation(m_shader->shaderProgram(), "position");
-    glEnableVertexAttribArray(pos_attrib);
-    glVertexAttribPointer(
-        pos_attrib,
-        2,
-        GL_FLOAT,
-        GL_FALSE,
-        sizeof(Rocket::Core::Vertex),
-        (const GLvoid*)buffer_offset
-    );
-
-    buffer_offset += sizeof(float) * 2;
-
-    GLint color_attrib = glGetAttribLocation(m_shader->shaderProgram(), "color");
-
-    glEnableVertexAttribArray(color_attrib);
-    glVertexAttribPointer(
-        color_attrib,
-        4,
-        GL_UNSIGNED_BYTE,
-        GL_TRUE,
-        sizeof(Rocket::Core::Vertex),
-        (const GLvoid*)buffer_offset
-    );
-    buffer_offset += sizeof(uint32_t);
-
-    GLint texcoord_attrib = glGetAttribLocation(m_shader->shaderProgram(), "texcoord");
-    glEnableVertexAttribArray(texcoord_attrib);
-    glVertexAttribPointer(
-        texcoord_attrib,
-        2,
-        GL_FLOAT,
-        GL_FALSE,
-        sizeof(Rocket::Core::Vertex),
-        (const GLvoid*)buffer_offset
-    );
 
     glBufferData(
         GL_ELEMENT_ARRAY_BUFFER,
