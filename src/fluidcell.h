@@ -48,9 +48,7 @@ public:
     FluidCell(const glm::ivec2& cell, FluidType type);
     ~FluidCell();
 
-    void setCellPosition(const glm::ivec2& pos) {
-        m_cellPosition = pos;
-    }
+    void setCellPosition(const glm::ivec2& pos);
 
     glm::ivec2 cellPosition() {
         return m_cellPosition;

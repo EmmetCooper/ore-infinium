@@ -16,6 +16,7 @@
  *****************************************************************************/
 
 #include "fluidcell.h"
+#include "block.h"
 
 std::vector<FluidCell::FluidProperties> FluidCell::fluidTypes;
 
@@ -30,6 +31,12 @@ FluidCell::FluidCell(const glm::ivec2& cell, FluidCell::FluidType type)
 FluidCell::~FluidCell()
 {
 
+}
+
+void FluidCell::setCellPosition(const glm::ivec2& pos)
+{
+    m_cellPosition = pos;
+    setPosition(glm::vec2(pos.x * Block::BLOCK_SIZE, pos.y * Block::BLOCK_SIZE));
 }
 
 void FluidCell::initFluidTypes()
