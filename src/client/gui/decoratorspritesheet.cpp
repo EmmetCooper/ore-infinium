@@ -188,7 +188,6 @@ void DecoratorSpriteSheet::RenderElement(Rocket::Core::Element* element, Rocket:
     Rocket::Core::Vector2f position = element->GetAbsoluteOffset(Rocket::Core::Box::PADDING);
     Rocket::Core::Vector2f size = element->GetBox().GetSize(Rocket::Core::Box::PADDING);
 
-    glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, (GLuint) GetTexture(image_index)->GetHandle(element->GetRenderInterface()));
 
     // vertices that will be uploaded.

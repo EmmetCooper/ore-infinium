@@ -212,8 +212,6 @@ void LightRenderer::renderToFBO()
 
 void LightRenderer::renderToBackbuffer()
 {
-    glEnable(GL_BLEND);
-
     Debug::checkGLError();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     Debug::checkGLError();
@@ -308,6 +306,7 @@ void LightRenderer::renderToBackbuffer()
 
     Debug::checkGLError();
 
+    glEnable(GL_BLEND);
     glDrawElements(
         GL_TRIANGLES,
         6 * (1), // 6 indices per 2 triangles
