@@ -16,11 +16,14 @@
  *****************************************************************************/
 
 #include "camera.h"
-#include "game.h"
-#include "debug.h"
-#include "spritesheetmanager.h"
+#include "globals.h"
 #include "shader.h"
+
+#include <GL/glew.h>
+
 #include "settings/settings.h"
+
+#include "debug.h"
 
 Camera::Camera()
 {
@@ -75,15 +78,6 @@ void Camera::addShader(Shader* shader)
     assert(shader);
     m_shaders.push_back(shader);
     pushMatrix();
-}
-
-glm::mat4 Camera::ortho() const
-{
-    return m_orthoMatrix;
-}
-glm::mat4 Camera::view() const
-{
-    return m_viewMatrix;
 }
 
 void Camera::pushMatrix()

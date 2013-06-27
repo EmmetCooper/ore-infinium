@@ -18,8 +18,6 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "camera.h"
-#include "world.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -52,8 +50,6 @@ public:
 private:
     Client* m_client = nullptr;
     Server* m_server = nullptr;
-
-    World *m_world = nullptr;
 
     bool m_startupDebugLogging = false;
     bool m_running = true;

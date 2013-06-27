@@ -11,6 +11,7 @@ debug.cpp
 entity.cpp
 fluidcell.cpp
 fluids.cpp
+#fluidrenderer.cpp
 game.cpp
 image.cpp
 lightrenderer.cpp
@@ -35,9 +36,6 @@ vegetation.cpp
 object.cpp
 #quadtreerenderer.cpp
 tool.cpp
-
-#cloudsystem.cpp
-#sky.cpp
 
 client/client.cpp
 client/gui/chatdialog.cpp

@@ -22,21 +22,15 @@
 #include "player.h"
 #include "chunk.h"
 #include "activechunk.h"
-#include "timer.h"
 
 #include <stdlib.h>
 #include <list>
-#include <sstream>
 
-#include <GL/glew.h>
-#include <SDL2/SDL_events.h>
-
-class Time;
 struct cpBody;
 struct cpSpace;
+
+class Time;
 class ActiveChunk;
-//class QuadTreeRenderer;
-//class QuadTree;
 class QueryCallback;
 class ContactListener;
 class LightRenderer;
@@ -51,17 +45,12 @@ class Torch;
 class Item;
 class PhysicsDebugRenderer;
 class ParticleRenderer;
+class Timer;
 
 //height
 static constexpr uint16_t WORLD_ROWCOUNT = 8400;
 //width
 static constexpr uint16_t WORLD_COLUMNCOUNT = 2400;
-
-static constexpr double FIXED_TIMESTEP = 1.0 / 60.0; // hertz
-static constexpr int32_t VELOCITY_ITERATIONS = 6;
-static constexpr int32_t POSITION_ITERATIONS = 2;
-
-static constexpr uint32_t WORLD_SEA_LEVEL = 16;
 
 /*
  e.g. [ ] [ ] [ ] [ ] [ ]  ... 8400
@@ -85,9 +74,6 @@ public:
     void render();
 
     void loadWorld();
-
-    static float pixelsToMeters(float pixels);
-    static float metersToPixels(float meters);
 
     bool isBlockSolid(const glm::vec2& vecDest) const;
 
@@ -278,7 +264,7 @@ private:
 
     Server* m_server = nullptr;
 
-    Timer m_physicsRendererFlushTimer;
+    Timer* m_physicsRendererFlushTimer = nullptr;
 
     /** WARNING: only valid when m_server is not. Existence is indicative of this world instance being the clients
      *  (which happens for both client-hosting a server and a client-joining)

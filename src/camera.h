@@ -18,11 +18,10 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include <GL/glew.h>
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <cstdint>
 #include <vector>
 
 class Shader;
@@ -51,10 +50,14 @@ public:
     void setView(const glm::mat4& view);
     void setOrtho(const glm::mat4& ortho);
 
-    glm::mat4 ortho() const;
-    glm::mat4 view() const;
+    glm::mat4 ortho() const {
+        return m_orthoMatrix;
+    }
+    glm::mat4 view() const {
+        return m_viewMatrix;
+    }
 
-    float scaleFactor() {
+    float scaleFactor() const {
         return m_scaleFactor;
     }
 

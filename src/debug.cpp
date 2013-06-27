@@ -25,6 +25,8 @@
 #include <iostream>
 #include <sstream>
 
+#include <SDL2/SDL.h>
+
 #ifndef NDEBUG
 #endif
 

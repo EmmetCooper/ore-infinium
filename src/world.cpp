@@ -33,7 +33,6 @@
 #include "tilerenderer.h"
 #include "lightrenderer.h"
 #include "physicsdebugrenderer.h"
-//#include "quadtreerenderer.h"
 
 #include "skyrenderer.h"
 #include "src/time.h"
@@ -87,7 +86,7 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
     m_treesSpatialHash = new SpatialHash(0.0, 0.0, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, Block::BLOCK_SIZE * WORLD_ROWCOUNT, 8.0, 4000);
     m_waterSpatialHash = new SpatialHash(0.0, 0.0, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, Block::BLOCK_SIZE * WORLD_ROWCOUNT, Block::BLOCK_SIZE, SpatialHash::SpatialHashContents::ObjectSpatialHashContents, 4000);
 
-    if (!m_server) {
+    if (m_client) {
         m_camera = new Camera();
         m_spriteSheetRenderer = new SpriteSheetRenderer(m_camera);
 //FIXME:        m_spriteSheetRenderer->registerSprite(m_uselessEntity);
@@ -110,6 +109,8 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
         //FIXME: call each update, and make it only do visible ones
         m_lightRenderer->setTorches(&m_torches);
+
+        m_physicsRendererFlushTimer = new Timer();
     }
 
     m_time = new Time();
@@ -191,6 +192,7 @@ World::~World()
 
     delete m_camera;
     delete m_time;
+    delete m_physicsRendererFlushTimer;
 }
 
 void World::addPlayer(Entities::Player* player)
@@ -356,16 +358,6 @@ void World::renderCrosshair()
     m_blockPickingCrosshair->setPosition(crosshairFinalPosition);
 }
 
-float World::metersToPixels(float meters)
-{
-    return meters * PIXELS_PER_METER;
-}
-
-float World::pixelsToMeters(float pixels)
-{
-    return pixels / PIXELS_PER_METER;
-}
-
 void World::update(double elapsedTime)
 {
     //FIXME: MAKE IT CENTER ON THE CENTER OF THE PLAYER SPRITE
@@ -396,9 +388,9 @@ void World::update(double elapsedTime)
 
             /// so that we don't flood the renderer with mutex/sync issues..since that's the slowest part
             /// obviously only applicable to physics debug rendering, when client is hosting the server.
-            if (m_physicsRendererFlushTimer.milliseconds() >= 500) {
+            if (m_physicsRendererFlushTimer->milliseconds() >= 500) {
                 m_server->client()->physicsDebugRenderer()->iterateShapesInSpace(m_cpSpace);
-                m_physicsRendererFlushTimer.reset();
+                m_physicsRendererFlushTimer->reset();
             }
         }
     }

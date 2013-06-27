@@ -15,18 +15,13 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
-#include "spritesheetrenderer.h"
+#include "fluidrenderer.h"
 
-#include "sprite.h"
-#include "torch.h"
-#include "entity.h"
 #include "debug.h"
-#include "game.h"
 #include "camera.h"
 #include "shader.h"
 #include "texture.h"
 #include "settings/settings.h"
-#include "globals.h"
 
 #include <yaml-cpp/yaml.h>
 
@@ -129,7 +124,7 @@ void SpriteSheetRenderer::registerSprite(Sprite* sprite)
 
         auto frameIdentifier = m_spriteSheetCharactersDescription.find(sprite->frameName());
         SpriteFrameIdentifier& frame = frameIdentifier->second;
-        sprite->m_sizeMeters = glm::vec2(frame.width / PIXELS_PER_METER, frame.height / PIXELS_PER_METER);
+        sprite->m_sizeMeters = glm::vec2(World::pixelsToMeters(frame.width), World::pixelsToMeters(frame.height));
 
         //NOTE: terraria's player size is (blocksize*2, blocksize*3), and that's a great default. sprite->m_size = glm::vec2(Block::blockSize * 2, Block::blockSize * 3);
         Debug::log(Debug::Area::SpriteSheetRendererArea) << "character sprite registered, setting default size, which is that of source texture: width: " << frame.width << " height: " << frame.height << " new sprite count: " << m_entitySprites.size();
@@ -141,7 +136,7 @@ void SpriteSheetRenderer::registerSprite(Sprite* sprite)
 
         auto frameIdentifier = m_spriteSheetEntitiesDescription.find(sprite->frameName());
         SpriteFrameIdentifier& frame = frameIdentifier->second;
-        sprite->m_sizeMeters = glm::vec2(frame.width / PIXELS_PER_METER, frame.height / PIXELS_PER_METER);
+        sprite->m_sizeMeters = glm::vec2(World::pixelsToMeters(frame.width), World::pixelsToMeters(frame.height));
 
         Debug::log(Debug::Area::SpriteSheetRendererArea) << "entity sprite registered, setting default size, which is that of source texture: width: " << frame.width << " height: " << frame.height << " new sprite count: " << m_entitySprites.size();
         break;

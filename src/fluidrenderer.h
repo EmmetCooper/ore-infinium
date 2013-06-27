@@ -15,28 +15,51 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
-#ifndef GLOBALS_H
-#define GLOBALS_H
+#ifndef FLUIDRENDERER_H
+#define FLUIDRENDERER_H
 
-// 50px per 1 meter. so that box2d has a range of entity sizes between 0.1 and 10 meters.
-static constexpr double PIXELS_PER_METER = 50;
-static constexpr float BLOCK_SIZE = 16.0f / PIXELS_PER_METER;
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/swizzle.hpp>
+#include <GL/glew.h>
 
-//FIXME: find good values for this. Basically this is as far out as *anyone* can see when they zoom out, regardless of resolution they will all only be able to see
-// this many blocks out.
-// units are just tile counts, not in meters, just number of tiles.
-static constexpr float MAX_VIEWPORT_WIDTH = 200.0f;
-static constexpr float MAX_VIEWPORT_HEIGHT = 200.0f;
+#include <map>
+#include <string>
+#include <vector>
 
-/// ACTIVECHUNK_SIZE^2 == total tiles within chunk
-static constexpr uint32_t ACTIVECHUNK_SIZE = 2;
+class Torch;
+class Camera;
+class Texture;
 
-static constexpr double FIXED_TIMESTEP = 1.0 / 60.0; // hertz
+class FluidRenderer
+{
+public:
+    FluidRenderer(Camera* camera);
+    ~FluidRenderer();
 
-// for chipmunk physics
-static constexpr int32_t VELOCITY_ITERATIONS = 6;
-static constexpr int32_t POSITION_ITERATIONS = 2;
+    void setCamera(Camera* camera);
+    Camera* camera() {
+        return m_camera;
+    }
 
-static constexpr uint32_t WORLD_SEA_LEVEL = 16;
+private:
+    struct Vertex {
+        glm::vec2 position;
+        unsigned int color; // packed with 4 u8s (unsigned chars) for color
+        glm::vec2 uv;
+    };
+
+    void initGL();
+    void initGLCharacters();
+
+    GLuint m_vao; // vertex array object
+    GLuint m_vbo; // vertex buffer object
+    GLuint m_ebo; // element buffer object
+
+    uint32_t m_maxWaterCount = 22000;
+
+    Camera* m_camera = nullptr;
+    Shader* m_shaderWater = nullptr;
+};
 
 #endif

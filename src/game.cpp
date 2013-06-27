@@ -18,7 +18,6 @@
 #include "game.h"
 
 #include "debug.h"
-#include "spritesheetmanager.h"
 
 #include <google/protobuf/stubs/common.h>
 
@@ -28,8 +27,6 @@
 #include "src/fluids.h"
 
 #include "settings/settings.h"
-
-#include <enet/enet.h>
 
 #include <iostream>
 #include <sstream>
