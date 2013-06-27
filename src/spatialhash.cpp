@@ -178,7 +178,7 @@ void SpatialHash::queryRange(std::set<Sprite*> *results, double x, double y, dou
 
 ///////////////////////////////////////////////////////////////////////// similar code, but for Objects instead..I'd prefer these to be merged of course, though not a big deal. Used for "lightweight" things like Fluids which don't need the other shit that Sprite hauls along
 
-void SpatialHash::queryRange(std::set<Object*>* results, double x, double y, double x2, double y2)
+void SpatialHash::queryRangeNonOverlapping(std::vector<Object*>* results, double x, double y, double x2, double y2)
 {
     assert(m_contents == SpatialHashContents::ObjectSpatialHashContents);
 
@@ -199,7 +199,7 @@ void SpatialHash::queryRange(std::set<Object*>* results, double x, double y, dou
                 for (auto* object : it->second.list) {
 
                     const glm::vec2& position = object->position();
-                    results->insert(object);
+                    results->push_back(object);
                 }
             }
         }

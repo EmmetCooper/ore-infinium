@@ -64,14 +64,14 @@ void FluidRenderer::renderWater()
 {
     m_shaderWater->bindProgram();
 
-    std::set<Object*> results;
+    std::vector<Object*> results;
 
     double left = m_mainPlayer->position().x - Settings::instance()->screenResolutionWidth * 0.5;
     double top = m_mainPlayer->position().y - Settings::instance()->screenResolutionHeight * 0.5;
     double right = m_mainPlayer->position().x + Settings::instance()->screenResolutionWidth;
     double bottom = m_mainPlayer->position().x + Settings::instance()->screenResolutionHeight;
 
-    m_spatialHashWater->queryRange(&results, left, top, right, bottom);
+    m_spatialHashWater->queryRangeNonOverlapping(&results, left, top, right, bottom);
 
     Debug::checkGLError();
 //
