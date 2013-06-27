@@ -86,10 +86,13 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
     m_treesSpatialHash = new SpatialHash(0.0, 0.0, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, Block::BLOCK_SIZE * WORLD_ROWCOUNT, 8.0, 4000);
     m_waterSpatialHash = new SpatialHash(0.0, 0.0, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, Block::BLOCK_SIZE * WORLD_ROWCOUNT, Block::BLOCK_SIZE, SpatialHash::SpatialHashContents::ObjectSpatialHashContents, 4000);
 
+    // time has to be init'ed early on
+    m_time = new Time();
+    m_time->setTime(13, 59, 0);
+
     if (m_client) {
         m_camera = new Camera();
         m_spriteSheetRenderer = new SpriteSheetRenderer(m_camera);
-//FIXME:        m_spriteSheetRenderer->registerSprite(m_uselessEntity);
 
 //FIXME:unused         m_quadTreeRenderer = new QuadTreeRenderer(m_camera);
 //FIXME:        m_quadTreeRenderer->addQuadTree(m_torchesQuadTree);
@@ -110,14 +113,14 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         //FIXME: call each update, and make it only do visible ones
         m_lightRenderer->setTorches(&m_torches);
 
-        m_physicsRendererFlushTimer = new Timer();
+        m_sky = new SkyRenderer(this, m_camera, m_time);
+        m_particleRenderer = new ParticleRenderer(this, m_camera, m_mainPlayer);
     }
 
-    m_time = new Time();
-    m_time->setTime(13, 59, 0);
 
     //client doesn't actually load/generate any world
     if (m_server) {
+        m_physicsRendererFlushTimer = new Timer();
         float x = Block::BLOCK_SIZE * WORLD_COLUMNCOUNT;
         float y = Block::BLOCK_SIZE * WORLD_ROWCOUNT;
 //HACK: FIXME:        m_torchesQuadTree = new QuadTree(QuadTree::XY(x / 2.0, y / 2.0), QuadTree::XY(x / 2.0, y / 2.0));
@@ -146,10 +149,6 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
     //FIXME: saveMap();
 
-    if (m_client) {
-        m_sky = new SkyRenderer(this, m_camera, m_time);
-        m_particleRenderer = new ParticleRenderer(this, m_camera, m_mainPlayer);
-    }
 }
 
 World::~World()

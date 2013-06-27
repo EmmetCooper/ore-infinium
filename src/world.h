@@ -264,6 +264,7 @@ private:
 
     Server* m_server = nullptr;
 
+    /// server only
     Timer* m_physicsRendererFlushTimer = nullptr;
 
     /** WARNING: only valid when m_server is not. Existence is indicative of this world instance being the clients
