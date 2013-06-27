@@ -56,7 +56,7 @@ MSVC/Visual Studio is particularly a retarded cousin of other compilers,
 so you can likely forget about that compiling for several years,
 as is the case with most projects.
 
-* YAML-CPP == 0.3.0. (https://github.com/mydrive/yaml-cpp) NOT GREATER THAN.
+* YAML-CPP == 0.3.0. (https://code.google.com/p/yaml-cpp/source/checkout) NOT GREATER THAN.
 
 Newer versions like 0.5 have a new API which I unfortunately cannot yet use as
 evidently, nothing ships it yet, not until the next version of ubuntu).
