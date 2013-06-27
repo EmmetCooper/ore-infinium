@@ -526,8 +526,8 @@ void World::calculateAttackPosition()
 void World::loadWorld()
 {
     Debug::log(Debug::Area::WorldLoaderArea) << "Loading world!";
-    Debug::log(Debug::Area::WorldLoaderArea) << "SIZEOF Block class: " << sizeof(Block);
-    Debug::log(Debug::Area::WorldLoaderArea) << "SIZEOF m_blocks: " << (sizeof(Block) * m_blocks.size()) / 1e6 << " MiB";
+    Debug::log(Debug::Area::ImportantArea) << "SIZEOF Block class: " << sizeof(Block);
+    Debug::log(Debug::Area::ImportantArea) << "SIZEOF m_blocks: " << (sizeof(Block) * m_blocks.size()) / 1e6 << " MiB";
     generateWorld();
 }
 

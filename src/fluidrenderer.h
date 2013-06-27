@@ -20,27 +20,38 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/swizzle.hpp>
 #include <GL/glew.h>
 
 #include <map>
 #include <string>
 #include <vector>
 
+class SpatialHash;
+namespace Entities {
+    class Player;
+}
+
 class Torch;
 class Camera;
 class Texture;
+class Shader;
 
 class FluidRenderer
 {
 public:
-    FluidRenderer(Camera* camera);
+    FluidRenderer(Camera* camera, Entities::Player* mainPlayer);
     ~FluidRenderer();
 
     void setCamera(Camera* camera);
     Camera* camera() {
         return m_camera;
     }
+
+    void setWaterSpatialHash(SpatialHash* hash) {
+        m_spatialHashWater = hash;
+    }
+
+    void render();
 
 private:
     struct Vertex {
@@ -50,16 +61,22 @@ private:
     };
 
     void initGL();
-    void initGLCharacters();
+    void initGLWater();
 
-    GLuint m_vao; // vertex array object
-    GLuint m_vbo; // vertex buffer object
-    GLuint m_ebo; // element buffer object
+    void renderWater();
+
+    GLuint m_vaoWater; // vertex array object
+    GLuint m_vboWater; // vertex buffer object
+    GLuint m_eboWater; // element buffer object
 
     uint32_t m_maxWaterCount = 22000;
 
     Camera* m_camera = nullptr;
     Shader* m_shaderWater = nullptr;
+
+    Entities::Player* m_mainPlayer = nullptr;
+
+    SpatialHash* m_spatialHashWater = nullptr;
 };
 
 #endif

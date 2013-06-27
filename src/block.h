@@ -126,7 +126,7 @@ public:
      * Which mesh sprite to use, aka subsprite.
      * This is utilized to cleanly decide which exact sprite(e.g. full block, corner pieces, etc.) to show for whatever
      * tile (e.g. dirt, grass) this is.
-     * 0-255.
+     * 0-15.
      * For example, @sa primitiveType
      * which does not generally depend on the surroundings.
      *

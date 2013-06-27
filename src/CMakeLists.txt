@@ -11,7 +11,7 @@ debug.cpp
 entity.cpp
 fluidcell.cpp
 fluids.cpp
-#fluidrenderer.cpp
+fluidrenderer.cpp
 game.cpp
 image.cpp
 lightrenderer.cpp
