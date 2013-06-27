@@ -67,7 +67,13 @@ public:
     void clear();
 
     void queryRange(std::set<Sprite*> *results, double x, double y, double x2, double y2);
-    void queryRange(std::set<Object*> *results, double x, double y, double x2, double y2);
+
+    /**
+     * Different from traditional @sa queryRange
+     * calls, because this one is ONLY VALID for objects which cannot possibly span more than one cell per object.
+     * (Which avoids the overhead of using a set).
+     */
+    void queryRangeNonOverlapping(std::vector<Object*> *results, double x, double y, double x2, double y2);
 
     struct Key {
         uint32_t x;

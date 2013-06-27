@@ -188,8 +188,6 @@ void SpatialHash::queryRange(std::set<Object*>* results, double x, double y, dou
     uint32_t endX = x2 / m_cellSize;
     uint32_t endY = y2 / m_cellSize;
 
-    cpBB queryBB = cpBBNew(x, y, x2, y2);
-
     for (uint32_t y = startY; y <= endY; ++y) {
         for (uint32_t x = startX; x <= endX; ++x) {
             Key key(x, y);
