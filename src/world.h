@@ -23,6 +23,7 @@
 #include "chunk.h"
 #include "activechunk.h"
 
+#include <unordered_set>
 #include <stdlib.h>
 #include <list>
 
@@ -222,10 +223,32 @@ private:
 
     Sprite* m_blockPickingCrosshair = nullptr;
 
+    struct KeyHashDesiredChunk {
+        std::size_t operator()(const DesiredChunk& k) const
+        {
+            std::hash<int> h;
+            return h(k.column) ^ (h(k.row) << 1);
+        }
+    };
+
+    struct KeyEqualDesiredChunk {
+        bool operator()(const DesiredChunk& lhs, const DesiredChunk& rhs) const
+        {
+            return lhs.column == rhs.column && lhs.row == rhs.row;
+        }
+    };
+
+    // holds the chunks that every player wants to have activated. made unique after it's done adding
+    std::unordered_set<DesiredChunk, KeyHashDesiredChunk, KeyEqualDesiredChunk> m_desiredChunks;
+
+//    std::unordered_map<Key, SpriteList, KeyHash, KeyEqual> m_spriteObjects;
+
     // it's easier to manage with a linear array. access is trivial - array[y][x] simply becomes array[y*rowlength + x]
     // [column * WORLD_ROWCOUNT + row]
     std::vector<Block> m_blocks;
     std::map<DesiredChunk, ActiveChunk*> m_activeChunks;
+
+
     std::vector<cpShape*> m_tileShapesToDestroy;
 
     TileRenderer* m_tileRenderer = nullptr;

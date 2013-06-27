@@ -44,6 +44,8 @@ public:
      * a non-optimal cellSize will yield poor performance. So it's best to be slightly bigger than the average
      * size of items it will contain.
      *
+     * NOTE: you should specify a reserve size, as it has no idea what you want to store and is just set at some small number.
+     *
      */
     SpatialHash(double x, double y, double width, double height, double cellSize, size_t reserve = 100);
 

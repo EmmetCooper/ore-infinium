@@ -58,6 +58,7 @@
 #include <math.h>
 #include <fstream>
 #include <chrono>
+#include <unordered_set>
 
 #include <fstream>
 #include <boost/iostreams/filtering_streambuf.hpp>
@@ -238,9 +239,6 @@ void World::removePlayer(Entities::Player* player)
 
 void World::updateTilePhysicsObjects()
 {
-    // holds the chunks that every player wants to have activated. made unique after it's done adding
-    std::list<DesiredChunk> desiredChunks;
-
     for (Entities::Player * player : m_players) {
         // mark which chunks we want to be activated within this players viewport
 
@@ -259,7 +257,7 @@ void World::updateTilePhysicsObjects()
             for (int currentColumn = start.x; currentColumn < end.x; currentColumn += ACTIVECHUNK_SIZE) {
 
                 DesiredChunk desiredChunk(currentRow / ACTIVECHUNK_SIZE, currentColumn / ACTIVECHUNK_SIZE);
-                desiredChunks.push_back(desiredChunk);
+                m_desiredChunks.insert(desiredChunk);
             }
         }
     }
@@ -273,7 +271,7 @@ void World::updateTilePhysicsObjects()
     }
 
     // increment the refcount for each one we need
-    for (auto & d : desiredChunks) {
+    for (auto & d : m_desiredChunks) {
 
         auto it = m_activeChunks.find(d);
         if (it == m_activeChunks.end()) {
@@ -295,6 +293,8 @@ void World::updateTilePhysicsObjects()
             m_activeChunks.erase(activeChunk.first);
         }
     }
+
+    m_desiredChunks.clear();
 }
 
 Entities::Player* World::findPlayer(uint32_t playerID)
