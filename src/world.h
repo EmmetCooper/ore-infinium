@@ -226,7 +226,7 @@ private:
     struct KeyHashDesiredChunk {
         std::size_t operator()(const DesiredChunk& k) const
         {
-            std::hash<int> h;
+            std::hash<uint32_t> h;
             return h(k.column) ^ (h(k.row) << 1);
         }
     };
@@ -246,8 +246,8 @@ private:
     // it's easier to manage with a linear array. access is trivial - array[y][x] simply becomes array[y*rowlength + x]
     // [column * WORLD_ROWCOUNT + row]
     std::vector<Block> m_blocks;
+//    std::unordered_map<DesiredChunk, ActiveChunk, KeyHashDesiredChunk, KeyEqualDesiredChunk> m_activeChunks;
     std::map<DesiredChunk, ActiveChunk*> m_activeChunks;
-
 
     std::vector<cpShape*> m_tileShapesToDestroy;
 

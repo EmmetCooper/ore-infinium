@@ -133,6 +133,9 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         cpSpaceSetSleepTimeThreshold(m_cpSpace, 0.5);
 //        cpSpaceAddCollisionHandler(m_cpSpace, 0, 0, &ContactListener::begin, nullptr, nullptr, nullptr, this);
 
+        //FIXME: harcoded and just a value i chose because it seemed to be in this area.
+        m_desiredChunks.reserve(8000);
+
         ////////////////////////
 
         loadWorld();
@@ -266,12 +269,12 @@ void World::updateTilePhysicsObjects()
 //   Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE post-removal: " << desiredChunks.size();
 
     // set all refcounts to 0
-    for (auto & activeChunk : m_activeChunks) {
+    for (auto& activeChunk : m_activeChunks) {
         activeChunk.second->refcount = 0;
     }
 
     // increment the refcount for each one we need
-    for (auto & d : m_desiredChunks) {
+    for (auto& d : m_desiredChunks) {
 
         auto it = m_activeChunks.find(d);
         if (it == m_activeChunks.end()) {
@@ -287,7 +290,7 @@ void World::updateTilePhysicsObjects()
     }
 
     // delete all active chunks with a refcount of 0
-    for (auto & activeChunk : m_activeChunks) {
+    for (auto& activeChunk : m_activeChunks) {
         if (activeChunk.second->refcount == 0) {
             delete activeChunk.second;
             m_activeChunks.erase(activeChunk.first);
