@@ -137,10 +137,10 @@
                             <input id="LightRenderingPass" type="checkbox" value="false"/>Light Renderer Pass<br/>
                             <input id="TileRenderingPass" type="checkbox" value="false"/>Tile Renderer Pass<br/>
                             <input id="SkyRenderingPass" type="checkbox" value="false"/>Sky Renderer Pass<br/>
-                            <input id="Box2DShapeRendering" type="checkbox" value="false"/>Box2D Shape Rendering<br/>
-                            <input id="Box2DCenterOfMassRendering" type="checkbox" value="false"/>Box2D Center of Mass Rendering<br/>
-                            <input id="Box2DJointRendering" type="checkbox" value="false"/>Box2D Joint Rendering<br/>
-                            <input id="Box2DAABBRendering" type="checkbox" value="false"/>Box2D AABB Rendering<br/>
+                            <input id="ChipmunkShapeRendering" type="checkbox" value="false"/>Box2D Shape Rendering<br/>
+                            <input id="ChipmunkCenterOfMassRendering" type="checkbox" value="false"/>Box2D Center of Mass Rendering<br/>
+                            <input id="ChipmunkJointRendering" type="checkbox" value="false"/>Box2D Joint Rendering<br/>
+                            <input id="ChipmunkAABBRendering" type="checkbox" value="false"/>Box2D AABB Rendering<br/>
                             </p>
                     </div>
 

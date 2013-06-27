@@ -117,7 +117,6 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         m_particleRenderer = new ParticleRenderer(this, m_camera, m_mainPlayer);
     }
 
-
     //client doesn't actually load/generate any world
     if (m_server) {
         m_physicsRendererFlushTimer = new Timer();
@@ -1004,21 +1003,6 @@ void World::attackTilePhysicsObject(const glm::vec2& positionToAttack, Entities:
     cpGroup group = CP_NO_GROUP;
 
     cpSpacePointQuery(m_cpSpace, point, layers, group, &World::attackTilePhysicsObjectCallback, this);
-
-//     FIXME:
-//    b2AABB aabb;
-//    aabb.lowerBound = b2Vec2((Block::BLOCK_SIZE * (column)) + (Block::BLOCK_SIZE * 0.5), Block::BLOCK_SIZE * (row) + (Block::BLOCK_SIZE * 0.5));
-//    aabb.upperBound = b2Vec2((Block::BLOCK_SIZE * (column)) + (Block::BLOCK_SIZE * 0.5), Block::BLOCK_SIZE * (row)+ (Block::BLOCK_SIZE * 0.5));
-//
-//    m_queryCallback->setFixtureSearchType(ContactListener::BodyType::Block);
-//    m_box2DWorld->QueryAABB(m_queryCallback, aabb);
-//
-////    Debug::log(Debug::ServerEntityLogicArea) << "FIXTURE CALLBCK COUNT: " <<  m_queryCallback->bodiesAtPoint(aabb.lowerBound).size();
-//    for (auto* fixture : m_queryCallback->fixturesAtPoint(aabb.lowerBound)) {
-//        //be sure to delete our body marker
-//        //delete static_cast<ContactListener::BodyUserData*>(fixture->GetUserData());
-//        //m_mainTileBody->DestroyFixture(fixture);
-//    }
 }
 
 void World::performBlockAttack(Entities::Player* player)

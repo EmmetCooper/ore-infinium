@@ -214,25 +214,25 @@ void DebugSettings::ProcessEvent(Rocket::Core::Event& event)
         } else {
             Settings::instance()->debugRendererFlags &= ~Debug::RenderingDebug::SkyRenderingPassDebug;
         }
-    } else if (id == "Box2DShapeRendering") {
+    } else if (id == "ChipmunkShapeRendering") {
         if (isChecked) {
             Settings::instance()->debugRendererFlags |= Debug::RenderingDebug::ChipmunkShapeRenderingDebug;
         } else {
             Settings::instance()->debugRendererFlags &= ~Debug::RenderingDebug::ChipmunkShapeRenderingDebug;
         }
-    } else if (id == "Box2DCenterOfMassRendering") {
+    } else if (id == "ChipmunkCenterOfMassRendering") {
         if (isChecked) {
             Settings::instance()->debugRendererFlags |= Debug::RenderingDebug::ChipmunkCenterOfMassRenderingDebug;
         } else {
             Settings::instance()->debugRendererFlags &= ~Debug::RenderingDebug::ChipmunkCenterOfMassRenderingDebug;
         }
-    } else if (id == "Box2DJointRendering") {
+    } else if (id == "ChipmunkJointRendering") {
         if (isChecked) {
             Settings::instance()->debugRendererFlags |= Debug::RenderingDebug::ChipmunkJointRenderingDebug;
         } else {
             Settings::instance()->debugRendererFlags &= ~Debug::RenderingDebug::ChipmunkJointRenderingDebug;
         }
-    } else if (id == "Box2DAABBRendering") {
+    } else if (id == "ChipmunkAABBRendering") {
         if (isChecked) {
             Settings::instance()->debugRendererFlags |= Debug::RenderingDebug::ChipmunkAABBRenderingDebug;
         } else {
@@ -307,10 +307,10 @@ void DebugSettings::loadDocument()
     m_debugSettings->GetElementById("LightRenderingPass")->AddEventListener("change", this);
     m_debugSettings->GetElementById("TileRenderingPass")->AddEventListener("change", this);
     m_debugSettings->GetElementById("SkyRenderingPass")->AddEventListener("change", this);
-    m_debugSettings->GetElementById("Box2DShapeRendering")->AddEventListener("change", this);
-    m_debugSettings->GetElementById("Box2DCenterOfMassRendering")->AddEventListener("change", this);
-    m_debugSettings->GetElementById("Box2DJointRendering")->AddEventListener("change", this);
-    m_debugSettings->GetElementById("Box2DAABBRendering")->AddEventListener("change", this);
+    m_debugSettings->GetElementById("ChipmunkShapeRendering")->AddEventListener("change", this);
+    m_debugSettings->GetElementById("ChipmunkCenterOfMassRendering")->AddEventListener("change", this);
+    m_debugSettings->GetElementById("ChipmunkJointRendering")->AddEventListener("change", this);
+    m_debugSettings->GetElementById("ChipmunkAABBRendering")->AddEventListener("change", this);
 }
 
 void DebugSettings::loadRenderingSettings()
@@ -335,19 +335,19 @@ void DebugSettings::loadRenderingSettings()
     }
 
     if (flags & Debug::RenderingDebug::ChipmunkShapeRenderingDebug) {
-        m_debugSettings->GetElementById("Box2DShapeRendering")->SetAttribute<Rocket::Core::String>("checked", "");
+        m_debugSettings->GetElementById("ChipmunkShapeRendering")->SetAttribute<Rocket::Core::String>("checked", "");
     }
 
     if (flags & Debug::RenderingDebug::ChipmunkCenterOfMassRenderingDebug) {
-        m_debugSettings->GetElementById("Box2DCenterOfMassRendering")->SetAttribute<Rocket::Core::String>("checked", "");
+        m_debugSettings->GetElementById("ChipmunkCenterOfMassRendering")->SetAttribute<Rocket::Core::String>("checked", "");
     }
 
     if (flags & Debug::RenderingDebug::ChipmunkJointRenderingDebug) {
-        m_debugSettings->GetElementById("Box2DJointRendering")->SetAttribute<Rocket::Core::String>("checked", "");
+        m_debugSettings->GetElementById("ChipmunkJointRendering")->SetAttribute<Rocket::Core::String>("checked", "");
     }
 
     if (flags & Debug::RenderingDebug::ChipmunkAABBRenderingDebug) {
-        m_debugSettings->GetElementById("Box2DAABBRendering")->SetAttribute<Rocket::Core::String>("checked", "");
+        m_debugSettings->GetElementById("ChipmunkAABBRendering")->SetAttribute<Rocket::Core::String>("checked", "");
     }
 }
 
