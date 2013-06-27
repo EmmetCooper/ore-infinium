@@ -255,22 +255,22 @@ void Client::render(double frameTime)
             int settingsFlags = Settings::instance()->debugRendererFlags;
             bool drawingRequired = false;
 
-            if (settingsFlags & Debug::RenderingDebug::Box2DAABBRenderingDebug) {
+            if (settingsFlags & Debug::RenderingDebug::ChipmunkAABBRenderingDebug) {
                 // rendererFlags |= b2Draw::e_aabbBit;
                 drawingRequired = true;
             }
 
-            if (settingsFlags & Debug::RenderingDebug::Box2DShapeRenderingDebug) {
+            if (settingsFlags & Debug::RenderingDebug::ChipmunkShapeRenderingDebug) {
                 //  rendererFlags |= b2Draw::e_shapeBit;
                 drawingRequired = true;
             }
 
-            if (settingsFlags & Debug::RenderingDebug::Box2DCenterOfMassRenderingDebug) {
+            if (settingsFlags & Debug::RenderingDebug::ChipmunkCenterOfMassRenderingDebug) {
                 //   rendererFlags |= b2Draw::e_centerOfMassBit;
                 drawingRequired = true;
             }
 
-            if (settingsFlags & Debug::RenderingDebug::Box2DJointRenderingDebug) {
+            if (settingsFlags & Debug::RenderingDebug::ChipmunkJointRenderingDebug) {
                 //    rendererFlags |= b2Draw::e_jointBit;
                 drawingRequired = true;
             }

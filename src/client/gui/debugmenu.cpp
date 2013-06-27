@@ -126,7 +126,7 @@ void DebugMenu::update(double frameTime)
         ss.str("");
 
         m_debug->GetElementById("5")->SetInnerRML(playerString.c_str());
-        uint32_t depth = m_client->mainPlayer()->depthBelowSeaLevel();
+        int32_t depth = m_client->mainPlayer()->depthBelowSeaLevel();
 
         std::string appender;
         if (depth >= 0) {

@@ -216,27 +216,27 @@ void DebugSettings::ProcessEvent(Rocket::Core::Event& event)
         }
     } else if (id == "Box2DShapeRendering") {
         if (isChecked) {
-            Settings::instance()->debugRendererFlags |= Debug::RenderingDebug::Box2DShapeRenderingDebug;
+            Settings::instance()->debugRendererFlags |= Debug::RenderingDebug::ChipmunkShapeRenderingDebug;
         } else {
-            Settings::instance()->debugRendererFlags &= ~Debug::RenderingDebug::Box2DShapeRenderingDebug;
+            Settings::instance()->debugRendererFlags &= ~Debug::RenderingDebug::ChipmunkShapeRenderingDebug;
         }
     } else if (id == "Box2DCenterOfMassRendering") {
         if (isChecked) {
-            Settings::instance()->debugRendererFlags |= Debug::RenderingDebug::Box2DCenterOfMassRenderingDebug;
+            Settings::instance()->debugRendererFlags |= Debug::RenderingDebug::ChipmunkCenterOfMassRenderingDebug;
         } else {
-            Settings::instance()->debugRendererFlags &= ~Debug::RenderingDebug::Box2DCenterOfMassRenderingDebug;
+            Settings::instance()->debugRendererFlags &= ~Debug::RenderingDebug::ChipmunkCenterOfMassRenderingDebug;
         }
     } else if (id == "Box2DJointRendering") {
         if (isChecked) {
-            Settings::instance()->debugRendererFlags |= Debug::RenderingDebug::Box2DJointRenderingDebug;
+            Settings::instance()->debugRendererFlags |= Debug::RenderingDebug::ChipmunkJointRenderingDebug;
         } else {
-            Settings::instance()->debugRendererFlags &= ~Debug::RenderingDebug::Box2DJointRenderingDebug;
+            Settings::instance()->debugRendererFlags &= ~Debug::RenderingDebug::ChipmunkJointRenderingDebug;
         }
     } else if (id == "Box2DAABBRendering") {
         if (isChecked) {
-            Settings::instance()->debugRendererFlags |= Debug::RenderingDebug::Box2DAABBRenderingDebug;
+            Settings::instance()->debugRendererFlags |= Debug::RenderingDebug::ChipmunkAABBRenderingDebug;
         } else {
-            Settings::instance()->debugRendererFlags &= ~Debug::RenderingDebug::Box2DAABBRenderingDebug;
+            Settings::instance()->debugRendererFlags &= ~Debug::RenderingDebug::ChipmunkAABBRenderingDebug;
         }
     }
 }
@@ -334,19 +334,19 @@ void DebugSettings::loadRenderingSettings()
         m_debugSettings->GetElementById("SkyRenderingPass")->SetAttribute<Rocket::Core::String>("checked", "");
     }
 
-    if (flags & Debug::RenderingDebug::Box2DShapeRenderingDebug) {
+    if (flags & Debug::RenderingDebug::ChipmunkShapeRenderingDebug) {
         m_debugSettings->GetElementById("Box2DShapeRendering")->SetAttribute<Rocket::Core::String>("checked", "");
     }
 
-    if (flags & Debug::RenderingDebug::Box2DCenterOfMassRenderingDebug) {
+    if (flags & Debug::RenderingDebug::ChipmunkCenterOfMassRenderingDebug) {
         m_debugSettings->GetElementById("Box2DCenterOfMassRendering")->SetAttribute<Rocket::Core::String>("checked", "");
     }
 
-    if (flags & Debug::RenderingDebug::Box2DJointRenderingDebug) {
+    if (flags & Debug::RenderingDebug::ChipmunkJointRenderingDebug) {
         m_debugSettings->GetElementById("Box2DJointRendering")->SetAttribute<Rocket::Core::String>("checked", "");
     }
 
-    if (flags & Debug::RenderingDebug::Box2DAABBRenderingDebug) {
+    if (flags & Debug::RenderingDebug::ChipmunkAABBRenderingDebug) {
         m_debugSettings->GetElementById("Box2DAABBRendering")->SetAttribute<Rocket::Core::String>("checked", "");
     }
 }

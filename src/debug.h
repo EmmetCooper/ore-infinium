@@ -66,10 +66,10 @@ public:
         LightRenderingPassDebug = 1 << 1,
         TileRenderingPassDebug = 1 << 2,
         SkyRenderingPassDebug = 1 << 3,
-        Box2DShapeRenderingDebug = 1 << 4,
-        Box2DCenterOfMassRenderingDebug = 1 << 5,
-        Box2DJointRenderingDebug = 1 << 6,
-        Box2DAABBRenderingDebug = 1 << 7
+        ChipmunkShapeRenderingDebug = 1 << 4,
+        ChipmunkCenterOfMassRenderingDebug = 1 << 5,
+        ChipmunkJointRenderingDebug = 1 << 6,
+        ChipmunkAABBRenderingDebug = 1 << 7
     };
 
     static LogStream log(Area area);

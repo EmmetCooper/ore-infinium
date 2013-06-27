@@ -29,8 +29,8 @@
 #include <assert.h>
 
 SpatialHash::SpatialHash(double x, double y, double x2, double y2, double cellSize, size_t reserve) :
-    m_cellSize(cellSize),
     m_contents(SpatialHashContents::SpriteSpatialHashContents),
+    m_cellSize(cellSize),
     m_x2(x2),
     m_y2(y2),
     m_x(x),

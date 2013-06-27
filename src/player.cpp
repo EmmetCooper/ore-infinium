@@ -221,9 +221,9 @@ void Player::jump()
     }
 }
 
-uint32_t Player::depthBelowSeaLevel()
+int32_t Player::depthBelowSeaLevel()
 {
-    uint32_t position = static_cast<uint32_t>(this->position().x / Block::BLOCK_SIZE);
+    int32_t position = static_cast<int32_t>(this->position().x / Block::BLOCK_SIZE);
     return position - World::seaLevel();
 }
 
