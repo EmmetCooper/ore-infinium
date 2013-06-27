@@ -49,7 +49,8 @@ binary, which e.g. ubuntu ships in a separate package
 * FreeType (librocket already requires that so if you have that you should be
 fine).
 
-* OpenAL-Soft >= 1.14
+* OpenAL-Soft >= 1.14 (http://kcat.strangesoft.net/openal.html#download) - NOT
+PRESENTLY USED, NO AUDIO SYSTEM CREATED YET, SO DONT WORRY ABOUT IT YET.
 
 * C++11 compatible compiler (at least GCC 4.7 is fine and clang 3.2 or above).
 MSVC/Visual Studio is particularly a retarded cousin of other compilers,
