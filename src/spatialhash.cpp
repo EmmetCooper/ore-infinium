@@ -25,7 +25,7 @@
 
 #include <chipmunk/chipmunk.h>
 
-#include <set>
+#include <unordered_set>
 #include <assert.h>
 
 SpatialHash::SpatialHash(double x, double y, double x2, double y2, double cellSize, size_t reserve) :
@@ -140,7 +140,7 @@ void SpatialHash::clear()
 
 }
 
-void SpatialHash::queryRange(std::set<Sprite*> *results, double x, double y, double x2, double y2)
+void SpatialHash::queryRange(std::unordered_set<Sprite*> *results, double x, double y, double x2, double y2)
 {
     assert(m_contents == SpatialHashContents::SpriteSpatialHashContents);
 
@@ -174,7 +174,6 @@ void SpatialHash::queryRange(std::set<Sprite*> *results, double x, double y, dou
         }
     }
 }
-
 
 ///////////////////////////////////////////////////////////////////////// similar code, but for Objects instead..I'd prefer these to be merged of course, though not a big deal. Used for "lightweight" things like Fluids which don't need the other shit that Sprite hauls along
 

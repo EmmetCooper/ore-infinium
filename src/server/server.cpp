@@ -45,6 +45,7 @@
 #include <random>
 #include <chrono>
 #include <thread>
+#include <unordered_set>
 
 #include <zlib.h>
 #include <algorithm>
@@ -583,7 +584,7 @@ void Server::sendPlayerQuickBarInventory(Entities::Player* player, uint8_t index
 
 void Server::sendInitialVegetationSpawn(ENetPeer* peer)
 {
-    std::set<Sprite*> results;
+    std::unordered_set<Sprite*> results;
     m_world->m_treesSpatialHash->queryRange(&results, 0.0, 0.0, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, Block::BLOCK_SIZE * WORLD_ROWCOUNT);
 
     PacketBuf::InitialVegetationSpawn message;

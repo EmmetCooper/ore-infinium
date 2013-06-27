@@ -22,7 +22,7 @@
 #include "src/spatialhash.h"
 #include "torch.h"
 
-#include <set>
+#include <unordered_set>
 #include <thread>
 
 UnitTest::UnitTest()
@@ -57,7 +57,7 @@ void UnitTest::testSpatialHash()
     std::this_thread::sleep_for(std::chrono::seconds(3));
     std::cout << "Sleep done; querying entire range" << '\n';
 
-    std::set<Sprite*> results;
+    std::unordered_set<Sprite*> results;
     hash->queryRange(&results, 0.0, 0.0, width, height);
 
     std::cout << "Range query finished. Full query count, was: " << results.size() << " should be: " << max << '\n';
