@@ -68,6 +68,13 @@ Kind of a pain in the ass, but whatever.
 
 * ZLib (http://www.zlib.net/)  for compression, for both my network packets and file saving, etc.
 
+NOTE: I do not apply custom patches to said dependencies, I push all of my code
+upstream so it doesn't turn into patch hell, and I like contributing. So the
+/dependencies/ directories are just checkouts of the versions of the libs that I
+use. Your distro's version should be sufficient, but this is for ease of use and
+such, especially for people on worse platforms which do not have a package
+manager.
+
 -----------------------------------------------------------------------------------------
 
 
