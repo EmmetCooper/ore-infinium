@@ -15,33 +15,27 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
-#ifndef FLUIDCELL_H
-#define FLUIDCELL_H
+#include "fluids.h"
+#include "block.h"
 
-#include "object.h"
+std::vector<Fluids::FluidProperties> Fluids::fluidTypes;
 
-#include "src/fluids.h"
-
-#include <glm/glm.hpp>
-
-#include <stdint.h>
-#include <vector>
-
-class FluidCell : public Object
+void Fluids::initFluidTypes()
 {
-public:
-    FluidCell(const glm::ivec2& cell, Fluids::FluidType type);
-    ~FluidCell();
+    fluidTypes.resize(2);
+    FluidProperties waterProperty;
+    fluidTypes.at(FluidType::Water) = waterProperty;
 
-    void setCellPosition(const glm::ivec2& pos);
+    FluidProperties lavaProperty;
+    fluidTypes.at(FluidType::Lava) = lavaProperty;
+}
 
-    glm::ivec2 cellPosition() {
-        return m_cellPosition;
-    }
+Fluids::Fluids(Fluids::FluidType type)
+{
 
-private:
-    glm::ivec2 m_cellPosition = glm::ivec2(0, 0);
-    Fluids::FluidType m_type;
-};
+}
 
-#endif
+Fluids::~Fluids()
+{
+
+}

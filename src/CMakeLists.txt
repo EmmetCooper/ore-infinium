@@ -10,6 +10,7 @@ chunk.cpp
 debug.cpp
 entity.cpp
 fluidcell.cpp
+fluids.cpp
 game.cpp
 image.cpp
 lightrenderer.cpp

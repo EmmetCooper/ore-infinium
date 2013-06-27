@@ -25,7 +25,7 @@
 #include "client/client.h"
 #include "server/server.h"
 
-#include "src/fluidcell.h"
+#include "src/fluids.h"
 
 #include "settings/settings.h"
 
@@ -41,7 +41,6 @@
 #include <vector>
 
 #include <assert.h>
-
 
 Game::Game()
 {
@@ -72,7 +71,7 @@ void Game::init()
     }
 
     Block::initBlockTypes();
-    FluidCell::initFluidTypes();
+    Fluids::initFluidTypes();
 
     m_client = new Client();
 
