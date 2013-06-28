@@ -30,6 +30,7 @@ public:
     ~UnitTest();
 
     void testSpatialHash();
+    void testCompression();
 
 private:
 };
