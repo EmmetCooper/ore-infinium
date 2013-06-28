@@ -30,7 +30,6 @@ To get started building this on Kubuntu (which is what I'm using as a test
 machine, and is, as a rule, a good base for shipping software), you can install
 some packages so that you don't have to build all of them yourself.
 
-
 Here's a list, just to keep in mind. Commands are further down.
 
 * SDL 2.0+ (http://www.libsdl.org/hg.php)
@@ -66,7 +65,9 @@ Kind of a pain in the ass, but whatever.
 
 * Chipmunk physics library (http://chipmunk-physics.net) >= 6.1
 
-* ZLib (http://www.zlib.net/)  for compression, for both my network packets and file saving, etc.
+* ZLib (http://www.zlib.net/ and https://github.com/madler/zlib)  for compression, for both my network packets and file saving, etc.
+
+* Boost 1.40 (iostreams)
 
 NOTE: I do not apply custom patches to said dependencies, I push all of my code
 upstream so it doesn't turn into patch hell, and I like contributing. So the
