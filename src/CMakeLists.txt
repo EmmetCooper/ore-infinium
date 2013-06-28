@@ -97,6 +97,11 @@ add_custom_target(
 add_dependencies(${EXECUTABLE_NAME} do_protoc)
 
 include_directories(
+# ----------
+${CMAKE_SOURCE_DIR}/utils/glm/
+
+#-----------
+
 ${CMAKE_SOURCE_DIR}
 ${SDL2_INCLUDE_DIR}
 ${FREEIMAGE_INCLUDE_PATH}

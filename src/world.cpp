@@ -66,7 +66,7 @@
 #include <boost/iostreams/copy.hpp>
 #include <boost/iostreams/filter/zlib.hpp>
 
-#include <glm/core/func_common.hpp>
+#include "glm/core/func_common.hpp"
 
 #include <FreeImage.h>
 
