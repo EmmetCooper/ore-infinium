@@ -41,7 +41,7 @@ binary, which e.g. ubuntu ships in a separate package
 
 * GLEW
 
-* GLM (matrix/math library) >= 0.9.4 (http://glm.g-truc.net/)
+* GLM (matrix/math library) >= 0.9.4 (http://glm.g-truc.net/) - https://github.com/g-truc/glm
 
 * libRocket (http://librocket.com) GUI HTML/CSS C++ library
 
