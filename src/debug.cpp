@@ -19,7 +19,7 @@
 #include "game.h"
 #include "settings/settings.h"
 
-#include <GL/glew.h>
+#include "glew.h"
 
 #include <assert.h>
 #include <iostream>

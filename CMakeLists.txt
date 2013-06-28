@@ -40,7 +40,6 @@ include(FindProtobuf)
 find_package(SDL2)
 
 find_package(OpenGL)
-find_package(GLEW)
 
 find_package(FreeImage)
 
@@ -62,9 +61,6 @@ set_package_properties(SDL2 PROPERTIES TYPE REQUIRED PURPOSE "Used for setting u
 
 set_package_properties(OpenGL PROPERTIES DESCRIPTION "OpenGL >= 3.0 is required. Version check is done at runtime" URL "-")
 set_package_properties(OpenGL PROPERTIES TYPE REQUIRED PURPOSE "OpenGL is used for all rendering, without it you won't see anything :)")
-
-set_package_properties(GLEW PROPERTIES DESCRIPTION "OpenGL Extension Wrangler" URL "http://glew.sourceforge.net/")
-set_package_properties(GLEW PROPERTIES TYPE REQUIRED PURPOSE "To create our function pointers and extension loading for OpenGL")
 
 set_package_properties(FreeImage PROPERTIES DESCRIPTION "Cross-platform open source image loading library" URL "http://freeimage.sourceforge.net/")
 set_package_properties(FreeImage PROPERTIES TYPE REQUIRED PURPOSE "For loading textures from disk")

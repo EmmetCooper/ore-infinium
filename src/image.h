@@ -18,7 +18,7 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
-#include <GL/glew.h>
+#include "glew.h"
 
 #include <string>
 #include <FreeImage.h>

@@ -19,7 +19,7 @@
 #include "globals.h"
 #include "shader.h"
 
-#include <GL/glew.h>
+#include "glew.h"
 
 #include "settings/settings.h"
 

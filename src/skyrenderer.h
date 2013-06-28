@@ -21,7 +21,7 @@
 #include "glm/glm.hpp"
 #include "glm/core/type.hpp"
 
-#include <GL/glew.h>
+#include "glew.h"
 
 #include <vector>
 

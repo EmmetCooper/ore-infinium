@@ -24,7 +24,7 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-#include <GL/glew.h>
+#include "glew.h"
 
 #include <map>
 #include <string>

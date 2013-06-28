@@ -34,7 +34,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <GL/glew.h>
+#include "glew.h"
 #include <GL/glext.h>
 #include <SDL_timer.h>
 
