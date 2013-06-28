@@ -22,7 +22,7 @@
 
 #include "src/fluids.h"
 
-#include <glm/glm.hpp>
+#include "glm/glm.hpp"
 
 #include <stdint.h>
 #include <vector>

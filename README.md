@@ -42,6 +42,8 @@ binary, which e.g. ubuntu ships in a separate package
 * GLEW
 
 * GLM (matrix/math library) >= 0.9.4 (http://glm.g-truc.net/) - https://github.com/g-truc/glm
+(NOTE: this is internal with the game, so it builds automatically with it. No
+need to get this.)
 
 * libRocket (http://librocket.com) GUI HTML/CSS C++ library
 
@@ -82,7 +84,7 @@ manager.
 If you're running Ubuntu 13.10 (which is what I support the most), then type:
 
 'apt-get install libenet-dev libglew-dev libprotobuf-dev protobuf-compiler
-libyaml-cpp-dev zlib1g-dev libopenal-dev libglm-dev'
+libyaml-cpp-dev zlib1g-dev libopenal-dev'
 
 And just to make sure, if you've never done development, you probably need to
 run:

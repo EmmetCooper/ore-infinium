@@ -19,9 +19,9 @@
 #define ENTITY_H
 
 #include "sprite.h"
-#include <glm/core/type.hpp>
-
 #include "spatialhash.h"
+
+#include "glm/core/type.hpp"
 
 struct cpBody;
 struct cpShape;

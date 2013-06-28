@@ -27,8 +27,8 @@
 
 #include <fstream>
 
-#include <glm/core/func_common.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include "glm/core/func_common.hpp"
+#include "glm/gtc/type_ptr.hpp"
 
 ParticleRenderer::ParticleRenderer(World* world, Camera* camera, Entities::Player* mainPlayer)
 {

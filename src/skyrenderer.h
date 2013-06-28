@@ -18,10 +18,11 @@
 #ifndef SKY_H
 #define SKY_H
 
+#include "glm/glm.hpp"
+#include "glm/core/type.hpp"
+
 #include <GL/glew.h>
 
-#include <glm/glm.hpp>
-#include <glm/core/type.hpp>
 #include <vector>
 
 class Camera;

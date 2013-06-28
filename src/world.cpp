@@ -30,11 +30,13 @@
 #include "torch.h"
 #include "game.h"
 #include "camera.h"
+
 #include "tilerenderer.h"
 #include "lightrenderer.h"
 #include "physicsdebugrenderer.h"
-
+#include "particlerenderer.h"
 #include "skyrenderer.h"
+
 #include "src/time.h"
 #include "settings/settings.h"
 #include "quickbarinventory.h"
@@ -47,7 +49,6 @@
 #include <chipmunk/chipmunk.h>
 
 #include <noise/noise.h>
-#include "particlerenderer.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -59,12 +60,14 @@
 #include <fstream>
 #include <chrono>
 #include <unordered_set>
-
 #include <fstream>
+
 #include <boost/iostreams/filtering_streambuf.hpp>
 #include <boost/iostreams/copy.hpp>
 #include <boost/iostreams/filter/zlib.hpp>
+
 #include <glm/core/func_common.hpp>
+
 #include <FreeImage.h>
 
 //HACK: thinkw e're going to go away from libnoise

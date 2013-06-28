@@ -48,7 +48,7 @@ find_package(YamlCpp)
 
 find_package(Chipmunk)
 
-find_package(GLM)
+#find_package(GLM)
 find_package(LibRocket)
 find_package(enet)
 find_package(Protobuf)
@@ -67,8 +67,8 @@ set_package_properties(OpenGL PROPERTIES TYPE REQUIRED PURPOSE "OpenGL is used f
 set_package_properties(GLEW PROPERTIES DESCRIPTION "OpenGL Extension Wrangler" URL "http://glew.sourceforge.net/")
 set_package_properties(GLEW PROPERTIES TYPE REQUIRED PURPOSE "To create our function pointers and extension loading for OpenGL")
 
-set_package_properties(GLM PROPERTIES DESCRIPTION "OpenGL Open Source Mathematics Library" URL "http://glm.g-truc.net/")
-set_package_properties(GLM PROPERTIES TYPE REQUIRED PURPOSE "For matrix transformations, for camera and position setup, etc.")
+#set_package_properties(GLM PROPERTIES DESCRIPTION "OpenGL Open Source Mathematics Library" URL "http://glm.g-truc.net/")
+#set_package_properties(GLM PROPERTIES TYPE REQUIRED PURPOSE "For matrix transformations, for camera and position setup, etc.")
 
 set_package_properties(FreeImage PROPERTIES DESCRIPTION "Cross-platform open source image loading library" URL "http://freeimage.sourceforge.net/")
 set_package_properties(FreeImage PROPERTIES TYPE REQUIRED PURPOSE "For loading textures from disk")
