@@ -110,13 +110,13 @@ ExternalProject_Add(protobuf
     CONFIGURE_COMMAND ${CMAKE_SOURCE_DIR}/dependencies/protobuf/configure --prefix=${CMAKE_INSTALL_PREFIX}
 )
 
-ExternalProject_Add(SDL_image
-    SOURCE_DIR ${CMAKE_SOURCE_DIR}/dependencies/SDL_image/
-    BINARY_DIR ${CMAKE_BINARY_DIR}/dependencies/build/SDL_image
-    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-    CONFIGURE_COMMAND ${CMAKE_SOURCE_DIR}/dependencies/SDL_image/configure --prefix=${CMAKE_INSTALL_PREFIX}
-)
-
+#ExternalProject_Add(SDL_image
+#    SOURCE_DIR ${CMAKE_SOURCE_DIR}/dependencies/SDL_image/
+#    BINARY_DIR ${CMAKE_BINARY_DIR}/dependencies/build/SDL_image
+#    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
+#    CONFIGURE_COMMAND ${CMAKE_SOURCE_DIR}/dependencies/SDL_image/configure --prefix=${CMAKE_INSTALL_PREFIX}
+#)
+#
 #ExternalProject_Add(FreeImage
 #    SOURCE_DIR ${CMAKE_SOURCE_DIR}/dependencies/FreeImage/
 #    BINARY_DIR ${CMAKE_BINARY_DIR}/dependencies/build/FreeImage
@@ -165,6 +165,7 @@ ${CMAKE_INSTALL_PREFIX}/utils/GLEW/
 
 ${CMAKE_SOURCE_DIR}
 ${SDL2_INCLUDE_DIR}
+${SDLIMAGE_INCLUDE_DIR}
 ${FREEIMAGE_INCLUDE_PATH}
 ${FREETYPE_INCLUDE_DIRS}
 ${YAMLCPP_INCLUDE_DIR}
@@ -180,6 +181,7 @@ target_link_libraries(
 ore-infinium
 ${SDL2_LIBRARY}
 ${SDL2MAIN_LIBRARY}
+${SDLIMAGE_LIBRARY}
 ${ZLIB_LIBRARY}
 ${FREEIMAGE_LIBRARY}
 ${FREETYPE_LIBRARY}
