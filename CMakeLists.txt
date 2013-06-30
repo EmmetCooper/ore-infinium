@@ -107,6 +107,12 @@ ExternalProject_Add(libRocket
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
 )
 
+ExternalProject_Add(enet
+    SOURCE_DIR ${CMAKE_SOURCE_DIR}/dependencies/enet/
+    BINARY_DIR ${CMAKE_BINARY_DIR}/dependencies/build/enet
+    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
+    CONFIGURE_COMMAND ${CMAKE_SOURCE_DIR}/dependencies/enet/configure --prefix=${CMAKE_INSTALL_PREFIX}
+)
 
 endif()
 
