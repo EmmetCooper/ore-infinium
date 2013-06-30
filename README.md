@@ -10,8 +10,8 @@ See http://www.oreinfinium.org for more (slightly) up to date information.
 
 ------------------------------------------------------------------------------------
 
-Written in C++11, SDL 2.0, OpenGL 3.1 and using and contanis only Free Software and Free
-assets
+Written in C++11, SDL 2.0, OpenGL 3.1 and using and contains only Free Software and Free
+assets.
 
 
 -----------------------------------------------------------------------------------
@@ -30,7 +30,16 @@ To get started building this on Kubuntu (which is what I'm using as a test
 machine, and is, as a rule, a good base for shipping software), you can install
 some packages so that you don't have to build all of them yourself.
 
-Here's a list, just to keep in mind. Commands are further down.
+Here's a list of the dependencies I use, just to keep in mind. Commands are further down.
+
+
+
+---------------------
+NOTE: I made the buildsystem in such a way that the source files of the
+dependencies it needs reside in dependencies/, so when the proper flag is passed
+to CMake, it will compile those instead of attempting to search for your system
+ones.
+---------------------
 
 * SDL 2.0+ (http://www.libsdl.org/hg.php)
 
@@ -64,18 +73,18 @@ Newer versions like 0.5 have a new API which I unfortunately cannot yet use as
 evidently, nothing ships it yet, not until the next version of ubuntu).
 Kind of a pain in the ass, but whatever.
 
-
 * Chipmunk physics library (http://chipmunk-physics.net) >= 6.1
 
 * ZLib (http://www.zlib.net/ and https://github.com/madler/zlib)  for compression, for both my network packets and file saving, etc.
 
 * Boost 1.40 (iostreams)
 
+-----------------------------------------------------------------------------------------
 NOTE: I do not apply custom patches to said dependencies, I push all of my code
 upstream so it doesn't turn into patch hell, and I like contributing. So the
 /dependencies/ directories are just checkouts of the versions of the libs that I
 use. Your distro's version should be sufficient, but this is for ease of use and
-such, especially for people on worse platforms which do not have a package
+such, especially for people on unfortunate platforms which do not have a package
 manager.
 
 -----------------------------------------------------------------------------------------
@@ -83,13 +92,28 @@ manager.
 
 If you're running Ubuntu 13.10 (which is what I support the most), then type:
 
-'apt-get install libenet-dev libglew-dev libprotobuf-dev protobuf-compiler
-libyaml-cpp-dev zlib1g-dev libopenal-dev'
 
-And just to make sure, if you've never done development, you probably need to
+Just to make sure, if you've never done development, you probably need to
 run:
 
-'apt-get install mercurial git cmake'
+'apt-get install git cmake'
+
+Now to download this repo(source code), type: git clone git@github.com:sreich/ore-infinium.git
+
+now at a terminal, type 'cd ore-infinium' and:
+ 'cmake -DCMAKE_INSTALL_PREFIX=/home/myuser/some-path-to-install-game -DBUILD_THIRD_PARTY_LIBRARIES=ON'
+
+
+The last part, aka the -DBUILD_THIRD_PARTY_LIBRARIES=ON flag indicates that the
+project should build the 3rd part dependencies/libraries that it comes with. Use
+this for if your system doesn't have them installed (specifically you will want
+this on Windows since it's work to compile things there).
+
+
+NOTE: IGNORE THIS CRAP FOR NOW --------------
+'apt-get install libenet-dev libglew-dev libprotobuf-dev protobuf-compiler
+libyaml-cpp-dev zlib1g-dev libopenal-dev'
+--------------------------------------
 
 Okay, so basically this gives us everything except the following:
 
@@ -98,5 +122,6 @@ Okay, so basically this gives us everything except the following:
 * librocket
 
 So those need to be built from source.
+
 
 
