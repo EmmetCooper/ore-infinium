@@ -1,7 +1,3 @@
-
-# Define sources and executable
-set(EXECUTABLE_NAME "ore-infinium")
-
 set(SRC
 activechunk.cpp
 block.cpp
@@ -69,10 +65,63 @@ ${CMAKE_SOURCE_DIR}/utils/GLEW/glew.c
 
 include(FindPkgConfig)
 
-add_executable(${EXECUTABLE_NAME} ${SRC})
+add_executable(ore-infinium ${SRC})
+if (BUILD_THIRD_PARTY_LIBRARIES STREQUAL "ON")
+
+add_dependencies(ore-infinium zlib)
+add_dependencies(ore-infinium libRocket)
+add_dependencies(ore-infinium enet)
+add_dependencies(ore-infinium protobuf)
+add_dependencies(ore-infinium FreeImage)
+
+ExternalProject_Add(libRocket
+    SOURCE_DIR ${CMAKE_SOURCE_DIR}/dependencies/libRocket/Build
+    BINARY_DIR ${CMAKE_BINARY_DIR}/dependencies/build/libRocket
+    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+)
+
+ExternalProject_Add(enet
+    SOURCE_DIR ${CMAKE_SOURCE_DIR}/dependencies/enet/
+    BINARY_DIR ${CMAKE_BINARY_DIR}/dependencies/build/enet
+    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
+    CONFIGURE_COMMAND ${CMAKE_SOURCE_DIR}/dependencies/enet/configure --prefix=${CMAKE_INSTALL_PREFIX}
+)
+
+ExternalProject_Add(Chipmunk2D
+    SOURCE_DIR ${CMAKE_SOURCE_DIR}/dependencies/Chipmunk2D/
+    BINARY_DIR ${CMAKE_BINARY_DIR}/dependencies/build/Chipmunk2D
+    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+)
+
+ExternalProject_Add(zlib
+    SOURCE_DIR ${CMAKE_SOURCE_DIR}/dependencies/zlib/
+    BINARY_DIR ${CMAKE_BINARY_DIR}/dependencies/build/zlib
+    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+)
+
+ExternalProject_Add(protobuf
+    SOURCE_DIR ${CMAKE_SOURCE_DIR}/dependencies/protobuf/
+    BINARY_DIR ${CMAKE_BINARY_DIR}/dependencies/build/protobuf
+    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
+    CONFIGURE_COMMAND ${CMAKE_SOURCE_DIR}/dependencies/protobuf/configure --prefix=${CMAKE_INSTALL_PREFIX}
+)
+
+ExternalProject_Add(FreeImage
+    SOURCE_DIR ${CMAKE_SOURCE_DIR}/dependencies/FreeImage/
+    BINARY_DIR ${CMAKE_BINARY_DIR}/dependencies/build/FreeImage
+    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+)
+
+endif()
 
 find_program(PROTOC_EXEC NAME protoc
 PATHS
+${CMAKE_INSTALL_PREFIX}/bin
+${CMAKE_INSTALL_PREFIX}/protobuf/src
 /usr/bin/
 /usr/local/bin
 /opt/bin
@@ -87,16 +136,16 @@ endif (NOT PROTOC_EXEC)
 # ----------------------- Generate protoc (somefile.pb.cc and somefile.pb.h) from a given somefile.proto file and build against that. the 'protoc' binary has to exist, but apparently distros have 2 packages mostly, libprotobuf and protoc, both of which are needed  -----------------------------------------
 add_custom_command(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/packet.pb.cc
-  COMMAND protoc  -I=${CMAKE_CURRENT_SOURCE_DIR} --cpp_out=${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/packet.proto
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/packet.proto
+  COMMAND ${PROTOC_EXEC}  -I=${CMAKE_CURRENT_SOURCE_DIR} --cpp_out=${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/packet.proto
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/packet.proto ;protobuf
 )
 
 add_custom_target(
   do_protoc
-  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/packet.pb.cc
+  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/packet.pb.cc ;protobuf
 )
 
-add_dependencies(${EXECUTABLE_NAME} do_protoc)
+add_dependencies(ore-infinium do_protoc)
 
 include_directories(
 # ----------
@@ -120,7 +169,7 @@ ${LIBNOISE_INCLUDE_DIR}
 )
 
 target_link_libraries(
-${EXECUTABLE_NAME}
+ore-infinium
 ${SDL2_LIBRARY}
 ${SDL2MAIN_LIBRARY}
 ${ZLIB_LIBRARY}
@@ -155,5 +204,5 @@ install(DIRECTORY ./client/ DESTINATION "client") #FILES_MATCHING PATTERN "*")
 install(DIRECTORY ./ DESTINATION bin FILES_MATCHING PATTERN "*.frag" )
 install(DIRECTORY ./ DESTINATION bin FILES_MATCHING PATTERN "*.vert" )
 install(DIRECTORY ./ DESTINATION bin FILES_MATCHING PATTERN "*.gs" )
-install(TARGETS ${EXECUTABLE_NAME} DESTINATION bin)
+install(TARGETS "ore-infinium" DESTINATION bin)
 
