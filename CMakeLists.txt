@@ -42,16 +42,13 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib64 ${CMAKE_INSTALL_PREFIX}/lib)
 
-
-
-
 include(FindProtobuf)
 
 find_package(SDL2)
 
 find_package(OpenGL)
 
-#find_package(FreeImage)
+find_package(SDL_image)
 
 find_package(YamlCpp)
 
@@ -72,9 +69,9 @@ set_package_properties(SDL2 PROPERTIES TYPE REQUIRED PURPOSE "Used for setting u
 set_package_properties(OpenGL PROPERTIES DESCRIPTION "OpenGL >= 3.0 is required. Version check is done at runtime" URL "-")
 set_package_properties(OpenGL PROPERTIES TYPE REQUIRED PURPOSE "OpenGL is used for all rendering, without it you won't see anything :)")
 
-set_package_properties(FreeImage PROPERTIES DESCRIPTION "Cross-platform open source image loading library" URL "http://freeimage.sourceforge.net/")
-set_package_properties(FreeImage PROPERTIES TYPE REQUIRED PURPOSE "For loading textures from disk")
-#
+set_package_properties(SDL_image PROPERTIES DESCRIPTION "Cross-platform open source image loading library" URL "")
+set_package_properties(SDL_image PROPERTIES TYPE REQUIRED PURPOSE "For loading textures from disk")
+
 set_package_properties(YamlCpp PROPERTIES DESCRIPTION "YAML CPP < 0.5, >= 0.30" URL "http://code.google.com/p/yaml-cpp/")
 set_package_properties(YamlCpp PROPERTIES TYPE REQUIRED PURPOSE "For config file and sprite sheet reading")
 
