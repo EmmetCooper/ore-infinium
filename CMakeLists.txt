@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.6)
 
-# To force which compiler to use e.g. for me for clang instead of gcc, pass CC and CCX=/usr/bin/clang++ cmake .. ; ...
+option(BUILD_THIRD_PARTY_LIBRARIES "Set to ON to automatically build included 3rd-party libraries" OFF)
+
+# To force which compiler to use, e.g. for me for clang instead of gcc, pass CC and CCX=/usr/bin/clang++ cmake .. ; ...
 
 project(ore-infinium)
 
@@ -8,6 +10,8 @@ include(FeatureSummary)
 include(ExternalProject)
 
 # Enable debug symbols by default
+#
+# (you can also set it on the command line: -D CMAKE_BUILD_TYPE=Release)
 if(CMAKE_BUILD_TYPE STREQUAL "")
   set(CMAKE_BUILD_TYPE Debug)
 endif()
@@ -28,7 +32,6 @@ else(CMAKE_BUILD_TYPE STREQUAL "")
     set(CMAKE_C_FLAGS "-O2 -Wall -Wno-unused-variable -Wno-unused-function -fexpensive-optimizations")
 endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
-# (you can also set it on the command line: -D CMAKE_BUILD_TYPE=Release)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 
 # Set version information in a config.h file
@@ -86,7 +89,41 @@ set_package_properties(LibNoise PROPERTIES TYPE REQUIRED PURPOSE "For easily gen
 set_package_properties(ZLIB PROPERTIES DESCRIPTION "zlib" URL "zlib")
 set_package_properties(ZLIB PROPERTIES TYPE REQUIRED PURPOSE "For compression for network communication as well as file loading/saving")
 
-feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+feature_summary(WHAT ALL)
+#FATAL_ON_MISSING_REQUIRED_PACKAGES
+
+#   DEPENDS ${proj_DEPENDENCIES}
+
+if (BUILD_THIRD_PARTY_LIBRARIES STREQUAL "ON")
+
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib64 {$${CMAKE_INSTALL_PREFIX}/lib)
+
+ExternalProject_Add(libRocket
+    SOURCE_DIR ${CMAKE_SOURCE_DIR}/dependencies/libRocket/Build
+    BINARY_DIR ${CMAKE_BINARY_DIR}/dependencies/build/libRocket
+    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+)
+
+
+endif()
+
+# ExternalProject_Add(${proj}
+#  SOURCE_DIR ${Log4Qt_SOURCE_DIR}
+#  BINARY_DIR ${proj}_bin
+#  INSTALL_DIR ${proj}_install
+#  INSTALL_COMMAND ""
+#  CMAKE_GENERATOR ${gen}
+#  CMAKE_ARGS
+#    ${common_args}
+# -DQT_QMAKE_EXECUTABLE:FILEPATH=${QT_QMAKE_EXECUTABLE}
+#  CMAKE_CACHE_ARGS
+#    -DCMAKE_INCLUDE_CURRENT_DIR:BOOL=ON
+#   DEPENDS ${proj_DEPENDENCIES}
+#)
+
 
 include_directories(${CMAKE_SOURCE_DIR})
 

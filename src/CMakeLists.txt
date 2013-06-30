@@ -102,6 +102,8 @@ include_directories(
 # ----------
 ${CMAKE_SOURCE_DIR}/utils/glm/
 ${CMAKE_SOURCE_DIR}/utils/GLEW/
+
+${CMAKE_INSTALL_PREFIX}/utils/GLEW/
 #-----------
 
 ${CMAKE_SOURCE_DIR}
