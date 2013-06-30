@@ -121,6 +121,13 @@ ExternalProject_Add(Chipmunk2D
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
 )
 
+ExternalProject_Add(protobuf
+    SOURCE_DIR ${CMAKE_SOURCE_DIR}/dependencies/protobuf/
+    BINARY_DIR ${CMAKE_BINARY_DIR}/dependencies/build/protobuf
+    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
+    CONFIGURE_COMMAND ${CMAKE_SOURCE_DIR}/dependencies/protobuf/configure --prefix=${CMAKE_INSTALL_PREFIX}
+)
+
 endif()
 
 # ExternalProject_Add(${proj}
