@@ -98,7 +98,7 @@ if (BUILD_THIRD_PARTY_LIBRARIES STREQUAL "ON")
 
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib64 {$${CMAKE_INSTALL_PREFIX}/lib)
+set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib64 ${CMAKE_INSTALL_PREFIX}/lib)
 
 ExternalProject_Add(libRocket
     SOURCE_DIR ${CMAKE_SOURCE_DIR}/dependencies/libRocket/Build
@@ -112,6 +112,13 @@ ExternalProject_Add(enet
     BINARY_DIR ${CMAKE_BINARY_DIR}/dependencies/build/enet
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
     CONFIGURE_COMMAND ${CMAKE_SOURCE_DIR}/dependencies/enet/configure --prefix=${CMAKE_INSTALL_PREFIX}
+)
+
+ExternalProject_Add(Chipmunk2D
+    SOURCE_DIR ${CMAKE_SOURCE_DIR}/dependencies/Chipmunk2D/
+    BINARY_DIR ${CMAKE_BINARY_DIR}/dependencies/build/Chipmunk2D
+    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
 )
 
 endif()
@@ -130,7 +137,6 @@ endif()
 #   DEPENDS ${proj_DEPENDENCIES}
 #)
 
-
 include_directories(${CMAKE_SOURCE_DIR})
 
 configure_file(
@@ -139,7 +145,6 @@ configure_file(
   )
 
 include_directories("${PROJECT_BINARY_DIR}")
-
 
 #message("PROJ BIN DITR: " + ${CMAKE_SOURCE_DIR} + "/src/network/protobuf-src")
 ## protoc -I=protobuf-src --cpp_out=protobuf-compiled protobuf-src/packet.proto
