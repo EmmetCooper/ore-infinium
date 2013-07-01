@@ -26,9 +26,6 @@
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/io/coded_stream.h>
 
-#include <boost/iostreams/filtering_streambuf.hpp>
-#include <boost/iostreams/copy.hpp>
-#include <boost/iostreams/filter/zlib.hpp>
 #include "src/debug.h"
 
 #include <iostream>
@@ -110,42 +107,43 @@ Packet::PacketCompression Packet::serializeStreamContents(google::protobuf::io::
 
 std::string Packet::compress(std::stringstream* in)
 {
-    Debug::log(Debug::NetworkServerContinuousArea) << "compressing packet..precompressed size: " << in->str().size();
-    /////////////////////////////////////////////////////////////////////////////////////////////
-    boost::iostreams::filtering_streambuf<boost::iostreams::input> out;
-    std::stringstream compressedStream;
-
-    boost::iostreams::zlib_params params;
-    params.level = boost::iostreams::zlib::best_compression;
-
-    out.push(boost::iostreams::zlib_compressor(params));
-    out.push(*in);
-
-    boost::iostreams::copy(out, compressedStream);
-    /////////////////////////////////////////////////////////////////////////////////////////////
-    Debug::log(Debug::NetworkServerContinuousArea) << "compressing packet..compressed size: " << compressedStream.str().size();
-
-    return compressedStream.str();
+//    Debug::log(Debug::NetworkServerContinuousArea) << "compressing packet..precompressed size: " << in->str().size();
+//    /////////////////////////////////////////////////////////////////////////////////////////////
+//    boost::iostreams::filtering_streambuf<boost::iostreams::input> out;
+//    std::stringstream compressedStream;
+//
+//    boost::iostreams::zlib_params params;
+//    params.level = boost::iostreams::zlib::best_compression;
+//
+//    out.push(boost::iostreams::zlib_compressor(params));
+//    out.push(*in);
+//
+//    boost::iostreams::copy(out, compressedStream);
+//    /////////////////////////////////////////////////////////////////////////////////////////////
+//    Debug::log(Debug::NetworkServerContinuousArea) << "compressing packet..compressed size: " << compressedStream.str().size();
+//
+    return in->str();//compressedStream.str();
 }
 
 std::string Packet::decompress(std::stringstream* in)
 {
-    /////////////////////////////////////////////////////////////////////////////////////////////
-    boost::iostreams::filtering_streambuf<boost::iostreams::input> inbuf;
-
-    std::stringstream decompressedStream;
-
-    boost::iostreams::zlib_params params;
-
-    inbuf.push(boost::iostreams::zlib_decompressor(params));
-    inbuf.push(*in);
-
-    std::stringstream compressed;
-    boost::iostreams::copy(inbuf, decompressedStream);
-
-    /////////////////////////////////////////////////////////////////////////////////////////////
-
-    return decompressedStream.str();
+//    /////////////////////////////////////////////////////////////////////////////////////////////
+//    boost::iostreams::filtering_streambuf<boost::iostreams::input> inbuf;
+//
+//    std::stringstream decompressedStream;
+//
+//    boost::iostreams::zlib_params params;
+//
+//    inbuf.push(boost::iostreams::zlib_decompressor(params));
+//    inbuf.push(*in);
+//
+//    std::stringstream compressed;
+//    boost::iostreams::copy(inbuf, decompressedStream);
+//
+//    /////////////////////////////////////////////////////////////////////////////////////////////
+//
+//    return decompressedStream.str();
+    return in->str();//compressedStream.str();
 }
 
 uint32_t Packet::deserializePacketType(const std::string& packet)

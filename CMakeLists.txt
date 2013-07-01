@@ -62,8 +62,6 @@ find_package(LibNoise)
 
 find_package(ZLIB)
 
-find_package(Boost 1.40 COMPONENTS iostreams REQUIRED)
-
 set_package_properties(SDL2 PROPERTIES DESCRIPTION "SDL2" URL "http://hg.libsdl.org/SDL/")
 set_package_properties(SDL2 PROPERTIES TYPE REQUIRED PURPOSE "Used for setting up an OpenGL 3.0+ context as well as for input.")
 
