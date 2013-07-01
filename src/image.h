@@ -21,9 +21,6 @@
 #include "glew.h"
 
 #include <string>
-#include <FreeImage.h>
-
-struct FIBITMAP;
 
 class Image
 {
@@ -36,7 +33,7 @@ public:
 
     void flipVertically();
 
-    BYTE* bytes();
+    uint8_t* bytes();
 
 private:
 
@@ -53,10 +50,10 @@ private:
      */
     void loadImage(const std::string& filename);
 
-    FIBITMAP* m_bitmap = nullptr;
-
     uint32_t m_width = 0;
     uint32_t m_height = 0;
+
+    int m_bitmap;
 };
 
 #endif

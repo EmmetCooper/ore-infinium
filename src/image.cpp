@@ -19,7 +19,6 @@
 
 #include "debug.h"
 
-#include <FreeImage.h>
 #include <sys/stat.h>
 
 Image::Image(const std::string& fileName)
@@ -29,7 +28,7 @@ Image::Image(const std::string& fileName)
 
 Image::~Image()
 {
-    FreeImage_Unload(m_bitmap);
+   // FreeImage_Unload(m_bitmap);
 }
 
 uint32_t Image::width() const
@@ -44,7 +43,7 @@ uint32_t Image::height() const
 
 void Image::loadImage(const std::string& filename)
 {
-    FREE_IMAGE_FORMAT imageFormat = FIF_UNKNOWN;
+  //  FREE_IMAGE_FORMAT imageFormat = FIF_UNKNOWN;
 
     Debug::log(Debug::Area::ImageLoaderArea) << "Loading image: " << filename << " ... ";
 
@@ -53,31 +52,31 @@ void Image::loadImage(const std::string& filename)
 
     Debug::fatal(fileExists, Debug::Area::ImageLoaderArea, "image file failed to load, file does not exist. Filename: " + filename);
 
-    imageFormat = FreeImage_GetFileType(filename.c_str());
+ //   imageFormat = FreeImage_GetFileType(filename.c_str());
 
     //if still unknown, try to guess the file format from the file extension
-    if (imageFormat == FIF_UNKNOWN) {
-        imageFormat = FreeImage_GetFIFFromFilename(filename.c_str());
-    }
+//    if (imageFormat == FIF_UNKNOWN) {
+   //     imageFormat = FreeImage_GetFIFFromFilename(filename.c_str());
+  //  }
 
     //still unknown, we're boned.
-    if (imageFormat == FIF_UNKNOWN) {
+//    if (imageFormat == FIF_UNKNOWN) {
         Debug::fatal(false, Debug::Area::ImageLoaderArea, "failure to load image, type unknown");
-    }
+ //   }
 
     //check that the plugin has reading capabilities for this file and load the file
-    if (FreeImage_FIFSupportsReading(imageFormat)) {
-        m_bitmap = FreeImage_Load(imageFormat, filename.c_str());
-    } else {
+ //   if (FreeImage_FIFSupportsReading(imageFormat)) {
+//        m_bitmap = FreeImage_Load(imageFormat, filename.c_str());
+  //  } else {
         // we can't read this!
         Debug::assertf(false , "failure to load image, we don't support reading that image type!");
-    }
+   // }
 
     Debug::fatal(m_bitmap, Debug::Area::ImageLoaderArea, "failure to load image, bitmap pointer invalid");
 
-    m_width = FreeImage_GetWidth(m_bitmap);
-    m_height = FreeImage_GetHeight(m_bitmap);
-
+//    m_width = FreeImage_GetWidth(m_bitmap);
+//    m_height = FreeImage_GetHeight(m_bitmap);
+//
     if (m_width == 0 || m_height == 0) {
         Debug::fatal(false, Debug::Area::ImageLoaderArea, "failure to load image, bitmap sizes invalid or bits invalid");
     }
@@ -85,11 +84,11 @@ void Image::loadImage(const std::string& filename)
 
 void Image::flipVertically()
 {
-    FreeImage_FlipVertical(m_bitmap);
 }
 
-BYTE* Image::bytes()
+uint8_t* Image::bytes()
 {
     Debug::fatal(m_bitmap, Debug::Area::ImageLoaderArea, "bitmap invalid!");
-    return FreeImage_GetBits(m_bitmap);
+//    return FreeImage_GetBits(m_bitmap);
+    return nullptr;
 }

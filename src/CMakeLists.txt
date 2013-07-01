@@ -73,7 +73,12 @@ add_dependencies(ore-infinium zlib)
 add_dependencies(ore-infinium libRocket)
 add_dependencies(ore-infinium enet)
 add_dependencies(ore-infinium protobuf)
-add_dependencies(ore-infinium FreeImage)
+add_dependencies(ore-infinium SDL_image)
+
+set(CLEANPATH1 ${CMAKE_INSTALL_PREFIX}/build/SDL_image/)
+set(CLEANPATH1 ${CMAKE_SOURCE_DIR}/dependencies/SDL_image/)
+set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${CLEANPATH1}/config.status;${CLEANPATH1}/Makefile")
+#set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${CLEANPATH2}/SDL2_image.pc;${CLEANPATH2}/SDL2_image.spec;${CLEANPATH2}/Makefile;${CLEANPATH2}/.deps;${CLEANPATH2}/config.cache;${CLEANPATH2}/config.status")
 
 ExternalProject_Add(libRocket
     SOURCE_DIR ${CMAKE_SOURCE_DIR}/dependencies/libRocket/Build
@@ -110,20 +115,13 @@ ExternalProject_Add(protobuf
     CONFIGURE_COMMAND ${CMAKE_SOURCE_DIR}/dependencies/protobuf/configure --prefix=${CMAKE_INSTALL_PREFIX}
 )
 
-#ExternalProject_Add(SDL_image
-#    SOURCE_DIR ${CMAKE_SOURCE_DIR}/dependencies/SDL_image/
-#    BINARY_DIR ${CMAKE_BINARY_DIR}/dependencies/build/SDL_image
-#    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-#    CONFIGURE_COMMAND ${CMAKE_SOURCE_DIR}/dependencies/SDL_image/configure --prefix=${CMAKE_INSTALL_PREFIX}
-#)
-#
-#ExternalProject_Add(FreeImage
-#    SOURCE_DIR ${CMAKE_SOURCE_DIR}/dependencies/FreeImage/
-#    BINARY_DIR ${CMAKE_BINARY_DIR}/dependencies/build/FreeImage
-#    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-#    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
-#)
-#
+ExternalProject_Add(SDL_image
+    SOURCE_DIR ${CMAKE_SOURCE_DIR}/dependencies/SDL_image/
+    BINARY_DIR ${CMAKE_BINARY_DIR}/dependencies/build/SDL_image
+    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
+    CONFIGURE_COMMAND ${CMAKE_SOURCE_DIR}/dependencies/SDL_image/configure --prefix=${CMAKE_INSTALL_PREFIX} --disable-bmp
+)
+
 endif()
 
 find_program(PROTOC_EXEC NAME protoc
@@ -166,7 +164,6 @@ ${CMAKE_INSTALL_PREFIX}/utils/GLEW/
 ${CMAKE_SOURCE_DIR}
 ${SDL2_INCLUDE_DIR}
 ${SDLIMAGE_INCLUDE_DIR}
-${FREEIMAGE_INCLUDE_PATH}
 ${FREETYPE_INCLUDE_DIRS}
 ${YAMLCPP_INCLUDE_DIR}
 ${LIBROCKET_INCLUDE_DIRS}
@@ -183,7 +180,6 @@ ${SDL2_LIBRARY}
 ${SDL2MAIN_LIBRARY}
 ${SDLIMAGE_LIBRARY}
 ${ZLIB_LIBRARY}
-${FREEIMAGE_LIBRARY}
 ${FREETYPE_LIBRARY}
 ${OPENGL_LIBRARIES}
 ${LIBROCKET_LIBRARIES}
