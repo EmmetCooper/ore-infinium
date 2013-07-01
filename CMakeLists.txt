@@ -48,6 +48,7 @@ find_package(SDL2)
 
 find_package(OpenGL)
 
+find_package(WebP)
 find_package(SDL_image)
 
 find_package(YamlCpp)
@@ -81,8 +82,11 @@ set_package_properties(Chipmunk PROPERTIES TYPE REQUIRED PURPOSE "I use it for e
 set_package_properties(LibRocket PROPERTIES DESCRIPTION "LibRocket Cross-Platform GUI library that is described with CSS and HTML" URL "https://github.com/lloydw/libRocket")
 set_package_properties(LibRocket PROPERTIES TYPE REQUIRED PURPOSE "For our game's user interface (inventory, game menu, etc.)")
 
-set_package_properties(enet PROPERTIES DESCRIPTION "enet reliabale UDP networking library" URL "http://enet.bespin.org/index.html")
+set_package_properties(enet PROPERTIES DESCRIPTION "enet reliable UDP networking library" URL "http://enet.bespin.org/index.html")
 set_package_properties(enet PROPERTIES TYPE REQUIRED PURPOSE "For networking, obviously.")
+
+set_package_properties(WebP PROPERTIES DESCRIPTION "Google's 'better than PNG' image format for textures" URL "")
+set_package_properties(WebP PROPERTIES TYPE REQUIRED PURPOSE "For loading stored textures")
 
 set_package_properties(Protobuf PROPERTIES DESCRIPTION "Google's protobuf Protocol Buffers implementation" URL "http://code.google.com/p/protobuf/")
 set_package_properties(Protobuf PROPERTIES TYPE REQUIRED PURPOSE "For serializing and deserializing data in a cross-architecture/platform manner. Used for network communication as well as saving game files and such.")
