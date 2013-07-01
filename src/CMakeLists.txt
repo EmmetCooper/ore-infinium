@@ -122,7 +122,8 @@ ExternalProject_Add(SDL_image
     SOURCE_DIR ${CMAKE_SOURCE_DIR}/dependencies/SDL_image/
     BINARY_DIR ${CMAKE_BINARY_DIR}/dependencies/build/SDL_image
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-    CONFIGURE_COMMAND ${CMAKE_SOURCE_DIR}/dependencies/SDL_image/configure --prefix=${CMAKE_INSTALL_PREFIX} --disable-bmp
+    CONFIGURE_COMMAND ${CMAKE_SOURCE_DIR}/dependencies/SDL_image/configure --prefix=${CMAKE_INSTALL_PREFIX} --disable-bmp --disable-jpg --disable-gif --disable-pcx --disable-png --disable-png-shared --disable-tif --disable-tga --disable-xv --disable-xpm --disable-xcf --disable-pnm --disable-lbm --disable-jpg-shared --enable-webp --disable-webp-shared
+
 )
 
 ExternalProject_Add(freetype2
@@ -133,6 +134,7 @@ ExternalProject_Add(freetype2
 )
 
 add_dependencies(SDL_image libwebp)
+#add_dependencies(SDL_image SDL)
 add_dependencies(libRocket freetype2)
 
 ExternalProject_Add(libwebp
