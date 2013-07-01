@@ -74,6 +74,7 @@ add_dependencies(ore-infinium libRocket)
 add_dependencies(ore-infinium enet)
 add_dependencies(ore-infinium protobuf)
 add_dependencies(ore-infinium SDL_image)
+add_dependencies(ore-infinium libwebp)
 
 set(CLEANPATH1 ${CMAKE_INSTALL_PREFIX}/build/SDL_image/)
 set(CLEANPATH1 ${CMAKE_SOURCE_DIR}/dependencies/SDL_image/)
@@ -120,6 +121,15 @@ ExternalProject_Add(SDL_image
     BINARY_DIR ${CMAKE_BINARY_DIR}/dependencies/build/SDL_image
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
     CONFIGURE_COMMAND ${CMAKE_SOURCE_DIR}/dependencies/SDL_image/configure --prefix=${CMAKE_INSTALL_PREFIX} --disable-bmp
+)
+
+add_dependencies(SDL_image libwebp)
+
+ExternalProject_Add(libwebp
+    SOURCE_DIR ${CMAKE_SOURCE_DIR}/dependencies/libwebp/
+    BINARY_DIR ${CMAKE_BINARY_DIR}/dependencies/build/libwebp
+    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
+    CONFIGURE_COMMAND ${CMAKE_SOURCE_DIR}/dependencies/libwebp/configure --prefix=${CMAKE_INSTALL_PREFIX} --enable-libwebpdecoder
 )
 
 endif()
