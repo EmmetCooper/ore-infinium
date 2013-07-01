@@ -43,6 +43,8 @@ ones.
 
 * SDL 2.0+ (http://www.libsdl.org/hg.php)
 
+* SDL_image for loading images so we can use them as textures
+
 * protobuf (google's libprotobuf. needs both the library and the 'protoc'
 binary, which e.g. ubuntu ships in a separate package
 
@@ -59,13 +61,13 @@ need to get this.)
 * FreeType (librocket already requires that so if you have that you should be
 fine).
 
+* WebP (libwebp) all of the shipped images/textures are stored in this format,
+just for kicks. Google's WebP has a lot of nice things with it, one of which is
+better compression than PNG.
+
+
 * OpenAL-Soft >= 1.14 (http://kcat.strangesoft.net/openal.html#download) - NOT
 PRESENTLY USED, NO AUDIO SYSTEM CREATED YET, SO DONT WORRY ABOUT IT YET.
-
-* C++11 compatible compiler (at least GCC 4.7 is fine and clang 3.2 or above).
-MSVC/Visual Studio is particularly a retarded cousin of other compilers,
-so you can likely forget about that compiling for several years,
-as is the case with most projects.
 
 * YAML-CPP == 0.3.0. (https://code.google.com/p/yaml-cpp/source/checkout) NOT GREATER THAN.
 
@@ -77,7 +79,13 @@ Kind of a pain in the ass, but whatever.
 
 * ZLib (http://www.zlib.net/ and https://github.com/madler/zlib)  for compression, for both my network packets and file saving, etc.
 
-* Boost 1.40 (iostreams)
+--------------------------------------
+
+NOTE: you need a C++11 compatible compiler (at least GCC 4.7 is fine and clang 3.2 or above).
+MSVC/Visual Studio is particularly a retarded cousin of other compilers,
+so you can likely forget about that compiling for several years,
+as is the case with most projects.
+
 
 -----------------------------------------------------------------------------------------
 NOTE: I do not apply custom patches to said dependencies, I push all of my code
