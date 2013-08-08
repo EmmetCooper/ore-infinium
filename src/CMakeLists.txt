@@ -157,7 +157,7 @@ ${CMAKE_INSTALL_PREFIX}/protobuf/src
 
 if (NOT PROTOC_EXEC)
     message(FATAL_ERROR
-    "ERROR: Unable to launch protoc. The 'protoc' binary is a required build-time dependency. If this message is in error, check the output of 'which protoc' maybe the search paths need fixed in this file."
+    "ERROR: We couldn't launch launch protoc. We need the 'protoc' binary for at build time to generate network shit. If this message is in error, check the output of 'which protoc' maybe the search paths need fixed in this file."
     )
 endif (NOT PROTOC_EXEC)
 
