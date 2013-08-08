@@ -35,10 +35,7 @@ Here's a list of the dependencies I use, just to keep in mind. Commands are furt
 
 
 ---------------------
-NOTE: I made the buildsystem in such a way that the source files of the
-dependencies it needs reside in dependencies/, so when the proper flag is passed
-to CMake, it will compile those instead of attempting to search for your system
-ones.
+NOTE: There is a python automatic dependency build script (TODO, very much so ;)
 ---------------------
 
 * SDL 2.0+ (http://www.libsdl.org/hg.php)

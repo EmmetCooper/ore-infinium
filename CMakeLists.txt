@@ -101,20 +101,6 @@ feature_summary(WHAT ALL)
 #   DEPENDS ${proj_DEPENDENCIES}
 
 
-# ExternalProject_Add(${proj}
-#  SOURCE_DIR ${Log4Qt_SOURCE_DIR}
-#  BINARY_DIR ${proj}_bin
-#  INSTALL_DIR ${proj}_install
-#  INSTALL_COMMAND ""
-#  CMAKE_GENERATOR ${gen}
-#  CMAKE_ARGS
-#    ${common_args}
-# -DQT_QMAKE_EXECUTABLE:FILEPATH=${QT_QMAKE_EXECUTABLE}
-#  CMAKE_CACHE_ARGS
-#    -DCMAKE_INCLUDE_CURRENT_DIR:BOOL=ON
-#   DEPENDS ${proj_DEPENDENCIES}
-#)
-
 include_directories(${CMAKE_SOURCE_DIR})
 
 configure_file(
