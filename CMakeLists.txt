@@ -7,7 +7,6 @@ option(BUILD_THIRD_PARTY_LIBRARIES "Set to ON to automatically build included 3r
 project(ore-infinium)
 
 include(FeatureSummary)
-include(ExternalProject)
 
 # Enable debug symbols by default
 #
