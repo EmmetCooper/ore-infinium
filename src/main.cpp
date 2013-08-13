@@ -15,6 +15,8 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
+#define GLEW_BUILD
+
 //TODO: possible some of these may not be wanted, but what the hell, lets try it!
 #define GLM_PRECISION_HIGHP_FLOAT
 #define GLM_FORCE_CXX11

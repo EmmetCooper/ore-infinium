@@ -68,8 +68,6 @@
 
 #include "glm/core/func_common.hpp"
 
-#include <FreeImage.h>
-
 //HACK: thinkw e're going to go away from libnoise
 using namespace noise;
 

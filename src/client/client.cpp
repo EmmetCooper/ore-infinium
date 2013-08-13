@@ -46,6 +46,7 @@
 #include <random>
 
 #include <GL/glew.h>
+#include <SDL/SDL_image.h>
 
 Client::Client()
 {
@@ -117,6 +118,9 @@ void Client::initSDL()
     if (!m_window) {
         Debug::checkSDLError();
     }
+
+    int ret = IMG_Init(IMG_INIT_PNG);
+    assert(ret != 0);
 
 //    glewExperimental = GL_TRUE;
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);

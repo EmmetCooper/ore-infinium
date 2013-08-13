@@ -20,7 +20,7 @@
 
 #include "debug.h"
 
-#include <FreeImage.h>
+#include "glew.h"
 
 Texture::Texture(const std::string& fileName)
 {
@@ -76,6 +76,8 @@ void Texture::generate(Texture::TextureFilter textureFilter)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
+    /*
+     * FIXME:
     BYTE* bits = m_image->bytes();
     Debug::assertf(bits, "Image::generate, could not gen texture, image bits are empty.");
 
@@ -85,6 +87,7 @@ void Texture::generate(Texture::TextureFilter textureFilter)
     m_border = 0;
     glTexImage2D(GL_TEXTURE_2D, m_level, m_internal_format, m_width, m_height, m_border, m_image_format, GL_UNSIGNED_BYTE, bits);
 
+    */
     Debug::checkGLError();
 }
 
