@@ -45,8 +45,6 @@ uint32_t Image::height() const
 
 void Image::loadImage(const std::string& filename)
 {
-  //  FREE_IMAGE_FORMAT imageFormat = FIF_UNKNOWN;
-
     Debug::log(Debug::Area::ImageLoaderArea) << "Loading image: " << filename << " ... ";
 
     struct stat fileAttribute;
@@ -54,9 +52,7 @@ void Image::loadImage(const std::string& filename)
 
     Debug::fatal(fileExists, Debug::Area::ImageLoaderArea, "image file failed to load, file does not exist. Filename: " + filename);
 
- //   imageFormat = FreeImage_GetFileType(filename.c_str());
     SDL_Surface* loadedImage = IMG_Load(filename.c_str());
-
 
     //if still unknown, try to guess the file format from the file extension
 //    if (imageFormat == FIF_UNKNOWN) {
