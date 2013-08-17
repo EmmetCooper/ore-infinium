@@ -53,7 +53,6 @@ void Image::loadImage(const std::string& filename)
     Debug::fatal(fileExists, Debug::Area::ImageLoaderArea, "image file failed to load, file does not exist. Filename: " + filename);
 
     SDL_Surface* loadedImage = IMG_Load(filename.c_str());
-
     //if still unknown, try to guess the file format from the file extension
 //    if (imageFormat == FIF_UNKNOWN) {
    //     imageFormat = FreeImage_GetFIFFromFilename(filename.c_str());

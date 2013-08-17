@@ -131,7 +131,7 @@ void Client::initSDL()
     // FIXME: i *want 3.2, but Mesa 9 only has 3.0.. :(
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
 
     /* Turn on double buffering with a 24bit Z buffer.
      * You may need to change this to 16 or 32 for your system */
@@ -142,6 +142,8 @@ void Client::initSDL()
     //SDL_GL_ExtensionSupported();
 
     m_GLcontext = SDL_GL_CreateContext(m_window);
+    Debug::assertf(m_GLcontext != nullptr, "SDL GL Context creation failure! Context nullptr.");
+    Debug::checkGLError();
 
 //FIXME: doesn't do shit
     SDL_GL_SetSwapInterval(1);
@@ -153,7 +155,23 @@ void Client::initSDL()
 
     Debug::checkSDLError();
     Debug::checkGLError();
-    Debug::assertf(glewInit() == GLEW_OK, "glewInit returned !GLEW_OK. No GL context can be formed..bailing out");
+
+    glewExperimental = true;
+
+    int retGLEW = glewInit();
+
+    Debug::log(Debug::Area::StartupArea) << "glewInit return code: " << retGLEW;
+    
+    for(int i = 0; i < 100; ++i) {
+      Debug::checkGLErrorSafe();
+    }
+
+    Debug::checkGLError();
+
+
+    Debug::assertf(retGLEW == GLEW_OK, "glewInit returned !GLEW_OK. No GL context can be formed..bailing out");
+
+    Debug::checkGLError();
 
     Debug::log(Debug::Area::StartupArea) << "Platform: Driver Vendor: " << glGetString(GL_VENDOR);
     Debug::log(Debug::Area::StartupArea) << "Platform: Renderer: " << glGetString(GL_RENDERER);

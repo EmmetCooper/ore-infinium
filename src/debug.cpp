@@ -55,9 +55,19 @@ void Debug::fatal(bool value, Debug::Area area, const std::string& message)
 void Debug::checkGLError()
 {
     GLenum error = glGetError();
+
     if (error != GL_NO_ERROR) {
-        Debug::log(Debug::Area::ClientRendererArea) << gluErrorString(error);
+	Debug::log(Debug::Area::ClientRendererArea) << "GL error code: " << error << " STRING:" << gluErrorString(error);
         assert(0);
+    }
+}
+
+void Debug::checkGLErrorSafe()
+{
+    GLenum error = glGetError();
+
+    if (error != GL_NO_ERROR) {
+	Debug::log(Debug::Area::ClientRendererArea) << "GL error code: " << error << " STRING:" << gluErrorString(error);
     }
 }
 

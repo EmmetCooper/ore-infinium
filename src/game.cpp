@@ -64,7 +64,8 @@ void Game::abort_game(const char* message)
 void Game::init()
 {
     if (m_startupDebugLogging) {
-        Settings::instance()->debugAreas |= Debug::Area::StartupArea;
+        Settings::instance()->debugAreas |= Debug::Area::StartupArea | Debug::Area::ImageLoaderArea | Debug::Area::GUILoggerArea | Debug::Area::SettingsArea
+        | Debug::Area::ShadersArea | Debug::Area::ImportantArea | Debug::Area::ClientRendererArea;
     }
 
     Block::initBlockTypes();
