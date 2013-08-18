@@ -25,20 +25,24 @@
 #include "src/client/client.h"
 
 #include "src/debug.h"
-#include <src/camera.h>
-#include <src/world.h>
-#include <src/chunk.h>
-#include <src/time.h>
-#include <src/torch.h>
-#include <src/quickbarinventory.h>
-#include <src/globals.h>
-#include <src/tool.h>
+#include "src/camera.h"
+#include "src/world.h"
+#include "src/chunk.h"
+#include "src/time.h"
+#include "src/torch.h"
+#include "src/quickbarinventory.h"
+#include "src/globals.h"
+#include "src/tool.h"
+#include "src/settings/settings.h"
 #include "src/../config.h"
 
 #include <google/protobuf/stubs/common.h>
 #include <google/protobuf/io/zero_copy_stream.h>
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/io/coded_stream.h>
+
+#include <SDL2/SDL.h>
+#include <zlib.h>
 
 #include <iostream>
 #include <fstream>
@@ -47,9 +51,7 @@
 #include <thread>
 #include <unordered_set>
 
-#include <zlib.h>
 #include <algorithm>
-#include <SDL2/SDL.h>
 
 Server::Server()
 {
@@ -75,7 +77,7 @@ void Server::init(uint8_t maxClients, uint32_t port, Client* client)
                                 0 /* assume any amount of incoming bandwidth */,
                                 0 /* assume any amount of outgoing bandwidth */);
 
-    Debug::assertf(m_server, "failed to create ENet server");
+   Debug::assertf(m_server, "failed to create ENet server");
 
     m_world = new World(nullptr, nullptr, this);
 }
@@ -128,8 +130,17 @@ void Server::poll()
         case ENET_EVENT_TYPE_CONNECT:
             Debug::log(Debug::Area::NetworkServerContinuousArea) << "Received a new peer, adding to client list, connection from host:  " << event.peer->address.host << " at port: " << event.peer->address.port << " client has not yet been validated.";
             Debug::log(Debug::Area::NetworkServerContinuousArea) << "client count, before adding: " << m_clients.size();
+
             //NOTE: we don't actually act on it, first we wait for them to send us a packet then we validate it and if so we add it to our client list
             //FIXME: probably should timeout if they're not validated within n seconds, that way they can't just keep piling on top of us
+
+            // in debug mode, so set an insane timeout value
+            if (Settings::instance()->startupFlags() & Settings::NoTimeoutStartupFlag) {
+                Debug::log(Debug::ImportantArea) << "server reports an initial peer connection; setting timeout to absurdity as --no-timeout is set.";
+                enet_peer_timeout(event.peer, 0, 3600 * 1000, 3600 * 1000);
+            }
+
+
 
             //DEFAULT IS 5000
 //                event.peer->timeoutMinimum = 2000;

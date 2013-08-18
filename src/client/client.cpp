@@ -266,7 +266,7 @@ void Client::render(double frameTime)
     // only a client-hosted server has a chance of seeing any debug shit
     if (m_server) {
         if (!m_physicsDebugRenderer && m_world && m_world->spriteSheetRenderer()) {
-            m_physicsDebugRenderer = new PhysicsDebugRenderer(m_world->spriteSheetRenderer()->camera());
+//FIXME:HACK:            m_physicsDebugRenderer = new PhysicsDebugRenderer(m_world->spriteSheetRenderer()->camera());
             // physics debug renderer first init...
 //            m_box2DWorld->SetDebugDraw(m_physicsDebugRenderer);
         }
@@ -533,6 +533,10 @@ bool Client::connect(const char* address, unsigned int port)
     m_address.port = port;
 
     m_peer = enet_host_connect(m_client, &m_address, 2, 0);
+
+    if (Settings::instance()->startupFlags() & Settings::NoTimeoutStartupFlag) {
+        enet_peer_timeout(m_peer, 0, 3600 * 1000, 3600 * 1000);
+    }
 
     if (m_peer == NULL) {
         Debug::log(Debug::Area::NetworkClientInitialArea) << "Client failed to connect to server";
