@@ -83,7 +83,7 @@ void Client::init()
 
     m_debugMenu = new DebugMenu(this);
     m_debugMenu->show();
-    startMultiplayerHost("SOME PLAYER NAME");
+//FIXME: TEMP    startMultiplayerHost("SOME PLAYER NAME");
 //dws    std::stringstream ss;
 //    ss << "Player";
 //    std::random_device device;
@@ -161,7 +161,7 @@ void Client::initSDL()
     int retGLEW = glewInit();
 
     Debug::log(Debug::Area::StartupArea) << "glewInit return code: " << retGLEW;
-    
+
     for(int i = 0; i < 100; ++i) {
       Debug::checkGLErrorSafe();
     }

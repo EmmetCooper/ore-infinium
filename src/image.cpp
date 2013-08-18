@@ -30,17 +30,17 @@ Image::Image(const std::string& fileName)
 
 Image::~Image()
 {
-   // FreeImage_Unload(m_bitmap);
+  SDL_FreeSurface(m_surface);
 }
 
 uint32_t Image::width() const
 {
-    return m_width;
+    return m_surface->w;
 }
 
 uint32_t Image::height() const
 {
-    return m_height;
+    return m_surface->h;
 }
 
 void Image::loadImage(const std::string& filename)
@@ -52,32 +52,16 @@ void Image::loadImage(const std::string& filename)
 
     Debug::fatal(fileExists, Debug::Area::ImageLoaderArea, "image file failed to load, file does not exist. Filename: " + filename);
 
-    SDL_Surface* loadedImage = IMG_Load(filename.c_str());
-    //if still unknown, try to guess the file format from the file extension
-//    if (imageFormat == FIF_UNKNOWN) {
-   //     imageFormat = FreeImage_GetFIFFromFilename(filename.c_str());
-  //  }
+    m_surface = IMG_Load(filename.c_str());
 
-    //still unknown, we're boned.
-//    if (imageFormat == FIF_UNKNOWN) {
-        Debug::fatal(false, Debug::Area::ImageLoaderArea, "failure to load image, type unknown");
- //   }
+    Debug::fatal(m_surface, Debug::Area::ImageLoaderArea, "failure to load image, bitmap pointer invalid");
+    Debug::fatal(m_surface->w > 0, Debug::Area::ImageLoaderArea, "failure to load image, width is 0");
+    Debug::fatal(m_surface->h > 0, Debug::Area::ImageLoaderArea, "failure to load image, height is 0");
 
-    //check that the plugin has reading capabilities for this file and load the file
- //   if (FreeImage_FIFSupportsReading(imageFormat)) {
-//        m_bitmap = FreeImage_Load(imageFormat, filename.c_str());
-  //  } else {
-        // we can't read this!
-        Debug::assertf(false , "failure to load image, we don't support reading that image type!");
-   // }
-
-    Debug::fatal(m_bitmap, Debug::Area::ImageLoaderArea, "failure to load image, bitmap pointer invalid");
-
-//    m_width = FreeImage_GetWidth(m_bitmap);
-//    m_height = FreeImage_GetHeight(m_bitmap);
-//
-    if (m_width == 0 || m_height == 0) {
-        Debug::fatal(false, Debug::Area::ImageLoaderArea, "failure to load image, bitmap sizes invalid or bits invalid");
+    if(m_surface->format->BytesPerPixel == 4) {
+        m_format = GL_BGRA;
+    } else {
+        Debug::fatal(false, Debug::ImageLoaderArea, "image format is different than what we're used to. format is NOT GL_RGBA");
     }
 }
 
@@ -85,9 +69,8 @@ void Image::flipVertically()
 {
 }
 
-uint8_t* Image::bytes()
+void* Image::bytes()
 {
-    Debug::fatal(m_bitmap, Debug::Area::ImageLoaderArea, "bitmap invalid!");
-//    return FreeImage_GetBits(m_bitmap);
-    return nullptr;
+    Debug::fatal(m_surface, Debug::Area::ImageLoaderArea, "bitmap invalid!");
+    return m_surface->pixels;
 }

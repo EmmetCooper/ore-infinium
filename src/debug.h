@@ -75,6 +75,10 @@ public:
     static LogStream log(Area area);
 
     static void assertf(bool value, const std::string& message);
+    
+    /**
+     * 
+     */
     static void fatal(bool value, Area area, const std::string& message);
 
     static void checkGLError();

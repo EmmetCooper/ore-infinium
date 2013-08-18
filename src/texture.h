@@ -30,18 +30,19 @@ public:
     explicit Texture(const std::string& fileName);
     ~Texture();
 
-    unsigned int width() const;
-    unsigned int height() const;
+    uint32_t width() const;
+    uint32_t height() const;
 
     enum TextureFilter {
         TextureFilterLinear,
         TextureFilterNearest
     };
 
+    int format() const;
+
     void bind();
     void generate(TextureFilter textureFilter);
-    GLuint textureHandle();
-
+    GLuint textureHandle() const;
 
 private:
     void loadImage(const std::string& fileName);

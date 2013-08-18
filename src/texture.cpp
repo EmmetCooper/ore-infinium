@@ -40,6 +40,11 @@ void Texture::loadImage(const std::string& filename)
     m_width = m_image->width();
 }
 
+int Texture::format() const {
+    Debug::assertf(m_image, "image pointer not existent through texture interface, but format was requested; BUG");
+    return m_image->format();
+}
+
 void Texture::bind()
 {
     Debug::assertf(m_textureID, "bind called before generate on Image");
@@ -52,7 +57,7 @@ void Texture::bind()
 void Texture::generate(Texture::TextureFilter textureFilter)
 {
     Debug::checkGLError();
-//    glActiveTexture(GL_TEXTURE0);
+//    glActiveTexture(GL_TEXTURE0); JUNK?
 
     glGenTextures(1, &m_textureID);
     glBindTexture(GL_TEXTURE_2D, m_textureID);
@@ -70,28 +75,23 @@ void Texture::generate(Texture::TextureFilter textureFilter)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         break;
-
     }
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    /*
-     * FIXME:
-    BYTE* bits = m_image->bytes();
-    Debug::assertf(bits, "Image::generate, could not gen texture, image bits are empty.");
+    void* bytes = m_image->bytes();
+    Debug::assertf(bytes, "Image::generate, could not gen texture, image bits are empty.");
 
     m_internal_format = GL_RGBA;
-    m_image_format = GL_BGRA;
     m_level = 0;
     m_border = 0;
-    glTexImage2D(GL_TEXTURE_2D, m_level, m_internal_format, m_width, m_height, m_border, m_image_format, GL_UNSIGNED_BYTE, bits);
+    glTexImage2D(GL_TEXTURE_2D, m_level, m_internal_format, m_width, m_height, m_border, m_image->format(), GL_UNSIGNED_BYTE, bytes);
 
-    */
     Debug::checkGLError();
 }
 
-GLuint Texture::textureHandle()
+GLuint Texture::textureHandle() const
 {
     return m_textureID;
 }

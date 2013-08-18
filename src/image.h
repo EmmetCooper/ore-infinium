@@ -22,18 +22,23 @@
 
 #include <string>
 
+struct SDL_Surface;
 class Image
 {
 public:
     explicit Image(const std::string& fileName);
     ~Image();
 
-    unsigned int width() const;
-    unsigned int height() const;
+    uint32_t width() const;
+    uint32_t height() const;
 
     void flipVertically();
 
-    uint8_t* bytes();
+    void* bytes();
+
+    int format() const {
+        return m_format;
+    }
 
 private:
 
@@ -50,10 +55,9 @@ private:
      */
     void loadImage(const std::string& filename);
 
-    uint32_t m_width = 0;
-    uint32_t m_height = 0;
+    SDL_Surface* m_surface = nullptr;
 
-    int m_bitmap;
+    int m_format = GL_RGBA;
 };
 
 #endif
