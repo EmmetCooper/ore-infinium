@@ -51,8 +51,10 @@ TileRenderer::TileRenderer(World* world, Camera* camera, Entities::Player* mainP
     glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, 0);
     glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP);
-    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP);
+    Debug::checkGLError();
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    Debug::checkGLError();
 
     const GLint level = 0;
     glTexImage3D(GL_TEXTURE_2D_ARRAY, level, GL_RGBA, Block::BLOCK_SIZE_PIXELS, Block::BLOCK_SIZE_PIXELS, Block::blockTypes.size() + Block::wallTypes.size(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr /* if it's null it tells GL we will send in 2D images as elements one by one, later */);
@@ -61,17 +63,19 @@ TileRenderer::TileRenderer(World* world, Camera* camera, Entities::Player* mainP
     const GLint yoffset = 0;
     const GLsizei depth = 1;
 
+    Debug::checkGLError();
     for (size_t i = 0; i < Block::blockTypes.size(); ++i) {
         Image image(Block::blockTypes.at(i).texture);
 
-        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, level, xoffset, yoffset, i, Block::BLOCK_SIZE_PIXELS, Block::BLOCK_SIZE_PIXELS, depth, GL_BGRA, GL_UNSIGNED_BYTE, image.bytes());
+        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, level, xoffset, yoffset, i, Block::BLOCK_SIZE_PIXELS, Block::BLOCK_SIZE_PIXELS, depth, GL_RGBA, GL_UNSIGNED_BYTE, image.bytes());
     }
 
     for (size_t i = 0; i < Block::wallTypes.size(); ++i) {
         Image image(Block::wallTypes.at(i).texture);
 
-        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, level, xoffset, yoffset, (Block::blockTypes.size() + i), Block::BLOCK_SIZE_PIXELS, Block::BLOCK_SIZE_PIXELS, depth, GL_BGRA, GL_UNSIGNED_BYTE, image.bytes());
+        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, level, xoffset, yoffset, (Block::blockTypes.size() + i), Block::BLOCK_SIZE_PIXELS, Block::BLOCK_SIZE_PIXELS, depth, GL_RGBA, GL_UNSIGNED_BYTE, image.bytes());
     }
+    Debug::checkGLError();
 }
 
 TileRenderer::~TileRenderer()
@@ -108,6 +112,7 @@ GLuint TileRenderer::fboTexture()
 
 void TileRenderer::render()
 {
+    Debug::checkGLError();
     glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
     glBindRenderbuffer(GL_RENDERBUFFER, m_rb);
 
@@ -145,6 +150,7 @@ void TileRenderer::render()
     //columns are our X value, rows the Y
     const int startColumn = std::max(static_cast<int>(tilesBeforeX - (halfScreenMetersWidth / transformedTileSize)) - 2, 0);
     const int endColumn = std::min(static_cast<int>(tilesBeforeX + (halfScreenMetersWidth / transformedTileSize) + 2), static_cast<int>(WORLD_COLUMNCOUNT));
+    Debug::checkGLError();
 
     //Debug:: log(Debug::TileRendererArea) << "tilesBeforeX: " << tilesBeforeX << " tilebeforeY: " << tilesBeforeY;
     //Debug:: log(Debug::TileRendererArea) << "halfScreenMetersHeight: " << halfScreenMetersHeight << " Width: " << halfScreenMetersWidth;
@@ -159,9 +165,14 @@ void TileRenderer::render()
         assert(0);
     }
 
+    Debug::checkGLError();
+
     glBindVertexArray(m_vao);
+    Debug::checkGLError();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+    Debug::checkGLError();
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    Debug::checkGLError();
 
     const uint32_t totalTiles = (endRow - startRow) * (endColumn - startColumn);
     if (totalTiles > m_highestTileCount || m_firstRun) {
@@ -342,15 +353,20 @@ void TileRenderer::initGL()
     GLenum buffers[] = { GL_COLOR_ATTACHMENT0 };
     glDrawBuffers(1, buffers);
 
+    Debug::checkGLError();
     glGenTextures(1, &m_fboTexture);
     glBindTexture(GL_TEXTURE_2D, m_fboTexture);
 
+    Debug::checkGLError();
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+    Debug::checkGLError();
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    Debug::checkGLError();
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Settings::instance()->screenResolutionWidth, Settings::instance()->screenResolutionHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    Debug::checkGLError();
 
     // Attach the texture to the FBO
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_fboTexture, 0);

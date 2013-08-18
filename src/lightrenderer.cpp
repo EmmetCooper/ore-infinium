@@ -42,10 +42,12 @@ LightRenderer::LightRenderer(World* world, Camera* camera, Entities::Player* mai
     :   m_mainPlayer(mainPlayer),
         m_world(world)
 {
+    Debug::checkGLError();
     m_shader = new Shader("lightrenderer.vert", "lightrenderer.frag");
     m_shaderPassthrough = new Shader("lightrendererpassthrough.vert", "lightrendererpassthrough.frag");
     setCamera(camera);
 
+    Debug::checkGLError();
     initGL();
 }
 
@@ -331,13 +333,16 @@ void LightRenderer::renderToBackbuffer()
 
 void LightRenderer::initGL()
 {
+    Debug::checkGLError();
     glGenFramebuffers(1, &m_fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
 
+    Debug::checkGLError();
     glGenRenderbuffers(1, &m_rb);
     glBindRenderbuffer(GL_RENDERBUFFER, m_rb);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, Settings::instance()->screenResolutionWidth, Settings::instance()->screenResolutionHeight);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_rb);
+    Debug::checkGLError();
 
     GLenum buffers[] = { GL_COLOR_ATTACHMENT0 };
     glDrawBuffers(1, buffers);
@@ -345,24 +350,33 @@ void LightRenderer::initGL()
     // torch lightmap texture
     glGenTextures(1, &m_torchLightTexture);
     glBindTexture(GL_TEXTURE_2D, m_torchLightTexture);
+    Debug::checkGLError();
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+    Debug::checkGLError();
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    Debug::checkGLError();
+//FIXME:HACK:why does this param break on my mesa laptop?    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//FIXME:HACK:why does this param break on my mesa laptop?    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+//   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    Debug::checkGLError();
 
     Image image("../textures/torch light.png");
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width(), image.height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, image.bytes());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.bytes());
 
     glGenTextures(1, &m_fboTexture);
     glBindTexture(GL_TEXTURE_2D, m_fboTexture);
+    Debug::checkGLError();
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    Debug::checkGLError();
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Settings::instance()->screenResolutionWidth, Settings::instance()->screenResolutionHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 

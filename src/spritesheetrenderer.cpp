@@ -38,13 +38,21 @@
 
 SpriteSheetRenderer::SpriteSheetRenderer(Camera* camera)
 {
+    Debug::checkGLError();
+
     m_shader = new Shader("sprite.vert", "sprite.frag");
     setCamera(camera);
 
+    Debug::checkGLError();
+
     initGL();
 
+    Debug::checkGLError();
+
     loadAllSpriteSheets();
+    Debug::checkGLError();
     parseAllSpriteSheets();
+    Debug::checkGLError();
 }
 
 SpriteSheetRenderer::~SpriteSheetRenderer()

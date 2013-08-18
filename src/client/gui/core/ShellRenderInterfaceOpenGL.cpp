@@ -41,10 +41,16 @@
 
 ShellRenderInterfaceOpenGL::ShellRenderInterfaceOpenGL()
 {
+    Debug::checkGLError();
+
     m_shader = new Shader("guirenderer.vert", "guirenderer.frag");
     m_shader->bindProgram();
 
+    Debug::checkGLError();
+
     initGL();
+
+    Debug::checkGLError();
 }
 
 ShellRenderInterfaceOpenGL::~ShellRenderInterfaceOpenGL()
@@ -60,6 +66,7 @@ ShellRenderInterfaceOpenGL::~ShellRenderInterfaceOpenGL()
 
 void ShellRenderInterfaceOpenGL::initGL()
 {
+    Debug::checkGLError();
     glGenVertexArrays(1, &m_vao);
     glBindVertexArray(m_vao);
 
@@ -136,6 +143,7 @@ void ShellRenderInterfaceOpenGL::initGL()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_BGRA, GL_UNSIGNED_BYTE, &imageData);
+    Debug::checkGLError();
 }
 
 void ShellRenderInterfaceOpenGL::SetViewport(int width, int height)
@@ -149,6 +157,7 @@ void ShellRenderInterfaceOpenGL::SetViewport(int width, int height)
 // Called by Rocket when it wants to render geometry that it does not wish to optimise.
 void ShellRenderInterfaceOpenGL::RenderGeometry(Rocket::Core::Vertex* vertices, int num_vertices, int* indices, int num_indices, const Rocket::Core::TextureHandle texture, const Rocket::Core::Vector2f& translation)
 {
+    Debug::checkGLError();
     glActiveTexture(GL_TEXTURE0);
 
     if (!texture) {
@@ -159,6 +168,7 @@ void ShellRenderInterfaceOpenGL::RenderGeometry(Rocket::Core::Vertex* vertices, 
 
     m_shader->bindProgram();
 
+    Debug::checkGLError();
     glm::mat4 view =  glm::translate(glm::mat4(), glm::vec3(translation.x, translation.y, 0.0f));
 
     glm::mat4 mvp =  m_ortho * view;
@@ -166,10 +176,12 @@ void ShellRenderInterfaceOpenGL::RenderGeometry(Rocket::Core::Vertex* vertices, 
     int mvpLoc = glGetUniformLocation(m_shader->shaderProgram(), "mvp");
     glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, &mvp[0][0]);
 
+    Debug::checkGLError();
     glBindVertexArray(m_vao);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 
+    Debug::checkGLError();
     glBufferData(
         GL_ELEMENT_ARRAY_BUFFER,
         num_indices * sizeof(indices),
@@ -177,6 +189,7 @@ void ShellRenderInterfaceOpenGL::RenderGeometry(Rocket::Core::Vertex* vertices, 
         GL_DYNAMIC_DRAW
     );
 
+    Debug::checkGLError();
     // finally upload everything to the actual vbo
     glBufferData(
         GL_ARRAY_BUFFER,
@@ -185,9 +198,11 @@ void ShellRenderInterfaceOpenGL::RenderGeometry(Rocket::Core::Vertex* vertices, 
         GL_DYNAMIC_DRAW
     );
 
+    Debug::checkGLError();
     ////////////////////////////////FINALLY RENDER IT ALL //////////////////////////////////////////
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    Debug::checkGLError();
 
     m_shader->bindProgram();
 
@@ -199,11 +214,14 @@ void ShellRenderInterfaceOpenGL::RenderGeometry(Rocket::Core::Vertex* vertices, 
     );
 
     m_shader->unbindProgram();
+    Debug::checkGLError();
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    Debug::checkGLError();
 
     glDisable(GL_BLEND);
+    Debug::checkGLError();
 }
 
 // Called by Rocket when it wants to compile geometry it believes will be static for the forseeable future.
@@ -243,6 +261,7 @@ bool ShellRenderInterfaceOpenGL::LoadTexture(Rocket::Core::TextureHandle& textur
 {
     Debug::log(Debug::Area::GUILoggerArea) << "Rocket OpenGL Renderer, loading texture name: " << source.CString();
 
+    Debug::checkGLError();
     Image* image = new Image(source.CString());
     image->flipVertically();
 
@@ -250,6 +269,7 @@ bool ShellRenderInterfaceOpenGL::LoadTexture(Rocket::Core::TextureHandle& textur
     texture_dimensions.y = image->height();
 
     bool success = GenerateTexture(texture_handle, static_cast<Rocket::Core::byte*>(image->bytes()), texture_dimensions);
+    Debug::checkGLError();
 
     return success;
 }
@@ -257,6 +277,7 @@ bool ShellRenderInterfaceOpenGL::LoadTexture(Rocket::Core::TextureHandle& textur
 // Called by Rocket when a texture is required to be built from an internally-generated sequence of pixels.
 bool ShellRenderInterfaceOpenGL::GenerateTexture(Rocket::Core::TextureHandle& texture_handle, const Rocket::Core::byte* source, const Rocket::Core::Vector2i& source_dimensions)
 {
+    Debug::checkGLError();
     GLuint texture_id = 0;
     glGenTextures(1, &texture_id);
     if (texture_id == 0) {
@@ -264,21 +285,37 @@ bool ShellRenderInterfaceOpenGL::GenerateTexture(Rocket::Core::TextureHandle& te
         return false;
     }
 
+    Debug::checkGLError();
+
     glBindTexture(GL_TEXTURE_2D, texture_id);
+
+    Debug::checkGLError();
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+
+    Debug::checkGLError();
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+    Debug::checkGLError();
+
+    //FIXME: on my laptop, mesa 9.1, Gallium 0.4 on AMD RS880, invalid enumerant? odd shit.
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+    Debug::checkGLError();
 
     GLenum image_format = GL_RGBA;
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, source_dimensions.x, source_dimensions.y, 0, image_format, GL_UNSIGNED_BYTE, (void*)(source));
 
+    Debug::checkGLError();
+
     texture_handle = (Rocket::Core::TextureHandle) texture_id;
+
+    Debug::checkGLError();
 
     return true;
 }
@@ -287,4 +324,5 @@ bool ShellRenderInterfaceOpenGL::GenerateTexture(Rocket::Core::TextureHandle& te
 void ShellRenderInterfaceOpenGL::ReleaseTexture(Rocket::Core::TextureHandle texture_handle)
 {
     glDeleteTextures(1, (GLuint*) &texture_handle);
+    Debug::checkGLError();
 }
