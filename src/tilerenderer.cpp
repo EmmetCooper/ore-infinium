@@ -121,7 +121,7 @@ void TileRenderer::render()
     glClear(GL_COLOR_BUFFER_BIT);
 
     if (!m_renderingEnabled) {
-        //don't forget, w need to unset that shit.
+        //don't forget, we need to unset that shit.
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
