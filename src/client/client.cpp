@@ -145,7 +145,7 @@ void Client::initSDL()
     Debug::assertf(m_GLcontext != nullptr, "SDL GL Context creation failure! Context nullptr.");
     Debug::checkGLError();
 
-//FIXME: doesn't do shit
+    //FIXME: doesn't do shit
     SDL_GL_SetSwapInterval(1);
 
     Debug::checkSDLError();
@@ -306,6 +306,14 @@ void Client::render(double frameTime)
     if (m_renderGUI) {
         drawDebugText(frameTime);
         m_gui->render();
+    } else {
+        static int limiter = 0;
+        ++limiter;
+
+        if (limiter > 10) {
+            limiter = 0;
+            Debug::log(Debug::ImportantArea) << "FPS: " << (1000.0 / frameTime) << " FrameTime: " << frameTime << " ms";
+        }
     }
 
     SDL_GL_SwapWindow(m_window);
