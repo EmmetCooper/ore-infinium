@@ -63,7 +63,7 @@ void Game::abort_game(const char* message)
 
 void Game::init()
 {
-    if (m_startupDebugLogging) {
+    if (Settings::instance()->startupFlags() & Settings::StartupFlags::DebugLoggingStartupFlag) {
         Settings::instance()->debugAreas |= Debug::Area::StartupArea | Debug::Area::ImageLoaderArea | Debug::Area::GUILoggerArea | Debug::Area::SettingsArea
         | Debug::Area::ShadersArea | Debug::Area::ImportantArea | Debug::Area::ClientRendererArea;
     }
@@ -73,7 +73,7 @@ void Game::init()
 
     m_client = new Client();
 
-    if (m_worldViewerEnabled) {
+    if (Settings::instance()->startupFlags() & Settings::StartupFlags::WorldViewerStartupFlag) {
         m_client->enableWorldViewing();
     }
 

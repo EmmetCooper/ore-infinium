@@ -39,21 +39,11 @@ public:
     void abort_game(const char* message);
     void shutdown();
 
-    void enableStartupDebugLogging() {
-        m_startupDebugLogging = true;
-    }
-
-    void enableWorldViewer() {
-        m_worldViewerEnabled = true;
-    }
-
 private:
     Client* m_client = nullptr;
     Server* m_server = nullptr;
 
-    bool m_startupDebugLogging = false;
     bool m_running = true;
-    bool m_worldViewerEnabled = false;
 };
 
 #endif

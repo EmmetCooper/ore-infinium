@@ -20,7 +20,6 @@
 //TODO: possible some of these may not be wanted, but what the hell, lets try it!
 #define GLM_PRECISION_HIGHP_FLOAT
 #define GLM_FORCE_CXX11
-#define GLM_FORCE_INLINE
 
 #include "glm/glm.hpp"
 #include "glm/glm.hpp"
@@ -32,6 +31,7 @@
 #include "config.h"
 
 #include "src/unittest.h"
+#include "settings/settings.h"
 
 #include <iostream>
 
@@ -52,6 +52,7 @@ int main(int argc, char* argv[])
 {
     bool startupDebugEnabled = false;
     bool worldViewer = false;
+    bool noTimeout = false;
 
     if (argc > 1) {
         //NOTE: we start at 1 because the first element(0) is app name.
@@ -70,6 +71,8 @@ int main(int argc, char* argv[])
 
             std::cout << '\n' << '\n' << '\n' << "----------------------------------------- debug methods -----------------------------------------" << '\n';
             std::cout << "--test-spatial-hash Runs various unit tests on the spatial hash to verify there are no regressions, report and exit." << '\n';
+            std::cout << "--world-viewer Enables special client modes to make the game world easier to troubleshoot (only applicable to client-hosted server mode)." << '\n';
+            std::cout << "--no-timeout Configures connection timeouts and other things to allow for debugging, especially via e.g. valgrind." << '\n';
 
             exit(0);
         } else if (contains("--authors")) {
@@ -84,6 +87,8 @@ int main(int argc, char* argv[])
             exit(0);
         } else if (contains("--world-viewer")) {
             worldViewer = true;
+        } else if (contains("--no-timeout")) {
+            noTimeout = true;
         }
     }
 
@@ -92,11 +97,15 @@ int main(int argc, char* argv[])
     Game game;
 
     if (startupDebugEnabled) {
-        game.enableStartupDebugLogging();
+        Settings::instance()->setStartupFlag(Settings::StartupFlags::DebugLoggingStartupFlag);
     }
 
     if (worldViewer) {
-        game.enableWorldViewer();
+        Settings::instance()->setStartupFlag(Settings::StartupFlags::WorldViewerStartupFlag);
+    }
+
+    if (noTimeout) {
+        Settings::instance()->setStartupFlag(Settings::StartupFlags::NoTimeoutStartupFlag);
     }
 
     game.init();

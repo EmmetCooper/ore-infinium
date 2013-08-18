@@ -39,12 +39,31 @@ public:
 
 //static int SDL_LOGPRIORITY = SDL_LOG_PRIORITY_WARN;
 
+    enum StartupFlags {
+        DebugLoggingStartupFlag = 1 << 0,
+        WorldViewerStartupFlag = 1 << 1,
+        NoTimeoutStartupFlag = 1 << 2
+    };
+
+    /**
+     * Enable the provided startup flag
+     */
+    void setStartupFlag(StartupFlags flag) {
+        m_startupFlags |= flag;
+    }
+
+    uint32_t startupFlags() const {
+        return m_startupFlags;
+    }
+
 private:
     Settings();
     Settings(const Settings& tm) {};
     Settings& operator=(const Settings& tm);
 
     static Settings* s_instance;
+
+    uint32_t m_startupFlags;
 };
 
 #endif
