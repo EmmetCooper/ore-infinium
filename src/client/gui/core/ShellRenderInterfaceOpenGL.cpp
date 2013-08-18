@@ -274,7 +274,9 @@ bool ShellRenderInterfaceOpenGL::GenerateTexture(Rocket::Core::TextureHandle& te
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, source_dimensions.x, source_dimensions.y, 0, GL_BGRA, GL_UNSIGNED_BYTE, (void*)(source));
+    GLenum image_format = GL_RGBA;
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, source_dimensions.x, source_dimensions.y, 0, image_format, GL_UNSIGNED_BYTE, (void*)(source));
 
     texture_handle = (Rocket::Core::TextureHandle) texture_id;
 
