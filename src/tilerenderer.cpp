@@ -167,11 +167,11 @@ void TileRenderer::render()
 
     Debug::checkGLError();
 
-    glBindVertexArray(m_vao);
+//    glBindVertexArray(m_vao);
     Debug::checkGLError();
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+  //  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
     Debug::checkGLError();
-    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+   // glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     Debug::checkGLError();
 
     const uint32_t totalTiles = (endRow - startRow) * (endColumn - startColumn);
@@ -327,13 +327,13 @@ void TileRenderer::render()
         (const GLvoid*)0);
 
     m_shader->unbindProgram();
-    glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  //  glBindVertexArray(0);
+//    glBindBuffer(GL_ARRAY_BUFFER, 0);
+ //   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glDisable(GL_BLEND);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+//    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+ //   glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
     Debug::checkGLError();
 }
@@ -424,12 +424,12 @@ void TileRenderer::initGL()
         sizeof(Vertex),
         (const GLvoid*)buffer_offset);
 
-    glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
+//    glBindVertexArray(0);
+//    glBindBuffer(GL_ARRAY_BUFFER, 0);
+//    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+//
+//    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+//    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+//
     Debug::checkGLError();
 }

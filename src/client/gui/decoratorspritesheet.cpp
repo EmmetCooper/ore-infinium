@@ -48,6 +48,7 @@ DecoratorSpriteSheet::~DecoratorSpriteSheet()
 
 bool DecoratorSpriteSheet::Initialise()
 {
+    return true;
     m_shader = new Shader("decoratorspritesheet.vert", "decoratorspritesheet.frag");
     m_shader->bindProgram();
 
@@ -158,6 +159,7 @@ void DecoratorSpriteSheet::ReleaseElementData(Rocket::Core::DecoratorDataHandle 
 // Called to render the decorator on an element.
 void DecoratorSpriteSheet::RenderElement(Rocket::Core::Element* element, Rocket::Core::DecoratorDataHandle ROCKET_UNUSED(element_data))
 {
+    return;
     const Rocket::Core::Property* imageSourceProperty = element->GetProperty("image-src");
 
     //don't render it, property has not been set.

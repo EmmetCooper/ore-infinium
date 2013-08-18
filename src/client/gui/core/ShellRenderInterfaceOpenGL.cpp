@@ -43,11 +43,11 @@ ShellRenderInterfaceOpenGL::ShellRenderInterfaceOpenGL()
 {
     Debug::checkGLError();
 
+return;
     m_shader = new Shader("guirenderer.vert", "guirenderer.frag");
     m_shader->bindProgram();
 
     Debug::checkGLError();
-
     initGL();
 
     Debug::checkGLError();
@@ -157,6 +157,7 @@ void ShellRenderInterfaceOpenGL::SetViewport(int width, int height)
 // Called by Rocket when it wants to render geometry that it does not wish to optimise.
 void ShellRenderInterfaceOpenGL::RenderGeometry(Rocket::Core::Vertex* vertices, int num_vertices, int* indices, int num_indices, const Rocket::Core::TextureHandle texture, const Rocket::Core::Vector2f& translation)
 {
+    return;
     Debug::checkGLError();
     glActiveTexture(GL_TEXTURE0);
 
@@ -243,6 +244,7 @@ void ShellRenderInterfaceOpenGL::ReleaseCompiledGeometry(Rocket::Core::CompiledG
 // Called by Rocket when it wants to enable or disable scissoring to clip content.
 void ShellRenderInterfaceOpenGL::EnableScissorRegion(bool enable)
 {
+    return;
     if (enable) {
         glEnable(GL_SCISSOR_TEST);
     } else {
@@ -253,12 +255,14 @@ void ShellRenderInterfaceOpenGL::EnableScissorRegion(bool enable)
 // Called by Rocket when it wants to change the scissor region.
 void ShellRenderInterfaceOpenGL::SetScissorRegion(int x, int y, int width, int height)
 {
+    return;
     glScissor(x, m_height - (y + height), width, height);
 }
 
 // Called by Rocket when a texture is required by the library.
 bool ShellRenderInterfaceOpenGL::LoadTexture(Rocket::Core::TextureHandle& texture_handle, Rocket::Core::Vector2i& texture_dimensions, const Rocket::Core::String& source)
 {
+    return true;
     Debug::log(Debug::Area::GUILoggerArea) << "Rocket OpenGL Renderer, loading texture name: " << source.CString();
 
     Debug::checkGLError();
@@ -277,6 +281,7 @@ bool ShellRenderInterfaceOpenGL::LoadTexture(Rocket::Core::TextureHandle& textur
 // Called by Rocket when a texture is required to be built from an internally-generated sequence of pixels.
 bool ShellRenderInterfaceOpenGL::GenerateTexture(Rocket::Core::TextureHandle& texture_handle, const Rocket::Core::byte* source, const Rocket::Core::Vector2i& source_dimensions)
 {
+    return true;
     Debug::checkGLError();
     GLuint texture_id = 0;
     glGenTextures(1, &texture_id);
@@ -323,6 +328,7 @@ bool ShellRenderInterfaceOpenGL::GenerateTexture(Rocket::Core::TextureHandle& te
 // Called by Rocket when a loaded texture is no longer required.
 void ShellRenderInterfaceOpenGL::ReleaseTexture(Rocket::Core::TextureHandle texture_handle)
 {
+    return;
     glDeleteTextures(1, (GLuint*) &texture_handle);
     Debug::checkGLError();
 }

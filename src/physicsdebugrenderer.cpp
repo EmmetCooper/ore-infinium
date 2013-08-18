@@ -29,6 +29,7 @@ const cpFloat PI = 3.1415926535897932384626433832795028841971693993751058;
 
 PhysicsDebugRenderer::PhysicsDebugRenderer(Camera* camera)
 {
+    return;
     s_instance = this;
     m_shader = new Shader("physicsdebugrenderer.vert", "physicsdebugrenderer.frag");
     m_shader->bindProgram();

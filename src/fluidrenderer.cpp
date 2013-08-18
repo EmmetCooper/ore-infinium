@@ -35,6 +35,8 @@ FluidRenderer::FluidRenderer(Camera* camera, Entities::Player* mainPlayer)
 : m_camera(camera),
   m_mainPlayer(mainPlayer)
 {
+    return;
+    Debug::assertf(false, "");
     m_shaderWater = new Shader("fluidrenderer_water.vert", "fluidrenderer_water.frag");
     setCamera(camera);
 

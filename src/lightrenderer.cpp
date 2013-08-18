@@ -43,6 +43,7 @@ LightRenderer::LightRenderer(World* world, Camera* camera, Entities::Player* mai
         m_world(world)
 {
     Debug::checkGLError();
+    return;;
     m_shader = new Shader("lightrenderer.vert", "lightrenderer.frag");
     m_shaderPassthrough = new Shader("lightrendererpassthrough.vert", "lightrendererpassthrough.frag");
     setCamera(camera);
@@ -89,6 +90,7 @@ void LightRenderer::setTileRendererTexture(GLuint texture)
 //FIXME: TODO: take a slightly different approach, clear to white instead, draw black whereever there are tiles that have back-tiles, and then draw user-placed lights which would brighten up those tiles
 void LightRenderer::renderToFBO()
 {
+    return;;
     m_shader->bindProgram();
 
     Debug::checkGLError();
@@ -214,6 +216,7 @@ void LightRenderer::renderToFBO()
 
 void LightRenderer::renderToBackbuffer()
 {
+    return;;
     Debug::checkGLError();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     Debug::checkGLError();

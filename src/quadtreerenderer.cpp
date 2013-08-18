@@ -26,6 +26,7 @@
 
 QuadTreeRenderer::QuadTreeRenderer(Camera* camera)
 {
+    return;
     m_shader = new Shader("quadtreerenderer.vert", "quadtreerenderer.frag");
     m_shader->bindProgram();
     setCamera(camera);

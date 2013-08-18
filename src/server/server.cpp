@@ -140,8 +140,6 @@ void Server::poll()
                 enet_peer_timeout(event.peer, 0, 3600 * 1000, 3600 * 1000);
             }
 
-
-
             //DEFAULT IS 5000
 //                event.peer->timeoutMinimum = 2000;
 //                //DEFAULT IS 30000
