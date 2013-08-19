@@ -38,7 +38,6 @@
 
 SpriteSheetRenderer::SpriteSheetRenderer(Camera* camera)
 {
-    return;
     Debug::checkGLError();
 
     m_shader = new Shader("sprite.vert", "sprite.frag");
@@ -207,7 +206,6 @@ std::map<std::string, SpriteSheetRenderer::SpriteFrameIdentifier> SpriteSheetRen
 
 void SpriteSheetRenderer::renderCharacters()
 {
-    return;
     m_shader->bindProgram();
 
     bindSpriteSheet(SpriteSheetType::Character);
@@ -326,7 +324,6 @@ void SpriteSheetRenderer::renderCharacters()
 
 void SpriteSheetRenderer::renderEntities()
 {
-    return;
     m_shader->bindProgram();
 
     bindSpriteSheet(SpriteSheetType::Entity);

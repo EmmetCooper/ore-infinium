@@ -36,7 +36,7 @@ SkyRenderer::SkyRenderer(World* world, Camera* camera, Time* time) :
     m_time(time)
 {
     Debug::log(Debug::Area::ClientRendererArea) << "sky renderer init, screen at width: " << Settings::instance()->screenResolutionWidth << " height: " << Settings::instance()->screenResolutionHeight;
-    return;
+
     m_celestialBodiesShader = new Shader("skyrenderer.vert", "skyrenderer.frag");
     m_skyBackgroundDayShader = new Shader("skyrendererday.vert", "skyrendererday.frag");
     m_skyBackgroundNightShader = new Shader("skyrenderernight.vert", "skyrenderernight.frag");
@@ -796,7 +796,6 @@ void SkyRenderer::renderCelestialBodies()
 
 void SkyRenderer::update(const float elapsedTime)
 {
-    return;
     assert(m_time);
 
     glm::vec2 viewportCenter = glm::vec2(1600 / 2, 900 / 2);
@@ -827,7 +826,6 @@ void SkyRenderer::update(const float elapsedTime)
 
 void SkyRenderer::render()
 {
-    return;
     renderSkyBackgroundNight();
     renderSkyBackgroundDay();
     renderCelestialBodies();

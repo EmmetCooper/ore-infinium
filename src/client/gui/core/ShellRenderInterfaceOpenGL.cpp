@@ -300,9 +300,8 @@ bool ShellRenderInterfaceOpenGL::GenerateTexture(Rocket::Core::TextureHandle& te
 
     Debug::checkGLError();
 
-    //FIXME: on my laptop, mesa 9.1, Gallium 0.4 on AMD RS880, invalid enumerant? odd shit.
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     Debug::checkGLError();
 
