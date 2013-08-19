@@ -112,8 +112,6 @@ GLuint TileRenderer::fboTexture()
 
 void TileRenderer::render()
 {
-    Debug::log(Debug::ImportantArea) << "tilerenderer::render() pass starting";
-
     Debug::checkGLError();
     glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
     glBindRenderbuffer(GL_RENDERBUFFER, m_rb);
