@@ -112,6 +112,8 @@ GLuint TileRenderer::fboTexture()
 
 void TileRenderer::render()
 {
+    Debug::log(Debug::ImportantArea) << "tilerenderer::render() pass starting";
+
     Debug::checkGLError();
     glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
     glBindRenderbuffer(GL_RENDERBUFFER, m_rb);
@@ -167,11 +169,7 @@ void TileRenderer::render()
 
     Debug::checkGLError();
 
-//    glBindVertexArray(m_vao);
-    Debug::checkGLError();
-  //  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-    Debug::checkGLError();
-   // glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glBindVertexArray(m_vao);
     Debug::checkGLError();
 
     const uint32_t totalTiles = (endRow - startRow) * (endColumn - startColumn);
@@ -195,6 +193,7 @@ void TileRenderer::render()
         glDeleteBuffers(1, &m_ebo);
         glGenBuffers(1, &m_ebo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+        //NOTE: this vbo binding is required even though i've been told vaos negate that?
 
         glBufferData(
             GL_ELEMENT_ARRAY_BUFFER,
@@ -305,16 +304,22 @@ void TileRenderer::render()
         ++drawingRow;
     }
 
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+
+    Debug::checkGLError();
     glBufferData(
         GL_ARRAY_BUFFER,
         quads.size() * sizeof(Quad),
         &quads[0],
         GL_STREAM_DRAW);
 
+    Debug::checkGLError();
     ////////////////////////////////FINALLY RENDER IT ALL //////////////////////////////////////////
     glEnable(GL_BLEND);
+    Debug::checkGLError();
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    Debug::checkGLError();
     m_shader->bindProgram();
 
     Debug::checkGLError();
@@ -327,9 +332,8 @@ void TileRenderer::render()
         (const GLvoid*)0);
 
     m_shader->unbindProgram();
-  //  glBindVertexArray(0);
-//    glBindBuffer(GL_ARRAY_BUFFER, 0);
- //   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glDisable(GL_BLEND);
 
 //    glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -349,6 +353,9 @@ void TileRenderer::initGL()
     glBindRenderbuffer(GL_RENDERBUFFER, m_rb);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, Settings::instance()->windowWidth, Settings::instance()->windowHeight);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_rb);
+
+
+    //FIXME: HACK: discard render buffer, utilize texture thang
 
     GLenum buffers[] = { GL_COLOR_ATTACHMENT0 };
     glDrawBuffers(1, buffers);
@@ -424,12 +431,12 @@ void TileRenderer::initGL()
         sizeof(Vertex),
         (const GLvoid*)buffer_offset);
 
-//    glBindVertexArray(0);
-//    glBindBuffer(GL_ARRAY_BUFFER, 0);
-//    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-//
-//    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-//    glBindRenderbuffer(GL_RENDERBUFFER, 0);
-//
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
     Debug::checkGLError();
 }
