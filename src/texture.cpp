@@ -36,8 +36,6 @@ Texture::~Texture()
 void Texture::loadImage(const std::string& filename)
 {
     m_image = new Image(filename);
-    m_height = m_image->height();
-    m_width = m_image->width();
 }
 
 int Texture::format() const {
@@ -57,7 +55,7 @@ void Texture::bind()
 void Texture::generate(Texture::TextureFilter textureFilter)
 {
     Debug::checkGLError();
-//    glActiveTexture(GL_TEXTURE0); JUNK?
+    glActiveTexture(GL_TEXTURE0);// FIXME: JUNK?
 
     glGenTextures(1, &m_textureID);
     glBindTexture(GL_TEXTURE_2D, m_textureID);
@@ -80,13 +78,13 @@ void Texture::generate(Texture::TextureFilter textureFilter)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    void* bytes = m_image->bytes();
-    Debug::assertf(bytes, "Image::generate, could not gen texture, image bits are empty.");
+//    void* bytes = m_image->bytes();
+//    Debug::assertf(bytes, "Image::generate, could not gen texture, image bits are empty.");
 
     m_internal_format = GL_RGBA;
     m_level = 0;
     m_border = 0;
-    glTexImage2D(GL_TEXTURE_2D, m_level, m_internal_format, m_width, m_height, m_border, m_image->format(), GL_UNSIGNED_BYTE, bytes);
+    glTexImage2D(GL_TEXTURE_2D, m_level, m_internal_format, m_image->width(), m_image->height(), m_border, m_image->format(), GL_UNSIGNED_BYTE, m_image->bytes());
 
     Debug::checkGLError();
 }
@@ -98,10 +96,10 @@ GLuint Texture::textureHandle() const
 
 unsigned int Texture::width() const
 {
-    return m_width;
+    return m_image->width();
 }
 
 unsigned int Texture::height() const
 {
-    return m_height;
+    return m_image->height();
 }

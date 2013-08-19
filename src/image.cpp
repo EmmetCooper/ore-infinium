@@ -61,7 +61,7 @@ void Image::loadImage(const std::string& filename)
     if(m_surface->format->BytesPerPixel == 4) {
         m_format = GL_BGRA;
     } else {
-        Debug::fatal(false, Debug::ImageLoaderArea, "image format is different than what we're used to. format is NOT GL_RGBA");
+        Debug::fatal(false, Debug::ImageLoaderArea, "image format is different than what we're used to. format is NOT RGBA");
     }
 }
 

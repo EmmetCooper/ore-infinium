@@ -49,8 +49,6 @@ private:
 
 private:
     Image* m_image = nullptr;
-    uint32_t m_width = 0;
-    uint32_t m_height = 0;
 
     GLuint m_textureID = 0;
     GLenum m_image_format = 0;
