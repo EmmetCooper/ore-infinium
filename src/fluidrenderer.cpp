@@ -35,8 +35,6 @@ FluidRenderer::FluidRenderer(Camera* camera, Entities::Player* mainPlayer)
 : m_camera(camera),
   m_mainPlayer(mainPlayer)
 {
-    return;
-    Debug::assertf(false, "");
     m_shaderWater = new Shader("fluidrenderer_water.vert", "fluidrenderer_water.frag");
     setCamera(camera);
 
@@ -62,6 +60,11 @@ void FluidRenderer::setCamera(Camera* camera)
     m_camera->addShader(m_shaderWater);
 }
 
+void FluidRenderer::render()
+{
+    renderWater();
+}
+
 void FluidRenderer::renderWater()
 {
     m_shaderWater->bindProgram();
@@ -73,7 +76,7 @@ void FluidRenderer::renderWater()
     double right = m_mainPlayer->position().x + Settings::instance()->screenResolutionWidth;
     double bottom = m_mainPlayer->position().x + Settings::instance()->screenResolutionHeight;
 
-    m_spatialHashWater->queryRangeNonOverlapping(&results, left, top, right, bottom);
+    m_waterSpatialHash->queryRangeNonOverlapping(&results, left, top, right, bottom);
 
     Debug::checkGLError();
 //

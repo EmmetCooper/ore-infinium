@@ -48,7 +48,7 @@ public:
     }
 
     void setWaterSpatialHash(SpatialHash* hash) {
-        m_spatialHashWater = hash;
+        m_waterSpatialHash = hash;
     }
 
     void render();
@@ -76,7 +76,7 @@ private:
 
     Entities::Player* m_mainPlayer = nullptr;
 
-    SpatialHash* m_spatialHashWater = nullptr;
+    SpatialHash* m_waterSpatialHash = nullptr;
 };
 
 #endif

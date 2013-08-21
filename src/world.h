@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <list>
 
+class FluidRenderer;
 struct cpBody;
 struct cpSpace;
 
@@ -254,6 +255,7 @@ private:
     TileRenderer* m_tileRenderer = nullptr;
     LightRenderer* m_lightRenderer = nullptr;
     ParticleRenderer* m_particleRenderer = nullptr;
+    FluidRenderer* m_fluidRenderer = nullptr;
 //    QuadTreeRenderer* m_quadTreeRenderer = nullptr;
     SpriteSheetRenderer* m_spriteSheetRenderer = nullptr;
 
