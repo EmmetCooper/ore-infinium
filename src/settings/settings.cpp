@@ -38,7 +38,8 @@ Settings::Settings()
 //    Debug::RenderingDebug::Box2DAABBRenderingDebug |
 //    Debug::RenderingDebug::Box2DJointRenderingDebug |
 //          |    Debug::RenderingDebug::Box2DShapeRenderingDebug
-      )
+      ),
+      m_startupFlags(0)
 {
 
 }
