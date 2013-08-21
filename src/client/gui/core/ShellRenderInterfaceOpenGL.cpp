@@ -176,7 +176,6 @@ void ShellRenderInterfaceOpenGL::RenderGeometry(Rocket::Core::Vertex* vertices, 
 
     Debug::checkGLError();
     glBindVertexArray(m_vao);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 
     Debug::checkGLError();
@@ -215,7 +214,6 @@ void ShellRenderInterfaceOpenGL::RenderGeometry(Rocket::Core::Vertex* vertices, 
     Debug::checkGLError();
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     Debug::checkGLError();
 
     glDisable(GL_BLEND);
