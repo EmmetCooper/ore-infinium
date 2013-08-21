@@ -78,16 +78,24 @@ int main(int argc, char* argv[])
         } else if (contains("--authors")) {
             std::cout << "Lead Developer - Shaun Reich <sreich@kde.org>\n";
             exit(0);
-        } else if (contains("-d") || contains("--debug")) {
+        }
+
+        if (contains("-d") || contains("--debug")) {
             startupDebugEnabled = true;
-        } else if (contains("--test-spatial-hash")) {
+        }
+
+        if (contains("--test-spatial-hash")) {
             UnitTest* t = new UnitTest();
             t->testSpatialHash();
             delete t;
             exit(0);
-        } else if (contains("--world-viewer")) {
+        }
+
+        if (contains("--world-viewer")) {
             worldViewer = true;
-        } else if (contains("--no-timeout")) {
+        }
+
+        if (contains("--no-timeout")) {
             noTimeout = true;
         }
     }
