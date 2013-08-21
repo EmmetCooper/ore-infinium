@@ -65,7 +65,7 @@ void Game::init()
 {
     if (Settings::instance()->startupFlags() & Settings::StartupFlags::DebugLoggingStartupFlag) {
         Settings::instance()->debugAreas |= Debug::Area::StartupArea | Debug::Area::ImageLoaderArea | Debug::Area::GUILoggerArea | Debug::Area::SettingsArea
-        | Debug::Area::ShadersArea | Debug::Area::ImportantArea | Debug::Area::ClientRendererArea;
+        | Debug::Area::ShadersArea | Debug::Area::ImportantArea;
     }
 
     Block::initBlockTypes();
