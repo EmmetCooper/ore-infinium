@@ -42,7 +42,10 @@ public:
     enum StartupFlags {
         DebugLoggingStartupFlag = 1 << 0,
         WorldViewerStartupFlag = 1 << 1,
-        NoTimeoutStartupFlag = 1 << 2
+        NoTimeoutStartupFlag = 1 << 2,
+
+        //debug, immediately hosts and joins localhost session
+        PlayNowStartupFlag = 1 << 3
     };
 
     /**

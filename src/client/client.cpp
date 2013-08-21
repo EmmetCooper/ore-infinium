@@ -83,7 +83,11 @@ void Client::init()
 
     m_debugMenu = new DebugMenu(this);
     m_debugMenu->show();
-//FIXME: TEMP    startMultiplayerHost("SOME PLAYER NAME");
+
+    if (Settings::instance()->startupFlags() & Settings::PlayNowStartupFlag) {
+        startMultiplayerHost("Dingo");
+    }
+
 //dws    std::stringstream ss;
 //    ss << "Player";
 //    std::random_device device;

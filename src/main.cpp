@@ -53,6 +53,7 @@ int main(int argc, char* argv[])
     bool startupDebugEnabled = false;
     bool worldViewer = false;
     bool noTimeout = false;
+    bool playNow = false;
 
     if (argc > 1) {
         //NOTE: we start at 1 because the first element(0) is app name.
@@ -73,6 +74,7 @@ int main(int argc, char* argv[])
             std::cout << "--test-spatial-hash Runs various unit tests on the spatial hash to verify there are no regressions, report and exit." << '\n';
             std::cout << "--world-viewer Enables special client modes to make the game world easier to troubleshoot (only applicable to client-hosted server mode)." << '\n';
             std::cout << "--no-timeout Configures connection timeouts and other things to allow for debugging, especially via e.g. valgrind." << '\n';
+            std::cout << "--play-now Hosts and joins a local session immediately on startup (for fast debugging)." << '\n';
 
             exit(0);
         } else if (contains("--authors")) {
@@ -98,6 +100,11 @@ int main(int argc, char* argv[])
         if (contains("--no-timeout")) {
             noTimeout = true;
         }
+
+        if (contains("--play-now")) {
+            playNow = true;
+        }
+
     }
 
     std::cout << "Ore Infinium Version " << ore_infinium_VERSION_MAJOR << "." << ore_infinium_VERSION_MINOR << "\n";
@@ -114,6 +121,10 @@ int main(int argc, char* argv[])
 
     if (noTimeout) {
         Settings::instance()->setStartupFlag(Settings::StartupFlags::NoTimeoutStartupFlag);
+    }
+
+    if (playNow) {
+        Settings::instance()->setStartupFlag(Settings::StartupFlags::PlayNowStartupFlag);
     }
 
     game.init();
