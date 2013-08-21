@@ -22,7 +22,11 @@
 
 #include <string>
 
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_main.h>
+
 struct SDL_Surface;
+
 class Image
 {
 public:
@@ -54,6 +58,8 @@ private:
      * @p border border size. Default 0
      */
     void loadImage(const std::string& filename);
+
+    int invert_surface_vertical(SDL_Surface *surface);
 
     SDL_Surface* m_surface = nullptr;
 

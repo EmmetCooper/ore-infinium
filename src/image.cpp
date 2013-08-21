@@ -19,13 +19,19 @@
 
 #include "debug.h"
 
+#include <SDL2/SDL_video.h>
 #include <SDL2/SDL_image.h>
 
 #include <sys/stat.h>
 
+//Flip flags
+const int FLIP_VERTICAL = 1;
+const int FLIP_HORIZONTAL = 2;
+
 Image::Image(const std::string& fileName)
 {
     loadImage(fileName);
+    invert_surface_vertical(m_surface);
 }
 
 Image::~Image()
@@ -59,7 +65,7 @@ void Image::loadImage(const std::string& filename)
     Debug::fatal(m_surface->h > 0, Debug::Area::ImageLoaderArea, "failure to load image, height is 0");
 
     if(m_surface->format->BytesPerPixel == 4) {
-        m_format = GL_BGRA;
+        m_format = GL_RGBA;
     } else {
         Debug::fatal(false, Debug::ImageLoaderArea, "image format is different than what we're used to. format is NOT RGBA");
     }
@@ -67,6 +73,63 @@ void Image::loadImage(const std::string& filename)
 
 void Image::flipVertically()
 {
+    invert_surface_vertical(m_surface);
+}
+
+#define SDL_LOCKIFMUST(s) (SDL_MUSTLOCK(s) ? SDL_LockSurface(s) : 0)
+#define SDL_UNLOCKIFMUST(s) { if(SDL_MUSTLOCK(s)) SDL_UnlockSurface(s); }
+
+int Image::invert_surface_vertical(SDL_Surface *surface)
+{
+    Uint8 *t;
+    register Uint8 *a, *b;
+    Uint8 *last;
+    register Uint16 pitch;
+
+    if( SDL_LOCKIFMUST(surface) < 0 )
+        return -2;
+
+    /* do nothing unless at least two lines */
+    if(surface->h < 2) {
+        SDL_UNLOCKIFMUST(surface);
+        return 0;
+    }
+
+    /* get a place to store a line */
+    pitch = surface->pitch;
+    t = (Uint8*)malloc(pitch);
+
+    if(t == NULL) {
+        SDL_UNLOCKIFMUST(surface);
+        return -2;
+    }
+
+    /* get first line; it's about to be trampled */
+    memcpy(t,surface->pixels,pitch);
+
+    /* now, shuffle the rest so it's almost correct */
+    a = (Uint8*)surface->pixels;
+    last = a + pitch * (surface->h - 1);
+    b = last;
+
+    while(a < b) {
+        memcpy(a,b,pitch);
+        a += pitch;
+        memcpy(b,a,pitch);
+        b -= pitch;
+    }
+
+    /* in this shuffled state, the bottom slice is too far down */
+    memmove( b, b+pitch, last-b );
+
+    /* now we can put back that first row--in the last place */
+    memcpy(last,t,pitch);
+
+    /* everything is in the right place; close up. */
+    free(t);
+    SDL_UNLOCKIFMUST(surface);
+
+    return 0;
 }
 
 void* Image::bytes()
