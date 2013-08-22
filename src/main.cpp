@@ -35,7 +35,13 @@
 
 #include <iostream>
 
+#include <QGuiApplication>
+
+#include <QtQuick/QQuickView>
+
 std::vector<std::string> args;
+
+#include "squircle.h"
 
 bool contains(const std::string& str)
 {
@@ -50,6 +56,16 @@ bool contains(const std::string& str)
 
 int main(int argc, char* argv[])
 {
+    QGuiApplication app(argc, argv);
+
+    qmlRegisterType<Squircle>("OpenGLUnderQML", 1, 0, "Squircle");
+    QQuickView view;
+    view.setSource(QUrl("../client/gui/assets/qml/main.qml"));
+    view.show();
+
+    return app.exec();
+
+
     bool startupDebugEnabled = false;
     bool worldViewer = false;
     bool noTimeout = false;

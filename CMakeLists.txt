@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.6)
+cmake_minimum_required(VERSION 2.8.8)
 
 option(BUILD_THIRD_PARTY_LIBRARIES "Set to ON to automatically build included 3rd-party libraries" OFF)
 
@@ -41,9 +41,23 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib64 ${CMAKE_INSTALL_PREFIX}/lib)
 
+
+  # Tell CMake to run moc when necessary:
+  set(CMAKE_AUTOMOC ON)
+  # As moc files are generated in the binary dir, tell CMake
+  # to always look for includes there:
+#  set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+
+####### # Executables fail to build with Qt 5 in the default configuration
+#######  # without -fPIE. We add that here.
+#######  set(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
+
 include(FindProtobuf)
 
 find_package(SDL2)
+
+find_package(Qt5Quick)
 
 find_package(OpenGL)
 

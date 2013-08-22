@@ -61,6 +61,9 @@ ${CMAKE_CURRENT_BINARY_DIR}/packet.pb.cc
 unittest.cpp
 
 ${CMAKE_SOURCE_DIR}/utils/GLEW/glew.c
+
+squircle.cpp
+
 )
 
 include(FindPkgConfig)
@@ -121,6 +124,7 @@ ${ENET_INCLUDE_DIRS}
 ${PROTOBUF_INCLUDE_DIR}
 ${CHIPMUNK_INCLUDE_DIR}
 ${LIBNOISE_INCLUDE_DIR}
+${Qt5Quick_INCLUDES}
 )
 
 target_link_libraries(
@@ -140,6 +144,7 @@ ${ENET_LIBRARIES}
 ${PROTOBUF_LIBRARY}
 ${CHIPMUNK_LIBRARIES}
 ${LIBNOISE_LIBRARY}
+${Qt5Quick_LIBRARIES}
 )
 
 # CPack packaging
