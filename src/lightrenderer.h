@@ -24,7 +24,10 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "glew.h"
+#include <QOpenGLFunctions>
+#include <QOpenGLShaderProgram>
+
+#include <qopengl.h>
 
 #include <map>
 #include <string>
@@ -41,7 +44,7 @@ class World;
 class Shader;
 class Torch;
 
-class LightRenderer
+class LightRenderer : QOpenGLFunctions_3_1_CoreBackend
 {
 public:
     explicit LightRenderer(World* world, Camera* camera, Entities::Player* mainPlayer);

@@ -18,7 +18,8 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include "glew.h"
+#include <QOpenGLFunctions>
+
 #include <string>
 
 /**
@@ -27,7 +28,7 @@
 *
 * Also has built in logging for these and binding functions.
 */
-class Shader
+class Shader : QOpenGLFunctions
 {
 public:
     explicit Shader(const char* vertexShader, const char* fragmentShader);

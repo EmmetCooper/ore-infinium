@@ -18,8 +18,6 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include "glew.h"
-
 #include <string>
 
 class Image;

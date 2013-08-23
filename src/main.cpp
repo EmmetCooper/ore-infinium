@@ -15,8 +15,6 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.    *
  *****************************************************************************/
 
-#define GLEW_BUILD
-
 //TODO: possible some of these may not be wanted, but what the hell, lets try it!
 #define GLM_PRECISION_HIGHP_FLOAT
 #define GLM_FORCE_CXX11
@@ -38,6 +36,8 @@
 #include <QGuiApplication>
 
 #include <QtQuick/QQuickView>
+#include <QOpenGLFunctions>
+#include <QOpenGLContext>
 
 std::vector<std::string> args;
 
@@ -57,6 +57,9 @@ bool contains(const std::string& str)
 int main(int argc, char* argv[])
 {
     QGuiApplication app(argc, argv);
+
+    QOpenGLFunctions funcs(QOpenGLContext::currentContext());
+    bool npot = funcs.hasOpenGLFeature(QOpenGLFunctions::NPOTTextures);
 
     qmlRegisterType<Squircle>("OpenGLUnderQML", 1, 0, "Squircle");
     QQuickView view;
@@ -103,9 +106,9 @@ int main(int argc, char* argv[])
         }
 
         if (contains("--test-spatial-hash")) {
-            UnitTest* t = new UnitTest();
-            t->testSpatialHash();
-            delete t;
+ //           UnitTest* t = new UnitTest();
+  //          t->testSpatialHash();
+   //         delete t;
             exit(0);
         }
 
@@ -125,7 +128,7 @@ int main(int argc, char* argv[])
 
     std::cout << "Ore Infinium Version " << ore_infinium_VERSION_MAJOR << "." << ore_infinium_VERSION_MINOR << "\n";
 
-    Game game;
+//    Game game;
 
     if (startupDebugEnabled) {
         Settings::instance()->setStartupFlag(Settings::StartupFlags::DebugLoggingStartupFlag);
@@ -143,5 +146,5 @@ int main(int argc, char* argv[])
         Settings::instance()->setStartupFlag(Settings::StartupFlags::PlayNowStartupFlag);
     }
 
-    game.init();
+//    game.init();
 }

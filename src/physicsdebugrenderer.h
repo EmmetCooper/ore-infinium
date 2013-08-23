@@ -25,7 +25,11 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "glew.h"
+#include <QOpenGLFunctions>
+#include <QOpenGLShaderProgram>
+#include <QOpenGLFramebufferObject>
+
+#include <qopengl.h>
 
 #include <mutex>
 

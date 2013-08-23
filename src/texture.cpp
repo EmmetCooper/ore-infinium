@@ -20,8 +20,6 @@
 
 #include "debug.h"
 
-#include "glew.h"
-
 Texture::Texture(const std::string& fileName)
 {
     loadImage(fileName);

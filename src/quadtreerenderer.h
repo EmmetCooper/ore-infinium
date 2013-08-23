@@ -25,8 +25,6 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "glew.h"
-
 class QuadTree;
 
 class QuadTreeRenderer

@@ -34,8 +34,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "glew.h"
-#include <GL/glext.h>
 #include <SDL_timer.h>
 
 LightRenderer::LightRenderer(World* world, Camera* camera, Entities::Player* mainPlayer)

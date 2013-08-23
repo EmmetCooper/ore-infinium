@@ -4,6 +4,7 @@
 #include <QtQuick/QQuickItem>
 #include <QtGui/QOpenGLShaderProgram>
 #include <QTime>
+//#include "client/client.h"
 
 class Squircle : public QQuickItem
 {
@@ -30,6 +31,8 @@ private slots:
 
 private:
     QOpenGLShaderProgram *m_program;
+
+//    Client* m_client = nullptr;
 
     QTime m_time;
     int m_frameCount = 0;

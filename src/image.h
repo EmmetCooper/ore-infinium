@@ -18,12 +18,12 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
-#include "glew.h"
-
 #include <string>
 
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_main.h>
+
+#include <QtGui/QOpenGLContext>
 
 struct SDL_Surface;
 

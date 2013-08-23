@@ -1,7 +1,7 @@
 
 #include "squircle.h"
 
-#include <QtQuick/qquickwindow.h>
+#include <QtQuick/QQuickWindow>
 #include <QtGui/QOpenGLShaderProgram>
 #include <QtGui/QOpenGLContext>
 
@@ -10,7 +10,9 @@ Squircle::Squircle()
     , m_t(0)
     , m_thread_t(0)
 {
-    connect(this, SIGNAL(windowChanged(QQuickWindow*)), this, SLOT(handleWindowChanged(QQuickWindow*)));
+    connect(this, &Squircle::windowChanged, this, &Squircle::handleWindowChanged);
+
+//    m_client = new Client();
 }
 
 void Squircle::setT(qreal t)

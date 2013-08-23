@@ -21,8 +21,6 @@
 #include "glm/glm.hpp"
 #include "glm/core/type.hpp"
 
-#include "glew.h"
-
 #include <vector>
 
 class Camera;

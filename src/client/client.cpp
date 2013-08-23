@@ -45,7 +45,6 @@
 
 #include <random>
 
-#include <GL/glew.h>
 #include <SDL2/SDL_image.h>
 
 Client::Client()
@@ -63,14 +62,42 @@ Client::~Client()
 #ifdef FREEIMAGE_LIB
     FreeImage_DeInitialise();
 #endif
-
-    SDL_DestroyWindow(m_window);
-    SDL_Quit();
 }
 
 void Client::init()
 {
-    initSDL();
+//    initSDL();
+
+    //FIXME: MOVE INTO INITGL
+    Debug::checkGLError();
+
+    Debug::log(Debug::Area::StartupArea) << "Platform: Driver Vendor: " << glGetString(GL_VENDOR);
+    Debug::log(Debug::Area::StartupArea) << "Platform: Renderer: " << glGetString(GL_RENDERER);
+    Debug::log(Debug::Area::StartupArea) << "OpenGL Version: " << glGetString(GL_VERSION);
+    Debug::log(Debug::Area::StartupArea) << "GLSL Version: " << glGetString(GL_SHADING_LANGUAGE_VERSION);
+
+    Debug::checkGLError();
+
+    GLint textureSize;
+    glGetIntegerv(GL_MAX_TEXTURE_SIZE, &textureSize);
+    Debug::log(Debug::Area::StartupArea) << "Maximum OpenGL texture size allowed: " << textureSize << "\n\n\n";
+
+#ifdef GLEW_KHR_debug
+    if (GLEW_KHR_debug) {
+        glEnable(GL_DEBUG_OUTPUT);
+        glDebugMessageCallback(&Debug::glDebugCallback, 0);
+        glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, 0, GL_TRUE);
+    } else {
+        Debug::log(Debug::Area::ImportantArea) << "GLEW_KHR_debug is not available, disabling OpenGL debug reporting facilities. The extension was compiled in but is not available at runtime.";
+    }
+#endif
+
+    Debug::fatal(enet_initialize() == 0, Debug::Area::ImportantArea, "An error occurred during ENet init (network init failure");
+
+    //glClearColor(0.f, .5f, 0.f, 1.0f);
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+    glViewport(0, 0, Settings::instance()->windowWidth, Settings::instance()->windowHeight);
 
     // call this ONLY when linking with FreeImage as a static library
 #ifdef FREEIMAGE_LIB
@@ -174,36 +201,6 @@ void Client::initSDL()
 
 
     Debug::assertf(retGLEW == GLEW_OK, "glewInit returned !GLEW_OK. No GL context can be formed..bailing out");
-
-    Debug::checkGLError();
-
-    Debug::log(Debug::Area::StartupArea) << "Platform: Driver Vendor: " << glGetString(GL_VENDOR);
-    Debug::log(Debug::Area::StartupArea) << "Platform: Renderer: " << glGetString(GL_RENDERER);
-    Debug::log(Debug::Area::StartupArea) << "OpenGL Version: " << glGetString(GL_VERSION);
-    Debug::log(Debug::Area::StartupArea) << "GLSL Version: " << glGetString(GL_SHADING_LANGUAGE_VERSION);
-
-    Debug::checkGLError();
-
-    GLint textureSize;
-    glGetIntegerv(GL_MAX_TEXTURE_SIZE, &textureSize);
-    Debug::log(Debug::Area::StartupArea) << "Maximum OpenGL texture size allowed: " << textureSize << "\n\n\n";
-
-#ifdef GLEW_KHR_debug
-    if (GLEW_KHR_debug) {
-        glEnable(GL_DEBUG_OUTPUT);
-        glDebugMessageCallback(&Debug::glDebugCallback, 0);
-        glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, 0, GL_TRUE);
-    } else {
-        Debug::log(Debug::Area::ImportantArea) << "GLEW_KHR_debug is not available, disabling OpenGL debug reporting facilities. The extension was compiled in but is not available at runtime.";
-    }
-#endif
-
-    Debug::fatal(enet_initialize() == 0, Debug::Area::ImportantArea, "An error occurred during ENet init (network init failure");
-
-    //glClearColor(0.f, .5f, 0.f, 1.0f);
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-    glViewport(0, 0, Settings::instance()->windowWidth, Settings::instance()->windowHeight);
 
     Debug::checkGLError();
 }

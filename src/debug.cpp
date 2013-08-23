@@ -19,13 +19,14 @@
 #include "game.h"
 #include "settings/settings.h"
 
-#include "glew.h"
 
 #include <assert.h>
 #include <iostream>
 #include <sstream>
 
 #include <SDL2/SDL.h>
+
+#include <QtGui/QOpenGLContext>
 
 #ifndef NDEBUG
 #endif
