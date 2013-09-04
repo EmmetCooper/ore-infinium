@@ -95,9 +95,10 @@ void Client::init()
     Debug::fatal(enet_initialize() == 0, Debug::Area::ImportantArea, "An error occurred during ENet init (network init failure");
 
     //glClearColor(0.f, .5f, 0.f, 1.0f);
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+//    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-    glViewport(0, 0, Settings::instance()->windowWidth, Settings::instance()->windowHeight);
+    //FIXME:
+//    glViewport(0, 0, Settings::instance()->windowWidth, Settings::instance()->windowHeight);
 
     // call this ONLY when linking with FreeImage as a static library
 #ifdef FREEIMAGE_LIB
@@ -258,95 +259,96 @@ void Client::poll()
 
 void Client::render(double frameTime)
 {
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (m_world && m_mainPlayer) {
-        m_world->render();
+        Debug::log(Debug::ImportantArea) << "RENDERING WORLD (thru client)";
+//        m_world->render();
     }
-
-    // only a client-hosted server has a chance of seeing any debug shit
-    if (m_server) {
-        if (!m_physicsDebugRenderer && m_world && m_world->spriteSheetRenderer()) {
-//FIXME:HACK:            m_physicsDebugRenderer = new PhysicsDebugRenderer(m_world->spriteSheetRenderer()->camera());
-            // physics debug renderer first init...
-//            m_box2DWorld->SetDebugDraw(m_physicsDebugRenderer);
-        }
-
-        if (m_physicsDebugRenderer) {
-
-            int rendererFlags = 0;
-            int settingsFlags = Settings::instance()->debugRendererFlags;
-            bool drawingRequired = false;
-
-            if (settingsFlags & Debug::RenderingDebug::ChipmunkAABBRenderingDebug) {
-                // rendererFlags |= b2Draw::e_aabbBit;
-                drawingRequired = true;
-            }
-
-            if (settingsFlags & Debug::RenderingDebug::ChipmunkShapeRenderingDebug) {
-                //  rendererFlags |= b2Draw::e_shapeBit;
-                drawingRequired = true;
-            }
-
-            if (settingsFlags & Debug::RenderingDebug::ChipmunkCenterOfMassRenderingDebug) {
-                //   rendererFlags |= b2Draw::e_centerOfMassBit;
-                drawingRequired = true;
-            }
-
-            if (settingsFlags & Debug::RenderingDebug::ChipmunkJointRenderingDebug) {
-                //    rendererFlags |= b2Draw::e_jointBit;
-                drawingRequired = true;
-            }
-
-            if (drawingRequired) {
-                m_physicsDebugRenderer->render();
-            }
-        }
-    }
-
-    if (m_renderGUI) {
-  //      drawDebugText(frameTime);
- //       m_gui->render();
-    } else {
-        static int limiter = 0;
-        ++limiter;
-
-        if (limiter > 10) {
-            limiter = 0;
-            Debug::log(Debug::ImportantArea) << "FPS: " << (1000.0 / frameTime) << " FrameTime: " << frameTime << " ms";
-        }
-    }
-
+//
+//    // only a client-hosted server has a chance of seeing any debug shit
+//    if (m_server) {
+//        if (!m_physicsDebugRenderer && m_world && m_world->spriteSheetRenderer()) {
+////FIXME:HACK:            m_physicsDebugRenderer = new PhysicsDebugRenderer(m_world->spriteSheetRenderer()->camera());
+//            // physics debug renderer first init...
+////            m_box2DWorld->SetDebugDraw(m_physicsDebugRenderer);
+//        }
+//
+//        if (m_physicsDebugRenderer) {
+//
+//            int rendererFlags = 0;
+//            int settingsFlags = Settings::instance()->debugRendererFlags;
+//            bool drawingRequired = false;
+//
+//            if (settingsFlags & Debug::RenderingDebug::ChipmunkAABBRenderingDebug) {
+//                // rendererFlags |= b2Draw::e_aabbBit;
+//                drawingRequired = true;
+//            }
+//
+//            if (settingsFlags & Debug::RenderingDebug::ChipmunkShapeRenderingDebug) {
+//                //  rendererFlags |= b2Draw::e_shapeBit;
+//                drawingRequired = true;
+//            }
+//
+//            if (settingsFlags & Debug::RenderingDebug::ChipmunkCenterOfMassRenderingDebug) {
+//                //   rendererFlags |= b2Draw::e_centerOfMassBit;
+//                drawingRequired = true;
+//            }
+//
+//            if (settingsFlags & Debug::RenderingDebug::ChipmunkJointRenderingDebug) {
+//                //    rendererFlags |= b2Draw::e_jointBit;
+//                drawingRequired = true;
+//            }
+//
+//            if (drawingRequired) {
+//                m_physicsDebugRenderer->render();
+//            }
+//        }
+//    }
+//
+//    if (m_renderGUI) {
+//  //      drawDebugText(frameTime);
+// //       m_gui->render();
+//    } else {
+//        static int limiter = 0;
+//        ++limiter;
+//
+//        if (limiter > 10) {
+//            limiter = 0;
+//            Debug::log(Debug::ImportantArea) << "FPS: " << (1000.0 / frameTime) << " FrameTime: " << frameTime << " ms";
+//        }
+//    }
+//
 //    SDL_GL_SwapWindow(m_window);
 }
 
 void Client::tick(double frameTime)
 {
-    handleInputEvents();
+//    handleInputEvents();
 
-    if (m_peer) {
-        poll();
-    }
-
-    if (m_world) {
-        if (m_mainPlayer) {
-            //NOTE: we send this shit regardless of input events..for obvious reasons. (aka fossils of a once living bug lie here ;)
-            sendPlayerMovement();
-            sendPlayerMouseState();
-        }
-
-        m_world->update(frameTime);
-
-        if (m_quickBarMenu) {
-            m_quickBarMenu->update();
-        }
-
-        if (m_server) {
-            if (m_physicsDebugRenderer) {
-                m_debugMenu->setPhysicsWorldShapeCount(m_physicsDebugRenderer->shapeCount());
-            }
-        }
-    }
+ //   if (m_peer) {
+ //       poll();
+ //   }
+ //
+ //   if (m_world) {
+ //       if (m_mainPlayer) {
+ //           //NOTE: we send this shit regardless of input events..for obvious reasons. (aka fossils of a once living bug lie here ;)
+ //           sendPlayerMovement();
+ //           sendPlayerMouseState();
+ //       }
+ //
+ //       m_world->update(frameTime);
+ //
+ //       if (m_quickBarMenu) {
+ //           m_quickBarMenu->update();
+ //       }
+ //
+ //       if (m_server) {
+ //           if (m_physicsDebugRenderer) {
+ //               m_debugMenu->setPhysicsWorldShapeCount(m_physicsDebugRenderer->shapeCount());
+ //           }
+ //       }
+ //   }
 }
 
 void Client::setActiveChunkCount(uint32_t count)

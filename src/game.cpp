@@ -89,7 +89,7 @@ void Game::tick()
     double t = 0.0;
 
     double fps = 0.0;
-    while (m_running) {
+//    while (m_running) {
 
         std::chrono::system_clock::time_point newTime = std::chrono::high_resolution_clock::now();
         double frameTime = std::chrono::duration_cast<std::chrono::duration<double, std::milli> >(newTime - currentTime).count();
@@ -119,7 +119,7 @@ void Game::tick()
         // sleep so we don't burn cpu
         //  std::chrono::milliseconds timeUntilNextFrame(int(dt - accumulator));
         //  std::this_thread::sleep_for(timeUntilNextFrame);
-    }
+//    }
 
     /*
 

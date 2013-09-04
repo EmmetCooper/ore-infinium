@@ -61,7 +61,6 @@ int main(int argc, char* argv[])
 //    QOpenGLFunctions funcs(QOpenGLContext::currentContext());
 //    bool npot = funcs.hasOpenGLFeature(QOpenGLFunctions::NPOTTextures);
 
-
     bool startupDebugEnabled = false;
     bool worldViewer = false;
     bool noTimeout = false;
@@ -120,8 +119,6 @@ int main(int argc, char* argv[])
     }
 
     std::cout << "Ore Infinium Version " << ore_infinium_VERSION_MAJOR << "." << ore_infinium_VERSION_MINOR << "\n";
-
-//    Game game;
 
     if (startupDebugEnabled) {
         Settings::instance()->setStartupFlag(Settings::StartupFlags::DebugLoggingStartupFlag);

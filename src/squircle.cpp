@@ -56,6 +56,13 @@ void Squircle::paintUnder()
     assert(window());
     assert(window()->openglContext());
 
+    glViewport(0, 0, window()->width(), window()->height());
+//
+ //   glDisable(GL_DEPTH_TEST);
+//
+    glClearColor(0, 0, 0, 1);
+//    glClear(GL_COLOR_BUFFER_BIT);
+
     if (!m_game) {
         Debug::log(Debug::StartupArea) << "m_game not yet created, creating new!";
 
@@ -115,15 +122,10 @@ void Squircle::paintUnder()
 //    m_program->setAttributeArray(0, GL_FLOAT, values, 2);
 //    m_program->setUniformValue("t", (float) m_thread_t);
 //
-//    glViewport(0, 0, window()->width(), window()->height());
-//
-//    glDisable(GL_DEPTH_TEST);
-//
-//    glClearColor(0, 0, 0, 1);
-//    glClear(GL_COLOR_BUFFER_BIT);
+
 //
 //    glEnable(GL_BLEND);
-//    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+ //   glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 //
 //    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 //
