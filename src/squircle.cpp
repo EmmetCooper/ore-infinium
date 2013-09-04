@@ -5,14 +5,27 @@
 #include <QtGui/QOpenGLShaderProgram>
 #include <QtGui/QOpenGLContext>
 
+#include "assert.h"
+
 Squircle::Squircle()
     : m_program(0)
     , m_t(0)
     , m_thread_t(0)
 {
+    m_game =  new Game();
+
+    m_game->init();
+
     connect(this, &Squircle::windowChanged, this, &Squircle::handleWindowChanged);
 
+
 //    m_client = new Client();
+}
+
+Squircle::~Squircle()
+{
+    m_game->shutdown();
+    delete m_game;
 }
 
 void Squircle::setT(qreal t)
@@ -31,7 +44,7 @@ void Squircle::handleWindowChanged(QQuickWindow *win)
         // Connect the beforeRendering signal to our paint function.
         // Since this call is executed on the rendering thread it must be
         // a Qt::DirectConnection
-        connect(win, SIGNAL(beforeRendering()), this, SLOT(paint()), Qt::DirectConnection);
+        connect(win, SIGNAL(beforeRendering()), this, SLOT(paintUnder()), Qt::DirectConnection);
         connect(win, SIGNAL(beforeSynchronizing()), this, SLOT(sync()), Qt::DirectConnection);
 
         // If we allow QML to do the clearing, they would clear what we paint
@@ -40,33 +53,36 @@ void Squircle::handleWindowChanged(QQuickWindow *win)
     }
 }
 
-void Squircle::paint()
+void Squircle::paintUnder()
 {
-    if (!m_program) {
-        m_program = new QOpenGLShaderProgram();
-        m_program->addShaderFromSourceCode(QOpenGLShader::Vertex,
-                                           "attribute highp vec4 vertices;"
-                                           "varying highp vec2 coords;"
-                                           "void main() {"
-                                           "    gl_Position = vertices;"
-                                           "    coords = vertices.xy;"
-                                           "}");
-        m_program->addShaderFromSourceCode(QOpenGLShader::Fragment,
-                                           "uniform lowp float t;"
-                                           "varying highp vec2 coords;"
-                                           "void main() {"
-                                           "    lowp float i = 1. - (pow(abs(coords.x), 4.) + pow(abs(coords.y), 4.));"
-                                           "    i = smoothstep(t - 0.8, t + 0.8, i);"
-                                           "    i = floor(i * 20.) / 20.;"
-                                           "    gl_FragColor = vec4(coords * .5 + .5, i, i);"
-                                           "}");
+    assert(game);
+    m_game->tick();
 
-        m_program->bindAttributeLocation("vertices", 0);
-        m_program->link();
-
-        connect(window()->openglContext(), SIGNAL(aboutToBeDestroyed()),
-                this, SLOT(cleanup()), Qt::DirectConnection);
-    }
+//    if (!m_program) {
+//        m_program = new QOpenGLShaderProgram();
+//        m_program->addShaderFromSourceCode(QOpenGLShader::Vertex,
+//                                           "attribute highp vec4 vertices;"
+//                                           "varying highp vec2 coords;"
+//                                           "void main() {"
+//                                           "    gl_Position = vertices;"
+//                                           "    coords = vertices.xy;"
+//                                           "}");
+//        m_program->addShaderFromSourceCode(QOpenGLShader::Fragment,
+//                                           "uniform lowp float t;"
+//                                           "varying highp vec2 coords;"
+//                                           "void main() {"
+//                                           "    lowp float i = 1. - (pow(abs(coords.x), 4.) + pow(abs(coords.y), 4.));"
+//                                           "    i = smoothstep(t - 0.8, t + 0.8, i);"
+//                                           "    i = floor(i * 20.) / 20.;"
+//                                           "    gl_FragColor = vec4(coords * .5 + .5, i, i);"
+//                                           "}");
+//
+//        m_program->bindAttributeLocation("vertices", 0);
+//        m_program->link();
+//
+ //       connect(window()->openglContext(), SIGNAL(aboutToBeDestroyed()),
+  //              this, SLOT(cleanup()), Qt::DirectConnection);
+   // }
 
 
     if (m_frameCount == 0) {
@@ -78,41 +94,41 @@ void Squircle::paint()
 
 
 
-    m_program->bind();
-
-    m_program->enableAttributeArray(0);
-
-    float values[] = {
-        -1, -1,
-        1, -1,
-        -1, 1,
-        1, 1
-    };
-    m_program->setAttributeArray(0, GL_FLOAT, values, 2);
-    m_program->setUniformValue("t", (float) m_thread_t);
-
-    glViewport(0, 0, window()->width(), window()->height());
-
-    glDisable(GL_DEPTH_TEST);
-
-    glClearColor(0, 0, 0, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-    m_program->disableAttributeArray(0);
-    m_program->release();
+//    m_program->bind();
+//
+//    m_program->enableAttributeArray(0);
+//
+//    float values[] = {
+//        -1, -1,
+//        1, -1,
+//        -1, 1,
+//        1, 1
+//    };
+//    m_program->setAttributeArray(0, GL_FLOAT, values, 2);
+//    m_program->setUniformValue("t", (float) m_thread_t);
+//
+//    glViewport(0, 0, window()->width(), window()->height());
+//
+//    glDisable(GL_DEPTH_TEST);
+//
+//    glClearColor(0, 0, 0, 1);
+//    glClear(GL_COLOR_BUFFER_BIT);
+//
+//    glEnable(GL_BLEND);
+//    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+//
+//    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+//
+//    m_program->disableAttributeArray(0);
+//    m_program->release();
 }
 
 void Squircle::cleanup()
 {
-    if (m_program) {
-        delete m_program;
-        m_program = 0;
-    }
+//    if (m_program) {
+//        delete m_program;
+//        m_program = 0;
+//    }
 }
 
 void Squircle::sync()

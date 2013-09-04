@@ -78,9 +78,6 @@ void Game::init()
     }
 
     m_client->init();
-
-    tick();
-    shutdown();
 }
 
 void Game::tick()

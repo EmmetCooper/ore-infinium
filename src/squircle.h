@@ -4,7 +4,10 @@
 #include <QtQuick/QQuickItem>
 #include <QtGui/QOpenGLShaderProgram>
 #include <QTime>
+
 //#include "client/client.h"
+
+#include "src/game.h"
 
 class Squircle : public QQuickItem
 {
@@ -14,6 +17,7 @@ class Squircle : public QQuickItem
 
 public:
     Squircle();
+    ~Squircle();
 
     qreal t() const { return m_t; }
     void setT(qreal t);
@@ -22,7 +26,7 @@ signals:
     void tChanged();
 
 public slots:
-    void paint();
+    void paintUnder();
     void cleanup();
     void sync();
 
@@ -36,6 +40,8 @@ private:
 
     QTime m_time;
     int m_frameCount = 0;
+
+    Game *m_game = nullptr;
 
     qreal m_t;
     qreal m_thread_t;

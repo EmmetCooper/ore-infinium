@@ -68,6 +68,7 @@ int main(int argc, char* argv[])
 
     return app.exec();
 
+    //TODO: handle dedicated server case, (can use qapplication, maybe gui? but obviously don't use the qquickview or anything)
 
     bool startupDebugEnabled = false;
     bool worldViewer = false;
