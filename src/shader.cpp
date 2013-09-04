@@ -17,6 +17,12 @@
 
 #include "shader.h"
 
+#include "debug.h"
+#include "game.h"
+#include "settings/settings.h"
+
+#include "glew.h"
+
 #include <fstream>
 #include <iostream>
 #include <stdio.h>
@@ -26,9 +32,6 @@
 #include <vector>
 #include <sys/stat.h>
 
-#include "debug.h"
-#include "game.h"
-#include "settings/settings.h"
 
 Shader::Shader(const char* vertexShader, const char* fragmentShader)
 {

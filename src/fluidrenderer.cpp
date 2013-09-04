@@ -33,7 +33,7 @@
 
 FluidRenderer::FluidRenderer(Camera* camera, Entities::Player* mainPlayer)
 : m_camera(camera),
-  m_mainPlayer(mainPlayer), QOpenGLFunctions_3_1_CoreBackend(0)
+  m_mainPlayer(mainPlayer)
 {
     m_shaderWater = new Shader("fluidrenderer_water.vert", "fluidrenderer_water.frag");
     setCamera(camera);

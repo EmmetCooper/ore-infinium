@@ -22,11 +22,7 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-#include <QOpenGLFunctions>
-#include <QOpenGLShaderProgram>
-#include <QOpenGLFramebufferObject>
-
-#include <qopengl.h>
+#include "glew.h"
 
 #include <map>
 #include <string>
@@ -39,7 +35,7 @@ class Texture;
 class Sprite;
 class Entity;
 
-class SpriteSheetRenderer : protected QOpenGLFunctions_3_0_CoreBackend
+class SpriteSheetRenderer
 {
 public:
     SpriteSheetRenderer(Camera* camera);

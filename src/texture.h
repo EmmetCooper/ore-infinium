@@ -20,6 +20,8 @@
 
 #include <string>
 
+#include "glew.h"
+
 class Image;
 
 class Texture

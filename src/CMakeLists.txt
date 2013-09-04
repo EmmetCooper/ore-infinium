@@ -60,7 +60,7 @@ ${CMAKE_CURRENT_BINARY_DIR}/packet.pb.cc
 
 unittest.cpp
 
-#${CMAKE_SOURCE_DIR}/utils/GLEW/glew.c
+${CMAKE_SOURCE_DIR}/utils/GLEW/glew.c
 
 squircle.cpp
 
@@ -108,9 +108,9 @@ add_dependencies(ore-infinium do_protoc)
 include_directories(
 # ----------
 ${CMAKE_SOURCE_DIR}/utils/glm/
-#${CMAKE_SOURCE_DIR}/utils/GLEW/
+${CMAKE_SOURCE_DIR}/utils/GLEW/
 
-#${CMAKE_INSTALL_PREFIX}/utils/GLEW/
+${CMAKE_INSTALL_PREFIX}/utils/GLEW/
 #-----------
 
 ${CMAKE_SOURCE_DIR}

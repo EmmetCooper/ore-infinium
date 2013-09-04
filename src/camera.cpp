@@ -19,7 +19,7 @@
 #include "globals.h"
 #include "shader.h"
 
-#include <QtGui/QOpenGLContext>
+#include "glew.h"
 
 #include "settings/settings.h"
 

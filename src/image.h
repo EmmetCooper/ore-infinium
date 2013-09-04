@@ -23,7 +23,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_main.h>
 
-#include <QtGui/QOpenGLContext>
+#include "glew.h"
 
 struct SDL_Surface;
 

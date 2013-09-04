@@ -21,13 +21,7 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-#include <QOpenGLFunctions>
-#include <QOpenGLShaderProgram>
-#include <QOpenGLFramebufferObject>
-
-#include <GL/gl.h>
-
-#include <qopengl.h>
+#include "glew.h"
 
 #include <map>
 #include <string>
@@ -43,7 +37,7 @@ class Camera;
 class Texture;
 class Shader;
 
-class FluidRenderer : protected QOpenGLFunctions_3_1_CoreBackend
+class FluidRenderer
 {
 public:
     FluidRenderer(Camera* camera, Entities::Player* mainPlayer);

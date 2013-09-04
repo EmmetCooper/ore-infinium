@@ -26,7 +26,7 @@
 
 #include <SDL2/SDL.h>
 
-#include <QtGui/QOpenGLContext>
+#include "glew.h"
 
 #ifndef NDEBUG
 #endif
