@@ -129,8 +129,8 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         m_sky = new SkyRenderer(this, m_camera, m_time);
         m_particleRenderer = new ParticleRenderer(this, m_camera, m_mainPlayer);
 
-        m_fluidRenderer = new FluidRenderer(m_camera, m_mainPlayer);
-        m_fluidRenderer->setWaterSpatialHash(m_waterSpatialHash);
+//              m_fluidRenderer = new FluidRenderer(m_camera, m_mainPlayer);
+//              m_fluidRenderer->setWaterSpatialHash(m_waterSpatialHash);
     }
 
     //client doesn't actually load/generate any world
@@ -357,7 +357,7 @@ void World::render()
     m_spriteSheetRenderer->renderCharacters();
 
     //FIXME: take lighting into account, needs access to fbos though.
-    m_fluidRenderer->render();
+//                 m_fluidRenderer->render();
 
 //    m_particleRenderer->render();
 
