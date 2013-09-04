@@ -22,15 +22,17 @@ Item {
         radius: 10
         border.width: 1
         border.color: "white"
+        opacity: 0.5
 //        anchors.fill: label
 
         anchors {
             bottom: parent.bottom
-            top: parent.top
             left: parent.left
             right: parent.right
 
         }
+
+        height: 100
 
         anchors.bottomMargin: 30
 

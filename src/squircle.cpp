@@ -60,7 +60,7 @@ void Squircle::paintUnder()
 //
  //   glDisable(GL_DEPTH_TEST);
 //
-    glClearColor(0, 0, 0, 1);
+    glClearColor(0, 0, 02, 1);
 //    glClear(GL_COLOR_BUFFER_BIT);
 
     if (!m_game) {
