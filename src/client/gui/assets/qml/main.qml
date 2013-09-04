@@ -4,8 +4,9 @@ import OpenGLUnderQML 1.0
 
 Item {
 
-    width: 320
-    height: 480
+    //FIXME: gynormous hack, strip win size out into C++
+    width: 1024
+    height: 768
 
     Squircle {
         SequentialAnimation on t {
@@ -16,12 +17,24 @@ Item {
         }
     }
     Rectangle {
+        id: rect
         color: Qt.rgba(1, 1, 1, 0.7)
         radius: 10
         border.width: 1
         border.color: "white"
-        anchors.fill: label
-        anchors.margins: -10
+//        anchors.fill: label
+
+        anchors {
+            bottom: parent.bottom
+            top: parent.top
+            left: parent.left
+            right: parent.right
+
+        }
+
+        anchors.bottomMargin: 30
+
+
     }
 
     Text {
@@ -29,9 +42,10 @@ Item {
         color: "black"
         wrapMode: Text.WordWrap
         text: "The background here is a squircle rendered with raw OpenGL using the 'beforeRender()' signal in QQuickWindow. This text label and its border is rendered using QML"
-        anchors.right: parent.right
-        anchors.left: parent.left
-        anchors.bottom: parent.bottom
-        anchors.margins: 20
+        anchors.fill: rect
+//        anchors.right: parent.right
+//        anchors.left: parent.left
+//        anchors.bottom: parent.bottom
+//        height: 100
     }
 }
