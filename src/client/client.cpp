@@ -326,29 +326,29 @@ void Client::tick(double frameTime)
 {
 //    handleInputEvents();
 
- //   if (m_peer) {
- //       poll();
- //   }
- //
- //   if (m_world) {
- //       if (m_mainPlayer) {
- //           //NOTE: we send this shit regardless of input events..for obvious reasons. (aka fossils of a once living bug lie here ;)
- //           sendPlayerMovement();
- //           sendPlayerMouseState();
- //       }
- //
- //       m_world->update(frameTime);
- //
- //       if (m_quickBarMenu) {
- //           m_quickBarMenu->update();
- //       }
- //
- //       if (m_server) {
- //           if (m_physicsDebugRenderer) {
- //               m_debugMenu->setPhysicsWorldShapeCount(m_physicsDebugRenderer->shapeCount());
- //           }
- //       }
- //   }
+    if (m_peer) {
+        poll();
+    }
+
+   if (m_world) {
+       if (m_mainPlayer) {
+           //NOTE: we send this shit regardless of input events..for obvious reasons. (aka fossils of a once living bug lie here ;)
+           sendPlayerMovement();
+           sendPlayerMouseState();
+       }
+
+       m_world->update(frameTime);
+
+       if (m_quickBarMenu) {
+           m_quickBarMenu->update();
+       }
+
+       if (m_server) {
+           if (m_physicsDebugRenderer) {
+               m_debugMenu->setPhysicsWorldShapeCount(m_physicsDebugRenderer->shapeCount());
+           }
+       }
+   }
 }
 
 void Client::setActiveChunkCount(uint32_t count)
