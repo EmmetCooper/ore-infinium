@@ -1,5 +1,7 @@
 
 #include "squircle.h"
+#include "debug.h"
+#include "debug.h"
 
 #include <QtQuick/QQuickWindow>
 #include <QtGui/QOpenGLShaderProgram>
@@ -12,10 +14,6 @@ Squircle::Squircle()
     , m_t(0)
     , m_thread_t(0)
 {
-    m_game =  new Game();
-
-    m_game->init();
-
     connect(this, &Squircle::windowChanged, this, &Squircle::handleWindowChanged);
 
 
@@ -55,8 +53,17 @@ void Squircle::handleWindowChanged(QQuickWindow *win)
 
 void Squircle::paintUnder()
 {
-    assert(game);
-    m_game->tick();
+    assert(window());
+    assert(window()->openglContext());
+
+    if (!m_game) {
+        Debug::log(Debug::StartupArea) << "m_game not yet created, creating new!";
+
+        m_game =  new Game();
+        m_game->init();
+    } else {
+        m_game->tick();
+    }
 
 //    if (!m_program) {
 //        m_program = new QOpenGLShaderProgram();
@@ -83,6 +90,7 @@ void Squircle::paintUnder()
  //       connect(window()->openglContext(), SIGNAL(aboutToBeDestroyed()),
   //              this, SLOT(cleanup()), Qt::DirectConnection);
    // }
+    assert(window()->openglContext());
 
 
     if (m_frameCount == 0) {

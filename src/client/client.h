@@ -138,7 +138,7 @@ private:
 ///////////////////////////////////////////////
 
 private:
-    void initSDL();
+    void initGL();
 
     glm::vec2 mousePositionToWorldCoords();
 

@@ -66,7 +66,7 @@ Client::~Client()
 
 void Client::init()
 {
-//    initSDL();
+    initGL();
 
     //FIXME: MOVE INTO INITGL
     Debug::checkGLError();
@@ -104,12 +104,12 @@ void Client::init()
     FreeImage_Initialise();
 #endif
 
-    m_gui = GUI::instance();
-    m_mainMenu = new MainMenu(this);
-    m_mainMenu->showMainMenu();
-
-    m_debugMenu = new DebugMenu(this);
-    m_debugMenu->show();
+//    m_gui = GUI::instance();
+//    m_mainMenu = new MainMenu(this);
+//    m_mainMenu->showMainMenu();
+//
+//    m_debugMenu = new DebugMenu(this);
+//    m_debugMenu->show();
 
     if (Settings::instance()->startupFlags() & Settings::PlayNowStartupFlag) {
         startMultiplayerHost("Dingo");
@@ -126,67 +126,67 @@ void Client::init()
 //    startMultiplayerHost(ss.str());
 }
 
-void Client::initSDL()
+void Client::initGL()
 {
-    Debug::log(Debug::Area::StartupArea) << "SDL on platform: " << SDL_GetPlatform();
-
-    SDL_version compiled;
-    SDL_version linked;
-    SDL_VERSION(&compiled);
-    SDL_GetVersion(&linked);
-
-    Debug::log(Debug::Area::StartupArea) << "Compiled against SDL version: " << int(compiled.major) << "." << int(compiled.minor) << "-" << int(compiled.patch) <<
-                                         " Running (linked) against version: " << int(linked.major) << "." << int(linked.minor) << "-" << int(linked.patch);
-
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) != 0) {
-        std::string error = SDL_GetError();
-        Debug::fatal(false, Debug::Area::ImportantArea, "failure to initialize SDL error: " + error);
-    }
-
-    m_window = SDL_CreateWindow("Ore Infinium", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                                Settings::instance()->windowWidth, Settings::instance()->windowHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
-
-    if (!m_window) {
-        Debug::checkSDLError();
-    }
-
-    int ret = IMG_Init(IMG_INIT_PNG);
-    assert(ret != 0);
-
-//    glewExperimental = GL_TRUE;
-    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-
-    // Request opengl 3.3 context.
-    // FIXME: i *want 3.2, but Mesa 9 only has 3.0.. :(
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
-
-    /* Turn on double buffering with a 24bit Z buffer.
-     * You may need to change this to 16 or 32 for your system */
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-
-    //TODO: we'll probably need some extension at some point in time..
-    //SDL_GL_ExtensionSupported();
-
-    m_GLcontext = SDL_GL_CreateContext(m_window);
-    Debug::assertf(m_GLcontext != nullptr, "SDL GL Context creation failure! Context nullptr.");
-    Debug::checkGLError();
-
-    //FIXME: doesn't do shit
-    SDL_GL_SetSwapInterval(1);
-
-    Debug::checkSDLError();
-    Debug::checkGLError();
-
-    SDL_ShowCursor(0);
-
-    Debug::checkSDLError();
-    Debug::checkGLError();
-
+//    Debug::log(Debug::Area::StartupArea) << "SDL on platform: " << SDL_GetPlatform();
+//
+//    SDL_version compiled;
+//    SDL_version linked;
+//    SDL_VERSION(&compiled);
+//    SDL_GetVersion(&linked);
+//
+//    Debug::log(Debug::Area::StartupArea) << "Compiled against SDL version: " << int(compiled.major) << "." << int(compiled.minor) << "-" << int(compiled.patch) <<
+//                                         " Running (linked) against version: " << int(linked.major) << "." << int(linked.minor) << "-" << int(linked.patch);
+//
+//    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) != 0) {
+//        std::string error = SDL_GetError();
+//        Debug::fatal(false, Debug::Area::ImportantArea, "failure to initialize SDL error: " + error);
+//    }
+//
+//    m_window = SDL_CreateWindow("Ore Infinium", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+//                                Settings::instance()->windowWidth, Settings::instance()->windowHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+//
+//    if (!m_window) {
+//        Debug::checkSDLError();
+//    }
+//
+//    int ret = IMG_Init(IMG_INIT_PNG);
+//    assert(ret != 0);
+//
+////    glewExperimental = GL_TRUE;
+//    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+//    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+//    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+//
+//    // Request opengl 3.3 context.
+//    // FIXME: i *want 3.2, but Mesa 9 only has 3.0.. :(
+//    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+//    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+//    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+//
+//    /* Turn on double buffering with a 24bit Z buffer.
+//     * You may need to change this to 16 or 32 for your system */
+//    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+//    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+//
+//    //TODO: we'll probably need some extension at some point in time..
+//    //SDL_GL_ExtensionSupported();
+//
+//    m_GLcontext = SDL_GL_CreateContext(m_window);
+//    Debug::assertf(m_GLcontext != nullptr, "SDL GL Context creation failure! Context nullptr.");
+//    Debug::checkGLError();
+//
+//    //FIXME: doesn't do shit
+//    SDL_GL_SetSwapInterval(1);
+//
+//    Debug::checkSDLError();
+//    Debug::checkGLError();
+//
+//    SDL_ShowCursor(0);
+//
+//    Debug::checkSDLError();
+//    Debug::checkGLError();
+//
     glewExperimental = true;
 
     int retGLEW = glewInit();
@@ -305,8 +305,8 @@ void Client::render(double frameTime)
     }
 
     if (m_renderGUI) {
-        drawDebugText(frameTime);
-        m_gui->render();
+  //      drawDebugText(frameTime);
+ //       m_gui->render();
     } else {
         static int limiter = 0;
         ++limiter;
@@ -317,7 +317,7 @@ void Client::render(double frameTime)
         }
     }
 
-    SDL_GL_SwapWindow(m_window);
+//    SDL_GL_SwapWindow(m_window);
 }
 
 void Client::tick(double frameTime)
@@ -361,85 +361,86 @@ void Client::drawDebugText(double frameTime)
 
 void Client::handleInputEvents()
 {
-    SDL_Event event;
-
-    while (SDL_PollEvent(&event)) {
-
-        m_gui->handleEvent(event);
-
-        if (m_mainPlayer && m_peer && m_connected && m_gui->inputDemanded() == false) {
-            handlePlayerInput(event);
-            m_quickBarMenu->handleEvent(event);
-        }
-
-        switch (event.type) {
-        case SDL_KEYDOWN:
-            if (event.key.keysym.sym == SDLK_ESCAPE) {
-                //only if we are connected, do we allow hiding and showing (escape menu)
-                if (m_peer) {
-                    if (!m_mainMenu->escapeMenuVisible()) {
-                        m_mainMenu->showEscapeMenu();
-                    } else {
-                        m_mainMenu->hideEscapeMenu();
-                    }
-                }
-            } else if (event.key.keysym.sym == SDLK_F1) {
-                m_debugMenu->setCollapsed(!m_debugMenu->collapsed());
-            } else if (event.key.keysym.sym == SDLK_F8) {
-                std::stringstream ss;
-                ss << "Player";
-                std::random_device device;
-                std::mt19937 rand(device());
-                std::uniform_int_distribution<> distribution(0, INT_MAX);
-
-                ss << distribution(rand);
-
-                startMultiplayerHost(ss.str());
-            } else if (event.key.keysym.sym == SDLK_F10) {
-                m_renderGUI = !m_renderGUI;
-            } else if (event.key.keysym.sym == SDLK_F11) {
-                if (m_debugSettings == nullptr) {
-                    m_debugSettings = new DebugSettings(this);
-                    m_debugSettings->show();
-                } else {
-                    if (m_debugSettings->visible()) {
-                        m_debugSettings->hide();
-                    } else {
-                        m_debugSettings->show();
-                    }
-                }
-            }
-            break;
-
-
-        case SDL_WINDOWEVENT_CLOSE:
-            //FIXME: fucking useless. doesn't get called for..gee, what would this event be called for? oh yeah, window closing. No, instead that's fucking SDL_QUIT, which is
-            // also for some fucking reason, also ctrl-C/break. That shit don't make sense brah
-
-            // if (m_peer) {
-            //     m_mainMenu->toggleShown();
-            // } else {
-            //     shutdown();
-            // }
-            break;
-
-        case SDL_QUIT:
-//            if (m_peer) {
-//                m_mainMenu->showEscapeMenu();
-//            } else {
-            //NOTE: so far this seems to be ctrl-C as well as window close button. Who the fuck knows why the above one does nothing
-            shutdown();
-            //}
-            break;
-
-        default:
-            break;
-        }
-    }
+//    SDL_Event event;
+//
+//    while (SDL_PollEvent(&event)) {
+//
+////        m_gui->handleEvent(event);
+//
+//        if (m_mainPlayer && m_peer && m_connected && m_gui->inputDemanded() == false) {
+//            handlePlayerInput(event);
+//            m_quickBarMenu->handleEvent(event);
+//        }
+//
+//        switch (event.type) {
+//        case SDL_KEYDOWN:
+//            if (event.key.keysym.sym == SDLK_ESCAPE) {
+//                //only if we are connected, do we allow hiding and showing (escape menu)
+//                if (m_peer) {
+//                    if (!m_mainMenu->escapeMenuVisible()) {
+//                        m_mainMenu->showEscapeMenu();
+//                    } else {
+//                        m_mainMenu->hideEscapeMenu();
+//                    }
+//                }
+//            } else if (event.key.keysym.sym == SDLK_F1) {
+//                m_debugMenu->setCollapsed(!m_debugMenu->collapsed());
+//            } else if (event.key.keysym.sym == SDLK_F8) {
+//                std::stringstream ss;
+//                ss << "Player";
+//                std::random_device device;
+//                std::mt19937 rand(device());
+//                std::uniform_int_distribution<> distribution(0, INT_MAX);
+//
+//                ss << distribution(rand);
+//
+//                startMultiplayerHost(ss.str());
+//            } else if (event.key.keysym.sym == SDLK_F10) {
+//                m_renderGUI = !m_renderGUI;
+//            } else if (event.key.keysym.sym == SDLK_F11) {
+//                if (m_debugSettings == nullptr) {
+//                    m_debugSettings = new DebugSettings(this);
+//                    m_debugSettings->show();
+//                } else {
+//                    if (m_debugSettings->visible()) {
+//                        m_debugSettings->hide();
+//                    } else {
+//                        m_debugSettings->show();
+//                    }
+//                }
+//            }
+//            break;
+//
+//
+//        case SDL_WINDOWEVENT_CLOSE:
+//            //FIXME: fucking useless. doesn't get called for..gee, what would this event be called for? oh yeah, window closing. No, instead that's fucking SDL_QUIT, which is
+//            // also for some fucking reason, also ctrl-C/break. That shit don't make sense brah
+//
+//            // if (m_peer) {
+//            //     m_mainMenu->toggleShown();
+//            // } else {
+//            //     shutdown();
+//            // }
+//            break;
+//
+//        case SDL_QUIT:
+////            if (m_peer) {
+////                m_mainMenu->showEscapeMenu();
+////            } else {
+//            //NOTE: so far this seems to be ctrl-C as well as window close button. Who the fuck knows why the above one does nothing
+//            shutdown();
+//            //}
+//            break;
+//
+//        default:
+//            break;
+//        }
+//    }
 }
 
 void Client::handlePlayerInput(SDL_Event& event)
 {
+    Debug::assertf(false, "ENOTIMPL");
     int32_t originalX = m_playerInputDirectionX;
     int32_t originalY = m_playerInputDirectionY;
 

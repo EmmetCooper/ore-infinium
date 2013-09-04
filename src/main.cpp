@@ -58,17 +58,9 @@ int main(int argc, char* argv[])
 {
     QGuiApplication app(argc, argv);
 
-    QOpenGLFunctions funcs(QOpenGLContext::currentContext());
-    bool npot = funcs.hasOpenGLFeature(QOpenGLFunctions::NPOTTextures);
+//    QOpenGLFunctions funcs(QOpenGLContext::currentContext());
+//    bool npot = funcs.hasOpenGLFeature(QOpenGLFunctions::NPOTTextures);
 
-    qmlRegisterType<Squircle>("OpenGLUnderQML", 1, 0, "Squircle");
-    QQuickView view;
-    view.setSource(QUrl("../client/gui/assets/qml/main.qml"));
-    view.show();
-
-    return app.exec();
-
-    //TODO: handle dedicated server case, (can use qapplication, maybe gui? but obviously don't use the qquickview or anything)
 
     bool startupDebugEnabled = false;
     bool worldViewer = false;
@@ -147,5 +139,10 @@ int main(int argc, char* argv[])
         Settings::instance()->setStartupFlag(Settings::StartupFlags::PlayNowStartupFlag);
     }
 
-//    game.init();
+    qmlRegisterType<Squircle>("OpenGLUnderQML", 1, 0, "Squircle");
+    QQuickView view;
+    view.setSource(QUrl("../client/gui/assets/qml/main.qml"));
+    view.show();
+
+    return app.exec();
 }

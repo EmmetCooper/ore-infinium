@@ -82,8 +82,6 @@ void Game::init()
 
 void Game::tick()
 {
-    SDL_StartTextInput();
-
     std::chrono::system_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
 
     double accumulator = 0.0;
