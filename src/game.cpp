@@ -82,6 +82,7 @@ void Game::init()
 
 void Game::tick()
 {
+    Debug::log(Debug::ImportantArea) << " GAME TICK!";
     std::chrono::system_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
 
     double accumulator = 0.0;

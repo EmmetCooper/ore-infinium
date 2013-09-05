@@ -263,7 +263,10 @@ void Client::render(double frameTime)
 
     if (m_world && m_mainPlayer) {
         Debug::log(Debug::ImportantArea) << "RENDERING WORLD (thru client)";
-//        m_world->render();
+        m_world->render();
+    } else {
+
+        Debug::log(Debug::ImportantArea) << "NOT RENDERING, player/world invalid";
     }
 //
 //    // only a client-hosted server has a chance of seeing any debug shit
@@ -325,6 +328,7 @@ void Client::render(double frameTime)
 void Client::tick(double frameTime)
 {
 //    handleInputEvents();
+    Debug::log(Debug::ImportantArea) << " CLIENT TICK!";
 
     if (m_peer) {
         poll();
@@ -785,6 +789,7 @@ void Client::receiveInitialPlayerData(const std::string& packetContents)
 //        m_chat->addChatLine("", chatMessage.str());
 
         // this is us, the first player so this means the world creation is up to us
+    Debug::log(Debug::Area::ImportantArea) << "CREATING WORLD< RECEIVED PLAYER DATA!";
         m_world = new World(m_mainPlayer, this, nullptr);
 
 //        m_quickBarMenu = new QuickBarMenu(this, quickBarInventory, m_world->spriteSheetRenderer());

@@ -332,29 +332,29 @@ void World::render()
 {
     assert(m_mainPlayer && !m_server);
 
-//    m_lightRenderer->setRenderingEnabled(Settings::instance()->debugRendererFlags & Debug::RenderingDebug::LightRenderingPassDebug);
-//    m_tileRenderer->setRenderingEnabled(Settings::instance()->debugRendererFlags & Debug::RenderingDebug::TileRenderingPassDebug);
+    m_lightRenderer->setRenderingEnabled(Settings::instance()->debugRendererFlags & Debug::RenderingDebug::LightRenderingPassDebug);
+    m_tileRenderer->setRenderingEnabled(Settings::instance()->debugRendererFlags & Debug::RenderingDebug::TileRenderingPassDebug);
 
     //Sky at bottom layer
 
     //TODO render tilemap..
 
     if (Settings::instance()->debugRendererFlags & Debug::RenderingDebug::SkyRenderingPassDebug) {
- //       m_sky->render();
+        m_sky->render();
     }
 
     //set our view so that the player will stay relative to the view, in the center.
     //HACK    m_window->setView(*m_view);
-//    m_lightRenderer->renderToFBO();
+    m_lightRenderer->renderToFBO();
 
-//    m_tileRenderer->render();
+    m_tileRenderer->render();
 
     //FIXME: incorporate entities into the pre-lit gamescene FBO, then render lighting as last pass
-    //m_lightRenderer->renderToBackbuffer();
+    m_lightRenderer->renderToBackbuffer();
 
     //HACK    m_window->setView(m_window->getDefaultView());
-   // m_spriteSheetRenderer->renderEntities();
-  //  m_spriteSheetRenderer->renderCharacters();
+    m_spriteSheetRenderer->renderEntities();
+    m_spriteSheetRenderer->renderCharacters();
 
     //FIXME: take lighting into account, needs access to fbos though.
  //   m_fluidRenderer->render();
@@ -363,7 +363,7 @@ void World::render()
 
 //FIXME unused    m_quadTreeRenderer->render();
 
-//    renderCrosshair();
+    renderCrosshair();
 }
 
 void World::renderCrosshair()
