@@ -340,7 +340,7 @@ void Client::tick(double frameTime)
        m_world->update(frameTime);
 
        if (m_quickBarMenu) {
-           m_quickBarMenu->update();
+//           m_quickBarMenu->update();
        }
 
        if (m_server) {
@@ -353,12 +353,12 @@ void Client::tick(double frameTime)
 
 void Client::setActiveChunkCount(uint32_t count)
 {
-    m_debugMenu->setActiveChunkCount(count);
+//    m_debugMenu->setActiveChunkCount(count);
 }
 
 void Client::drawDebugText(double frameTime)
 {
-    m_debugMenu->update(frameTime);
+ //   m_debugMenu->update(frameTime);
 }
 
 void Client::handleInputEvents()
@@ -550,10 +550,10 @@ bool Client::connect(const char* address, unsigned int port)
     ENetEvent event;
     if (enet_host_service(m_client, &event, 5000) > 0 && event.type == ENET_EVENT_TYPE_CONNECT) {
         Debug::log(Debug::Area::NetworkClientInitialArea) << "Client connection to server succeeded!";
-        m_mainMenu->hideMainMenu();
-
-        m_chat = new ChatDialog(this, m_mainMenu);
-        m_chat->show();
+//        m_mainMenu->hideMainMenu();
+//
+//        m_chat = new ChatDialog(this, m_mainMenu);
+//        m_chat->show();
 
         //NOTE: no world is created yet. we now wait for the server to receive our initial connection data, and give us back a
         //player id, which we then create as the main player and finally, create the world.
@@ -758,7 +758,7 @@ void Client::receiveChatMessage(const std::string& packetContents)
 {
     PacketBuf::ChatMessageFromServer chatMessage;
     Packet::deserialize(packetContents, &chatMessage);
-    m_chat->addChatLine(chatMessage.playername(), chatMessage.message());
+//    m_chat->addChatLine(chatMessage.playername(), chatMessage.message());
 }
 
 void Client::receiveInitialPlayerData(const std::string& packetContents)
@@ -782,13 +782,13 @@ void Client::receiveInitialPlayerData(const std::string& packetContents)
         m_mainPlayer->setQuickBarInventory(quickBarInventory);
 
         chatMessage << m_mainPlayer->name() << " has joined";
-        m_chat->addChatLine("", chatMessage.str());
+//        m_chat->addChatLine("", chatMessage.str());
 
         // this is us, the first player so this means the world creation is up to us
         m_world = new World(m_mainPlayer, this, nullptr);
 
-        m_quickBarMenu = new QuickBarMenu(this, quickBarInventory, m_world->spriteSheetRenderer());
-        m_quickBarMenu->show();
+//        m_quickBarMenu = new QuickBarMenu(this, quickBarInventory, m_world->spriteSheetRenderer());
+//        m_quickBarMenu->show();
 
     } else {
         player->setName(message.playername());
@@ -798,7 +798,7 @@ void Client::receiveInitialPlayerData(const std::string& packetContents)
         chatMessage << player->name() << " has joined";
 
         if (m_initialPlayersReceivedFinished) {
-            m_chat->addChatLine("", chatMessage.str());
+//            m_chat->addChatLine("", chatMessage.str());
         } else {
             Debug::log(Debug::Area::NetworkClientInitialArea) << "Player name: " << player->name() << " we're not adding the chat line because we haven't finished receiving initial client data";
         }
@@ -865,12 +865,12 @@ void Client::receiveQuickBarInventoryItemCountChanged(const std::string& packetC
     Packet::deserialize(packetContents, &message);
 
     if (message.newcount() == 0) {
-        m_quickBarMenu->inventory()->deleteItem(message.index());
+//        m_quickBarMenu->inventory()->deleteItem(message.index());
     } else {
-        m_quickBarMenu->inventory()->item(message.index())->setStackSize(message.newcount());
+//        m_quickBarMenu->inventory()->item(message.index())->setStackSize(message.newcount());
     }
 
-    m_quickBarMenu->reloadSlot(message.index());
+//    m_quickBarMenu->reloadSlot(message.index());
 }
 
 void Client::receiveQuickBarInventoryItem(const std::string& packetContents)
@@ -915,10 +915,10 @@ void Client::receiveQuickBarInventoryItem(const std::string& packetContents)
     uint32_t index = message.index();
 
     //delete the old one as we'll get resent it in whatever new form it is in (whether it's moving to the world, or to a different inventory)
-    m_quickBarMenu->inventory()->deleteItem(index);
+//    m_quickBarMenu->inventory()->deleteItem(index);
 
-    m_quickBarMenu->inventory()->setSlot(index, baseItem);
-    m_quickBarMenu->reloadSlot(index);
+ //   m_quickBarMenu->inventory()->setSlot(index, baseItem);
+  //  m_quickBarMenu->reloadSlot(index);
 }
 
 void Client::receiveItemSpawned(const std::string& packetContents)
