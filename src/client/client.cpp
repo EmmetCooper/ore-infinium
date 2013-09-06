@@ -62,6 +62,8 @@ Client::~Client()
 #ifdef FREEIMAGE_LIB
     FreeImage_DeInitialise();
 #endif
+
+    delete m_view;
 }
 
 void Client::init()
@@ -70,9 +72,9 @@ void Client::init()
     connect(this, &Client::windowChanged, this, &Client::handleWindowChanged);
 
     qmlRegisterType<Client>("OpenGLUnderQML", 1, 0, "Squircle");
-    QQuickView view;
-    view.setSource(QUrl("../client/gui/assets/qml/main.qml"));
-    view.show();
+    m_view = new QQuickView();
+    m_view->setSource(QUrl("../client/gui/assets/qml/main.qml"));
+    m_view->show();
 
     //glClearColor(0.f, .5f, 0.f, 1.0f);
 //    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -227,7 +229,7 @@ void Client::initGL()
 
     Debug::checkGLError();
 
-   
+
     //FIXME: MOVE INTO INITGL
     Debug::checkGLError();
 

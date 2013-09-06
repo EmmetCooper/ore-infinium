@@ -25,6 +25,7 @@
 
 #include <QtQuick/QQuickItem>
 #include <QtQuick/QQuickWindow>
+#include <QQuickView>
 #include <QtGui/QOpenGLShaderProgram>
 #include <QTime>
 
@@ -215,6 +216,8 @@ private:
     bool m_worldViewingEnabled = false;
 
     bool m_firstGLInit = false;
+
+    QQuickView* m_view = nullptr;
 
 private:
     ENetHost* m_client = nullptr;
