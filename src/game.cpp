@@ -80,11 +80,6 @@ void Game::init()
     m_client->init();
 }
 
-void Game::execClient()
-{
-    m_client->exec();
-}
-
 void Game::shutdown()
 {
     exit(0);

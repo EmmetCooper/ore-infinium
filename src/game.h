@@ -34,12 +34,11 @@ public:
 
     void init();
 
-    void execClient();
+private:
 
     void abort_game(const char* message);
     void shutdown();
 
-private:
     Client* m_client = nullptr;
     Server* m_server = nullptr;
 

@@ -23,8 +23,14 @@
 
 #include "src/player.h"
 
+#include <QtQuick/QQuickItem>
+#include <QtQuick/QQuickWindow>
+#include <QtGui/QOpenGLShaderProgram>
+#include <QTime>
+
 #include <SDL2/SDL.h>
 #include <SDL_log.h>
+
 #include <thread>
 
 struct cpSpace;
@@ -39,15 +45,40 @@ class DebugMenu;
 class World;
 class Server;
 
-class Client
+class Client : public QQuickItem
 {
+    Q_OBJECT
+    Q_PROPERTY(qreal t READ t WRITE setT NOTIFY tChanged)
+
+    qreal t() const { return m_t; }
+    void setT(qreal t);
+
+signals:
+    void tChanged();
+
+public slots:
+    void paintUnder();
+    void cleanup();
+    void sync();
+
+    void init();
+
+private slots:
+    void handleWindowChanged(QQuickWindow *win);
+
+private:
+    QTime m_time;
+    int m_frameCount = 0;
+
+    qreal m_t = 0.0;
+    qreal m_thread_t = 0.0;
+    //FIXME: ////////////////////////////////////////////////// UGLY, REFACTOR
+
 public:
     Client();
     ~Client();
 
-    void init();
 
-    void exec();
 
     void startSinglePlayer(const std::string& playername);
     /**
@@ -114,11 +145,14 @@ public:
     void sendQuickBarInventorySlotSelectRequest(uint8_t index);
 
 private:
+
+    void tickLogicThread();
+
     /**
      * blocks until it can connect within a timeout.
      * @returns true on success, false on failure
      */
-    bool connect(const char* address = "127.0.0.1", unsigned int port = 44543);
+    bool connectTo(const char* address = "127.0.0.1", unsigned int port = 44543);
     void sendInitialConnectionData();
     void sendPlayerMovement();
 
@@ -179,6 +213,8 @@ private:
     bool m_initialPlayersReceivedFinished = false;
 
     bool m_worldViewingEnabled = false;
+
+    bool m_firstGLInit = false;
 
 private:
     ENetHost* m_client = nullptr;

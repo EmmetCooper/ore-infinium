@@ -135,11 +135,15 @@ int main(int argc, char* argv[])
     }
 
     //TODO: may wanna run without gui for dedicated server...have the option to, at least
-    QGuiApplication app(argc, argv);
-    Game game;
+
 
     if (1) {
-        return game.execClient();
+        QGuiApplication app(argc, argv);
+
+        Game game;
+        game.init();
+
+        return app.exec();
     } else {
         //TODO: execDedicatedServer
     }

@@ -44,12 +44,12 @@
 #include "src/../config.h"
 
 #include <random>
+#include <QQuickView>
 
 #include <SDL2/SDL_image.h>
 
 Client::Client()
 {
-
 }
 
 Client::~Client()
@@ -66,33 +66,13 @@ Client::~Client()
 
 void Client::init()
 {
-    initGL();
 
-    //FIXME: MOVE INTO INITGL
-    Debug::checkGLError();
+    connect(this, &Client::windowChanged, this, &Client::handleWindowChanged);
 
-    Debug::log(Debug::Area::StartupArea) << "Platform: Driver Vendor: " << glGetString(GL_VENDOR);
-    Debug::log(Debug::Area::StartupArea) << "Platform: Renderer: " << glGetString(GL_RENDERER);
-    Debug::log(Debug::Area::StartupArea) << "OpenGL Version: " << glGetString(GL_VERSION);
-    Debug::log(Debug::Area::StartupArea) << "GLSL Version: " << glGetString(GL_SHADING_LANGUAGE_VERSION);
-
-    Debug::checkGLError();
-
-    GLint textureSize;
-    glGetIntegerv(GL_MAX_TEXTURE_SIZE, &textureSize);
-    Debug::log(Debug::Area::StartupArea) << "Maximum OpenGL texture size allowed: " << textureSize << "\n\n\n";
-
-#ifdef GLEW_KHR_debug
-    if (GLEW_KHR_debug) {
-        glEnable(GL_DEBUG_OUTPUT);
-        glDebugMessageCallback(&Debug::glDebugCallback, 0);
-        glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, 0, GL_TRUE);
-    } else {
-        Debug::log(Debug::Area::ImportantArea) << "GLEW_KHR_debug is not available, disabling OpenGL debug reporting facilities. The extension was compiled in but is not available at runtime.";
-    }
-#endif
-
-    Debug::fatal(enet_initialize() == 0, Debug::Area::ImportantArea, "An error occurred during ENet init (network init failure");
+    qmlRegisterType<Client>("OpenGLUnderQML", 1, 0, "Squircle");
+    QQuickView view;
+    view.setSource(QUrl("../client/gui/assets/qml/main.qml"));
+    view.show();
 
     //glClearColor(0.f, .5f, 0.f, 1.0f);
 //    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -127,9 +107,12 @@ void Client::init()
 //    startMultiplayerHost(ss.str());
 }
 
-void Client::exec()
+void Client::tickLogicThread()
 {
-    Debug::log(Debug::ImportantArea) << " GAME TICK!";
+
+    Debug::log(Debug::ImportantArea) << "CLIENT EXEC!";
+    Debug::log(Debug::ImportantArea) << "GAME TICK!";
+
     std::chrono::system_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
 
     double accumulator = 0.0;
@@ -153,10 +136,10 @@ void Client::exec()
         t += dt;
         accumulator -= dt;
 
-        m_client->tick(frameTime);
+        tick(frameTime);
     }
 
-    m_client->render(frameTime);
+    render(frameTime);
 
     const double alpha = accumulator / dt;
 
@@ -243,7 +226,113 @@ void Client::initGL()
     Debug::assertf(retGLEW == GLEW_OK, "glewInit returned !GLEW_OK. No GL context can be formed..bailing out");
 
     Debug::checkGLError();
+
+   
+    //FIXME: MOVE INTO INITGL
+    Debug::checkGLError();
+
+    Debug::log(Debug::Area::StartupArea) << "Platform: Driver Vendor: " << glGetString(GL_VENDOR);
+    Debug::log(Debug::Area::StartupArea) << "Platform: Renderer: " << glGetString(GL_RENDERER);
+    Debug::log(Debug::Area::StartupArea) << "OpenGL Version: " << glGetString(GL_VERSION);
+    Debug::log(Debug::Area::StartupArea) << "GLSL Version: " << glGetString(GL_SHADING_LANGUAGE_VERSION);
+
+    Debug::checkGLError();
+
+    GLint textureSize;
+    glGetIntegerv(GL_MAX_TEXTURE_SIZE, &textureSize);
+    Debug::log(Debug::Area::StartupArea) << "Maximum OpenGL texture size allowed: " << textureSize << "\n\n\n";
+
+#ifdef GLEW_KHR_debug
+    if (GLEW_KHR_debug) {
+        glEnable(GL_DEBUG_OUTPUT);
+        glDebugMessageCallback(&Debug::glDebugCallback, 0);
+        glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, 0, GL_TRUE);
+    } else {
+        Debug::log(Debug::Area::ImportantArea) << "GLEW_KHR_debug is not available, disabling OpenGL debug reporting facilities. The extension was compiled in but is not available at runtime.";
+    }
+#endif
+
+    Debug::fatal(enet_initialize() == 0, Debug::Area::ImportantArea, "An error occurred during ENet init (network init failure");
+
 }
+
+void Client::setT(qreal t)
+{
+    if (t == m_t)
+        return;
+    m_t = t;
+    emit tChanged();
+    if (window())
+        window()->update();
+}
+
+void Client::handleWindowChanged(QQuickWindow *win)
+{
+    if (win) {
+
+        if (!m_firstGLInit) {
+            m_firstGLInit = true;
+            initGL();
+        }
+
+        // Connect the beforeRendering signal to our paint function.
+        // Since this call is executed on the rendering thread it must be
+        // a Qt::DirectConnection
+        connect(win, SIGNAL(beforeRendering()), this, SLOT(paintUnder()), Qt::DirectConnection);
+        connect(win, SIGNAL(beforeSynchronizing()), this, SLOT(sync()), Qt::DirectConnection);
+
+        // If we allow QML to do the clearing, they would clear what we paint
+        // and nothing would show.
+        win->setClearBeforeRendering(false);
+    }
+}
+
+void Client::paintUnder()
+{
+    assert(window());
+    assert(window()->openglContext());
+
+    glViewport(0, 0, window()->width(), window()->height());
+    //   glDisable(GL_DEPTH_TEST);
+    glClearColor(0, 0, 02, 1);
+    //    glClear(GL_COLOR_BUFFER_BIT);
+
+
+    //       connect(window()->openglContext(), SIGNAL(aboutToBeDestroyed()),
+    //              this, SLOT(cleanup()), Qt::DirectConnection);
+    assert(window()->openglContext());
+
+    double frameTime = 0.0;
+    if (m_frameCount == 0) {
+        m_time.start();
+    } else {
+        frameTime = (m_time.elapsed() / static_cast<double>(m_frameCount));
+        printf("FPS is %f ms\n", frameTime);
+    }
+    m_frameCount++;
+
+    render(frameTime);
+
+    //    glEnable(GL_BLEND);
+    //   glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+    //
+    //    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    //
+    //    m_program->disableAttributeArray(0);
+    //    m_program->release();
+}
+
+void Client::sync()
+{
+    m_thread_t = m_t;
+}
+
+void Client::cleanup()
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
 
 void Client::poll()
 {
@@ -566,7 +655,7 @@ void Client::shutdown()
     exit(0);
 }
 
-bool Client::connect(const char* address, unsigned int port)
+bool Client::connectTo(const char* address, unsigned int port)
 {
     m_client = enet_host_create(nullptr /* create a client host */,
                                 1 /* only allow 1 outgoing connection */,
@@ -626,7 +715,7 @@ void Client::startSinglePlayer(const std::string& playername)
     m_server = new Server();
     m_server->init(1);
     m_serverThread = new std::thread(&Server::tick, m_server);
-    connect();
+    connectTo();
 }
 
 bool Client::startMultiplayerClientConnection(const std::string& playername, const char* address, unsigned int port)
@@ -634,7 +723,7 @@ bool Client::startMultiplayerClientConnection(const std::string& playername, con
     Debug::log(Debug::Area::NetworkClientInitialArea) << "starting multiplayer joining address: " << address << "! Entities::Playername: " << playername;
     m_playerName = playername;
 
-    if (connect(address, port)) {
+    if (connectTo(address, port)) {
         Debug::log(Debug::Area::NetworkClientInitialArea) << "connection success!";
         return true;
     } else {
@@ -657,7 +746,7 @@ void Client::startMultiplayerHost(const std::string& playername, unsigned int po
 
         m_server->init(8 /* 8 players (max) */, port, this);
         m_serverThread = new std::thread(&Server::tick, m_server);
-        connect();
+        connectTo();
     } else {
         Debug::log(Debug::Area::NetworkClientInitialArea) << "error, attempted to create player-hosted a server but we're still connected to this one";
     }
