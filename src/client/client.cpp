@@ -50,6 +50,7 @@
 
 Client::Client()
 {
+    connect(this, &Client::windowChanged, this, &Client::handleWindowChanged);
 }
 
 Client::~Client()
@@ -69,9 +70,8 @@ Client::~Client()
 void Client::init()
 {
     Debug::log(Debug::ImportantArea) << "CLIENT INIT START!";
-    connect(this, &Client::windowChanged, this, &Client::handleWindowChanged);
 
-    qmlRegisterType<Client>("OpenGLUnderQML", 1, 0, "Squircle");
+    qmlRegisterType<Client>("OpenGLUnderQML", 1, 0, "Client");
     m_view = new QQuickView();
     m_view->setSource(QUrl("../client/gui/assets/qml/main.qml"));
     m_view->show();
