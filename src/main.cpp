@@ -56,8 +56,6 @@ bool contains(const std::string& str)
 
 int main(int argc, char* argv[])
 {
-    QGuiApplication app(argc, argv);
-
 //    QOpenGLFunctions funcs(QOpenGLContext::currentContext());
 //    bool npot = funcs.hasOpenGLFeature(QOpenGLFunctions::NPOTTextures);
 
@@ -136,10 +134,13 @@ int main(int argc, char* argv[])
         Settings::instance()->setStartupFlag(Settings::StartupFlags::PlayNowStartupFlag);
     }
 
-    qmlRegisterType<Squircle>("OpenGLUnderQML", 1, 0, "Squircle");
-    QQuickView view;
-    view.setSource(QUrl("../client/gui/assets/qml/main.qml"));
-    view.show();
+    //TODO: may wanna run without gui for dedicated server...have the option to, at least
+    QGuiApplication app(argc, argv);
+    Game game;
 
-    return app.exec();
+    if (1) {
+        return game.execClient();
+    } else {
+        //TODO: execDedicatedServer
+    }
 }

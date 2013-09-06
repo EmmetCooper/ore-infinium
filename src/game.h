@@ -34,7 +34,7 @@ public:
 
     void init();
 
-    void tick();
+    void execClient();
 
     void abort_game(const char* message);
     void shutdown();

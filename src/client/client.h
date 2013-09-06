@@ -47,6 +47,8 @@ public:
 
     void init();
 
+    void exec();
+
     void startSinglePlayer(const std::string& playername);
     /**
      * Starts a mutliplayer client only connection, aka connecting to a server, not hosting.

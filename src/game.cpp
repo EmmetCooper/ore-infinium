@@ -80,78 +80,9 @@ void Game::init()
     m_client->init();
 }
 
-void Game::tick()
+void Game::execClient()
 {
-    Debug::log(Debug::ImportantArea) << " GAME TICK!";
-    std::chrono::system_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
-
-    double accumulator = 0.0;
-    const double dt = (1.0 / 60.0) * 1000.0; // runs at 60 hz
-    double t = 0.0;
-
-    double fps = 0.0;
-//    while (m_running) {
-
-        std::chrono::system_clock::time_point newTime = std::chrono::high_resolution_clock::now();
-        double frameTime = std::chrono::duration_cast<std::chrono::duration<double, std::milli> >(newTime - currentTime).count();
-
-        if (frameTime > (1.0 / 15.0) * 1000.0) {
-            frameTime = (1.0 / 15.0) * 1000.0; // note: max frame time to avoid spiral of death
-        }
-        currentTime = newTime;
-
-        accumulator += frameTime;
-
-        while (accumulator >= dt) {
-            t += dt;
-            accumulator -= dt;
-
-            m_client->tick(frameTime);
-        }
-
-        //dedicated server, no client.
-        //if (m_server) {
-
-        //}
-        m_client->render(frameTime);
-
-        const double alpha = accumulator / dt;
-
-        // sleep so we don't burn cpu
-        //  std::chrono::milliseconds timeUntilNextFrame(int(dt - accumulator));
-        //  std::this_thread::sleep_for(timeUntilNextFrame);
-//    }
-
-    /*
-
-    while (1) {
-
-        std::chrono::system_clock::time_point newTime = std::chrono::high_resolution_clock::now();
-        double frameTime = std::chrono::duration_cast<std::chrono::duration<double, std::milli> >(newTime - currentTime).count();
-
-        if (frameTime > (1.0 / 15.0) * 1000.0) {
-            frameTime = (1.0 / 15.0) * 1000.0; // note: max frame time to avoid spiral of death
-        }
-        currentTime = newTime;
-
-        accumulator += frameTime;
-
-        while (accumulator >= dt) {
-            m_world->update(dt);
-
-            t += dt;
-            accumulator -= dt;
-        }
-
-        const double alpha = accumulator / dt;
-
-        poll();
-        // do network shit
-        // sleep so we don't burn cpu
-        std::chrono::milliseconds timeUntilNextFrame(int(dt - accumulator));
-        std::this_thread::sleep_for(timeUntilNextFrame);
-    }
-    */
+    m_client->exec();
 }
 
 void Game::shutdown()
