@@ -68,7 +68,7 @@ Client::~Client()
 
 void Client::init()
 {
-
+    Debug::log(Debug::ImportantArea) << "CLIENT INIT START!";
     connect(this, &Client::windowChanged, this, &Client::handleWindowChanged);
 
     qmlRegisterType<Client>("OpenGLUnderQML", 1, 0, "Squircle");
@@ -107,6 +107,7 @@ void Client::init()
 //    ss << distribution(rand);
 //
 //    startMultiplayerHost(ss.str());
+    Debug::log(Debug::ImportantArea) << "CLIENT INIT END!";
 }
 
 void Client::tickLogicThread()
@@ -260,19 +261,28 @@ void Client::initGL()
 
 void Client::setT(qreal t)
 {
-    if (t == m_t)
+    if (t == m_t) {
         return;
+    }
+
     m_t = t;
     emit tChanged();
-    if (window())
+
+    if (window()) {
         window()->update();
+    }
 }
 
 void Client::handleWindowChanged(QQuickWindow *win)
 {
+    assert(0);
+    Debug::log(Debug::ImportantArea) << "WIN CHANGED SLOT!";
+
     if (win) {
+        Debug::log(Debug::ImportantArea) << "WIN CHANGED SLOT, win valid :)";
 
         if (!m_firstGLInit) {
+            Debug::log(Debug::ImportantArea) << "WIN CHANGED SLOT, first init, perform initGL";
             m_firstGLInit = true;
             initGL();
         }
@@ -299,6 +309,7 @@ void Client::paintUnder()
     glClearColor(0, 0, 02, 1);
     //    glClear(GL_COLOR_BUFFER_BIT);
 
+    Debug::log(Debug::ImportantArea) << "PAINTING UNDER!";
 
     //       connect(window()->openglContext(), SIGNAL(aboutToBeDestroyed()),
     //              this, SLOT(cleanup()), Qt::DirectConnection);
