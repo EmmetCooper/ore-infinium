@@ -45,7 +45,9 @@ public:
         NoTimeoutStartupFlag = 1 << 2,
 
         //debug, immediately hosts and joins localhost session
-        PlayNowStartupFlag = 1 << 3
+        PlayNowStartupFlag = 1 << 3,
+
+        NoSkyRendererStartupFlag = 1 << 4
     };
 
     /**

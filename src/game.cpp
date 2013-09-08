@@ -77,6 +77,10 @@ void Game::init()
         m_client->enableWorldViewing();
     }
 
+    if (Settings::instance()->startupFlags() & Settings::StartupFlags::NoSkyRendererStartupFlag) {
+        Settings::instance()->debugRendererFlags &= ~Debug::RenderingDebug::SkyRenderingPassDebug;
+    }
+
     m_client->init();
 }
 

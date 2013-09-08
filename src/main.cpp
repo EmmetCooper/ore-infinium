@@ -63,6 +63,7 @@ int main(int argc, char* argv[])
     bool worldViewer = false;
     bool noTimeout = false;
     bool playNow = false;
+    bool noSkyRenderer = false;
 
     if (argc > 1) {
         //NOTE: we start at 1 because the first element(0) is app name.
@@ -83,6 +84,7 @@ int main(int argc, char* argv[])
             std::cout << "--test-spatial-hash Runs various unit tests on the spatial hash to verify there are no regressions, report and exit." << '\n';
             std::cout << "--world-viewer Enables special client modes to make the game world easier to troubleshoot (only applicable to client-hosted server mode)." << '\n';
             std::cout << "--no-timeout Configures connection timeouts and other things to allow for debugging, especially via e.g. valgrind." << '\n';
+            std::cout << "--no-sky-renderer Disables sky renderer (for tricky/slow systems, for debugging. More optimal approaches and settings will exist later)" << '\n';
             std::cout << "--play-now Hosts and joins a local session immediately on startup (for fast debugging)." << '\n';
 
             exit(0);
@@ -114,6 +116,9 @@ int main(int argc, char* argv[])
             playNow = true;
         }
 
+        if (contains("--no-sky-renderer")) {
+            noSkyRenderer = true;
+        }
     }
 
     std::cout << "Ore Infinium Version " << ore_infinium_VERSION_MAJOR << "." << ore_infinium_VERSION_MINOR << "\n";
@@ -132,6 +137,10 @@ int main(int argc, char* argv[])
 
     if (playNow) {
         Settings::instance()->setStartupFlag(Settings::StartupFlags::PlayNowStartupFlag);
+    }
+
+    if (noSkyRenderer) {
+        Settings::instance()->setStartupFlag(Settings::StartupFlags::NoSkyRendererStartupFlag);
     }
 
     //TODO: may wanna run without gui for dedicated server...have the option to, at least
