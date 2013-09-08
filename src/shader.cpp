@@ -106,7 +106,6 @@ void Shader::loadShaders(const char* vertexShader, const char* fragmentShader)
     glCompileShader(m_vertexShader);
 
     if (!checkShaderCompileStatus(m_vertexShader)) {
-        assert(0);
         Debug::assertf(false, "vertex shader failed to compile properly");
     } else {
         Debug::log(Debug::Area::ShadersArea) << "vertex shader compiled!";

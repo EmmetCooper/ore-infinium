@@ -94,10 +94,6 @@ void Client::init()
 //    m_debugMenu = new DebugMenu(this);
 //    m_debugMenu->show();
 
-    if (Settings::instance()->startupFlags() & Settings::PlayNowStartupFlag) {
-        startMultiplayerHost("Dingo");
-    }
-
 //dws    std::stringstream ss;
 //    ss << "Player";
 //    std::random_device device;
@@ -112,7 +108,6 @@ void Client::init()
 
 void Client::tickLogicThread()
 {
-
     Debug::log(Debug::ImportantArea) << "CLIENT EXEC!";
     Debug::log(Debug::ImportantArea) << "GAME TICK!";
 
@@ -123,7 +118,8 @@ void Client::tickLogicThread()
     double t = 0.0;
 
     double fps = 0.0;
-    //    while (m_running) {
+    //FIXME: obviously...
+    while (1) {
 
     std::chrono::system_clock::time_point newTime = std::chrono::high_resolution_clock::now();
     double frameTime = std::chrono::duration_cast<std::chrono::duration<double, std::milli> >(newTime - currentTime).count();
@@ -139,17 +135,18 @@ void Client::tickLogicThread()
         t += dt;
         accumulator -= dt;
 
+        Debug::log(Debug::ImportantArea) << "TICKING LOGIC THREAD AND SUB TICK!";
         tick(frameTime);
     }
 
-    render(frameTime);
+//    render(frameTime);
 
     const double alpha = accumulator / dt;
 
     // sleep so we don't burn cpu
     //  std::chrono::milliseconds timeUntilNextFrame(int(dt - accumulator));
     //  std::this_thread::sleep_for(timeUntilNextFrame);
-    //    }
+    }
 }
 
 void Client::initGL()
@@ -275,18 +272,7 @@ void Client::setT(qreal t)
 
 void Client::handleWindowChanged(QQuickWindow *win)
 {
-    assert(0);
-    Debug::log(Debug::ImportantArea) << "WIN CHANGED SLOT!";
-
     if (win) {
-        Debug::log(Debug::ImportantArea) << "WIN CHANGED SLOT, win valid :)";
-
-        if (!m_firstGLInit) {
-            Debug::log(Debug::ImportantArea) << "WIN CHANGED SLOT, first init, perform initGL";
-            m_firstGLInit = true;
-            initGL();
-        }
-
         // Connect the beforeRendering signal to our paint function.
         // Since this call is executed on the rendering thread it must be
         // a Qt::DirectConnection
@@ -304,27 +290,43 @@ void Client::paintUnder()
     assert(window());
     assert(window()->openglContext());
 
-    glViewport(0, 0, window()->width(), window()->height());
-    //   glDisable(GL_DEPTH_TEST);
-    glClearColor(0, 0, 02, 1);
-    //    glClear(GL_COLOR_BUFFER_BIT);
+    if (!m_firstGLInit) {
+        Debug::log(Debug::ImportantArea) << "first paintunder, not init'd perform initGL";
+        m_firstGLInit = true;
+        initGL();
 
-    Debug::log(Debug::ImportantArea) << "PAINTING UNDER!";
+        //init logic thread now
+//        m_clientTickLogicThread = new std::thread(&Client::tickLogicThread, this);
+        //FIXME: not needed move into initGL if not there already.
+        glViewport(0, 0, window()->width(), window()->height());
 
-    //       connect(window()->openglContext(), SIGNAL(aboutToBeDestroyed()),
-    //              this, SLOT(cleanup()), Qt::DirectConnection);
-    assert(window()->openglContext());
+        if (Settings::instance()->startupFlags() & Settings::PlayNowStartupFlag) {
+            startMultiplayerHost("Dingo");
+        }
 
-    double frameTime = 0.0;
-    if (m_frameCount == 0) {
-        m_time.start();
     } else {
-        frameTime = (m_time.elapsed() / static_cast<double>(m_frameCount));
-        printf("FPS is %f ms\n", frameTime);
-    }
-    m_frameCount++;
 
-    render(frameTime);
+        //   glDisable(GL_DEPTH_TEST);
+        glClearColor(0, 0, 02, 1);
+        //    glClear(GL_COLOR_BUFFER_BIT);
+
+        //       connect(window()->openglContext(), SIGNAL(aboutToBeDestroyed()),
+        //              this, SLOT(cleanup()), Qt::DirectConnection);
+        assert(window()->openglContext());
+
+        double frameTime = 0.0;
+        if (m_frameCount == 0) {
+            m_time.start();
+        } else {
+            frameTime = (m_time.elapsed() / static_cast<double>(m_frameCount));
+            printf("ms/frame is %f ms\n", frameTime);
+        }
+        m_frameCount++;
+
+        tick(frameTime);
+
+        render(frameTime);
+    }
 
     //    glEnable(GL_BLEND);
     //   glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -403,10 +405,8 @@ void Client::render(double frameTime)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (m_world && m_mainPlayer) {
-        Debug::log(Debug::ImportantArea) << "RENDERING WORLD (thru client)";
         m_world->render();
     } else {
-
         Debug::log(Debug::ImportantArea) << "NOT RENDERING, player/world invalid";
     }
 //
@@ -469,7 +469,6 @@ void Client::render(double frameTime)
 void Client::tick(double frameTime)
 {
 //    handleInputEvents();
-    Debug::log(Debug::ImportantArea) << " CLIENT TICK!";
 
     if (m_peer) {
         poll();

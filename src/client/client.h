@@ -201,6 +201,7 @@ private:
     Entities::Player* m_mainPlayer = nullptr;
 
     std::thread* m_serverThread = nullptr;
+    std::thread* m_clientTickLogicThread = nullptr;
     bool m_connected = false;
 
     int32_t m_playerInputDirectionX = 0;
