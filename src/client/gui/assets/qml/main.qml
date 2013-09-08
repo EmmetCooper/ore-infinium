@@ -1,5 +1,7 @@
+import QtQuick 2.1
+import QtQuick.Controls 1.0
+import QtQuick.Controls.Styles 1.0
 
-import QtQuick 2.0
 import OpenGLUnderQML 1.0
 
 Item {
@@ -15,15 +17,63 @@ Item {
             loops: Animation.Infinite
             running: true
         }
+
     }
+
+    Component {
+        id: touchStyle
+        ButtonStyle {
+            panel: Item {
+                implicitHeight: 50
+                implicitWidth: 320
+                BorderImage {
+                    anchors.fill: parent
+                    antialiasing: true
+                    border.bottom: 8
+                    border.top: 8
+                    border.left: 8
+                    border.right: 8
+                    anchors.margins: control.pressed ? -4 : 0
+   //                 source: control.pressed ? "../images/button_pressed.png" : "../images/button_default.png"
+                    Text {
+                        text: control.text
+                        anchors.centerIn: parent
+                        color: "white"
+                        font.pixelSize: 23
+                        renderType: Text.NativeRendering
+                    }
+                }
+            }
+        }
+    }
+
     Rectangle {
         id: rect
         color: Qt.rgba(1, 1, 1, 0.7)
         radius: 10
         border.width: 1
         border.color: "white"
-        opacity: 0.5
+//        opacity: 0.5
 //        anchors.fill: label
+
+        Button {
+//            style: touchStyle
+
+           anchors {
+               left: parent.left
+               right: parent.horizontalCenter
+               top: parent.top
+               bottom: parent.bottom
+           }
+
+           text: "TEST"
+           onClicked: {
+               text = "CLICKED!"
+           }
+           }
+
+        height: 100
+        anchors.bottomMargin: 30
 
         anchors {
             bottom: parent.bottom
@@ -32,12 +82,12 @@ Item {
 
         }
 
-        height: 100
 
-        anchors.bottomMargin: 30
+        }
 
 
-    }
+
+
 
     Text {
         id: label

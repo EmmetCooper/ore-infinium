@@ -50,7 +50,7 @@
 
 Client::Client()
 {
-    connect(this, &Client::windowChanged, this, &Client::handleWindowChanged);
+    connect(this, &Client::windowChanged, this, &Client::handleWindowChanged, Qt::DirectConnection);
 }
 
 Client::~Client()
@@ -307,7 +307,7 @@ void Client::paintUnder()
     } else {
 
         //   glDisable(GL_DEPTH_TEST);
-        glClearColor(0, 0, 02, 1);
+        glClearColor(0, 0, 0.2, 1);
         //    glClear(GL_COLOR_BUFFER_BIT);
 
         //       connect(window()->openglContext(), SIGNAL(aboutToBeDestroyed()),
@@ -321,11 +321,12 @@ void Client::paintUnder()
             frameTime = (m_time.elapsed() / static_cast<double>(m_frameCount));
             printf("ms/frame is %f ms\n", frameTime);
         }
-        m_frameCount++;
 
         tick(frameTime);
 
         render(frameTime);
+
+        m_frameCount++;
     }
 
     //    glEnable(GL_BLEND);
@@ -409,6 +410,7 @@ void Client::render(double frameTime)
     } else {
         Debug::log(Debug::ImportantArea) << "NOT RENDERING, player/world invalid";
     }
+
 //
 //    // only a client-hosted server has a chance of seeing any debug shit
 //    if (m_server) {
