@@ -47,40 +47,56 @@ Item {
         }
     }
 
-    Rectangle {
-        id: rect
-        color: Qt.rgba(1, 1, 1, 0.7)
-        radius: 10
-        border.width: 1
-        border.color: "white"
-//        opacity: 0.5
-//        anchors.fill: label
+        Rectangle {
+            id: rect
+            color: Qt.rgba(1, 1, 1, 0.7)
+            radius: 10
+            border.width: 1
+            border.color: "white"
+    //        opacity: 0.5
+    //        anchors.fill: label
 
-        Button {
-//            style: touchStyle
+            MouseArea {
+                id: mouseArea
+                anchors.fill: parent
 
-           anchors {
-               left: parent.left
-               right: parent.horizontalCenter
-               top: parent.top
-               bottom: parent.bottom
-           }
+                drag.target: parent
 
-           text: "TEST"
-           onClicked: {
-               text = "CLICKED!"
-           }
-           }
+                onPressed: {
+//                    parent.anchors.left = undefined
+//                    parent.anchors.right = undefined
+//                    parent.anchors.bottom = undefined
+//                    parent.anchors.top = undefined
 
-        height: 100
-        anchors.bottomMargin: 30
+                    console.log("TEST")
+                }
+            }
 
-        anchors {
-            bottom: parent.bottom
-            left: parent.left
-            right: parent.right
+            Button {
+    //            style: touchstyle
 
-        }
+            anchors {
+                left: parent.left
+                right: parent.horizontalcenter
+                top: parent.top
+                bottom: parent.bottom
+            }
+
+            text: "test"
+            onClicked: {
+                text = "clicked!"
+            }
+            }
+
+            height: 100
+            anchors.bottomMargin: 30
+
+            anchors {
+                bottom: parent.bottom
+                left: parent.left
+                right: parent.right
+
+            }
 
 
         }

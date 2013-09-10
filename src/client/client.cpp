@@ -408,7 +408,7 @@ void Client::render(double frameTime)
     if (m_world && m_mainPlayer) {
         m_world->render();
     } else {
-        Debug::log(Debug::ImportantArea) << "NOT RENDERING, player/world invalid";
+        //Debug::log(Debug::ImportantArea) << "NOT RENDERING, player/world invalid";
     }
 
 //
