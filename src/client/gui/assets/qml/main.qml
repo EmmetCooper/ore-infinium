@@ -56,19 +56,48 @@ Item {
     //        opacity: 0.5
     //        anchors.fill: label
 
+            height: 500
+            width: 500
+            anchors.bottomMargin: 30
+
+           // anchors {
+           //     bottom: parent.bottom
+           //     left: parent.left
+           //     right: parent.right
+           //
+           // }
+
             MouseArea {
                 id: mouseArea
-                anchors.fill: parent
+                anchors {
+                   bottom: parent.bottom
+                   right: parent.right
+                }
 
-                drag.target: parent
+                Rectangle {
+                    anchors.fill: parent
+                    color: "red"
+                }
+
+                width: 30
+                height: 30
+
+                hoverEnabled: true
+
+                property int oldMouseX
 
                 onPressed: {
-//                    parent.anchors.left = undefined
-//                    parent.anchors.right = undefined
-//                    parent.anchors.bottom = undefined
-//                    parent.anchors.top = undefined
+                    parent.anchors.left = undefined
+                    parent.anchors.right = undefined
+                    parent.anchors.bottom = undefined
+                    parent.anchors.top = undefined
+                    oldMouseX = mouseX
+                }
 
-                    console.log("TEST")
+                onPositionChanged: {
+                    if (pressed) {
+                        parent.width += (mouseX - oldMouseX)
+                    }
                 }
             }
 
@@ -87,18 +116,6 @@ Item {
                 text = "clicked!"
             }
             }
-
-            height: 100
-            anchors.bottomMargin: 30
-
-            anchors {
-                bottom: parent.bottom
-                left: parent.left
-                right: parent.right
-
-            }
-
-
         }
 
 
