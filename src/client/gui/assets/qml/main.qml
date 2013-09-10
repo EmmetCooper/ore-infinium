@@ -84,7 +84,10 @@ Item {
 
                 hoverEnabled: true
 
+                acceptedButtons: Qt.LeftButton
+
                 property int oldMouseX
+                property int oldMouseY
 
                 onPressed: {
                     parent.anchors.left = undefined
@@ -92,12 +95,16 @@ Item {
                     parent.anchors.bottom = undefined
                     parent.anchors.top = undefined
                     oldMouseX = mouseX
+                    oldMouseY = mouseY
                 }
 
                 onPositionChanged: {
                     if (pressed) {
                         parent.width += (mouseX - oldMouseX)
+                        parent.height += (mouseY - oldMouseY)
                     }
+
+                    cursorShape = Qt.SizeFDiagCursor
                 }
             }
 
