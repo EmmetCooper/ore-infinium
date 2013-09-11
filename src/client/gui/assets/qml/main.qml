@@ -51,6 +51,24 @@ Item {
     }
 
 
+    /*
+            Button {
+    //            style: touchstyle
+
+            anchors {
+                left: parent.left
+                right: parent.horizontalcenter
+                top: parent.top
+                bottom: parent.bottom
+            }
+
+            text: "test"
+            onClicked: {
+                text = "clicked!"
+            }
+            }
+            */
+
 
 
     Text {
@@ -58,7 +76,7 @@ Item {
         color: "black"
         wrapMode: Text.WordWrap
         text: "The background here is a squircle rendered with raw OpenGL using the 'beforeRender()' signal in QQuickWindow. This text label and its border is rendered using QML"
-        anchors.fill: rect
+//        anchors.fill: rect
 //        anchors.right: parent.right
 //        anchors.left: parent.left
 //        anchors.bottom: parent.bottom
