@@ -5,58 +5,109 @@ import QtQuick.Controls.Styles 1.0
 import OpenGLUnderQML 1.0
 
 Item {
-           Rectangle {
-            id: rect
-            color: Qt.rgba(1, 1, 1, 0.7)
-            radius: 10
-            border.width: 1
-            border.color: "white"
-            opacity: 0.8
+    id: win
+    width: 150
+    height: 150
 
-            height: 500
-            width: 500
-            anchors.bottomMargin: 30
+    property int minWidth: 100
+    property int minHeight: 100
 
-            MouseArea {
-                id: bottomRightDragMouseArea
-                anchors {
-                   bottom: parent.bottom
-                   right: parent.right
-                }
+//    anchors.bottomMargin: 30
+    anchors {
+        bottomMargin: 10
+        topMargin: 10
+        leftMargin: 10
+        rightMargin: 10
+    }
 
-                Rectangle {
-                    id: bottomRightDragHandle
-                    anchors.fill: parent
-                    color: "red"
-                }
+    Rectangle {
+        id: contents
+        color: Qt.rgba(1, 1, 1, 0.7)
+        radius: 10
+        border.width: 1
+        border.color: "white"
+        opacity: 0.8
 
-                width: 30
-                height: 30
+        anchors {
+            bottomMargin: -10
+            topMargin: -10
+            leftMargin: -10
+            rightMargin: -10
+        }
 
-                hoverEnabled: true
+        anchors.fill: parent
 
-                acceptedButtons: Qt.LeftButton
+        MouseArea {
+            id: bottomRightDragMouseArea
+            anchors {
+                bottom: parent.bottom
+                right: parent.right
+            }
 
-                property int oldMouseX
-                property int oldMouseY
+            Rectangle {
+                id: bottomRightDragHandle
+                anchors.fill: parent
+                color: "red"
+            }
 
-                onPressed: {
-                    parent.anchors.left = undefined
-                    parent.anchors.right = undefined
-                    parent.anchors.bottom = undefined
-                    parent.anchors.top = undefined
-                    oldMouseX = mouseX
-                    oldMouseY = mouseY
-                }
+            width: 30
+            height: 30
 
-                onPositionChanged: {
-                    if (pressed) {
-                        parent.width += (mouseX - oldMouseX)
-                        parent.height += (mouseY - oldMouseY)
+            hoverEnabled: true
+
+            acceptedButtons: Qt.LeftButton
+
+            property int oldMouseX
+            property int oldMouseY
+
+            onPressed: {
+                win.anchors.left = undefined
+                win.anchors.right = undefined
+                win.anchors.bottom = undefined
+                win.anchors.top = undefined
+                oldMouseX = mouseX
+                oldMouseY = mouseY
+            }
+
+            onPositionChanged: {
+                if (pressed) {
+                    if (win.width > minWidth) {
+                        win.width += (mouseX - oldMouseX)
+                    } else if (win.width <=minWidth) {
+                        var mouseTemp = mouseX - oldMouseX
+                        if (mouseTemp > 0) {
+                            win.width += mouseTemp
+                        }
                     }
 
-                    cursorShape = Qt.SizeFDiagCursor
-                }
+                    if (win.height > minHeight) {
+                        win.height += (mouseY - oldMouseY)
+                    } else if (win.height <= minHeight) {
+                        var mouseTemp = mouseY - oldMouseY
+                        if (mouseTemp > 0) {
+                            win.height += mouseTemp
+                        }
+                    }
+                } // pos changed
+
+                cursorShape = Qt.SizeFDiagCursor
             }
+        } // mouse area
+    } //rectangle
+
+    Rectangle {
+        id: titlebar
+
+        color: "yellow"
+        opacity: 1
+
+        height: 20
+        width: 100
+
+        anchors {
+            left: contents.left
+            right: contents.right
+            bottom: contents.top
+        }
     }
 }

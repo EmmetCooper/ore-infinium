@@ -4,11 +4,33 @@ import QtQuick.Controls.Styles 1.0
 
 import OpenGLUnderQML 1.0
 
+//property alias label: text.text
+
 Item {
 
     Window {
-       anchors.fill: parent
+        x: 100
+        y: 100
+//       anchors.fill: parent
+
+//        width: 100
+//        height: 100
+        height: label.implicitHeight
+        Text {
+        id: label
+        color: "black"
+        wrapMode: Text.WrapAnywhere
+        text: "HERE IS SOME TEST TEXT. hopefully it'll know that it needs to expand the contents of the window and not fuck up, autosensing the size........................................................................blah"
+
+        anchors.fill: parent
+        //        anchors.fill: rect
+        //        anchors.right: parent.right
+        //        anchors.left: parent.left
+        //        anchors.bottom: parent.bottom
+        //        height: 100
+        }
     }
+
     //FIXME: gynormous hack, strip win size out into C++
     width: 1024
     height: 768
@@ -68,18 +90,4 @@ Item {
             }
             }
             */
-
-
-
-    Text {
-        id: label
-        color: "black"
-        wrapMode: Text.WordWrap
-        text: "The background here is a squircle rendered with raw OpenGL using the 'beforeRender()' signal in QQuickWindow. This text label and its border is rendered using QML"
-//        anchors.fill: rect
-//        anchors.right: parent.right
-//        anchors.left: parent.left
-//        anchors.bottom: parent.bottom
-//        height: 100
-    }
 }
