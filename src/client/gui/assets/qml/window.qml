@@ -109,5 +109,15 @@ Item {
             right: contents.right
             bottom: contents.top
         }
+
+        MouseArea {
+            id: dragHandle
+
+            anchors.fill: parent
+
+            hoverEnabled: true
+
+            drag.target: win
+        }
     }
 }

@@ -15,7 +15,8 @@ Item {
 
 //        width: 100
 //        height: 100
-        height: label.implicitHeight
+        minHeight: label.contentHeight
+        minWidth: label.contentWidth
         Text {
         id: label
         color: "black"
