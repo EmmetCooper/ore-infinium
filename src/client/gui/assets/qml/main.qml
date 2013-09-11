@@ -15,12 +15,13 @@ Item {
 
 //        width: 100
 //        height: 100
-        minHeight: label.contentHeight
-        minWidth: label.contentWidth
+
+        //minHeight: label.contentHeight
+        //minWidth: label.contentWidth
         Text {
         id: label
         color: "black"
-        wrapMode: Text.WrapAnywhere
+        wrapMode: Text.Wrap//Anywhere
         text: "HERE IS SOME TEST TEXT. hopefully it'll know that it needs to expand the contents of the window and not fuck up, autosensing the size........................................................................blah"
 
         anchors.fill: parent

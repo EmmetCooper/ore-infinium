@@ -71,23 +71,22 @@ Item {
 
             onPositionChanged: {
                 if (pressed) {
-                    if (win.width > minWidth) {
-                        win.width += (mouseX - oldMouseX)
-                    } else if (win.width <=minWidth) {
-                        var mouseTemp = mouseX - oldMouseX
-                        if (mouseTemp > 0) {
-                            win.width += mouseTemp
-                        }
+                    var mouseXDelta = (mouseX - oldMouseX)
+                    var mouseYDelta = (mouseY - oldMouseY)
+
+                    if (win.width + mouseXDelta >= minWidth) {
+                        win.width += mouseXDelta
                     }
 
-                    if (win.height > minHeight) {
-                        win.height += (mouseY - oldMouseY)
-                    } else if (win.height <= minHeight) {
-                        var mouseTemp = mouseY - oldMouseY
-                        if (mouseTemp > 0) {
-                            win.height += mouseTemp
-                        }
+                    if (win.height + mouseYDelta >= minHeight) {
+                        win.height += mouseYDelta
                     }
+
+                    //if (win.height >= minHeight) {
+                    //    win.height += mouseYDelta
+                    //} else if (win.height < minHeight) {
+                    //    win.height = minHeight
+                    //}
                 } // pos changed
 
                 cursorShape = Qt.SizeFDiagCursor
