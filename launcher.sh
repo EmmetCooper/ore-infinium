@@ -5,6 +5,9 @@
 
 #export QML_IMPORT_TRACE=1
 export QML_CONSOLE_EXTENDED=1
+
+#this only works for qtquick controls though, use Text { renderType: Text.NativeRendering }
+
 export DESKTOPCOMPONENTS_USE_NATIVE_TEXT=1
 #export QML_COMPILER_STATS=1
 

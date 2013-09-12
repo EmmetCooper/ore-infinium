@@ -9,6 +9,7 @@ Item {
     width: 150
     height: 150
 
+    property alias title: winTitle
     property int minWidth: 100
     property int minHeight: 100
 
@@ -63,6 +64,7 @@ Item {
             property int oldMouseY
 
             onPressed: {
+                win.z = 900
                 win.anchors.left = undefined
                 win.anchors.right = undefined
                 win.anchors.bottom = undefined
@@ -109,6 +111,14 @@ Item {
             left: contents.left
             right: contents.right
             bottom: contents.top
+        }
+
+        Text {
+            id: winTitle
+            text: "Amazing Window"
+
+            anchors.centerIn: parent
+            renderType: Text.NativeRendering
         }
 
         MouseArea {

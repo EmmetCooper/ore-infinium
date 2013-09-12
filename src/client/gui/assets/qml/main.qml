@@ -7,6 +7,43 @@ import OpenGLUnderQML 1.0
 //property alias label: text.text
 
 Item {
+    Window {
+        x: 200
+        y: 200
+//       anchors.fill: parent
+
+//        width: 100
+//        height: 100
+
+        //minHeight: label.contentHeight
+        //minWidth: label.contentWidth
+        Text {
+        id: label2
+        color: "black"
+        wrapMode: Text.Wrap//Anywhere
+        text: "HERE IS SOME TEST TEXT. hopefully it'll know that it needs to expand the contents of the window and not fuck up, autosensing the size........................................................................blah"
+
+        anchors.fill: parent
+        //        anchors.fill: rect
+        //        anchors.right: parent.right
+        //        anchors.left: parent.left
+        //        anchors.bottom: parent.bottom
+        //        height: 100
+        }
+
+        Button {
+            style: buttonStyle
+
+            anchors {
+                left: parent.left
+                right: parent.horizontalcenter
+                top: parent.top
+                bottom: parent.bottom
+            }
+
+            text: "test"
+        }
+    }
 
     Window {
         x: 100
