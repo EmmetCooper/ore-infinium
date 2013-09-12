@@ -44,6 +44,8 @@ Item {
                 right: parent.right
             }
 
+            z: 1000
+
             Rectangle {
                 id: bottomRightDragHandle
                 anchors.fill: parent
