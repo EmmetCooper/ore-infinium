@@ -116,7 +116,7 @@ Item {
 //                 source: control.pressed ? "../images/button_pressed.png" : "../images/button_default.png"
                 source: {
                     if (control.pressed) {
-                        "../gui.png"
+                        "../button-pressed.png"
                     } else {
                         ""
                     }
