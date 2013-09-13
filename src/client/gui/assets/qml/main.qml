@@ -15,30 +15,11 @@ Item {
         y: 300
     }
 
-
-    ColumnLayout {
-        anchors.centerIn: parent
-
-        Button {
-            style: buttonStyle
-
-            text: "test"
-        }
-                Button {
-            style: buttonStyle
-
-            text: "test"
-        }
-                Button {
-            style: buttonStyle
-
-            text: "test"
-        }
-                Button {
-            style: buttonStyle
-
-            text: "test"
-        }
+    Loader {
+       id: mainMenuLoader
+       source: "mainMenu.qml"
+       parent: parent
+       anchors.fill: parent
     }
 
     Window {
