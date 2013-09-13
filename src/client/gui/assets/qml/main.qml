@@ -117,8 +117,10 @@ Item {
                 source: {
                     if (control.pressed) {
                         "../button-pressed.png"
+                    } else if (control.hovered) {
+                        "../button-hovered.png"
                     } else {
-                        ""
+                        "../button-normal.png"
                     }
                 }
 
