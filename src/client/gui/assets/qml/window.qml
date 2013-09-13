@@ -85,12 +85,6 @@ Item {
                     if (win.height + mouseYDelta >= minHeight) {
                         win.height += mouseYDelta
                     }
-
-                    //if (win.height >= minHeight) {
-                    //    win.height += mouseYDelta
-                    //} else if (win.height < minHeight) {
-                    //    win.height = minHeight
-                    //}
                 } // pos changed
 
                 cursorShape = Qt.SizeFDiagCursor
@@ -127,6 +121,9 @@ Item {
             anchors.fill: parent
 
             hoverEnabled: true
+
+            onPositionChanged: {
+            }
 
             drag.target: win
         }

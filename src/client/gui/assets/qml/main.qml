@@ -3,43 +3,39 @@ import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.0
 
 import OpenGLUnderQML 1.0
+import QtQuick.Layouts 1.0
 
 //property alias label: text.text
 
 Item {
-    Window {
-        x: 200
-        y: 200
-//       anchors.fill: parent
+    OptionsDialog {
+        width: 200
+        height: 200
+        x: 300
+        y: 300
+    }
 
-//        width: 100
-//        height: 100
 
-        //minHeight: label.contentHeight
-        //minWidth: label.contentWidth
-        Text {
-        id: label2
-        color: "black"
-        wrapMode: Text.Wrap//Anywhere
-        text: "HERE IS SOME TEST TEXT. hopefully it'll know that it needs to expand the contents of the window and not fuck up, autosensing the size........................................................................blah"
-
-        anchors.fill: parent
-        //        anchors.fill: rect
-        //        anchors.right: parent.right
-        //        anchors.left: parent.left
-        //        anchors.bottom: parent.bottom
-        //        height: 100
-        }
+    ColumnLayout {
+        anchors.centerIn: parent
 
         Button {
             style: buttonStyle
 
-            anchors {
-                left: parent.left
-                right: parent.horizontalcenter
-                top: parent.top
-                bottom: parent.bottom
-            }
+            text: "test"
+        }
+                Button {
+            style: buttonStyle
+
+            text: "test"
+        }
+                Button {
+            style: buttonStyle
+
+            text: "test"
+        }
+                Button {
+            style: buttonStyle
 
             text: "test"
         }
@@ -74,7 +70,7 @@ Item {
 
             anchors {
                 left: parent.left
-                right: parent.horizontalcenter
+                right: parent.right
                 top: parent.top
                 bottom: parent.bottom
             }
@@ -113,7 +109,7 @@ Item {
                 border.left: 8
                 border.right: 8
                 anchors.margins: control.pressed ? -4 : 0
-//                 source: control.pressed ? "../images/button_pressed.png" : "../images/button_default.png"
+
                 source: {
                     if (control.pressed) {
                         "../button-pressed.png"
