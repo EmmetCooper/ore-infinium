@@ -9,71 +9,22 @@ import QtQuick.Layouts 1.0
 
 Item {
     ColumnLayout {
-        anchors.centerIn: parent
+    anchors.centerIn: parent
 
-        Button {
-            style: buttonStyle
-
+        OreButton {
             text: "mainmenu"
         }
 
-        Button {
-            style: buttonStyle
-
+        OreButton {
             text: "mainmenu"
         }
 
-        Button {
-            style: buttonStyle
-
+        OreButton {
             text: "Options"
         }
 
-        Button {
-            style: buttonStyle
-
+        OreButton {
             text: "Exit"
         }
     }
-
-    Component {
-        id: buttonStyle
-
-        ButtonStyle {
-            panel: Item {
-            implicitHeight: 50
-            implicitWidth: 320
-
-            BorderImage {
-                anchors.fill: parent
-                antialiasing: true
-                border.bottom: 8
-                border.top: 8
-                border.left: 8
-                border.right: 8
-                anchors.margins: control.pressed ? -4 : 0
-
-                source: {
-                    if (control.pressed) {
-                        "../button-pressed.png"
-                    } else if (control.hovered) {
-                        "../button-hovered.png"
-                    } else {
-                        "../button-normal.png"
-                    }
-                }
-
-
-                Text {
-                    text: control.text
-                    anchors.centerIn: parent
-                    color: "white"
-                    font.pixelSize: 23
-                    renderType: Text.NativeRendering
-                }
-            }
-            }
-        }
-    }
-
 }
