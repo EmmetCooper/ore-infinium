@@ -8,13 +8,6 @@ import QtQuick.Layouts 1.0
 //property alias label: text.text
 
 Item {
-    OptionsDialog {
-        width: 200
-        height: 200
-        x: 300
-        y: 300
-    }
-
     Loader {
        id: mainMenuLoader
        source: "mainMenu.qml"

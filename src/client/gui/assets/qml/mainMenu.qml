@@ -8,8 +8,17 @@ import QtQuick.Layouts 1.0
 //property alias label: text.text
 
 Item {
+    id: mainMenu
+
+    Loader {
+        id: optionsLoader
+        parent: mainMenu
+        anchors.fill: mainMenu
+        z: 200
+    }
+
     ColumnLayout {
-    anchors.centerIn: parent
+        anchors.centerIn: parent
 
         OreButton {
             text: "mainmenu"
@@ -21,6 +30,10 @@ Item {
 
         OreButton {
             text: "Options"
+
+            onClicked: {
+                optionsLoader.source = "optionsDialog.qml"
+            }
         }
 
         OreButton {

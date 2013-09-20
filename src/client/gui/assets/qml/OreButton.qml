@@ -2,12 +2,10 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.0
 
+Button {
+    id: button
 
- //   property alias text: button.text
-    Button {
-        id: button
-
-        style: ButtonStyle {
+    style: ButtonStyle {
         id: oreButtonStyle
         panel:
         Item {
