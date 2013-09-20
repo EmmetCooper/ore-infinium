@@ -32,7 +32,7 @@ Window {
     }
 
     Button {
-        style: buttonStyle
+//        style: buttonStyle
 
         anchors {
             left: parent.left

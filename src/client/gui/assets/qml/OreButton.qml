@@ -2,17 +2,13 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.0
 
-Item {
 
-    property alias text: button.text
+ //   property alias text: button.text
     Button {
         id: button
 
-        style: buttonStyle
-    }
-
-    ButtonStyle {
-        id: buttonStyle
+        style: ButtonStyle {
+        id: oreButtonStyle
         panel:
         Item {
             implicitHeight: 50
