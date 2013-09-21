@@ -11,17 +11,54 @@ Item {
 
     clip: true
 
+    property alias winContents: contents
     property alias title: winTitle
     property int minWidth: 100
     property int minHeight: 100
 
-//    anchors.bottomMargin: 30
     anchors {
         bottomMargin: 10
         topMargin: 10
-        leftMargin: 10
+        leftMargin: 30
         rightMargin: 10
     }
+
+    Rectangle {
+        id: titlebar
+
+        color: "yellow"
+        opacity: 1
+
+        height: 20
+        width: 100
+
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+        }
+
+        Text {
+            id: winTitle
+            text: "Amazing Window"
+
+            anchors.centerIn: parent
+            renderType: Text.NativeRendering
+        }
+
+        MouseArea {
+            id: dragHandle
+
+            anchors.fill: parent
+
+            hoverEnabled: true
+
+            onPositionChanged: {
+            }
+
+            drag.target: win
+        }
+    } // titlebar
 
     Rectangle {
         id: contents
@@ -32,13 +69,14 @@ Item {
         opacity: 0.8
 
         anchors {
-            bottomMargin: -10
-            topMargin: -10
-            leftMargin: -10
-            rightMargin: -10
-        }
+//            leftMargin: 10
+ //           rightMargin: -10
 
-        anchors.fill: parent
+            bottom: parent.bottom
+            top: titlebar.bottom
+            left: parent.left
+            right: parent.right
+        }
 
         MouseArea {
             id: bottomRightDragMouseArea
@@ -92,42 +130,5 @@ Item {
                 cursorShape = Qt.SizeFDiagCursor
             }
         } // mouse area
-    } //rectangle
-
-    Rectangle {
-        id: titlebar
-
-        color: "yellow"
-        opacity: 1
-
-        height: 20
-        width: 100
-
-        anchors {
-            left: contents.left
-            right: contents.right
-            bottom: contents.top
-        }
-
-        Text {
-            id: winTitle
-            text: "Amazing Window"
-
-            anchors.centerIn: parent
-            renderType: Text.NativeRendering
-        }
-
-        MouseArea {
-            id: dragHandle
-
-            anchors.fill: parent
-
-            hoverEnabled: true
-
-            onPositionChanged: {
-            }
-
-            drag.target: win
-        }
-    }
+    } //rectangle contents
 }

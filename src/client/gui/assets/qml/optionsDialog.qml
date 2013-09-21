@@ -18,7 +18,7 @@ Window {
     //minWidth: label.contentWidth
 
     Column {
-        anchors.fill: parent
+        anchors.centerIn: win.winContents
 
         Text {
         id: label

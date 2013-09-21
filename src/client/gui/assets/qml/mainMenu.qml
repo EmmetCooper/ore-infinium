@@ -14,7 +14,7 @@ Item {
         id: optionsLoader
         parent: mainMenu
 //        anchors.fill: mainMenu
-        anchors.centerIn: parent
+//        anchors.centerIn: parent
         z: 200
     }
 
