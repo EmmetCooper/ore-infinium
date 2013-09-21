@@ -17,30 +17,26 @@ Window {
     //minHeight: label.contentHeight
     //minWidth: label.contentWidth
 
-    Text {
-    id: label
-    color: "black"
-    wrapMode: Text.Wrap//Anywhere
-    text: "OPTIONS DIALOG!"
+    Column {
+        anchors.fill: parent
 
-    anchors.fill: parent
-    //        anchors.fill: rect
-    //        anchors.right: parent.right
-    //        anchors.left: parent.left
-    //        anchors.bottom: parent.bottom
-    //        height: 100
-    }
+        Text {
+        id: label
+        color: "black"
+        wrapMode: Text.Wrap//Anywhere
+        text: "OPTIONS DIALOG!"
 
-    Button {
-//        style: buttonStyle
-
-        anchors {
-            left: parent.left
-            right: parent.right
-            top: parent.top
-            bottom: parent.bottom
+        //        anchors.fill: rect
+        //        anchors.right: parent.right
+        //        anchors.left: parent.left
+        //        anchors.bottom: parent.bottom
+        //        height: 100
         }
 
-        text: "options dialog"
+
+        OreButton {
+
+            text: "options dialog"
+        }
     }
 }

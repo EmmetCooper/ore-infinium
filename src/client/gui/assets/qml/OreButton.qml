@@ -5,14 +5,21 @@ import QtQuick.Controls.Styles 1.0
 Button {
     id: button
 
+//    property alias pixelSize: label.font.pixelSize;
+    property int fontSize: 20
+
     style: ButtonStyle {
         id: oreButtonStyle
         panel:
         Item {
-            implicitHeight: 50
-            implicitWidth: 320
+            id: styleItem
+
+            implicitHeight: label.implicitHeight
+            implicitWidth: label.implicitWidth
 
             BorderImage {
+                id: borderImage
+
                 anchors.fill: parent
                 antialiasing: true
                 border.bottom: 8
@@ -32,10 +39,12 @@ Button {
                 }
 
                 Text {
+                    id: label
+
                     text: control.text
                     anchors.centerIn: parent
                     color: "white"
-                    font.pixelSize: 23
+                    font.pixelSize: fontSize
                     renderType: Text.NativeRendering
                 }
             }

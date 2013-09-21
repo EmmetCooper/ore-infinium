@@ -13,22 +13,33 @@ Item {
     Loader {
         id: optionsLoader
         parent: mainMenu
-        anchors.fill: mainMenu
+//        anchors.fill: mainMenu
+        anchors.centerIn: parent
         z: 200
     }
 
     ColumnLayout {
         anchors.centerIn: parent
 
+
         OreButton {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
             text: "mainmenu"
         }
 
         OreButton {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
             text: "mainmenu"
         }
 
         OreButton {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
             text: "Options"
 
             onClicked: {
@@ -37,6 +48,9 @@ Item {
         }
 
         OreButton {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
             text: "Exit"
         }
     }

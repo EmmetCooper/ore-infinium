@@ -9,6 +9,8 @@ Item {
     width: 150
     height: 150
 
+    clip: true
+
     property alias title: winTitle
     property int minWidth: 100
     property int minHeight: 100
