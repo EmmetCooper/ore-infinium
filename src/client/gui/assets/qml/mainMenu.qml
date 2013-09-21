@@ -16,6 +16,11 @@ Item {
 //        anchors.fill: mainMenu
 //        anchors.centerIn: parent
         z: 200
+
+        onLoaded: {
+            item.x = mainMenu.width * 0.5 - (item.width * 0.5)
+            item.y = mainMenu.height * 0.5 - (item.height * 0.5)
+        }
     }
 
     ColumnLayout {
