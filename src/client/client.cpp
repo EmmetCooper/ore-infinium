@@ -29,6 +29,7 @@
 #include "gui/debugmenu.h"
 #include "gui/quickbarmenu.h"
 #include "gui/debugsettings.h"
+#include "gui/optionsdialogbackend.h"
 
 #include "src/settings/settings.h"
 
@@ -73,6 +74,7 @@ void Client::init()
     Debug::log(Debug::ImportantArea) << "CLIENT INIT START!";
 
     qmlRegisterType<Client>("OpenGLUnderQML", 1, 0, "Client");
+    qmlRegisterType<OptionsDialogBackend>("OptionsDialogBackend", 1,0, "OptionsDialogBackend");
     m_view = new QQuickView();
     m_view->setSource(QUrl("../client/gui/assets/qml/main.qml"));
     m_view->show();

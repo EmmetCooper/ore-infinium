@@ -11,6 +11,11 @@ Item {
 
     clip: true
 
+    /**
+     * true if accepted, false if cancelled
+     */
+    signal closed(bool accepted);
+
     property alias winContents: contents
     property alias title: winTitle
     property int minWidth: 100

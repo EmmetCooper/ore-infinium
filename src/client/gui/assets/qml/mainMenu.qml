@@ -21,6 +21,16 @@ Item {
             item.x = mainMenu.width * 0.5 - (item.width * 0.5)
             item.y = mainMenu.height * 0.5 - (item.height * 0.5)
         }
+
+        Connections {
+            property var options: optionsLoader.item
+
+            target: optionsLoader.item
+
+            onClosed: {
+                optionsLoader.source = ""
+            }
+        }
     }
 
     ColumnLayout {

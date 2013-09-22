@@ -6,6 +6,8 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.0
 
+import OptionsDialogBackend 1.0
+
 Window {
     id: win
     x: 100
@@ -16,6 +18,10 @@ Window {
 
     //minHeight: label.contentHeight
     //minWidth: label.contentWidth
+    OptionsDialogBackend {
+        id: backend
+
+    }
 
     Column {
         anchors.centerIn: win.winContents
@@ -35,6 +41,9 @@ Window {
 
 
         OreButton {
+            onClicked: {
+                backend.finalizeSettings()
+            }
 
             text: "options dialog"
         }

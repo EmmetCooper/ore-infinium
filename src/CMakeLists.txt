@@ -40,6 +40,7 @@ client/gui/debugsettings.cpp
 client/gui/gui.cpp
 client/gui/mainmenu.cpp
 client/gui/optionsdialog.cpp
+client/gui/optionsdialogbackend.cpp
 client/gui/quickbarmenu.cpp
 
 client/gui/core/Shell.cpp
