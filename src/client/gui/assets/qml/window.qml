@@ -11,6 +11,7 @@ Item {
 
     clip: true
 
+
     /**
      * true if accepted, false if cancelled
      */
@@ -27,6 +28,8 @@ Item {
         leftMargin: 30
         rightMargin: 10
     }
+
+    focus: true
 
     Rectangle {
         id: titlebar
@@ -81,6 +84,12 @@ Item {
             top: titlebar.bottom
             left: parent.left
             right: parent.right
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            focus: true
+            hoverEnabled: true
         }
 
         MouseArea {
