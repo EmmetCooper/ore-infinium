@@ -3,8 +3,16 @@ import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.0
 
 TextField {
+    anchors {
+        topMargin: 5
+        bottomMargin: 5
+        leftMargin: 10
+        rightMargin: 10
+    }
+
         style: TextFieldStyle {
             textColor: "black"
+
 
             background: BorderImage  {
                 id: borderImage
@@ -18,7 +26,10 @@ TextField {
                 border.left: 8
                 border.right: 8
 
-                anchors.margins: 0
+                anchors {
+                    topMargin: 2
+                    bottomMargin: 2
+                }
 
                 source: {
                     if (control.hovered) {
@@ -29,4 +40,5 @@ TextField {
                 }
         }
     }
+
 }

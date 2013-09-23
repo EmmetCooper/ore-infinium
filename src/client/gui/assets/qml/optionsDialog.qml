@@ -37,12 +37,14 @@ Window {
 
         RowLayout {
             anchors {
+                top: parent.top
                 left: parent.left
                 right: parent.right
             }
 
             OreLabel {
                 anchors {
+                    top: parent.top
                     left: parent.left
                 }
 
@@ -52,6 +54,7 @@ Window {
 
             OreTextBox {
                 anchors {
+                    top: parent.top
                     left: label.right
                     right: parent.right
                 }
@@ -69,6 +72,7 @@ Window {
             OreLabel {
                 anchors {
                     left: parent.left
+                    top: parent.top
                 }
 
                 id: label2
@@ -77,6 +81,7 @@ Window {
 
             OreTextBox {
                 anchors {
+                    top: parent.top
                     left: label2.right
                     right: parent.right
                 }
