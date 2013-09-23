@@ -53,7 +53,7 @@ Window {
                 //        height: 100
             }
 
-            TextInput {
+            OreTextBox {
 
                 text: "options dialog"
             }
