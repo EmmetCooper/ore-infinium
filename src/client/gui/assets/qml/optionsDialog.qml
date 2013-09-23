@@ -42,11 +42,19 @@ Window {
             }
 
             OreLabel {
+                anchors {
+                    left: parent.left
+                }
+
                 id: label
                 text: "OPTIONS DIALOG!"
             }
 
             OreTextBox {
+                anchors {
+                    left: label.right
+                    right: parent.right
+                }
 
                 text: "options dialog"
             }
@@ -59,11 +67,19 @@ Window {
             }
 
             OreLabel {
+                anchors {
+                    left: parent.left
+                }
+
                 id: label2
                 text: "OPTIONS DIALOG!"
             }
 
             OreTextBox {
+                anchors {
+                    left: label2.right
+                    right: parent.right
+                }
 
                 text: "options dialog"
             }
