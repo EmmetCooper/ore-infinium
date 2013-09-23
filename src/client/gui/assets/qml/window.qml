@@ -23,9 +23,9 @@ Item {
     property int minHeight: 100
 
     anchors {
-        bottomMargin: 10
+        bottomMargin: 0
         topMargin: 10
-        leftMargin: 30
+        leftMargin: 20
         rightMargin: 10
     }
 
@@ -107,8 +107,8 @@ Item {
                 color: "red"
             }
 
-            width: 30
-            height: 30
+            width: 10
+            height: 10
 
             hoverEnabled: true
 
