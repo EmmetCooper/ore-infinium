@@ -3,3 +3,4 @@ OptionsDialog 0.1 optionsDialog.qml
 OreButton 0.1 OreButton.qml
 OreTextBox 0.1 OreTextBox.qml
 OreComboBox 0.1 OreComboBox.qml
+OreLabel 0.1 OreLabel.qml

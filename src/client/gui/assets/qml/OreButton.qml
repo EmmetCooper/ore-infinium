@@ -38,14 +38,13 @@ Button {
                     }
                 }
 
-                Text {
+                OreLabel {
                     id: label
 
                     text: control.text
                     anchors.centerIn: parent
                     color: "white"
                     font.pixelSize: fontSize
-                    renderType: Text.NativeRendering
                 }
             }
         }

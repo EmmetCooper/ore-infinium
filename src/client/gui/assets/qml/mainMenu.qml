@@ -33,9 +33,21 @@ Item {
         }
     }
 
-    ColumnLayout {
-        anchors.centerIn: parent
+    OreLabel {
+        anchors {
+            horizontalCenter: mainButtonLayout.horizontalCenter
+            bottom: mainButtonLayout.top
+            bottomMargin: 100
+        }
 
+       text: "Ore Infinium"
+       font.pixelSize: 40
+    }
+
+    ColumnLayout {
+        id: mainButtonLayout
+
+        anchors.centerIn: parent
 
         OreButton {
             Layout.fillWidth: true

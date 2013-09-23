@@ -28,6 +28,7 @@ Window {
 
     ColumnLayout {
         id: mainOptionsColumnLayout
+
         anchors {
             left: winContents.left
             right: winContents.right
@@ -40,17 +41,9 @@ Window {
                 right: parent.right
             }
 
-            Text {
+            OreLabel {
                 id: label
-                color: "black"
-                wrapMode: Text.NoWrap
                 text: "OPTIONS DIALOG!"
-
-                //        anchors.fill: rect
-                //        anchors.right: parent.right
-                //        anchors.left: parent.left
-                //        anchors.bottom: parent.bottom
-                //        height: 100
             }
 
             OreTextBox {
@@ -65,20 +58,12 @@ Window {
                 right: parent.right
             }
 
-            Text {
+            OreLabel {
                 id: label2
-                color: "black"
-                wrapMode: Text.NoWrap
                 text: "OPTIONS DIALOG!"
-
-                //        anchors.fill: rect
-                //        anchors.right: parent.right
-                //        anchors.left: parent.left
-                //        anchors.bottom: parent.bottom
-                //        height: 100
             }
 
-            TextInput {
+            OreTextBox {
 
                 text: "options dialog"
             }
