@@ -35,6 +35,7 @@ Window {
             top: winContents.top
         }
 
+        /*
         RowLayout {
             anchors {
                 top: parent.top
@@ -62,33 +63,37 @@ Window {
                 text: "options dialog"
             }
         }
+        */
 
-        RowLayout {
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
+//        RowLayout {
+//            anchors {
+//                left: parent.left
+//                right: parent.right
+//            }
 
             OreLabel {
+                id: playerNameLabel
+
                 anchors {
                     left: parent.left
-                    top: parent.top
+                    verticalCenter: playerNameTextBox.verticalCenter
                 }
 
-                id: label2
-                text: "OPTIONS DIALOG!"
+                text: "Player Name"
             }
 
             OreTextBox {
+                id: playerNameTextBox
+
                 anchors {
                     top: parent.top
-                    left: label2.right
+                    left: playerNameLabel.right
                     right: parent.right
                 }
 
-                text: "options dialog"
+                text: "test"
             }
-        } // rowlayout
+//        } // rowlayout
     } //column
 
     RowLayout {

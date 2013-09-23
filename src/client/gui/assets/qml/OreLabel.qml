@@ -4,7 +4,13 @@ import QtQuick.Controls.Styles 1.0
 
 Text {
     color: "white"
-    font.pixelSize: 20
+    font.pixelSize: 12
+
+    anchors {
+        leftMargin: 8
+    }
+
+    verticalAlignment: Text.AlignVCenter
 
     wrapMode: Text.NoWrap
     renderType: Text.NativeRendering
