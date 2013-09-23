@@ -45,7 +45,9 @@
 #include "src/../config.h"
 
 #include <random>
+
 #include <QQuickView>
+#include <QQmlEngine>
 
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_events.h>
@@ -76,6 +78,7 @@ void Client::init()
     qmlRegisterType<Client>("OpenGLUnderQML", 1, 0, "Client");
     qmlRegisterType<OptionsDialogBackend>("OptionsDialogBackend", 1,0, "OptionsDialogBackend");
     m_view = new QQuickView();
+    //m_view->engine()->addImportPath(QString("../client/gui/assets/qml"));
     m_view->setSource(QUrl("../client/gui/assets/qml/main.qml"));
     m_view->show();
 

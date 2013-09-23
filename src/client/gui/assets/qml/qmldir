@@ -4,3 +4,5 @@ OreButton 0.1 OreButton.qml
 OreTextBox 0.1 OreTextBox.qml
 OreComboBox 0.1 OreComboBox.qml
 OreLabel 0.1 OreLabel.qml
+OreComboBoxStyle 0.1 OreComboBoxStyle.qml
+MenuStyle 0.1 MenuStyle.qml

@@ -47,6 +47,6 @@ Button {
                     font.pixelSize: fontSize
                 }
             }
-        }
-    }
+        } //item
+    } //style
 }

@@ -148,6 +148,8 @@ ${LIBNOISE_LIBRARY}
 ${Qt5Quick_LIBRARIES}
 )
 
+message("QT5QUICK LIBS: " + ${Qt5Quick_LIBRARIES})
+
 # CPack packaging
 include(InstallRequiredSystemLibraries)
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING")

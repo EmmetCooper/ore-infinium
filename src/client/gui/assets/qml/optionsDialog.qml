@@ -35,65 +35,51 @@ Window {
             top: winContents.top
         }
 
-        /*
-        RowLayout {
+        OreLabel {
+            id: playerNameLabel
+
+            anchors {
+                left: parent.left
+                verticalCenter: playerNameTextBox.verticalCenter
+            }
+
+            text: "Player Name"
+        }
+
+        OreTextBox {
+            id: playerNameTextBox
+
             anchors {
                 top: parent.top
-                left: parent.left
+                left: playerNameLabel.right
                 right: parent.right
             }
 
-            OreLabel {
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                }
-
-                id: label
-                text: "OPTIONS DIALOG!"
-            }
-
-            OreTextBox {
-                anchors {
-                    top: parent.top
-                    left: label.right
-                    right: parent.right
-                }
-
-                text: "options dialog"
-            }
+            text: "test"
         }
-        */
 
-//        RowLayout {
-//            anchors {
-//                left: parent.left
-//                right: parent.right
-//            }
+        OreLabel {
+            id: resolutionLabel
 
-            OreLabel {
-                id: playerNameLabel
-
-                anchors {
-                    left: parent.left
-                    verticalCenter: playerNameTextBox.verticalCenter
-                }
-
-                text: "Player Name"
+            anchors {
+                left: parent.left
             }
 
-            OreTextBox {
-                id: playerNameTextBox
+            text: "Resolution"
+        }
 
-                anchors {
-                    top: parent.top
-                    left: playerNameLabel.right
-                    right: parent.right
-                }
+        ComboBox {
+            id: resolutionComboBox
+            style: OreComboBoxStyle {}
 
-                text: "test"
+            anchors {
+                left: resolutionLabel.right
+                right: parent.right
+                verticalCenter: resolutionLabel.verticalCenter
             }
-//        } // rowlayout
+
+            model: ["a", "b", "c"]
+        }
     } //column
 
     RowLayout {
