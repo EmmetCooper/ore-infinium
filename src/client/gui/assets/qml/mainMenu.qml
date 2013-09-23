@@ -10,6 +10,8 @@ import QtQuick.Layouts 1.0
 Item {
     id: mainMenu
 
+    signal exit()
+
     Loader {
         id: optionsLoader
         parent: mainMenu

@@ -41,8 +41,6 @@
 
 std::vector<std::string> args;
 
-#include "squircle.h"
-
 bool contains(const std::string& str)
 {
     for (size_t i = 0; i < args.size(); ++i) {

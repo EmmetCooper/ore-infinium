@@ -63,8 +63,6 @@ unittest.cpp
 
 ${CMAKE_SOURCE_DIR}/utils/GLEW/glew.c
 
-squircle.cpp
-
 )
 
 include(FindPkgConfig)
