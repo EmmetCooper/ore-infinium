@@ -109,6 +109,7 @@ Window {
             text: "OK"
             onClicked: {
                 backend.finalizeSettings()
+                closed(true)
             }
         }
 
@@ -123,6 +124,7 @@ Window {
             text: "Cancel"
             onClicked: {
                 //close
+                closed(false)
             }
         }
     }
