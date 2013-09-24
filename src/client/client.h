@@ -64,6 +64,8 @@ public slots:
 
     void init();
 
+    void exitClicked();
+
 private slots:
     void handleWindowChanged(QQuickWindow *win);
 
@@ -78,8 +80,6 @@ private:
 public:
     Client();
     ~Client();
-
-
 
     void startSinglePlayer(const std::string& playername);
     /**

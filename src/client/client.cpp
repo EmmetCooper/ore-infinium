@@ -48,6 +48,7 @@
 
 #include <QQuickView>
 #include <QQmlEngine>
+#include <QQmlContext>
 
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_events.h>
@@ -68,6 +69,7 @@ Client::~Client()
     FreeImage_DeInitialise();
 #endif
 
+    m_view->close();
     delete m_view;
 }
 
@@ -78,9 +80,15 @@ void Client::init()
     qmlRegisterType<Client>("OpenGLUnderQML", 1, 0, "Client");
     qmlRegisterType<OptionsDialogBackend>("OptionsDialogBackend", 1,0, "OptionsDialogBackend");
     m_view = new QQuickView();
+
+    QQmlContext *root = m_view->engine()->rootContext();
+    root->setContextProperty("ClientBackend", this);
+
     //m_view->engine()->addImportPath(QString("../client/gui/assets/qml"));
     m_view->setSource(QUrl("../client/gui/assets/qml/main.qml"));
     m_view->show();
+
+
 
     //glClearColor(0.f, .5f, 0.f, 1.0f);
 //    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -352,6 +360,13 @@ void Client::sync()
 void Client::cleanup()
 {
 
+}
+
+void Client::exitClicked()
+{
+    Debug::log(Debug::ImportantArea) << "Shutting down...";
+    //TODO: do something sane, and  flush configs and shit?
+    shutdown();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////

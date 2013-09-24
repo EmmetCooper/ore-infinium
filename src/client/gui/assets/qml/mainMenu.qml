@@ -12,6 +12,9 @@ Item {
 
     signal exit()
 
+    Component.onCompleted: {
+    }
+
     Loader {
         id: optionsLoader
         parent: mainMenu
@@ -79,6 +82,12 @@ Item {
         OreButton {
             Layout.fillWidth: true
             Layout.fillHeight: true
+
+            onClicked: {
+
+       exit.connect(ClientBackend.exitClicked());
+                exitClicked()
+            }
 
             text: "Exit"
         }
