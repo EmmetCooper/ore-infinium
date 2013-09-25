@@ -17,7 +17,6 @@
 
 #include "optionsdialog.h"
 #include "mainmenu.h"
-#include "gui.h"
 
 #include "src/client/client.h"
 
@@ -99,7 +98,7 @@ void OptionsDialog::ProcessEvent(Rocket::Core::Event& event)
 
 void OptionsDialog::loadDocument()
 {
-    m_options = GUI::instance()->context()->LoadDocument("../client/gui/assets/optionsDialog.rml");
+//    m_options = GUI::instance()->context()->LoadDocument("../client/gui/assets/optionsDialog.rml");
     m_options->RemoveReference();
     m_options->GetElementById("title")->SetInnerRML("fuck yeah, runtime options");
 
@@ -112,7 +111,7 @@ void OptionsDialog::loadDocument()
 
 void OptionsDialog::show()
 {
-    GUI::instance()->addInputDemand();
+ //   GUI::instance()->addInputDemand();
 
     loadDocument();
     m_options->Show(Rocket::Core::ElementDocument::MODAL);
@@ -121,9 +120,9 @@ void OptionsDialog::show()
 void OptionsDialog::close()
 {
     if (m_options) {
-        GUI::instance()->removeInputDemand();
+//        GUI::instance()->removeInputDemand();
         m_options->Close();
-        GUI::instance()->context()->UnloadDocument(m_options);
+ //       GUI::instance()->context()->UnloadDocument(m_options);
         m_options = nullptr;
     }
 }

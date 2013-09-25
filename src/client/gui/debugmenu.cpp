@@ -17,7 +17,6 @@
 
 #include "debugmenu.h"
 #include "mainmenu.h"
-#include "gui.h"
 
 #include "src/client/client.h"
 #include <src/debug.h>
@@ -58,7 +57,7 @@ void DebugMenu::ProcessEvent(Rocket::Core::Event& event)
 
 void DebugMenu::loadDocument()
 {
-    m_debug = GUI::instance()->context()->LoadDocument("../client/gui/assets/debugMenu.rml");
+//    m_debug = GUI::instance()->context()->LoadDocument("../client/gui/assets/debugMenu.rml");
 }
 
 void DebugMenu::setCollapsed(bool collapsed)
@@ -165,7 +164,7 @@ void DebugMenu::show()
 void DebugMenu::close()
 {
     m_debug->Close();
-    GUI::instance()->context()->UnloadDocument(m_debug);
+ //   GUI::instance()->context()->UnloadDocument(m_debug);
     delete m_debug;
 }
 

@@ -20,7 +20,7 @@
 #include "src/quickbarinventory.h"
 
 #include "src/client/client.h"
-#include "src/client/gui/gui.h"
+//#include "src/client/gui/gui.h"
 #include "src/client/gui/decoratorspritesheetinstancer.h"
 
 #include <src/spritesheetrenderer.h>
@@ -84,8 +84,8 @@ void QuickBarMenu::ProcessEvent(Rocket::Core::Event& event)
 
 void QuickBarMenu::loadDocument()
 {
-    m_menu = GUI::instance()->context()->LoadDocument("../client/gui/assets/quickBarMenu.rml");
-    m_switchedTooltip = GUI::instance()->context()->LoadDocument("../client/gui/assets/quickBarSwitchedTooltip.rml");
+//    m_menu = GUI::instance()->context()->LoadDocument("../client/gui/assets/quickBarMenu.rml");
+ //   m_switchedTooltip = GUI::instance()->context()->LoadDocument("../client/gui/assets/quickBarSwitchedTooltip.rml");
 
     float margin = m_menu->GetProperty<float>("width");
     margin += margin * 0.25f;

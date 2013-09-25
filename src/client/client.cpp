@@ -23,11 +23,6 @@
 
 #include "src/physicsdebugrenderer.h"
 
-#include "gui/gui.h"
-#include "gui/mainmenu.h"
-#include "gui/chatdialog.h"
-#include "gui/debugmenu.h"
-#include "gui/quickbarmenu.h"
 #include "gui/debugsettings.h"
 #include "gui/optionsdialogbackend.h"
 
@@ -512,7 +507,7 @@ void Client::tick(double frameTime)
 
        if (m_server) {
            if (m_physicsDebugRenderer) {
-               m_debugMenu->setPhysicsWorldShapeCount(m_physicsDebugRenderer->shapeCount());
+//               m_debugMenu->setPhysicsWorldShapeCount(m_physicsDebugRenderer->shapeCount());
            }
        }
    }
@@ -672,9 +667,9 @@ void Client::handlePlayerInput(SDL_Event& event)
         //greater than 0 is moving mouse wheel *up*, so we want previous.
         if (m_quickBarMenu) {
             if (event.wheel.y > 0) {
-                m_quickBarMenu->previousSlot();
+ //               m_quickBarMenu->previousSlot();
             } else if (event.wheel.y < 0) {
-                m_quickBarMenu->nextSlot();
+//                m_quickBarMenu->nextSlot();
             }
         }
         break;

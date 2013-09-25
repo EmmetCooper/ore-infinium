@@ -37,7 +37,6 @@ client/client.cpp
 client/gui/chatdialog.cpp
 client/gui/debugmenu.cpp
 client/gui/debugsettings.cpp
-client/gui/gui.cpp
 client/gui/mainmenu.cpp
 client/gui/optionsdialog.cpp
 client/gui/optionsdialogbackend.cpp

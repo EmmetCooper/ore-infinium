@@ -16,7 +16,6 @@
  *****************************************************************************/
 
 #include "debugsettings.h"
-#include "gui.h"
 
 #include "src/client/client.h"
 #include <src/debug.h>
@@ -269,7 +268,7 @@ void DebugSettings::ProcessEvent(Rocket::Core::Event& event)
 
 void DebugSettings::loadDocument()
 {
-    m_debugSettings = GUI::instance()->context()->LoadDocument("../client/gui/assets/debugSettings.rml");
+//    m_debugSettings = GUI::instance()->context()->LoadDocument("../client/gui/assets/debugSettings.rml");
     m_debugSettings->GetElementById("title")->SetInnerRML("Debug Settings");
 
     m_tabSet = dynamic_cast<Rocket::Controls::ElementTabSet*>(m_debugSettings->GetElementById("tabset"));

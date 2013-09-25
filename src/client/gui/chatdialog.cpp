@@ -17,7 +17,6 @@
 
 #include "chatdialog.h"
 #include "mainmenu.h"
-#include "gui.h"
 
 #include "src/client/client.h"
 #include <src/debug.h>
@@ -55,7 +54,7 @@ void ChatDialog::ProcessEvent(Rocket::Core::Event& event)
 
 void ChatDialog::loadDocument()
 {
-    m_chat = GUI::instance()->context()->LoadDocument("../client/gui/assets/chatDialog.rml");
+//    m_chat = GUI::instance()->context()->LoadDocument("../client/gui/assets/chatDialog.rml");
     m_chat->GetElementById("title")->SetInnerRML("Chat");
 
     m_tabSet = dynamic_cast<Rocket::Controls::ElementTabSet*>(m_chat->GetElementById("tabset"));
@@ -147,7 +146,7 @@ void ChatDialog::show()
 void ChatDialog::close()
 {
     m_chat->Close();
-    GUI::instance()->context()->UnloadDocument(m_chat);
+  //  GUI::instance()->context()->UnloadDocument(m_chat);
     //FIXME: gosh i hate this with a passion. but it's more complicated than it seems to do right. or at least i think it is.
     //also, notice i don't delete m_options. i'm seriously hoping that rocket does that. if i call delete on it, it crashsee.
     delete m_chat;

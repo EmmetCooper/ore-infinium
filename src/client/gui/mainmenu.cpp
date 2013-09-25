@@ -16,7 +16,6 @@
  *****************************************************************************/
 
 #include "mainmenu.h"
-#include "gui.h"
 
 #include "src/client/client.h"
 #include "src/settings/settings.h"
@@ -35,8 +34,7 @@
 
 MainMenu::MainMenu(Client* client) : m_client(client)
 {
-
-    m_menu = GUI::instance()->context()->LoadDocument("../client/gui/assets/mainMenu.rml");
+//    m_menu = GUI::instance()->context()->LoadDocument("../client/gui/assets/mainMenu.rml");
     assert(m_menu);
 
 //    m_menu->SetProperty("height", Rocket::Core::Property(Settings::instance()->screenResolutionHeight ,Rocket::Core::Property::PX));
@@ -48,7 +46,7 @@ MainMenu::MainMenu(Client* client) : m_client(client)
     m_menu->GetElementById("options")->AddEventListener("click", this);
     m_menu->GetElementById("quit")->AddEventListener("click", this);
 
-    m_escapeMenu = GUI::instance()->context()->LoadDocument("../client/gui/assets/escapeMenu.rml");
+   // m_escapeMenu = GUI::instance()->context()->LoadDocument("../client/gui/assets/escapeMenu.rml");
     assert(m_escapeMenu);
 
     m_escapeMenu->SetProperty("height", Rocket::Core::Property(Settings::instance()->screenResolutionHeight , Rocket::Core::Property::PX));
@@ -59,29 +57,29 @@ MainMenu::MainMenu(Client* client) : m_client(client)
     m_escapeMenu->GetElementById("options")->AddEventListener("click", this);
     m_escapeMenu->GetElementById("quit")->AddEventListener("click", this);
 
-    m_mainMenuSingleplayer = GUI::instance()->context()->LoadDocument("../client/gui/assets/mainMenuSingleplayer.rml");
+  //  m_mainMenuSingleplayer = GUI::instance()->context()->LoadDocument("../client/gui/assets/mainMenuSingleplayer.rml");
     assert(m_mainMenuSingleplayer);
     m_mainMenuSingleplayer->GetElementById("create")->AddEventListener("click", this);
     m_mainMenuSingleplayer->GetElementById("load")->AddEventListener("click", this);
     m_mainMenuSingleplayer->GetElementById("back")->AddEventListener("click", this);
 
-    m_mainMenuSingleplayerCreate = GUI::instance()->context()->LoadDocument("../client/gui/assets/mainMenuSingleplayerCreate.rml");
+//    m_mainMenuSingleplayerCreate = GUI::instance()->context()->LoadDocument("../client/gui/assets/mainMenuSingleplayerCreate.rml");
     m_mainMenuSingleplayerCreate->GetElementById("back")->AddEventListener("click", this);
     m_mainMenuSingleplayerCreate->GetElementById("start")->AddEventListener("click", this);
 
-    m_mainMenuSingleplayerLoad = GUI::instance()->context()->LoadDocument("../client/gui/assets/mainMenuSingleplayerLoad.rml");
+ //   m_mainMenuSingleplayerLoad = GUI::instance()->context()->LoadDocument("../client/gui/assets/mainMenuSingleplayerLoad.rml");
     m_mainMenuSingleplayerLoad->GetElementById("back")->AddEventListener("click", this);
 
-    m_mainMenuMultiplayer = GUI::instance()->context()->LoadDocument("../client/gui/assets/mainMenuMultiplayer.rml");
+  //  m_mainMenuMultiplayer = GUI::instance()->context()->LoadDocument("../client/gui/assets/mainMenuMultiplayer.rml");
     m_mainMenuMultiplayer->GetElementById("back")->AddEventListener("click", this);
     m_mainMenuMultiplayer->GetElementById("host")->AddEventListener("click", this);
     m_mainMenuMultiplayer->GetElementById("join")->AddEventListener("click", this);
 
-    m_mainMenuMultiplayerHost = GUI::instance()->context()->LoadDocument("../client/gui/assets/mainMenuMultiplayerHost.rml");
+   // m_mainMenuMultiplayerHost = GUI::instance()->context()->LoadDocument("../client/gui/assets/mainMenuMultiplayerHost.rml");
     m_mainMenuMultiplayerHost->GetElementById("back")->AddEventListener("click", this);
     m_mainMenuMultiplayerHost->GetElementById("host")->AddEventListener("click", this);
 
-    m_mainMenuMultiplayerJoin = GUI::instance()->context()->LoadDocument("../client/gui/assets/mainMenuMultiplayerJoin.rml");
+   // m_mainMenuMultiplayerJoin = GUI::instance()->context()->LoadDocument("../client/gui/assets/mainMenuMultiplayerJoin.rml");
     m_mainMenuMultiplayerJoin->GetElementById("back")->AddEventListener("click", this);
     m_mainMenuMultiplayerJoin->GetElementById("join")->AddEventListener("click", this);
 }
@@ -314,7 +312,7 @@ bool MainMenu::escapeMenuVisible()
 void MainMenu::showEscapeMenu()
 {
     if (!m_escapeMenu->IsVisible()) {
-        GUI::instance()->addInputDemand();
+    //    GUI::instance()->addInputDemand();
         m_escapeMenu->Show();
     }
 }
@@ -322,7 +320,7 @@ void MainMenu::showEscapeMenu()
 void MainMenu::hideEscapeMenu()
 {
     if (m_escapeMenu->IsVisible()) {
-        GUI::instance()->removeInputDemand();
+     //   GUI::instance()->removeInputDemand();
         m_escapeMenu->Hide();
         if (m_optionsDialog) {
             m_optionsDialog->close();
