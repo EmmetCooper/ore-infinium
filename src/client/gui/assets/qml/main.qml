@@ -23,19 +23,14 @@ Item {
 
         SingleplayerMenu
         {
+            id: menu
 
+            onCreateWorldClicked: {
+                print("BLAAAAH")
+            }
         }
     }
 
-//    Connections {
-//       id: singleplayerMenuConnections
-//       target: singleplayerMenu
-//
-//       onCreateWorldClicked: {
-//           print("BALAAAH")
-//       }
-//    }
-//
     Connections {
        id: mainMenuConnections
        target: mainMenuLoader.item

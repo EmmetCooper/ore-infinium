@@ -35,7 +35,7 @@ Item {
             Layout.fillHeight: true
 
             onClicked: {
-                ClientBackend.exitClicked()
+                createWorldClicked()
             }
 
             text: "Create World"
