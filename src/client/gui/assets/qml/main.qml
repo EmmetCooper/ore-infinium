@@ -19,30 +19,22 @@ Item {
     }
 
     Component {
-        id: comp
-        SinglePlayerMenu {}
+        id: singlePlayerMenu
+
+        SingleplayerMenu
+        {
+
+        }
     }
 
     Connections {
        id: mainMenuConnections
        target: mainMenuLoader.item
 
-       onSinglePlayerClicked: {
-//           stackView.push({ item: "singlePlayerMenu.qml", immediate: true})
-           stackView.push(comp)
+       onSingleplayerClicked: {
+           stackView.push(singlePlayerMenu)
        }
     }
-//
-//    Connections {
-//       id: singlePlayerMenuConnections
-//       target: singlePlayerMenu
-//
-//       onBackClicked: {
-//           // unload
-//           stackView.pop()
-//           singlePlayerMenu.destroy()
-//       }
-//    }
 
     StackView {
         id: stackView

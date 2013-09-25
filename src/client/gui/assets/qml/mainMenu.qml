@@ -11,7 +11,7 @@ Item {
     id: mainMenu
 
     signal exit()
-    signal singlePlayerClicked()
+    signal singleplayerClicked()
     signal multiplayerPlayerClicked()
 
     Component.onCompleted: {
@@ -61,7 +61,7 @@ Item {
             Layout.fillHeight: true
 
             onClicked: {
-                singlePlayerClicked()
+                singleplayerClicked()
             }
 
             text: "Singleplayer"

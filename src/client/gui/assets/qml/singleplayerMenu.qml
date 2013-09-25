@@ -6,7 +6,7 @@ import OpenGLUnderQML 1.0
 import QtQuick.Layouts 1.0
 
 Item {
-    id: singlePlayerMenu
+    id: singleplayerMenu
 
    signal backClicked()
 
@@ -73,7 +73,7 @@ Item {
 
         onClicked: {
 
-            singlePlayerMenu.Stack.view.pop()
+            singleplayerMenu.Stack.view.pop()
             backClicked()
         }
 
