@@ -26,8 +26,16 @@ Item {
             id: menu
 
             onCreateWorldClicked: {
-                print("BLAAAAH")
+                stackView.push(singleplayerCreateMenu)
             }
+        }
+    }
+
+    Component {
+        id: singleplayerCreateMenu
+
+        SingleplayerCreateMenu
+        {
         }
     }
 

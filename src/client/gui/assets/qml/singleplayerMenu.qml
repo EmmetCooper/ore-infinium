@@ -8,7 +8,6 @@ import QtQuick.Layouts 1.0
 Item {
     id: singleplayerMenu
 
-   signal backClicked()
    signal createWorldClicked()
 
     Component.onCompleted: {
@@ -67,9 +66,7 @@ Item {
         height: 50
 
         onClicked: {
-
             singleplayerMenu.Stack.view.pop()
-            backClicked()
         }
 
         text: "Back"
