@@ -10,7 +10,6 @@ import QtQuick.Layouts 1.0
 Item {
     id: mainMenu
 
-    signal exit()
     signal singleplayerClicked()
     signal multiplayerPlayerClicked()
 
@@ -90,9 +89,7 @@ Item {
             Layout.fillHeight: true
 
             onClicked: {
-
-                exit.connect(ClientBackend.exitClicked());
-                exitClicked()
+                ClientBackend.exitClicked()
             }
 
             text: "Exit"
