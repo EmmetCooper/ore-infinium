@@ -91,7 +91,7 @@ Item {
 
             onClicked: {
 
-            exit.connect(ClientBackend.exitClicked());
+                exit.connect(ClientBackend.exitClicked());
                 exitClicked()
             }
 

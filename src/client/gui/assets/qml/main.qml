@@ -19,7 +19,7 @@ Item {
     }
 
     Component {
-        id: singlePlayerMenu
+        id: singleplayerMenu
 
         SingleplayerMenu
         {
@@ -27,12 +27,21 @@ Item {
         }
     }
 
+//    Connections {
+//       id: singleplayerMenuConnections
+//       target: singleplayerMenu
+//
+//       onCreateWorldClicked: {
+//           print("BALAAAH")
+//       }
+//    }
+//
     Connections {
        id: mainMenuConnections
        target: mainMenuLoader.item
 
        onSingleplayerClicked: {
-           stackView.push(singlePlayerMenu)
+           stackView.push(singleplayerMenu)
        }
     }
 

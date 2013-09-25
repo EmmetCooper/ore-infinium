@@ -9,6 +9,7 @@ Item {
     id: singleplayerMenu
 
    signal backClicked()
+   signal createWorldClicked()
 
     Component.onCompleted: {
     }
@@ -34,23 +35,17 @@ Item {
             Layout.fillHeight: true
 
             onClicked: {
+                ClientBackend.exitClicked()
             }
 
-            text: "Singleplayer"
+            text: "Create World"
         }
 
         OreButton {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            text: "Multiplayer"
-        }
-
-        OreButton {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-
-            text: "Options"
+            text: "Load World"
 
             onClicked: {
                 optionsLoader.source = "optionsDialog.qml"
