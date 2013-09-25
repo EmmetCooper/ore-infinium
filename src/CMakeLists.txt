@@ -34,21 +34,7 @@ object.cpp
 tool.cpp
 
 client/client.cpp
-client/gui/chatdialog.cpp
-client/gui/debugmenu.cpp
-client/gui/debugsettings.cpp
-client/gui/mainmenu.cpp
-client/gui/optionsdialog.cpp
 client/gui/optionsdialogbackend.cpp
-client/gui/quickbarmenu.cpp
-
-client/gui/core/Shell.cpp
-client/gui/core/ShellFileInterface.cpp
-client/gui/core/ShellRenderInterfaceOpenGL.cpp
-client/gui/core/SystemInterfaceSDL2.cpp
-
-client/gui/decoratorspritesheet.cpp
-client/gui/decoratorspritesheetinstancer.cpp
 
 server/server.cpp
 server/contactlistener.cpp
