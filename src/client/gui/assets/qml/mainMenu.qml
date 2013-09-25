@@ -60,6 +60,10 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
+            onClicked: {
+                singlePlayerClicked()
+            }
+
             text: "Singleplayer"
         }
 

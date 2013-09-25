@@ -9,19 +9,68 @@ import QtQuick.Layouts 1.0
 
 Item {
     Loader {
-       id: mainMenuLoader
-       source: "mainMenu.qml"
- //      parent: parent
-//       anchors.fill: parent
+        id: mainMenuLoader
+        anchors.fill: parent
+
+        // loaded at init
+        source: "mainMenu.qml"
+    }
+
+    Loader {
+        id: singlePlayerMenuLoader
+        anchors.fill: parent
+        // only loaded on demand, and unloaded
+    }
+
+    Connections {
+       id: mainMenuConnections
+       target: mainMenuLoader.item
+
+       onSinglePlayerClicked: {
+           singlePlayerMenuLoader.source = "singlePlayerMenu.qml"
+           stackView.push(singlePlayerMenuLoader.item)
+       }
+    }
+
+    Connections {
+       id: singlePlayerMenuConnections
+       target: singlePlayerMenuLoader.item
+
+       onBackClicked: {
+           // unload
+           stackView.pop()
+           singlePlayerMenuLoader.source = ""
+       }
     }
 
     StackView {
         id: stackView
 
+        delegate: StackViewDelegate {
+            function transitionFinished(properties)
+            {
+                properties.exitItem.opacity = 1
+            }
+
+            property Component pushTransition: StackViewTransition {
+                PropertyAnimation {
+                    target: enterItem
+                    property: "opacity"
+                    from: 0
+                    to: 1
+                }
+                PropertyAnimation {
+                    target: exitItem
+                    property: "opacity"
+                    from: 1
+                    to: 0
+                }
+            }
+        }
+
         anchors.fill: parent
 
         initialItem: mainMenuLoader.item
-
     }
 
     //FIXME: gynormous hack, strip win size out into C++
