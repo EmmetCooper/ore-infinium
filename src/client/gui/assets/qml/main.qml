@@ -8,6 +8,8 @@ import QtQuick.Layouts 1.0
 //property alias label: text.text
 
 Item {
+    id: main
+
     Loader {
         id: mainMenuLoader
         anchors.fill: parent
@@ -16,10 +18,9 @@ Item {
         source: "mainMenu.qml"
     }
 
-    Loader {
-        id: singlePlayerMenuLoader
-        anchors.fill: parent
-        // only loaded on demand, and unloaded
+    Component {
+        id: comp
+        SinglePlayerMenu {}
     }
 
     Connections {
@@ -27,21 +28,21 @@ Item {
        target: mainMenuLoader.item
 
        onSinglePlayerClicked: {
-           singlePlayerMenuLoader.source = "singlePlayerMenu.qml"
-           stackView.push(singlePlayerMenuLoader.item)
+//           stackView.push({ item: "singlePlayerMenu.qml", immediate: true})
+           stackView.push(comp)
        }
     }
-
-    Connections {
-       id: singlePlayerMenuConnections
-       target: singlePlayerMenuLoader.item
-
-       onBackClicked: {
-           // unload
-           stackView.pop()
-           singlePlayerMenuLoader.source = ""
-       }
-    }
+//
+//    Connections {
+//       id: singlePlayerMenuConnections
+//       target: singlePlayerMenu
+//
+//       onBackClicked: {
+//           // unload
+//           stackView.pop()
+//           singlePlayerMenu.destroy()
+//       }
+//    }
 
     StackView {
         id: stackView

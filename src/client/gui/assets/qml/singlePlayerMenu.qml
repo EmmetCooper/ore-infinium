@@ -13,7 +13,6 @@ Item {
     Component.onCompleted: {
     }
 
-
     OreLabel {
         anchors {
             horizontalCenter: mainButtonLayout.horizontalCenter
@@ -74,6 +73,7 @@ Item {
 
         onClicked: {
 
+            singlePlayerMenu.Stack.view.pop()
             backClicked()
         }
 
