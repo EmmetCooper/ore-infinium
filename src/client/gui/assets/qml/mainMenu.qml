@@ -13,6 +13,13 @@ Item {
     signal singleplayerClicked()
     signal multiplayerPlayerClicked()
 
+    focus: true
+
+    Keys.onEscapePressed: {
+        event.accepted = true
+        exit.press()
+    }
+
     Component.onCompleted: {
     }
 
@@ -85,6 +92,7 @@ Item {
         }
 
         OreButton {
+            id: exit
             Layout.fillWidth: true
             Layout.fillHeight: true
 

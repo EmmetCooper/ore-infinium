@@ -10,6 +10,22 @@ Item {
 
    signal createWorldClicked()
 
+   focus: true
+
+   function pop() {
+        singleplayerMenu.Stack.view.pop()
+   }
+
+   FocusScope {
+       anchors.fill: parent
+       focus: true
+
+   Keys.onEscapePressed: {
+       print("ESC PRESSED")
+       event.accepted = true
+       pop()
+   }
+
     Component.onCompleted: {
     }
 
@@ -66,9 +82,10 @@ Item {
         height: 50
 
         onClicked: {
-            singleplayerMenu.Stack.view.pop()
+            pop()
         }
 
         text: "Back"
     }
+   }
 }

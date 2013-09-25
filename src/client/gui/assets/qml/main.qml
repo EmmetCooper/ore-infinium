@@ -10,6 +10,8 @@ import QtQuick.Layouts 1.0
 Item {
     id: main
 
+    focus: true
+
     Loader {
         id: mainMenuLoader
         anchors.fill: parent
@@ -51,6 +53,10 @@ Item {
     StackView {
         id: stackView
 
+        anchors.fill: parent
+
+        //focus: true
+
         delegate: StackViewDelegate {
             function transitionFinished(properties)
             {
@@ -71,9 +77,7 @@ Item {
                     to: 0
                 }
             }
-        }
-
-        anchors.fill: parent
+        } // delegate
 
         initialItem: mainMenuLoader.item
     }

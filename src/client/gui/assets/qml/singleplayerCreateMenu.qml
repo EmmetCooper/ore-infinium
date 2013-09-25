@@ -12,6 +12,8 @@ Item {
 
     }
 
+    focus: true
+
     OreLabel {
         anchors {
             horizontalCenter: mainButtonLayout.horizontalCenter
@@ -54,22 +56,12 @@ Item {
             Layout.fillHeight: true
 
             onClicked: {
-                createWorldClicked()
+                //ClientBackend.startSingleplayerCreate
             }
 
-            text: "Create World"
+            text: "Play!"
         }
 
-        OreButton {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-
-            text: "Load World"
-
-            onClicked: {
-                optionsLoader.source = "optionsDialog.qml"
-            }
-        }
     } // column layout
 
     OreButton {
