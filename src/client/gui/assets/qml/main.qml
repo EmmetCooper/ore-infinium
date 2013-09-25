@@ -11,8 +11,17 @@ Item {
     Loader {
        id: mainMenuLoader
        source: "mainMenu.qml"
-       parent: parent
-       anchors.fill: parent
+ //      parent: parent
+//       anchors.fill: parent
+    }
+
+    StackView {
+        id: stackView
+
+        anchors.fill: parent
+
+        initialItem: mainMenuLoader.item
+
     }
 
     //FIXME: gynormous hack, strip win size out into C++

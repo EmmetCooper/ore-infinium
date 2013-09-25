@@ -11,6 +11,8 @@ Item {
     id: mainMenu
 
     signal exit()
+    signal singlePlayerClicked()
+    signal multiplayerPlayerClicked()
 
     Component.onCompleted: {
     }
@@ -58,14 +60,14 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            text: "mainmenu"
+            text: "Singleplayer"
         }
 
         OreButton {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            text: "mainmenu"
+            text: "Multiplayer"
         }
 
         OreButton {
@@ -85,7 +87,7 @@ Item {
 
             onClicked: {
 
-       exit.connect(ClientBackend.exitClicked());
+            exit.connect(ClientBackend.exitClicked());
                 exitClicked()
             }
 
