@@ -16,9 +16,7 @@ Item {
     focus: true
 
     Keys.onEscapePressed: {
-        print("ESC PRESSED main menu")
-        event.accepted = true
-        exit.press()
+        exit.clicked()
     }
 
     Component.onCompleted: {
@@ -89,6 +87,7 @@ Item {
 
             onClicked: {
                 optionsLoader.source = "optionsDialog.qml"
+                optionsLoader.item.focus = true
             }
         }
 

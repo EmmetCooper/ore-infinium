@@ -13,6 +13,14 @@ Window {
     x: 100
     y: 100
 
+    focus: true
+
+    //FIXME: doesn't work..
+    Keys.onEscapePressed: {
+        win.visible = false
+
+    }
+
     minWidth: 200
     minHeight: 200
 
