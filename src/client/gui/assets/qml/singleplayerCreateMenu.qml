@@ -6,10 +6,16 @@ import OpenGLUnderQML 1.0
 import QtQuick.Layouts 1.0
 
 Item {
-    id: singleplayerCreateMenu
+    id: main
 
     Component.onCompleted: {
 
+    }
+
+    Keys.onEscapePressed: {
+        print("ESC PRESSED create menu")
+        event.accepted = true
+        main.Stack.view.pop()
     }
 
     focus: true
@@ -79,7 +85,7 @@ Item {
 
         onClicked: {
 
-            singleplayerCreateMenu.Stack.view.pop()
+            main.Stack.view.pop()
         }
 
         text: "Back"

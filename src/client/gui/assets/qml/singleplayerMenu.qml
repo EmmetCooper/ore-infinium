@@ -6,24 +6,15 @@ import OpenGLUnderQML 1.0
 import QtQuick.Layouts 1.0
 
 Item {
-    id: singleplayerMenu
+    id: main
 
-   signal createWorldClicked()
-
-   focus: true
-
-   function pop() {
-        singleplayerMenu.Stack.view.pop()
-   }
-
-   FocusScope {
-       anchors.fill: parent
-       focus: true
+    signal createWorldClicked()
+    focus: true
 
    Keys.onEscapePressed: {
-       print("ESC PRESSED")
-       event.accepted = true
-       pop()
+        print("ESC PRESSED SP menu")
+        event.accepted = true
+        main.Stack.view.pop()
    }
 
     Component.onCompleted: {
@@ -82,10 +73,9 @@ Item {
         height: 50
 
         onClicked: {
-            pop()
+            main.Stack.view.pop()
         }
 
         text: "Back"
     }
-   }
 }

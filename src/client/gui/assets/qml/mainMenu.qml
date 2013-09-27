@@ -16,6 +16,7 @@ Item {
     focus: true
 
     Keys.onEscapePressed: {
+        print("ESC PRESSED main menu")
         event.accepted = true
         exit.press()
     }

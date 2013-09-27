@@ -10,8 +10,6 @@ import QtQuick.Layouts 1.0
 Item {
     id: main
 
-    focus: true
-
     Loader {
         id: mainMenuLoader
         anchors.fill: parent
@@ -61,6 +59,7 @@ Item {
             function transitionFinished(properties)
             {
                 properties.exitItem.opacity = 1
+                properties.enterItem.focus = true
             }
 
             property Component pushTransition: StackViewTransition {
