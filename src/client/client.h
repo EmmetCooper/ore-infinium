@@ -65,6 +65,9 @@ public slots:
 
     void init();
 
+    //from QML ...
+    void startSingleplayerSlot(const QString& playerName, const QString& worldName);
+    void startMultiplayerClientConnectionSlot(const QString& playerName, const QString& address, uint16_t port = 44543);
     void exitClicked();
 
 private slots:

@@ -367,6 +367,18 @@ void Client::exitClicked()
     shutdown();
 }
 
+void Client::startSingleplayerSlot(const QString& playerName, const QString& worldName)
+{
+
+}
+
+
+void Client::startMultiplayerClientConnectionSlot(const QString& playerName, const QString& address, uint16_t port)
+{
+
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////////////
 
 void Client::poll()
