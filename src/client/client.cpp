@@ -28,6 +28,7 @@
 
 #include "src/settings/settings.h"
 
+#include "src/quickview.h"
 #include "src/quickbarinventory.h"
 #include "src/world.h"
 #include "src/player.h"
@@ -44,6 +45,7 @@
 #include <QQuickView>
 #include <QQmlEngine>
 #include <QQmlContext>
+#include <QOpenGLContext>
 
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_events.h>
@@ -73,8 +75,9 @@ void Client::init()
     Debug::log(Debug::ImportantArea) << "CLIENT INIT START!";
 
     qmlRegisterType<Client>("OpenGLUnderQML", 1, 0, "Client");
-    qmlRegisterType<OptionsDialogBackend>("OptionsDialogBackend", 1,0, "OptionsDialogBackend");
-    m_view = new QQuickView();
+    qmlRegisterType<OptionsDialogBackend>("OptionsDialogBackend", 1, 0, "OptionsDialogBackend");
+
+    m_view = new QuickView();
 
     QQmlContext *root = m_view->engine()->rootContext();
     root->setContextProperty("ClientBackend", this);
@@ -419,7 +422,7 @@ void Client::poll()
 
 void Client::render(double frameTime)
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     if (m_world && m_mainPlayer) {
         m_world->render();

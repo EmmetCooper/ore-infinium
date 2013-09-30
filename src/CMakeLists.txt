@@ -32,6 +32,7 @@ vegetation.cpp
 object.cpp
 #quadtreerenderer.cpp
 tool.cpp
+quickview.cpp
 
 client/client.cpp
 client/gui/optionsdialogbackend.cpp

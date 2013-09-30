@@ -45,6 +45,7 @@ class ChatDialog;
 class DebugMenu;
 class World;
 class Server;
+class QuickView;
 
 class Client : public QQuickItem
 {
@@ -218,7 +219,7 @@ private:
 
     bool m_firstGLInit = false;
 
-    QQuickView* m_view = nullptr;
+    QuickView* m_view = nullptr;
 
 private:
     ENetHost* m_client = nullptr;
