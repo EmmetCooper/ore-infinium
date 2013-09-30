@@ -28,8 +28,21 @@ Item {
             onCreateWorldClicked: {
                 stackView.push(singleplayerCreateMenu)
             }
+
+            onLoadWorldClicked: {
+                stackView.push(singleplayerLoadMenu)
+            }
         }
     }
+
+    Component {
+        id: singleplayerLoadMenu
+
+        SingleplayerLoadMenu
+        {
+        }
+    }
+
 
     Component {
         id: singleplayerCreateMenu

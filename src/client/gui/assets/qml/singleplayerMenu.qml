@@ -9,6 +9,7 @@ Item {
     id: main
 
     signal createWorldClicked()
+    signal loadWorldClicked()
     focus: true
 
    Keys.onEscapePressed: {
@@ -52,7 +53,7 @@ Item {
             text: "Load World"
 
             onClicked: {
-                optionsLoader.source = "optionsDialog.qml"
+                loadWorldClicked()
             }
         }
     } // column layout
