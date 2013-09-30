@@ -8,15 +8,15 @@ import QtQuick.Layouts 1.0
 Item {
     id: main
 
-    signal createWorldClicked()
-    focus: true
-
-   Keys.onEscapePressed: {
-        main.Stack.view.pop()
-   }
-
     Component.onCompleted: {
+
     }
+
+    Keys.onEscapePressed: {
+        main.Stack.view.pop()
+    }
+
+    focus: true
 
     OreLabel {
         anchors {
@@ -25,7 +25,7 @@ Item {
             topMargin: 100
         }
 
-       text: "Singleplayer"
+       text: "Singleplayer, load a world"
        font.pixelSize: 40
     }
 
@@ -34,27 +34,38 @@ Item {
 
         anchors.centerIn: parent
 
-        OreButton {
-            Layout.fillWidth: true
+        RowLayout {
             Layout.fillHeight: true
 
-            onClicked: {
-                createWorldClicked()
+            anchors {
+                left: parent.left
+                right: parent.right
             }
 
-            text: "Create World"
+            OreLabel {
+                id: playerNameLabel
+
+                text: "Player Name"
+            }
+
+            OreTextBox {
+                id: playerName
+
+                text: "Player123123kl"
+            }
         }
 
         OreButton {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            text: "Load World"
-
             onClicked: {
-                optionsLoader.source = "optionsDialog.qml"
+                //ClientBackend.startSingleplayerCreate
             }
+
+            text: "Play!"
         }
+
     } // column layout
 
     OreButton {
@@ -71,6 +82,7 @@ Item {
         height: 50
 
         onClicked: {
+
             main.Stack.view.pop()
         }
 

@@ -13,8 +13,6 @@ Item {
     }
 
     Keys.onEscapePressed: {
-        print("ESC PRESSED create menu")
-        event.accepted = true
         main.Stack.view.pop()
     }
 

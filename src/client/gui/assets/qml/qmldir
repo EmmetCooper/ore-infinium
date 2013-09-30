@@ -2,6 +2,7 @@ Window 0.1 window.qml
 MainMenu 0.1 mainMenu.qml
 SingleplayerMenu 0.1 singleplayerMenu.qml
 SingleplayerCreateMenu 0.1 singleplayerCreateMenu.qml
+SingleplayerLoadMenu 0.1 singleplayerLoadMenu.qml
 OptionsDialog 0.1 optionsDialog.qml
 OreButton 0.1 OreButton.qml
 OreTextBox 0.1 OreTextBox.qml
