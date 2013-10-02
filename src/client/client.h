@@ -65,10 +65,12 @@ public slots:
 
     void init();
 
-    //from QML ...
+    //------------------ from QML ...
     Q_INVOKABLE void startSingleplayerCreateSlot(const QString& playerName, const QString& worldName);
-    Q_INVOKABLE void startMultiplayerClientConnectionSlot(const QString& playerName, const QString& address, uint16_t port = 44543);
+    Q_INVOKABLE void startMultiplayerHostSlot(const QString& playerName, const QString& address, uint16_t port = 44543);
+    Q_INVOKABLE void startMultiplayerJoinSlot(const QString& playerName, const QString& address, uint16_t port = 44543);
     Q_INVOKABLE void exitClicked();
+    //-------------------
 
 private slots:
     void handleWindowChanged(QQuickWindow *win);

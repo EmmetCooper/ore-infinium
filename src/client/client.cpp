@@ -372,10 +372,14 @@ void Client::startSingleplayerCreateSlot(const QString& playerName, const QStrin
     Debug::log(Debug::ImportantArea) << "SP start slot, playername, world: " << qPrintable(playerName) << " : " << qPrintable(worldName);
 }
 
-
-void Client::startMultiplayerClientConnectionSlot(const QString& playerName, const QString& address, uint16_t port)
+void Client::startMultiplayerHostSlot(const QString& playerName, const QString& address, uint16_t port)
 {
-    Debug::log(Debug::ImportantArea) << "MP start slot, playername, addr, port: " << qPrintable(playerName) << " : " << qPrintable(address) << " : " << port;
+    Debug::log(Debug::ImportantArea) << "MP host slot, playername, addr, port: " << qPrintable(playerName) << " : " << qPrintable(address) << " : " << port;
+}
+
+void Client::startMultiplayerJoinSlot(const QString& playerName, const QString& address, uint16_t port)
+{
+    Debug::log(Debug::ImportantArea) << "MP join slot, playername, addr, port: " << qPrintable(playerName) << " : " << qPrintable(address) << " : " << port;
 }
 
 

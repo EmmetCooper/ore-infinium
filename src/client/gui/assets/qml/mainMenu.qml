@@ -11,7 +11,7 @@ Item {
     id: mainMenu
 
     signal singleplayerClicked()
-    signal multiplayerPlayerClicked()
+    signal multiplayerClicked()
 
     focus: true
 
@@ -75,6 +75,10 @@ Item {
         OreButton {
             Layout.fillWidth: true
             Layout.fillHeight: true
+
+            onClicked: {
+                multiplayerClicked()
+            }
 
             text: "Multiplayer"
         }

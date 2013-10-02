@@ -36,6 +36,24 @@ Item {
     }
 
     Component {
+        id: multiplayerMenu
+
+        MultiplayerMenu
+        {
+            id: menu
+
+            onHostClicked: {
+                stackView.push(multiplayerHostMenu)
+            }
+
+            onJoinClicked: {
+                stackView.push(multiplayerJoinMenu)
+            }
+        }
+    }
+
+
+    Component {
         id: singleplayerLoadMenu
 
         SingleplayerLoadMenu
@@ -52,12 +70,32 @@ Item {
         }
     }
 
+    Component {
+        id: multiplayerHostMenu
+
+        MultiplayerHostMenu
+        {
+        }
+    }
+
+    Component {
+        id: multiplayerJoinMenu
+
+        MultiplayerJoinMenu
+        {
+        }
+    }
+
     Connections {
        id: mainMenuConnections
        target: mainMenuLoader.item
 
        onSingleplayerClicked: {
            stackView.push(singleplayerMenu)
+       }
+
+        onMultiplayerClicked: {
+           stackView.push(multiplayerMenu)
        }
     }
 
