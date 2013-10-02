@@ -53,15 +53,16 @@ Item {
 
                 text: "Player123123kl"
             }
-
-            OreTextBox {
-                id: worldName
-
-                text: "world123123kl"
-            }
         }
 
         RowLayout {
+            Layout.fillHeight: true
+
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+
             OreLabel {
                 id: worldNameLabel
 
@@ -81,6 +82,7 @@ Item {
 
             onClicked: {
                 ClientBackend.startSingleplayerCreateSlot(playerName.text, worldName.text);
+                main.Stack.clear();
             }
 
             text: "Play!"
