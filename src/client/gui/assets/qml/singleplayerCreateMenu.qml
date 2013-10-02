@@ -61,6 +61,20 @@ Item {
             }
         }
 
+        RowLayout {
+            OreLabel {
+                id: worldNameLabel
+
+                text: "World Name"
+            }
+
+            OreTextBox {
+                id: worldName
+
+                text: "world123123kl"
+            }
+        }
+
         OreButton {
             Layout.fillWidth: true
             Layout.fillHeight: true
