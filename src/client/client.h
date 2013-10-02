@@ -55,6 +55,12 @@ class Client : public QQuickItem
     qreal t() const { return m_t; }
     void setT(qreal t);
 
+public:
+
+     Q_INVOKABLE int defaultPort() {
+        return 44543;
+    }
+
 signals:
     void tChanged();
 
@@ -70,6 +76,8 @@ public slots:
     Q_INVOKABLE void startMultiplayerHostSlot(const QString& playerName, int port);
     Q_INVOKABLE void startMultiplayerJoinSlot(const QString& playerName, const QString& address, int port);
     Q_INVOKABLE void exitClicked();
+
+
     //-------------------
 
 private slots:

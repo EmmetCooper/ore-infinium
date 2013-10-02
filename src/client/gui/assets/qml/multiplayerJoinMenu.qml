@@ -84,7 +84,7 @@ Item {
             OreTextBox {
                 id: port
 
-                text: "2"
+                text: ClientBackend.defaultPort()
             }
         }
 
