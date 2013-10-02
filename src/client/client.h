@@ -67,8 +67,8 @@ public slots:
 
     //------------------ from QML ...
     Q_INVOKABLE void startSingleplayerCreateSlot(const QString& playerName, const QString& worldName);
-    Q_INVOKABLE void startMultiplayerHostSlot(const QString& playerName, const QString& address, uint16_t port = 44543);
-    Q_INVOKABLE void startMultiplayerJoinSlot(const QString& playerName, const QString& address, uint16_t port = 44543);
+    Q_INVOKABLE void startMultiplayerHostSlot(const QString& playerName, int port);
+    Q_INVOKABLE void startMultiplayerJoinSlot(const QString& playerName, const QString& address, int port);
     Q_INVOKABLE void exitClicked();
     //-------------------
 

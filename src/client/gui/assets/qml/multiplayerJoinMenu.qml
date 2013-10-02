@@ -64,15 +64,27 @@ Item {
             }
 
             OreLabel {
-                id: worldNameLabel
+                id: addressLabel
 
-                text: "World Name"
+                text: "Address/IP"
             }
 
             OreTextBox {
-                id: worldName
+                id: address
 
-                text: "world123123kl"
+                text: "127.0.0.1"
+            }
+
+            OreLabel {
+                id: portLabel
+
+                text: "Port:"
+            }
+
+            OreTextBox {
+                id: port
+
+                text: "2"
             }
         }
 
@@ -81,7 +93,7 @@ Item {
             Layout.fillHeight: true
 
             onClicked: {
-                ClientBackend.startMultiplayerJoinSlot(playerName.text, worldName.text);
+                ClientBackend.startMultiplayerJoinSlot(playerName.text, parseInt(address.text), parseInt(port.text));
                 main.Stack.view.clear();
             }
 

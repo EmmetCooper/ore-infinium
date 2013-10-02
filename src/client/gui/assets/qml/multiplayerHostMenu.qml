@@ -64,15 +64,14 @@ Item {
             }
 
             OreLabel {
-                id: worldNameLabel
-
-                text: "World Name"
+                id: portLabel
+                text: "Port:"
             }
 
             OreTextBox {
-                id: worldName
+                id: port
 
-                text: "world123123kl"
+                text: "-1"
             }
         }
 
@@ -81,7 +80,7 @@ Item {
             Layout.fillHeight: true
 
             onClicked: {
-                ClientBackend.startMultiplayerHostSlot(playerName.text, worldName.text);
+                ClientBackend.startMultiplayerHostSlot(playerName.text, parseInt(port.text));
                 main.Stack.view.clear();
             }
 
