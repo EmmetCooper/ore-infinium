@@ -82,7 +82,7 @@ Item {
 
             onClicked: {
                 ClientBackend.startSingleplayerCreateSlot(playerName.text, worldName.text);
-                main.Stack.clear();
+                main.Stack.view.clear();
             }
 
             text: "Play!"
