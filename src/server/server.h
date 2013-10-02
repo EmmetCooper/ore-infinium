@@ -35,11 +35,10 @@ class Time;
 class Server
 {
 public:
-    /// we use port 44543 for our server by default..
     Server();
     ~Server();
 
-    void init(uint8_t maxClients, uint32_t port = 44543, Client* client = nullptr);
+    void init(uint8_t maxClients, uint16_t port = DEFAULT_PORT, Client* client = nullptr);
     void enableWorldViewing() {
         m_worldViewingEnabled = true;
     }

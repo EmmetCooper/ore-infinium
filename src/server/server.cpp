@@ -63,7 +63,7 @@ Server::~Server()
     enet_host_destroy(m_server);
 }
 
-void Server::init(uint8_t maxClients, uint32_t port, Client* client)
+void Server::init(uint8_t maxClients, uint16_t port, Client* client)
 {
     m_client = client;
 

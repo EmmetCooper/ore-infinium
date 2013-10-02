@@ -39,4 +39,6 @@ static constexpr int32_t POSITION_ITERATIONS = 2;
 
 static constexpr uint32_t WORLD_SEA_LEVEL = 16;
 
+static constexpr uint16_t DEFAULT_PORT = 44543;
+
 #endif

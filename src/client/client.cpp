@@ -704,7 +704,7 @@ void Client::shutdown()
     exit(0);
 }
 
-bool Client::connectTo(const char* address, unsigned int port)
+bool Client::connectTo(const char* address, uint16_t port)
 {
     m_client = enet_host_create(nullptr /* create a client host */,
                                 1 /* only allow 1 outgoing connection */,
@@ -767,7 +767,7 @@ void Client::startSinglePlayer(const std::string& playername)
     connectTo();
 }
 
-bool Client::startMultiplayerClientConnection(const std::string& playername, const char* address, unsigned int port)
+bool Client::startMultiplayerClientConnection(const std::string& playername, const char* address, uint16_t port)
 {
     Debug::log(Debug::Area::NetworkClientInitialArea) << "starting multiplayer joining address: " << address << "! Entities::Playername: " << playername;
     m_playerName = playername;
@@ -781,7 +781,7 @@ bool Client::startMultiplayerClientConnection(const std::string& playername, con
     }
 }
 
-void Client::startMultiplayerHost(const std::string& playername, unsigned int port)
+void Client::startMultiplayerHost(const std::string& playername, uint16_t port)
 {
     Debug::log(Debug::Area::NetworkClientInitialArea) << "starting multiplayer, hosting! Entities::Playername: " << playername << " port: " << port;
     if (!m_server) {

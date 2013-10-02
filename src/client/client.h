@@ -58,7 +58,7 @@ class Client : public QQuickItem
 public:
 
      Q_INVOKABLE int defaultPort() {
-        return 44543;
+        return DEFAULT_PORT;
     }
 
 signals:
@@ -100,12 +100,12 @@ public:
      * Starts a mutliplayer client only connection, aka connecting to a server, not hosting.
      * @p address the server address/IP to connect to
      */
-    bool startMultiplayerClientConnection(const std::string& playername, const char* address, unsigned int port = 44543);
+    bool startMultiplayerClientConnection(const std::string& playername, const char* address, uint16_t port = DEFAULT_PORT);
     /**
      * Similar to @sa startSinglePlayer
      * but instead hosts a multiplayer game, presumably visible to others through internet/LAN ip entering.
      */
-    void startMultiplayerHost(const std::string& playername, unsigned int port = 44543);
+    void startMultiplayerHost(const std::string& playername, uint16_t port = DEFAULT_PORT);
 
     void tick(double frameTime);
     void render(double frameTime);
@@ -167,7 +167,7 @@ private:
      * blocks until it can connect within a timeout.
      * @returns true on success, false on failure
      */
-    bool connectTo(const char* address = "127.0.0.1", unsigned int port = 44543);
+    bool connectTo(const char* address = "127.0.0.1", uint16_t port = DEFAULT_PORT);
     void sendInitialConnectionData();
     void sendPlayerMovement();
 
