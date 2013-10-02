@@ -53,15 +53,6 @@ Item {
 
                 text: "Player123123kl"
             }
-        }
-
-        RowLayout {
-            Layout.fillHeight: true
-
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
 
             OreLabel {
                 id: portLabel
