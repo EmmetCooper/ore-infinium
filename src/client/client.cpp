@@ -47,6 +47,7 @@
 #include <QQuickWindow>
 #include <QQmlContext>
 #include <QOpenGLContext>
+#include <QThread>
 
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_events.h>
@@ -313,6 +314,7 @@ void Client::paintUnder()
         //FIXME: not needed move into initGL if not there already.
         glViewport(0, 0, window()->width(), window()->height());
 
+        Debug::log(Debug::ImportantArea) << "paintunder THREAD ID: " << QThread::currentThreadId();
         if (Settings::instance()->startupFlags() & Settings::PlayNowStartupFlag) {
             startMultiplayerHost("Dingo");
         }
@@ -566,6 +568,7 @@ void Client::viewKeyPressed(QKeyEvent* event)
         //f1
 //                m_debugMenu->setCollapsed(!m_debugMenu->collapsed());
     } else if (event->key() == Qt::Key_F8) {
+    Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! accepting event, f8";
         event->accept();
         //f8
         std::stringstream ss;
@@ -575,8 +578,11 @@ void Client::viewKeyPressed(QKeyEvent* event)
         std::uniform_int_distribution<> distribution(0, INT_MAX);
 
         ss << distribution(rand);
+        Debug::log(Debug::ImportantArea) << "keypressevent THREAD ID: " << QThread::currentThreadId();
 
+    Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! starting mp host";
         startMultiplayerHost(ss.str());
+    Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! returned to keypressevent";
     } else if (event->key() == Qt::Key_F10) {
         //f10
 //FIXME:               m_renderGUI = !m_renderGUI;
