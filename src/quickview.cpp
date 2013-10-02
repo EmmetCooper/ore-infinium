@@ -17,7 +17,11 @@
 
 #include "quickview.h"
 
-QuickView::QuickView(QWindow* parent): QQuickView(parent)
+#include "src/client/client.h"
+
+QuickView::QuickView(Client* client, QWindow* parent)
+: QQuickView(parent),
+  m_client(client)
 {
 //    setSurfaceType(QSurface::OpenGLSurface);
 //
@@ -41,4 +45,11 @@ QuickView::QuickView(QWindow* parent): QQuickView(parent)
 //
 //    setFormat(format);
     create();
+}
+
+void QuickView::keyPressEvent(QKeyEvent* event)
+{
+    m_client->viewKeyPressed(event);
+
+    QQuickView::keyPressEvent(event);
 }

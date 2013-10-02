@@ -19,6 +19,8 @@
 #define GLM_PRECISION_HIGHP_FLOAT
 #define GLM_FORCE_CXX11
 
+#include "glew.h"
+
 #include "glm/glm.hpp"
 #include "glm/glm.hpp"
 #include "glm/gtc/constants.hpp"

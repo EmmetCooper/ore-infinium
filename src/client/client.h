@@ -18,14 +18,14 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
+#include "glew.h"
+
 #include <enet/enet.h>
 #include <string>
 
 #include "src/player.h"
 
 #include <QtQuick/QQuickItem>
-#include <QtQuick/QQuickWindow>
-#include <QQuickView>
 #include <QtGui/QOpenGLShaderProgram>
 #include <QTime>
 
@@ -46,6 +46,7 @@ class DebugMenu;
 class World;
 class Server;
 class QuickView;
+class QQuickWindow;
 
 class Client : public QQuickItem
 {
@@ -60,6 +61,8 @@ public:
      Q_INVOKABLE int defaultPort() {
         return DEFAULT_PORT;
     }
+
+    void viewKeyPressed(QKeyEvent* event);
 
 signals:
     void tChanged();
@@ -90,6 +93,9 @@ private:
     qreal m_t = 0.0;
     qreal m_thread_t = 0.0;
     //FIXME: ////////////////////////////////////////////////// UGLY, REFACTOR
+
+    //pretty useless actually, our QQuickView (QuickView) takes over on these....
+    virtual void keyPressEvent(QKeyEvent* event);
 
 public:
     Client();

@@ -44,6 +44,7 @@
 
 #include <QQuickView>
 #include <QQmlEngine>
+#include <QQuickWindow>
 #include <QQmlContext>
 #include <QOpenGLContext>
 
@@ -77,7 +78,7 @@ void Client::init()
     qmlRegisterType<Client>("OpenGLUnderQML", 1, 0, "Client");
     qmlRegisterType<OptionsDialogBackend>("OptionsDialogBackend", 1, 0, "OptionsDialogBackend");
 
-    m_view = new QuickView();
+    m_view = new QuickView(this);
 
     QQmlContext *root = m_view->engine()->rootContext();
     root->setContextProperty("ClientBackend", this);
@@ -542,6 +543,64 @@ void Client::drawDebugText(double frameTime)
  //   m_debugMenu->update(frameTime);
 }
 
+void Client::viewKeyPressed(QKeyEvent* event)
+{
+    Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT!";
+//        if (m_mainPlayer && m_peer && m_connected && m_gui->inputDemanded() == false) {
+//            handlePlayerInput(event);
+//            m_quickBarMenu->handleEvent(event);
+//        }
+
+    if (event->key() == Qt::Key_Escape) {
+        //only if we are connected, do we allow hiding and showing (escape menu)
+        if (m_peer) {
+            //FIXME: HACK
+            event->accept();
+        //     if (!m_mainMenu->escapeMenuVisible()) {
+        //         m_mainMenu->showEscapeMenu();
+        //     } else {
+        //         m_mainMenu->hideEscapeMenu();
+        //     }
+        }
+    } else if (event->key() == Qt::Key_F1) {
+        //f1
+//                m_debugMenu->setCollapsed(!m_debugMenu->collapsed());
+    } else if (event->key() == Qt::Key_F8) {
+        event->accept();
+        //f8
+        std::stringstream ss;
+        ss << "Player";
+        std::random_device device;
+        std::mt19937 rand(device());
+        std::uniform_int_distribution<> distribution(0, INT_MAX);
+
+        ss << distribution(rand);
+
+        startMultiplayerHost(ss.str());
+    } else if (event->key() == Qt::Key_F10) {
+        //f10
+//FIXME:               m_renderGUI = !m_renderGUI;
+    } else if (event->key() == Qt::Key_F11) {
+        //f11
+        //if (m_debugSettings == nullptr) {
+        //    m_debugSettings = new DebugSettings(this);
+        //    m_debugSettings->show();
+        //} else {
+        //    if (m_debugSettings->visible()) {
+        //        m_debugSettings->hide();
+        //    } else {
+        //        m_debugSettings->show();
+        //    }
+        //}
+    }
+
+}
+
+void Client::keyPressEvent(QKeyEvent* event)
+{
+    QQuickItem::keyPressEvent(event);
+}
+
 void Client::handleInputEvents()
 {
 //    SDL_Event event;
@@ -550,48 +609,7 @@ void Client::handleInputEvents()
 //
 ////        m_gui->handleEvent(event);
 //
-//        if (m_mainPlayer && m_peer && m_connected && m_gui->inputDemanded() == false) {
-//            handlePlayerInput(event);
-//            m_quickBarMenu->handleEvent(event);
-//        }
-//
-//        switch (event.type) {
-//        case SDL_KEYDOWN:
-//            if (event.key.keysym.sym == SDLK_ESCAPE) {
-//                //only if we are connected, do we allow hiding and showing (escape menu)
-//                if (m_peer) {
-//                    if (!m_mainMenu->escapeMenuVisible()) {
-//                        m_mainMenu->showEscapeMenu();
-//                    } else {
-//                        m_mainMenu->hideEscapeMenu();
-//                    }
-//                }
-//            } else if (event.key.keysym.sym == SDLK_F1) {
-//                m_debugMenu->setCollapsed(!m_debugMenu->collapsed());
-//            } else if (event.key.keysym.sym == SDLK_F8) {
-//                std::stringstream ss;
-//                ss << "Player";
-//                std::random_device device;
-//                std::mt19937 rand(device());
-//                std::uniform_int_distribution<> distribution(0, INT_MAX);
-//
-//                ss << distribution(rand);
-//
-//                startMultiplayerHost(ss.str());
-//            } else if (event.key.keysym.sym == SDLK_F10) {
-//                m_renderGUI = !m_renderGUI;
-//            } else if (event.key.keysym.sym == SDLK_F11) {
-//                if (m_debugSettings == nullptr) {
-//                    m_debugSettings = new DebugSettings(this);
-//                    m_debugSettings->show();
-//                } else {
-//                    if (m_debugSettings->visible()) {
-//                        m_debugSettings->hide();
-//                    } else {
-//                        m_debugSettings->show();
-//                    }
-//                }
-//            }
+
 //            break;
 //
 //

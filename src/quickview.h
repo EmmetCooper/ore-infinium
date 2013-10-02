@@ -17,14 +17,22 @@
 
 #ifndef QUICKVIEW_H
 #define QUICKVIEW_H
+
+#include "glew.h"
+
 #include <QQuickView>
+
+class Client;
 
 class QuickView : public QQuickView
 {
 public:
-    explicit QuickView(QWindow* parent = 0);
+    QuickView(Client* client, QWindow* parent = 0);
 
 private:
+    virtual void keyPressEvent(QKeyEvent* event);
+
+    Client* m_client = nullptr;
 };
 
 #endif
