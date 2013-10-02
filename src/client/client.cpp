@@ -367,15 +367,15 @@ void Client::exitClicked()
     shutdown();
 }
 
-void Client::startSingleplayerSlot(const QString& playerName, const QString& worldName)
+void Client::startSingleplayerCreateSlot(const QString& playerName, const QString& worldName)
 {
-
+    Debug::log(Debug::ImportantArea) << "SP start slot, playername, world: " << qPrintable(playerName) << " : " << qPrintable(worldName);
 }
 
 
 void Client::startMultiplayerClientConnectionSlot(const QString& playerName, const QString& address, uint16_t port)
 {
-
+    Debug::log(Debug::ImportantArea) << "MP start slot, playername, addr, port: " << qPrintable(playerName) << " : " << qPrintable(address) << " : " << port;
 }
 
 

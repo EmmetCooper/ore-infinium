@@ -53,6 +53,12 @@ Item {
 
                 text: "Player123123kl"
             }
+
+            OreTextBox {
+                id: worldName
+
+                text: "world123123kl"
+            }
         }
 
         OreButton {
@@ -60,7 +66,7 @@ Item {
             Layout.fillHeight: true
 
             onClicked: {
-                //ClientBackend.startSingleplayerCreate
+                ClientBackend.startSingleplayerCreateSlot(playerName.text, worldName.text);
             }
 
             text: "Play!"
