@@ -47,7 +47,8 @@ public:
         //debug, immediately hosts and joins localhost session
         PlayNowStartupFlag = 1 << 3,
 
-        NoSkyRendererStartupFlag = 1 << 4
+        NoSkyRendererStartupFlag = 1 << 4,
+        FullDebugStartupFlag = 1 << 5
     };
 
     /**

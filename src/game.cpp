@@ -81,6 +81,14 @@ void Game::init()
         Settings::instance()->debugRendererFlags &= ~Debug::RenderingDebug::SkyRenderingPassDebug;
     }
 
+    if (Settings::instance()->startupFlags() & Settings::StartupFlags::FullDebugStartupFlag) {
+        Settings::instance()->debugAreas |= Debug::Area::AudioArea | Debug::Area::AudioLoaderArea | Debug::Area::ClientEntityCreationArea |
+        Debug::Area::ClientInventoryArea | Debug::Area::ClientRendererArea | Debug::Area::GUILoggerArea | Debug::Area::ImageLoaderArea | Debug::Area::ImportantArea |
+        Debug::Area::LightingRendererArea | Debug::Area::NetworkClientContinuousArea | Debug::Area::NetworkClientInitialArea | Debug::Area::NetworkServerContinuousArea |
+        Debug::Area::NetworkServerInitialArea | Debug::Area::PhysicsArea | Debug::Area::ServerEntityCreationArea | Debug::Area::ServerEntityLogicArea | Debug::Area::SettingsArea |
+        Debug::Area::ShadersArea | Debug::Area::SpriteSheetRendererArea | Debug::Area::StartupArea | Debug::Area::TileRendererArea | Debug::Area::WorldGeneratorArea;
+    }
+
     m_client->init();
 }
 

@@ -60,6 +60,7 @@ int main(int argc, char* argv[])
 //    bool npot = funcs.hasOpenGLFeature(QOpenGLFunctions::NPOTTextures);
 
     bool startupDebugEnabled = false;
+    bool fullDebugEnabled = false;
     bool worldViewer = false;
     bool noTimeout = false;
     bool playNow = false;
@@ -86,6 +87,7 @@ int main(int argc, char* argv[])
             std::cout << "--no-timeout Configures connection timeouts and other things to allow for debugging, especially via e.g. valgrind." << '\n';
             std::cout << "--no-sky-renderer Disables sky renderer (for tricky/slow systems, for debugging. More optimal approaches and settings will exist later)" << '\n';
             std::cout << "--play-now Hosts and joins a local session immediately on startup (for fast debugging)." << '\n';
+            std::cout << "--debug-all Enable all debugging flags (cout)" << '\n';
 
             exit(0);
         } else if (contains("--authors")) {
@@ -119,6 +121,10 @@ int main(int argc, char* argv[])
         if (contains("--no-sky-renderer")) {
             noSkyRenderer = true;
         }
+
+        if (contains("--debug-all")) {
+            fullDebugEnabled = true;
+        }
     }
 
     std::cout << "Ore Infinium Version " << ore_infinium_VERSION_MAJOR << "." << ore_infinium_VERSION_MINOR << "\n";
@@ -141,6 +147,9 @@ int main(int argc, char* argv[])
 
     if (noSkyRenderer) {
         Settings::instance()->setStartupFlag(Settings::StartupFlags::NoSkyRendererStartupFlag);
+    }
+    if (noSkyRenderer) {
+        Settings::instance()->setStartupFlag(Settings::StartupFlags::FullDebugStartupFlag);
     }
 
     //TODO: may wanna run without gui for dedicated server...have the option to, at least
