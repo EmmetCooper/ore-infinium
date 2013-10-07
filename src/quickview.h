@@ -26,13 +26,19 @@ class Client;
 
 class QuickView : public QQuickView
 {
+    Q_OBJECT
+
 public:
     QuickView(Client* client, QWindow* parent = 0);
+
+signals:
+    void keyPressed(QKeyEvent* event);
 
 private:
     virtual void keyPressEvent(QKeyEvent* event);
 
     Client* m_client = nullptr;
 };
+Q_DECLARE_METATYPE(QKeyEvent*);
 
 #endif

@@ -19,6 +19,8 @@
 
 #include "src/client/client.h"
 
+#include <QtCore/QCoreApplication>
+
 QuickView::QuickView(Client* client, QWindow* parent)
 : QQuickView(parent),
   m_client(client)
@@ -44,12 +46,19 @@ QuickView::QuickView(Client* client, QWindow* parent)
 //    format.setBlueBufferSize(8);
 //
 //    setFormat(format);
+    qRegisterMetaType<QKeyEvent*>("QKeyEvent");
     create();
 }
 
 void QuickView::keyPressEvent(QKeyEvent* event)
 {
-    m_client->viewKeyPressed(event);
+//    m_client->viewKeyPressed(event);
+//    emit keyPressed(event);
+//    QMetaObject::invokeMethod(m_client, "viewKeyPressed", Qt::AutoConnection, Q_ARG(QKeyEvent*, event));
+//    QMouseEvent event(QEvent::MouseButtonPress, QPointF(0, 0), 0, 0, 0);
+    QKeyEvent event2(event->type(), event->key(), event->modifiers(), event->nativeScanCode(), event->nativeVirtualKey(), event->nativeModifiers());
+    QCoreApplication::sendEvent(m_client, &event2);
+
 
     QQuickView::keyPressEvent(event);
 }

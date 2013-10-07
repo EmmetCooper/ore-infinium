@@ -80,6 +80,7 @@ void Client::init()
     qmlRegisterType<OptionsDialogBackend>("OptionsDialogBackend", 1, 0, "OptionsDialogBackend");
 
     m_view = new QuickView(this);
+//    connect(m_view, SIGNAL(keyPressed(QKeyEvent*)), this, SLOT(viewKeyPressed(QKeyEvent*)), Qt::ConnectionType::DirectConnection);
 
     QQmlContext *root = m_view->engine()->rootContext();
     root->setContextProperty("ClientBackend", this);
@@ -87,7 +88,6 @@ void Client::init()
     //m_view->engine()->addImportPath(QString("../client/gui/assets/qml"));
     m_view->setSource(QUrl("../client/gui/assets/qml/main.qml"));
     m_view->show();
-
 
 
     //glClearColor(0.f, .5f, 0.f, 1.0f);
@@ -604,6 +604,7 @@ void Client::viewKeyPressed(QKeyEvent* event)
 
 void Client::keyPressEvent(QKeyEvent* event)
 {
+    Debug::log(Debug::ImportantArea) << " KEY PRESS EVENT CLIENT, propagated properly.";
     QQuickItem::keyPressEvent(event);
 }
 

@@ -62,7 +62,6 @@ public:
         return DEFAULT_PORT;
     }
 
-    void viewKeyPressed(QKeyEvent* event);
 
 signals:
     void tChanged();
@@ -73,6 +72,9 @@ public slots:
     void sync();
 
     void init();
+
+    // connected to QuickView custom subclass
+    void viewKeyPressed(QKeyEvent* event);
 
     //------------------ from QML ...
     Q_INVOKABLE void startSingleplayerCreateSlot(const QString& playerName, const QString& worldName);
