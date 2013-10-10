@@ -540,21 +540,23 @@ void Client::drawDebugText(double frameTime)
  //   m_debugMenu->update(frameTime);
 }
 
-bool Client::event(QEvent *event)
+void Client::viewKeyPressed(QKeyEvent* event)
 {
         Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT!";
 //        if (m_mainPlayer && m_peer && m_connected && m_gui->inputDemanded() == false) {
 //            handlePlayerInput(event);
 //            m_quickBarMenu->handleEvent(event);
 //        }
+    QKeyEvent eventCopy = *event;
+}
 
-
+void Client::processSharedKeyEvents()
+{
+    QKeyEvent *event;
     switch (event->type()) {
         case QEvent::KeyPress: {
-            QKeyEvent *key = dynamic_cast<QKeyEvent*>(event);
-            assert(key);
 
-            switch (key->key()) {
+            switch (event->key()) {
                 case Qt::Key_Escape: {
                     //only if we are connected, do we allow hiding and showing (escape menu)
                     if (m_peer) {
@@ -574,7 +576,6 @@ bool Client::event(QEvent *event)
                 }
 
                 case Qt::Key_F8: {
-                    Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! accepting event, f8";
                     event->accept();
                     //f8
                     std::stringstream ss;
@@ -584,11 +585,7 @@ bool Client::event(QEvent *event)
                     std::uniform_int_distribution<> distribution(0, INT_MAX);
 
                     ss << distribution(rand);
-                    Debug::log(Debug::ImportantArea) << "keypressevent THREAD ID: " << QThread::currentThreadId();
-
-                    Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! starting mp host";
                     startMultiplayerHost(ss.str());
-                    Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! returned to keypressevent";
                 }
 
                 case Qt::Key_F10: {
@@ -618,7 +615,6 @@ bool Client::event(QEvent *event)
         default:
             break;
     }
-    return QQuickItem::event(event);
 }
 
 void Client::handleInputEvents()
