@@ -73,9 +73,6 @@ public slots:
 
     void init();
 
-    // connected to QuickView custom subclass
-    void viewKeyPressed(QKeyEvent* event);
-
     //------------------ from QML ...
     Q_INVOKABLE void startSingleplayerCreateSlot(const QString& playerName, const QString& worldName);
     Q_INVOKABLE void startMultiplayerHostSlot(const QString& playerName, int port);
@@ -96,8 +93,7 @@ private:
     qreal m_thread_t = 0.0;
     //FIXME: ////////////////////////////////////////////////// UGLY, REFACTOR
 
-    //pretty useless actually, our QQuickView (QuickView) takes over on these....
-    virtual void keyPressEvent(QKeyEvent* event);
+    bool event(QEvent* event);
 
 public:
     Client();

@@ -18,6 +18,7 @@
 #include "quickview.h"
 
 #include "src/client/client.h"
+#include "debug.h"
 
 #include <QtCore/QCoreApplication>
 
@@ -56,6 +57,7 @@ void QuickView::keyPressEvent(QKeyEvent* event)
 //    emit keyPressed(event);
 //    QMetaObject::invokeMethod(m_client, "viewKeyPressed", Qt::AutoConnection, Q_ARG(QKeyEvent*, event));
 //    QMouseEvent event(QEvent::MouseButtonPress, QPointF(0, 0), 0, 0, 0);
+    Debug::log(Debug::ImportantArea) << "sending event, from quickview";
     QKeyEvent event2(event->type(), event->key(), event->modifiers(), event->nativeScanCode(), event->nativeVirtualKey(), event->nativeModifiers());
     QCoreApplication::sendEvent(m_client, &event2);
 

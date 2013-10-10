@@ -63,11 +63,6 @@ Client::~Client()
 
     delete m_mainPlayer;
 
-    // call this ONLY when linking with FreeImage as a static library
-#ifdef FREEIMAGE_LIB
-    FreeImage_DeInitialise();
-#endif
-
     m_view->close();
     delete m_view;
 }
@@ -545,67 +540,85 @@ void Client::drawDebugText(double frameTime)
  //   m_debugMenu->update(frameTime);
 }
 
-void Client::viewKeyPressed(QKeyEvent* event)
+bool Client::event(QEvent *event)
 {
-    Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT!";
+        Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT!";
 //        if (m_mainPlayer && m_peer && m_connected && m_gui->inputDemanded() == false) {
 //            handlePlayerInput(event);
 //            m_quickBarMenu->handleEvent(event);
 //        }
 
-    if (event->key() == Qt::Key_Escape) {
-        //only if we are connected, do we allow hiding and showing (escape menu)
-        if (m_peer) {
-            //FIXME: HACK
-            event->accept();
-        //     if (!m_mainMenu->escapeMenuVisible()) {
-        //         m_mainMenu->showEscapeMenu();
-        //     } else {
-        //         m_mainMenu->hideEscapeMenu();
-        //     }
-        }
-    } else if (event->key() == Qt::Key_F1) {
-        //f1
-//                m_debugMenu->setCollapsed(!m_debugMenu->collapsed());
-    } else if (event->key() == Qt::Key_F8) {
-    Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! accepting event, f8";
-        event->accept();
-        //f8
-        std::stringstream ss;
-        ss << "Player";
-        std::random_device device;
-        std::mt19937 rand(device());
-        std::uniform_int_distribution<> distribution(0, INT_MAX);
 
-        ss << distribution(rand);
-        Debug::log(Debug::ImportantArea) << "keypressevent THREAD ID: " << QThread::currentThreadId();
+    switch (event->type()) {
+        case QEvent::KeyPress: {
+            QKeyEvent *key = dynamic_cast<QKeyEvent*>(event);
+            assert(key);
 
-    Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! starting mp host";
-        startMultiplayerHost(ss.str());
-    Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! returned to keypressevent";
-    } else if (event->key() == Qt::Key_F10) {
-        //f10
-//FIXME:               m_renderGUI = !m_renderGUI;
-    } else if (event->key() == Qt::Key_F11) {
-        //f11
-        //if (m_debugSettings == nullptr) {
-        //    m_debugSettings = new DebugSettings(this);
-        //    m_debugSettings->show();
-        //} else {
-        //    if (m_debugSettings->visible()) {
-        //        m_debugSettings->hide();
-        //    } else {
-        //        m_debugSettings->show();
-        //    }
-        //}
+            switch (key->key()) {
+                case Qt::Key_Escape: {
+                    //only if we are connected, do we allow hiding and showing (escape menu)
+                    if (m_peer) {
+                        //FIXME: HACK
+                        event->accept();
+                    //     if (!m_mainMenu->escapeMenuVisible()) {
+                    //         m_mainMenu->showEscapeMenu();
+                    //     } else {
+                    //         m_mainMenu->hideEscapeMenu();
+                    //     }
+                    }
+                }
+
+                case Qt::Key_F1: {
+                    //f1
+                    // m_debugMenu->setCollapsed(!m_debugMenu->collapsed());
+                }
+
+                case Qt::Key_F8: {
+                    Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! accepting event, f8";
+                    event->accept();
+                    //f8
+                    std::stringstream ss;
+                    ss << "Player";
+                    std::random_device device;
+                    std::mt19937 rand(device());
+                    std::uniform_int_distribution<> distribution(0, INT_MAX);
+
+                    ss << distribution(rand);
+                    Debug::log(Debug::ImportantArea) << "keypressevent THREAD ID: " << QThread::currentThreadId();
+
+                    Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! starting mp host";
+                    startMultiplayerHost(ss.str());
+                    Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! returned to keypressevent";
+                }
+
+                case Qt::Key_F10: {
+                    //FIXME:               m_renderGUI = !m_renderGUI;
+                }
+
+                case Qt::Key_F11: {
+                    //f11
+                    //if (m_debugSettings == nullptr) {
+                    //    m_debugSettings = new DebugSettings(this);
+                    //    m_debugSettings->show();
+                    //} else {
+                    //    if (m_debugSettings->visible()) {
+                    //        m_debugSettings->hide();
+                    //    } else {
+                    //        m_debugSettings->show();
+                    //    }
+                    //}
+                }
+            }
+        } // key press
+
+        case QEvent::KeyRelease:
+            //not yet used..
+            break;
+
+        default:
+            break;
     }
-
-}
-
-void Client::keyPressEvent(QKeyEvent* event)
-{
-    Debug::log(Debug::ImportantArea) << " KEY PRESS EVENT CLIENT, propagated properly.";
-    QQuickItem::keyPressEvent(event);
+    return QQuickItem::event(event);
 }
 
 void Client::handleInputEvents()
