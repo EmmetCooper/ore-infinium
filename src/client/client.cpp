@@ -48,6 +48,7 @@
 #include <QQmlContext>
 #include <QOpenGLContext>
 #include <QThread>
+#include <QMutexLocker>
 
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_events.h>

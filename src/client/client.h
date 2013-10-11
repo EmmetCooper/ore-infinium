@@ -30,6 +30,7 @@
 
 #include <QtCore/QQueue>
 #include <QtCore/QTime>
+#include <QtCore/QMutex>
 
 #include <SDL2/SDL.h>
 #include <SDL_log.h>
@@ -225,6 +226,30 @@ private:
 
     std::thread* m_serverThread = nullptr;
     std::thread* m_clientTickLogicThread = nullptr;
+
+    /**
+     * For the client, there are a few threads, most are from Qt.
+     * There's the Qt main thread, the qtquick rendering thread (which runs all of our GL commands),
+     * and the client logic thread. The client logic thread handles networking and the interaction with game objects therein.
+     *
+     * The client logic thread never touches rendering code (obviously, as the GL is only on the qtquick rendering thread).
+     *
+     * Upon key presses, qt will handle it in a non-rendering thread (which I believe I've found to be a special thread, with no event loop).
+     *
+     * We will then lock this mutex and modify some data and of course, unlock it upon return.
+     * On tick of the client logic thread, @sa tickLogicThread
+     * this lock will be grabbed as we will be modifying game state when we poll the network and game objects and push and pull them.
+     *
+     * The renderer thread will also be grabbing said lock prior to rendering.
+     *
+     * TODO: what i *really* want to do is form a task scheduler that can process jobs and place them in a job queue. Few games do this though,
+     * mostly just idTech4,5. Even Unreal doesn't do that, last I checked, it has dedicated threads for subsystems. But that means you'll have e.g.
+     * 2 really slow subsystems stalling everything else. This happened with Supreme Commander which is why it runs like shit on n-core systems,
+     * but less shit on dual core systems.
+     *
+     */
+    QMutex m_clientLogicMutex;
+
     bool m_connected = false;
 
     int32_t m_playerInputDirectionX = 0;
