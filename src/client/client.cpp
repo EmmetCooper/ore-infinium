@@ -112,6 +112,9 @@ void Client::init()
 
 void Client::tickLogicThread()
 {
+    /*
+    UNUSED: because our main game loop is..complicated, now that Qt.
+
     Debug::log(Debug::ImportantArea) << "CLIENT EXEC!";
     Debug::log(Debug::ImportantArea) << "GAME TICK!";
 
@@ -151,6 +154,7 @@ void Client::tickLogicThread()
     //  std::chrono::milliseconds timeUntilNextFrame(int(dt - accumulator));
     //  std::this_thread::sleep_for(timeUntilNextFrame);
     }
+*/
 }
 
 void Client::initGL()
