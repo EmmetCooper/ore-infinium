@@ -91,11 +91,6 @@ void Client::init()
     //FIXME:
 //    glViewport(0, 0, Settings::instance()->windowWidth, Settings::instance()->windowHeight);
 
-    // call this ONLY when linking with FreeImage as a static library
-#ifdef FREEIMAGE_LIB
-    FreeImage_Initialise();
-#endif
-
 //    m_gui = GUI::instance();
 //    m_mainMenu = new MainMenu(this);
 //    m_mainMenu->showMainMenu();
