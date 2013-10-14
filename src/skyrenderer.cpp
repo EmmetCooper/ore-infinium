@@ -35,37 +35,7 @@ SkyRenderer::SkyRenderer(World* world, Camera* camera, Time* time) :
     m_camera(camera),
     m_time(time)
 {
-    Debug::log(Debug::Area::ClientRendererArea) << "sky renderer init, screen at width: " << Settings::instance()->screenResolutionWidth << " height: " << Settings::instance()->screenResolutionHeight;
 
-    m_celestialBodiesShader = new Shader("skyrenderer.vert", "skyrenderer.frag");
-    m_skyBackgroundDayShader = new Shader("skyrendererday.vert", "skyrendererday.frag");
-    m_skyBackgroundNightShader = new Shader("skyrenderernight.vert", "skyrenderernight.frag");
-
-    m_celestialBodiesTexture = new Texture("../textures/celestialBodies.png");
-    m_celestialBodiesTexture->generate(Texture::TextureFilterNearest);
-
-    m_skyBackgroundDayTexture = new Texture("../textures/skyBackgroundDay.png");
-    m_skyBackgroundDayTexture->generate(Texture::TextureFilterNearest);
-
-    m_skyBackgroundDuskTexture = new Texture("../textures/skyBackgroundDusk.png");
-    m_skyBackgroundDuskTexture->generate(Texture::TextureFilterNearest);
-
-    m_skyBackgroundNightTexture = new Texture("../textures/skyBackgroundNight.png");
-    m_skyBackgroundNightTexture->generate(Texture::TextureFilterNearest);
-
-    SpriteFrame sun;
-    sun.texturePosition = glm::vec2(0, 0);
-    sun.textureSize = glm::vec2(256, 256);
-    sun.sizeMeters = glm::vec2(200, 200);
-    m_celestialBodiesSprites.push_back(sun);
-
-    SpriteFrame moon;
-    moon.texturePosition = glm::vec2(402, 54);
-    moon.textureSize = glm::vec2(150, 160);
-    moon.sizeMeters = glm::vec2(50, 50);
-    m_celestialBodiesSprites.push_back(moon);
-
-    initGL();
 }
 
 SkyRenderer::~SkyRenderer()
@@ -100,6 +70,41 @@ SkyRenderer::~SkyRenderer()
     glDeleteFramebuffers(1, &m_fboSky);
     glDeleteRenderbuffers(1, &m_rbNight);
     glDeleteRenderbuffers(1, &m_rbSky);
+}
+
+void SkyRenderer::init()
+{
+    Debug::log(Debug::Area::ClientRendererArea) << "sky renderer init, screen at width: " << Settings::instance()->screenResolutionWidth << " height: " << Settings::instance()->screenResolutionHeight;
+
+    m_celestialBodiesShader = new Shader("skyrenderer.vert", "skyrenderer.frag");
+    m_skyBackgroundDayShader = new Shader("skyrendererday.vert", "skyrendererday.frag");
+    m_skyBackgroundNightShader = new Shader("skyrenderernight.vert", "skyrenderernight.frag");
+
+    m_celestialBodiesTexture = new Texture("../textures/celestialBodies.png");
+    m_celestialBodiesTexture->generate(Texture::TextureFilterNearest);
+
+    m_skyBackgroundDayTexture = new Texture("../textures/skyBackgroundDay.png");
+    m_skyBackgroundDayTexture->generate(Texture::TextureFilterNearest);
+
+    m_skyBackgroundDuskTexture = new Texture("../textures/skyBackgroundDusk.png");
+    m_skyBackgroundDuskTexture->generate(Texture::TextureFilterNearest);
+
+    m_skyBackgroundNightTexture = new Texture("../textures/skyBackgroundNight.png");
+    m_skyBackgroundNightTexture->generate(Texture::TextureFilterNearest);
+
+    SpriteFrame sun;
+    sun.texturePosition = glm::vec2(0, 0);
+    sun.textureSize = glm::vec2(256, 256);
+    sun.sizeMeters = glm::vec2(200, 200);
+    m_celestialBodiesSprites.push_back(sun);
+
+    SpriteFrame moon;
+    moon.texturePosition = glm::vec2(402, 54);
+    moon.textureSize = glm::vec2(150, 160);
+    moon.sizeMeters = glm::vec2(50, 50);
+    m_celestialBodiesSprites.push_back(moon);
+
+    initGL();
 }
 
 void SkyRenderer::initGL()

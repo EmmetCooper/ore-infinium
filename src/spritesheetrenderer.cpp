@@ -36,23 +36,10 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
-SpriteSheetRenderer::SpriteSheetRenderer(Camera* camera)
+SpriteSheetRenderer::SpriteSheetRenderer(Camera* camera) :
+m_camera(camera)
 {
-    Debug::checkGLError();
 
-    m_shader = new Shader("sprite.vert", "sprite.frag");
-    setCamera(camera);
-
-    Debug::checkGLError();
-
-    initGL();
-
-    Debug::checkGLError();
-
-    loadAllSpriteSheets();
-    Debug::checkGLError();
-    parseAllSpriteSheets();
-    Debug::checkGLError();
 }
 
 SpriteSheetRenderer::~SpriteSheetRenderer()
@@ -71,6 +58,25 @@ SpriteSheetRenderer::~SpriteSheetRenderer()
     delete m_spriteSheetTextures[SpriteSheetRenderer::SpriteSheetType::Entity].texture;
 
     delete m_shader;
+}
+
+void SpriteSheetRenderer::init()
+{
+    Debug::checkGLError();
+
+    m_shader = new Shader("sprite.vert", "sprite.frag");
+    setCamera(camera);
+
+    Debug::checkGLError();
+
+    initGL();
+
+    Debug::checkGLError();
+
+    loadAllSpriteSheets();
+    Debug::checkGLError();
+    parseAllSpriteSheets();
+    Debug::checkGLError();
 }
 
 void SpriteSheetRenderer::setCamera(Camera* camera)

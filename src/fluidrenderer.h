@@ -43,6 +43,8 @@ public:
     FluidRenderer(Camera* camera, Entities::Player* mainPlayer);
     ~FluidRenderer();
 
+    void init();
+
     void setCamera(Camera* camera);
     Camera* camera() {
         return m_camera;

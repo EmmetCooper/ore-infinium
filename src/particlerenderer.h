@@ -49,6 +49,8 @@ public:
     explicit ParticleRenderer(World* world, Camera* camera, Entities::Player* mainPlayer);
     ~ParticleRenderer();
 
+    void init();
+
     void render();
 
 private:
