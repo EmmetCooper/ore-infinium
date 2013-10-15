@@ -65,7 +65,7 @@ void SpriteSheetRenderer::init()
     Debug::checkGLError();
 
     m_shader = new Shader("sprite.vert", "sprite.frag");
-    setCamera(camera);
+    setCamera(m_camera);
 
     Debug::checkGLError();
 

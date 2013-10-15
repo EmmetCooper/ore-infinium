@@ -38,16 +38,10 @@
 
 LightRenderer::LightRenderer(World* world, Camera* camera, Entities::Player* mainPlayer)
     :   m_mainPlayer(mainPlayer),
+        m_camera(camera),
         m_world(world)
 {
-    Debug::checkGLError();
 
-    m_shader = new Shader("lightrenderer.vert", "lightrenderer.frag");
-    m_shaderPassthrough = new Shader("lightrendererpassthrough.vert", "lightrendererpassthrough.frag");
-    setCamera(camera);
-
-    Debug::checkGLError();
-    initGL();
 }
 
 LightRenderer::~LightRenderer()
@@ -67,6 +61,18 @@ LightRenderer::~LightRenderer()
 
     delete m_shader;
     delete m_shaderPassthrough;
+}
+
+void LightRenderer::init()
+{
+    Debug::checkGLError();
+
+    m_shader = new Shader("lightrenderer.vert", "lightrenderer.frag");
+    m_shaderPassthrough = new Shader("lightrendererpassthrough.vert", "lightrendererpassthrough.frag");
+    setCamera(m_camera);
+
+    Debug::checkGLError();
+    initGL();
 }
 
 void LightRenderer::setCamera(Camera* camera)

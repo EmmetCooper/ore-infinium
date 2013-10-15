@@ -47,6 +47,8 @@ public:
     explicit LightRenderer(World* world, Camera* camera, Entities::Player* mainPlayer);
     ~LightRenderer();
 
+    void init();
+
     void renderToFBO();
     void renderToBackbuffer();
 
