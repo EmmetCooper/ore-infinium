@@ -93,35 +93,25 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
     m_time = new Time();
     m_time->setTime(13, 59, 0);
 
-    Debug::checkGLError();
-
     if (m_client) {
         m_camera = new Camera();
-        Debug::checkGLError();
         m_spriteSheetRenderer = new SpriteSheetRenderer(m_camera);
-        Debug::checkGLError();
 
 //FIXME:unused         m_quadTreeRenderer = new QuadTreeRenderer(m_camera);
 //FIXME:        m_quadTreeRenderer->addQuadTree(m_torchesQuadTree);
 
-        Debug::checkGLError();
         m_tileRenderer = new TileRenderer(this, m_camera, m_mainPlayer);
-        Debug::checkGLError();
 
         //that's a HACK
         Torch* torch = new Torch(glm::vec2(2400 / PIXELS_PER_METER, 1420 / PIXELS_PER_METER));
         m_torches.push_back(torch);
         m_spriteSheetRenderer->registerSprite(torch);
 
-        Debug::checkGLError();
-
         m_blockPickingCrosshair = new Sprite("crosshairPickingActive", SpriteSheetRenderer::SpriteSheetType::Entity);
         m_spriteSheetRenderer->registerSprite(m_blockPickingCrosshair);
 
-        Debug::checkGLError();
-
         m_lightRenderer = new LightRenderer(this, m_camera, m_mainPlayer);
-        m_lightRenderer->setTileRendererTexture(m_tileRenderer->fboTexture());
+        /// NOTE: we delay setting the fbo of the tile renderer into the light renderer until @sa initRenderers()
 
         //FIXME: call each update, and make it only do visible ones
         m_lightRenderer->setTorches(&m_torches);
@@ -217,11 +207,16 @@ void World::initRenderers()
     m_initRenderers = true;
 
     m_spriteSheetRenderer->init();
-    m_lightRenderer->init();
+
     m_tileRenderer->init();
+    m_lightRenderer->init();
+    m_lightRenderer->setTileRendererTexture(m_tileRenderer->fboTexture());
+
     m_particleRenderer->init();
     m_fluidRenderer->init();
+
     m_skyRenderer->init();
+
 }
 
 void World::addPlayer(Entities::Player* player)
