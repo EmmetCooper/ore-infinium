@@ -204,6 +204,8 @@ World::~World()
 
 void World::initRenderers()
 {
+    Debug::log(Debug::ClientRendererArea) << "world, initing renderers..";
+
     m_initRenderers = true;
 
     m_spriteSheetRenderer->init();

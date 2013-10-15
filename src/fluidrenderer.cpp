@@ -53,10 +53,14 @@ FluidRenderer::~FluidRenderer()
 
 void FluidRenderer::init()
 {
+    Debug::log(Debug::ClientRendererArea) << "initing fluidrenderer..";
+
     m_shaderWater = new Shader("fluidrenderer_water.vert", "fluidrenderer_water.frag");
     setCamera(m_camera);
 
     initGL();
+
+    Debug::log(Debug::ClientRendererArea) << "...done";
 }
 
 void FluidRenderer::setCamera(Camera* camera)

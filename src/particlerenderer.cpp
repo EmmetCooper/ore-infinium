@@ -63,9 +63,13 @@ static float randFloat()
 
 void ParticleRenderer::init()
 {
+    Debug::log(Debug::ClientRendererArea) << "initing particlerenderer..";
+
     m_ortho = glm::mat4(1.0f);
     m_view = glm::mat4(1.0f);
 //FIXME:    initGL();
+
+    Debug::log(Debug::ClientRendererArea) << "...done";
 }
 
 //TODO: fix the particle renderer, as it's not even started erally ;)

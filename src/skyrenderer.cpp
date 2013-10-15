@@ -74,6 +74,7 @@ SkyRenderer::~SkyRenderer()
 
 void SkyRenderer::init()
 {
+    Debug::log(Debug::ClientRendererArea) << "initing skyrenderer..";
     Debug::log(Debug::Area::ClientRendererArea) << "sky renderer init, screen at width: " << Settings::instance()->screenResolutionWidth << " height: " << Settings::instance()->screenResolutionHeight;
 
     m_celestialBodiesShader = new Shader("skyrenderer.vert", "skyrenderer.frag");
@@ -105,6 +106,8 @@ void SkyRenderer::init()
     m_celestialBodiesSprites.push_back(moon);
 
     initGL();
+
+    Debug::log(Debug::ClientRendererArea) << "...done";
 }
 
 void SkyRenderer::initGL()
