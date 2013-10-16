@@ -20,10 +20,10 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 #'-msse', '-Wconversion', '-Wno-variadic-macros', '-Wuninitialized', '-Wcast-align', '-Wredundant-decls', '-Wno-unknown-pragmas', '-funsigned-char', '-fdata-sections', '-ffunction-sections', '-pedantic', '-Wextra', '-Weffc++', '-Wno-long-long', '-Wold-style-cast', '-Wstrict-overflow', '-Woverloaded-virtual', '-Wsign-promo', '-Wabi', '-Wmissing-declarations', '-Wall'
     set(CMAKE_CXX_FLAGS "-std=c++11 -O0 -g3")
 # -Wall -Wno-unused-variable -Wno-unused-function -Woverloaded-virtual -g3 -ggdb -ftrapv -fverbose-asm -Wextra -Wfloat-equal -Winit-self -Wuninitialized -Werror-implicit-function-declaration -Wundef -Wshadow  -Wpointer-arith -Wcast-align -Wstrict-overflow=5 -Wwrite-strings -Wswitch-default -Wconversion -Wno-switch -Wunreachable-code -Wformat=2 -fstack-check -Wdouble-promotion
-    set(CMAKE_C_FLAGS "-Wall -Wno-unused-variable -Wno-unused-function -funroll-loops -fexpensive-optimizations -g3 -ggdb")
+    set(CMAKE_C_FLAGS "-Wall -Wno-unused-variable -Wno-unused-function -funroll-loops -fexpensive-optimizations -g3 -ggdb -fno-exceptions")
 
     if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-        set(CMAKE_CXX_FLAGS "-std=c++11 -fPIC -O0 -g3 -Wmismatched-tags -Wswitch -Wuninitialized -fdiagnostics-show-category=name -fdiagnostics-show-template-tree -Wextra-tokens -Wextra -Wvolatile-register-var -Wunused-label -Wswitch -Wstrict-overflow=1 -Wsign-compare -Wreturn-type -Wreorder -Wpointer-sign -Wparentheses -Wnonnull -Wcomment -Wno-unused-parameter")
+        set(CMAKE_CXX_FLAGS "-std=c++11 -fPIC -O0 -g3 -Wmismatched-tags -Wswitch -Wuninitialized -fdiagnostics-show-category=name -fdiagnostics-show-template-tree -Wextra-tokens -Wextra -Wvolatile-register-var -Wunused-label -Wswitch -Wstrict-overflow=1 -Wsign-compare -Wreturn-type -Wreorder -Wpointer-sign -Wparentheses -Wnonnull -Wcomment -Wno-unused-parameter -fno-exceptions")
 # -fsanitize=integer -fsanitize=undefined")
 
 #set (SANITIZER_FLAGS  " -fsanitize=integer -fsanitize=undefined")
