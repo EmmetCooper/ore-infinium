@@ -297,7 +297,7 @@ void Client::paintUnder()
             m_time.start();
         } else {
             frameTime = (m_time.elapsed() / static_cast<double>(m_frameCount));
-            //printf("ms/frame is %f ms\n", frameTime);
+            printf("ms/frame is %f ms\n", frameTime);
         }
 
 //        tick(frameTime);
