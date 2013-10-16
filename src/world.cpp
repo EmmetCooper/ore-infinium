@@ -345,6 +345,10 @@ void World::render()
         initRenderers();
     }
 
+    if (m_mainPlayer) {
+        m_camera->centerOn(m_mainPlayer->position());
+    }
+
     m_lightRenderer->setRenderingEnabled(Settings::instance()->debugRendererFlags & Debug::RenderingDebug::LightRenderingPassDebug);
     m_tileRenderer->setRenderingEnabled(Settings::instance()->debugRendererFlags & Debug::RenderingDebug::TileRenderingPassDebug);
 
@@ -377,6 +381,7 @@ void World::render()
 //FIXME unused    m_quadTreeRenderer->render();
 
     renderCrosshair();
+
 }
 
 void World::renderCrosshair()
@@ -454,10 +459,6 @@ void World::update(double elapsedTime)
     if (m_client) {
         if (m_initRenderers) {
             m_skyRenderer->update(elapsedTime);
-
-            if (m_mainPlayer) {
-                m_camera->centerOn(m_mainPlayer->position());
-            }
         }
     }
 
