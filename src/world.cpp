@@ -215,7 +215,6 @@ World::~World()
 void World::initRenderers()
 {
     m_initRenderers = true;
-
     m_spriteSheetRenderer->init();
     m_lightRenderer->init();
     m_tileRenderer->init();
@@ -345,7 +344,7 @@ void World::render()
     assert(m_mainPlayer && !m_server);
 
     if (!m_initRenderers) {
-        initRenderers();
+        m_initRenderers();
     }
 
     m_lightRenderer->setRenderingEnabled(Settings::instance()->debugRendererFlags & Debug::RenderingDebug::LightRenderingPassDebug);

@@ -54,7 +54,7 @@ FluidRenderer::~FluidRenderer()
 void FluidRenderer::init()
 {
     m_shaderWater = new Shader("fluidrenderer_water.vert", "fluidrenderer_water.frag");
-    setCamera(m_camera);
+    setCamera(camera);
 
     initGL();
 }
