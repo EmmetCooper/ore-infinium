@@ -160,6 +160,31 @@ void Client::tickLogicThread()
 
 void Client::initGL()
 {
+//    Debug::log(Debug::Area::StartupArea) << "SDL on platform: " << SDL_GetPlatform();
+//
+//    SDL_version compiled;
+//    SDL_version linked;
+//    SDL_VERSION(&compiled);
+//    SDL_GetVersion(&linked);
+//
+//    Debug::log(Debug::Area::StartupArea) << "Compiled against SDL version: " << int(compiled.major) << "." << int(compiled.minor) << "-" << int(compiled.patch) <<
+//                                         " Running (linked) against version: " << int(linked.major) << "." << int(linked.minor) << "-" << int(linked.patch);
+//
+//    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) != 0) {
+//        std::string error = SDL_GetError();
+//        Debug::fatal(false, Debug::Area::ImportantArea, "failure to initialize SDL error: " + error);
+//    }
+//
+//    m_window = SDL_CreateWindow("Ore Infinium", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+//                                Settings::instance()->windowWidth, Settings::instance()->windowHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+//
+//    if (!m_window) {
+//        Debug::checkSDLError();
+//    }
+//
+//    int ret = IMG_Init(IMG_INIT_PNG);
+//    assert(ret != 0);
+//
 ////    glewExperimental = GL_TRUE;
 //    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
 //    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
@@ -175,10 +200,25 @@ void Client::initGL()
 //     * You may need to change this to 16 or 32 for your system */
 //    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 //    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+//
 //    //TODO: we'll probably need some extension at some point in time..
 //    //SDL_GL_ExtensionSupported();
+//
+//    m_GLcontext = SDL_GL_CreateContext(m_window);
+//    Debug::assertf(m_GLcontext != nullptr, "SDL GL Context creation failure! Context nullptr.");
+//    Debug::checkGLError();
+//
+//    //FIXME: doesn't do shit
+//    SDL_GL_SetSwapInterval(1);
+//
+//    Debug::checkSDLError();
+//    Debug::checkGLError();
+//
 //    SDL_ShowCursor(0);
-
+//
+//    Debug::checkSDLError();
+//    Debug::checkGLError();
+//
     glewExperimental = true;
 
     int retGLEW = glewInit();
@@ -259,8 +299,6 @@ void Client::paintUnder()
     assert(window());
     assert(window()->openglContext());
 
-    QMutexLocker locker(&m_clientLogicMutex);
-
     if (!m_firstGLInit) {
         Debug::log(Debug::ImportantArea) << "first paintunder, not init'd perform initGL";
         m_firstGLInit = true;
@@ -294,7 +332,7 @@ void Client::paintUnder()
             //printf("ms/frame is %f ms\n", frameTime);
         }
 
-//        tick(frameTime);
+        tick(frameTime);
 
         render(frameTime);
 
