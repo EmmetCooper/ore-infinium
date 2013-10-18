@@ -230,6 +230,8 @@ private:
     int32_t m_playerInputDirectionX = 0;
     int32_t m_playerInputDirectionY = 0;
 
+    QQueue<QKeyEvent*> m_keyEventQueue;
+
     cpSpace* m_cpSpace = nullptr;
     PhysicsDebugRenderer* m_physicsDebugRenderer = nullptr;
 
