@@ -35,32 +35,10 @@
 
 TileRenderer::TileRenderer(World* world, Camera* camera, Entities::Player* mainPlayer)
     :   m_mainPlayer(mainPlayer),
-        m_world(world),
-        m_camera(camera)
-{
-
-}
-
-TileRenderer::~TileRenderer()
-{
-    glDeleteBuffers(1, &m_vbo);
-    glDeleteBuffers(1, &m_ebo);
-
-    glDeleteVertexArrays(1, &m_vao);
-
-    glDeleteFramebuffers(1, &m_fbo);
-    glDeleteRenderbuffers(1, &m_rb);
-
-    glDeleteTextures(1, &m_fboTexture);
-    glDeleteTextures(1, &m_tileMapTexture);
-
-    delete m_shader;
-}
-
-void TileRenderer::init()
+        m_world(world)
 {
     m_shader = new Shader("tilerenderer.vert", "tilerenderer.frag");
-    setCamera(m_camera);
+    setCamera(camera);
 
     initGL();
 
@@ -98,6 +76,22 @@ void TileRenderer::init()
         glTexSubImage3D(GL_TEXTURE_2D_ARRAY, level, xoffset, yoffset, (Block::blockTypes.size() + i), Block::BLOCK_SIZE_PIXELS, Block::BLOCK_SIZE_PIXELS, depth, GL_RGBA, GL_UNSIGNED_BYTE, image.bytes());
     }
     Debug::checkGLError();
+}
+
+TileRenderer::~TileRenderer()
+{
+    glDeleteBuffers(1, &m_vbo);
+    glDeleteBuffers(1, &m_ebo);
+
+    glDeleteVertexArrays(1, &m_vao);
+
+    glDeleteFramebuffers(1, &m_fbo);
+    glDeleteRenderbuffers(1, &m_rb);
+
+    glDeleteTextures(1, &m_fboTexture);
+    glDeleteTextures(1, &m_tileMapTexture);
+
+    delete m_shader;
 }
 
 void TileRenderer::setCamera(Camera* camera)

@@ -35,7 +35,10 @@ FluidRenderer::FluidRenderer(Camera* camera, Entities::Player* mainPlayer)
 : m_camera(camera),
   m_mainPlayer(mainPlayer)
 {
+    m_shaderWater = new Shader("fluidrenderer_water.vert", "fluidrenderer_water.frag");
+    setCamera(camera);
 
+    initGL();
 }
 
 FluidRenderer::~FluidRenderer()
@@ -49,14 +52,6 @@ FluidRenderer::~FluidRenderer()
     glDeleteVertexArrays(1, &m_vaoWater);
 
     delete m_shaderWater;
-}
-
-void FluidRenderer::init()
-{
-    m_shaderWater = new Shader("fluidrenderer_water.vert", "fluidrenderer_water.frag");
-    setCamera(camera);
-
-    initGL();
 }
 
 void FluidRenderer::setCamera(Camera* camera)

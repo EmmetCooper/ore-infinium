@@ -166,13 +166,6 @@ private:
     static void attackTilePhysicsObjectCallback(cpShape* shape, void *data);
     static void tileRemovedPostStepCallback(cpSpace* space, void* obj, void* data);
 
-    /**
-     * Called by the GL render thread on a tick following the creation and connection of the world
-     * This is because the various renderers need to e.g. compile their shaders, submit vbos, etc.
-     * all of which require to be run on the rendering thread because we have no multithreaded GL context (and I'd prefer not).
-     */
-    void initRenderers();
-
     void renderCrosshair();
 
     /**
@@ -263,7 +256,6 @@ private:
     LightRenderer* m_lightRenderer = nullptr;
     ParticleRenderer* m_particleRenderer = nullptr;
     FluidRenderer* m_fluidRenderer = nullptr;
-    SkyRenderer *m_skyRenderer = nullptr;
 //    QuadTreeRenderer* m_quadTreeRenderer = nullptr;
     SpriteSheetRenderer* m_spriteSheetRenderer = nullptr;
 
@@ -272,6 +264,7 @@ private:
 
     //HACK: remove when we get beyond just testing stupid shit
     Entity* m_uselessEntity = nullptr;
+    SkyRenderer *m_sky = nullptr;
 
     bool m_mouseLeftHeld = false;
 
@@ -310,13 +303,6 @@ private:
 
     const float m_zoomInFactor = 1.02;
     const float m_zoomOutFactor = 0.98;
-
-    /**
-     * False if renderers have not been init'ed.
-     * Is checked on render() of the world (privately so).
-     * @sa initRenderers
-     */
-    bool m_initRenderers = false;
 
     Time* m_time = nullptr;
 

@@ -126,7 +126,7 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         //FIXME: call each update, and make it only do visible ones
         m_lightRenderer->setTorches(&m_torches);
 
-        m_skyRenderer = new SkyRenderer(this, m_camera, m_time);
+        m_sky = new SkyRenderer(this, m_camera, m_time);
         m_particleRenderer = new ParticleRenderer(this, m_camera, m_mainPlayer);
 
 //FIXME:        m_fluidRenderer = new FluidRenderer(m_camera, m_mainPlayer);
@@ -175,7 +175,7 @@ World::~World()
     delete m_spriteSheetRenderer;
     delete m_lightRenderer;
     delete m_particleRenderer;
-    delete m_skyRenderer;
+    delete m_sky;
 
     for (auto * torch : m_torches) {
         delete torch;
@@ -210,17 +210,6 @@ World::~World()
     delete m_camera;
     delete m_time;
     delete m_physicsRendererFlushTimer;
-}
-
-void World::initRenderers()
-{
-    m_initRenderers = true;
-    m_spriteSheetRenderer->init();
-    m_lightRenderer->init();
-    m_tileRenderer->init();
-    m_particleRenderer->init();
-    m_fluidRenderer->init();
-    m_skyRenderer->init();
 }
 
 void World::addPlayer(Entities::Player* player)
@@ -343,10 +332,6 @@ void World::render()
 {
     assert(m_mainPlayer && !m_server);
 
-    if (!m_initRenderers) {
-        m_initRenderers();
-    }
-
     m_lightRenderer->setRenderingEnabled(Settings::instance()->debugRendererFlags & Debug::RenderingDebug::LightRenderingPassDebug);
     m_tileRenderer->setRenderingEnabled(Settings::instance()->debugRendererFlags & Debug::RenderingDebug::TileRenderingPassDebug);
 
@@ -355,7 +340,7 @@ void World::render()
     //TODO render tilemap..
 
     if (Settings::instance()->debugRendererFlags & Debug::RenderingDebug::SkyRenderingPassDebug) {
-        m_skyRenderer->render();
+        m_sky->render();
     }
 
     //set our view so that the player will stay relative to the view, in the center.
@@ -397,7 +382,7 @@ void World::update(double elapsedTime)
     //FIXME: MAKE IT CENTER ON THE CENTER OF THE PLAYER SPRITE
     //only occurs on client side, obviously the server doesn't need to do this stuff
     if (m_client) {
-        m_skyRenderer->update(elapsedTime);
+        m_sky->update(elapsedTime);
     }
 
     if (m_server) {

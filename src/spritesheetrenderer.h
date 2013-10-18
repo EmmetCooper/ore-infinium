@@ -41,8 +41,6 @@ public:
     SpriteSheetRenderer(Camera* camera);
     ~SpriteSheetRenderer();
 
-    void init();
-
     /**
      * Indicative of which spritesheet this sprite is a type of.
      * aka what it is considered and which category it will fall under.

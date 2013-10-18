@@ -48,8 +48,6 @@ public:
     explicit TileRenderer(World* world, Camera* camera, Entities::Player* mainPlayer);
     ~TileRenderer();
 
-    void init();
-
     void render();
     GLuint fboTexture();
 

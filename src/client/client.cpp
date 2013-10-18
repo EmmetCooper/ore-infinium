@@ -156,10 +156,6 @@ void Client::tickLogicThread()
     //  std::this_thread::sleep_for(timeUntilNextFrame);
     }
 */
-
-    while (true) {
-        tick(1.0/60.0);
-    }
 }
 
 void Client::initGL()
@@ -269,8 +265,6 @@ void Client::paintUnder()
         Debug::log(Debug::ImportantArea) << "first paintunder, not init'd perform initGL";
         m_firstGLInit = true;
         initGL();
-
-        m_clientTickLogicThread = new std::thread(&Client::tickLogicThread, this);
 
         //init logic thread now
 //        m_clientTickLogicThread = new std::thread(&Client::tickLogicThread, this);
@@ -471,9 +465,7 @@ void Client::render(double frameTime)
 
 void Client::tick(double frameTime)
 {
-    QMutexLocker locker(&m_clientLogicMutex);
 //    handleInputEvents();
-
 
     if (m_peer) {
         poll();
@@ -970,7 +962,7 @@ void Client::receiveInitialPlayerData(const std::string& packetContents)
 //        m_chat->addChatLine("", chatMessage.str());
 
         // this is us, the first player so this means the world creation is up to us
-    Debug::log(Debug::Area::ImportantArea) << "CREATING WORLD RECEIVED PLAYER DATA last tick!";
+    Debug::log(Debug::Area::ImportantArea) << "CREATING WORLD< RECEIVED PLAYER DATA!";
         m_world = new World(m_mainPlayer, this, nullptr);
 
 //        m_quickBarMenu = new QuickBarMenu(this, quickBarInventory, m_world->spriteSheetRenderer());

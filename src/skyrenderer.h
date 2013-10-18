@@ -38,8 +38,6 @@ public:
     SkyRenderer(World* world, Camera* camera, Time* time);
     ~SkyRenderer();
 
-    void init();
-
     void update(const float elapsedTime);
     void render();
 

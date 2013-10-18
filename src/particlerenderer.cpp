@@ -32,7 +32,9 @@
 
 ParticleRenderer::ParticleRenderer(World* world, Camera* camera, Entities::Player* mainPlayer)
 {
-
+    m_ortho = glm::mat4(1.0f);
+    m_view = glm::mat4(1.0f);
+//FIXME:    initGL();
 }
 
 ParticleRenderer::~ParticleRenderer()
@@ -59,13 +61,6 @@ ParticleRenderer::~ParticleRenderer()
 static float randFloat()
 {
     return ((float)rand() / RAND_MAX);
-}
-
-void ParticleRenderer::init()
-{
-    m_ortho = glm::mat4(1.0f);
-    m_view = glm::mat4(1.0f);
-//FIXME:    initGL();
 }
 
 //TODO: fix the particle renderer, as it's not even started erally ;)
