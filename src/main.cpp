@@ -44,19 +44,6 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLContext>
 
-std::vector<std::string> args;
-
-bool contains(const std::string& str)
-{
-    for (size_t i = 0; i < args.size(); ++i) {
-        if (args[i] == str) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 int main(int argc, char* argv[])
 {
 //    QOpenGLFunctions funcs(QOpenGLContext::currentContext());
@@ -140,6 +127,11 @@ int main(int argc, char* argv[])
         if (params.contains("--debug-full")) {
             fullDebugEnabled = true;
             params.removeOne("--debug-full");
+        }
+
+        if (params.contains("--version" || params.contains("-v")) {
+            std::cout << "Ore Infinium Version " << ore_infinium_VERSION_MAJOR << "." << ore_infinium_VERSION_MINOR << "\n";
+            exit(0);
         }
 
         ////// END OF PARAMS, verify no extraneous ones (aka non-existent params)
