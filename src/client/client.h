@@ -27,9 +27,7 @@
 
 #include <QtQuick/QQuickItem>
 #include <QtGui/QOpenGLShaderProgram>
-
-#include <QtCore/QQueue>
-#include <QtCore/QTime>
+#include <QTime>
 
 #include <SDL2/SDL.h>
 #include <SDL_log.h>
@@ -49,7 +47,6 @@ class World;
 class Server;
 class QuickView;
 class QQuickWindow;
-class QKeyEvent;
 
 class Client : public QQuickItem
 {
@@ -76,8 +73,6 @@ public slots:
 
     void init();
 
-    void viewKeyPressed(QKeyEvent* event);
-
     //------------------ from QML ...
     Q_INVOKABLE void startSingleplayerCreateSlot(const QString& playerName, const QString& worldName);
     Q_INVOKABLE void startMultiplayerHostSlot(const QString& playerName, int port);
@@ -91,14 +86,14 @@ private slots:
     void handleWindowChanged(QQuickWindow *win);
 
 private:
-    void processSharedKeyEvents();
-
     QTime m_time;
     int m_frameCount = 0;
 
     qreal m_t = 0.0;
     qreal m_thread_t = 0.0;
     //FIXME: ////////////////////////////////////////////////// UGLY, REFACTOR
+
+    bool event(QEvent* event);
 
 public:
     Client();
@@ -229,8 +224,6 @@ private:
 
     int32_t m_playerInputDirectionX = 0;
     int32_t m_playerInputDirectionY = 0;
-
-    QQueue<QKeyEvent*> m_keyEventQueue;
 
     cpSpace* m_cpSpace = nullptr;
     PhysicsDebugRenderer* m_physicsDebugRenderer = nullptr;

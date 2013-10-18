@@ -540,23 +540,21 @@ void Client::drawDebugText(double frameTime)
  //   m_debugMenu->update(frameTime);
 }
 
-void Client::viewKeyPressed(QKeyEvent* event)
+bool Client::event(QEvent *event)
 {
         Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT!";
 //        if (m_mainPlayer && m_peer && m_connected && m_gui->inputDemanded() == false) {
 //            handlePlayerInput(event);
 //            m_quickBarMenu->handleEvent(event);
 //        }
-    QKeyEvent eventCopy = *event;
-}
 
-void Client::processSharedKeyEvents()
-{
-    QKeyEvent *event;
+
     switch (event->type()) {
         case QEvent::KeyPress: {
+            QKeyEvent *key = dynamic_cast<QKeyEvent*>(event);
+            assert(key);
 
-            switch (event->key()) {
+            switch (key->key()) {
                 case Qt::Key_Escape: {
                     //only if we are connected, do we allow hiding and showing (escape menu)
                     if (m_peer) {
@@ -576,6 +574,7 @@ void Client::processSharedKeyEvents()
                 }
 
                 case Qt::Key_F8: {
+                    Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! accepting event, f8";
                     event->accept();
                     //f8
                     std::stringstream ss;
@@ -585,7 +584,11 @@ void Client::processSharedKeyEvents()
                     std::uniform_int_distribution<> distribution(0, INT_MAX);
 
                     ss << distribution(rand);
+                    Debug::log(Debug::ImportantArea) << "keypressevent THREAD ID: " << QThread::currentThreadId();
+
+                    Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! starting mp host";
                     startMultiplayerHost(ss.str());
+                    Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! returned to keypressevent";
                 }
 
                 case Qt::Key_F10: {
@@ -615,6 +618,7 @@ void Client::processSharedKeyEvents()
         default:
             break;
     }
+    return QQuickItem::event(event);
 }
 
 void Client::handleInputEvents()
