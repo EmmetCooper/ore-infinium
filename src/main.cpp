@@ -129,7 +129,7 @@ int main(int argc, char* argv[])
             params.removeOne("--debug-full");
         }
 
-        if (params.contains("--version" || params.contains("-v")) {
+        if (params.contains("--version") || params.contains("-v")) {
             std::cout << "Ore Infinium Version " << ore_infinium_VERSION_MAJOR << "." << ore_infinium_VERSION_MINOR << "\n";
             exit(0);
         }
