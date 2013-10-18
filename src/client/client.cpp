@@ -522,8 +522,6 @@ void Client::viewKeyPressed(QKeyEvent* event)
 
 void Client::processSharedKeyEvents()
 {
-    //HACK: all of this should never be called and is useless.
-    assert(0);
     QKeyEvent *event;
     switch (event->type()) {
         case QEvent::KeyPress: {
