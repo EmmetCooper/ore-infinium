@@ -37,9 +37,9 @@
 #include <SDL_timer.h>
 
 LightRenderer::LightRenderer(World* world, Camera* camera, Entities::Player* mainPlayer)
-:   m_camera(camera),
-    m_mainPlayer(mainPlayer),
-    m_world(world)
+    :   m_mainPlayer(mainPlayer),
+        m_camera(camera),
+        m_world(world)
 {
 
 }
@@ -65,8 +65,6 @@ LightRenderer::~LightRenderer()
 
 void LightRenderer::init()
 {
-    Debug::log(Debug::ClientRendererArea) << "initing lightrenderer..";
-
     Debug::checkGLError();
 
     m_shader = new Shader("lightrenderer.vert", "lightrenderer.frag");
@@ -75,8 +73,6 @@ void LightRenderer::init()
 
     Debug::checkGLError();
     initGL();
-
-    Debug::log(Debug::ClientRendererArea) << "...done";
 }
 
 void LightRenderer::setCamera(Camera* camera)

@@ -34,9 +34,9 @@
 #include <stdlib.h>
 
 TileRenderer::TileRenderer(World* world, Camera* camera, Entities::Player* mainPlayer)
-    :   m_camera(camera),
-        m_mainPlayer(mainPlayer),
-        m_world(world)
+    :   m_mainPlayer(mainPlayer),
+        m_world(world),
+        m_camera(camera)
 {
 
 }
@@ -59,8 +59,6 @@ TileRenderer::~TileRenderer()
 
 void TileRenderer::init()
 {
-    Debug::log(Debug::ClientRendererArea) << "initing tilerenderer..";
-
     m_shader = new Shader("tilerenderer.vert", "tilerenderer.frag");
     setCamera(m_camera);
 
@@ -100,8 +98,6 @@ void TileRenderer::init()
         glTexSubImage3D(GL_TEXTURE_2D_ARRAY, level, xoffset, yoffset, (Block::blockTypes.size() + i), Block::BLOCK_SIZE_PIXELS, Block::BLOCK_SIZE_PIXELS, depth, GL_RGBA, GL_UNSIGNED_BYTE, image.bytes());
     }
     Debug::checkGLError();
-
-    Debug::log(Debug::ClientRendererArea) << "..done";
 }
 
 void TileRenderer::setCamera(Camera* camera)

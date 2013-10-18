@@ -62,8 +62,6 @@ SpriteSheetRenderer::~SpriteSheetRenderer()
 
 void SpriteSheetRenderer::init()
 {
-    Debug::log(Debug::ClientRendererArea) << "initing spritesheetrenderer..";
-
     Debug::checkGLError();
 
     m_shader = new Shader("sprite.vert", "sprite.frag");
@@ -79,7 +77,6 @@ void SpriteSheetRenderer::init()
     Debug::checkGLError();
     parseAllSpriteSheets();
     Debug::checkGLError();
-    Debug::log(Debug::ClientRendererArea) << "..done";
 }
 
 void SpriteSheetRenderer::setCamera(Camera* camera)
