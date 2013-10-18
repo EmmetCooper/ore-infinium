@@ -133,8 +133,8 @@ Item {
     }
 
     //FIXME: gynormous hack, strip win size out into C++
-    width: 1024
-    height: 768
+    width: 1600
+    height: 900
 
     Client {
         SequentialAnimation on t {

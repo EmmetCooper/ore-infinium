@@ -75,6 +75,9 @@ void Client::init()
     qmlRegisterType<OptionsDialogBackend>("OptionsDialogBackend", 1, 0, "OptionsDialogBackend");
 
     m_view = new QuickView(this);
+    m_view->setResizeMode(QQuickView::ResizeMode::SizeViewToRootObject);
+    m_view->setMinimumWidth(1600);
+    m_view->setMinimumHeight(900);
 //    connect(m_view, SIGNAL(keyPressed(QKeyEvent*)), this, SLOT(viewKeyPressed(QKeyEvent*)), Qt::ConnectionType::DirectConnection);
 
     QQmlContext *root = m_view->engine()->rootContext();
@@ -92,9 +95,6 @@ void Client::init()
 //    glViewport(0, 0, Settings::instance()->windowWidth, Settings::instance()->windowHeight);
 
     // call this ONLY when linking with FreeImage as a static library
-#ifdef FREEIMAGE_LIB
-    FreeImage_Initialise();
-#endif
 
 //    m_gui = GUI::instance();
 //    m_mainMenu = new MainMenu(this);
@@ -117,6 +117,7 @@ void Client::init()
 
 void Client::tickLogicThread()
 {
+    /*
     Debug::log(Debug::ImportantArea) << "CLIENT EXEC!";
     Debug::log(Debug::ImportantArea) << "GAME TICK!";
 
@@ -156,6 +157,7 @@ void Client::tickLogicThread()
     //  std::chrono::milliseconds timeUntilNextFrame(int(dt - accumulator));
     //  std::this_thread::sleep_for(timeUntilNextFrame);
     }
+    */
 }
 
 void Client::initGL()
@@ -308,6 +310,7 @@ void Client::paintUnder()
 //        m_clientTickLogicThread = new std::thread(&Client::tickLogicThread, this);
         //FIXME: not needed move into initGL if not there already.
         glViewport(0, 0, window()->width(), window()->height());
+        Debug::log(Debug::ImportantArea) << "WIN HEIGHT, W: " << window()->height() << " : " << window()->width();
 
         Debug::log(Debug::ImportantArea) << "paintunder THREAD ID: " << QThread::currentThreadId();
         if (Settings::instance()->startupFlags() & Settings::PlayNowStartupFlag) {
