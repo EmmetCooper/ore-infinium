@@ -215,7 +215,7 @@ void World::initRenderers()
     m_lightRenderer->setTileRendererTexture(m_tileRenderer->fboTexture());
 
     m_particleRenderer->init();
-//FIXME: reinstate allocation up in ctor, too.    m_fluidRenderer->init();
+    m_fluidRenderer->init();
 
     m_skyRenderer->init();
 
