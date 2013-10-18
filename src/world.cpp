@@ -392,6 +392,12 @@ void World::renderCrosshair()
 
 void World::update(double elapsedTime)
 {
+    //FIXME: MAKE IT CENTER ON THE CENTER OF THE PLAYER SPRITE
+    //only occurs on client side, obviously the server doesn't need to do this stuff
+    if (m_client) {
+        m_skyRenderer->update(elapsedTime);
+    }
+
     if (m_server) {
         for (auto * player : m_players) {
             if (player->mouseLeftButtonHeld()) {
@@ -449,16 +455,9 @@ void World::update(double elapsedTime)
             }
         }
     }
-    //FIXME: MAKE IT CENTER ON THE CENTER OF THE PLAYER SPRITE
-    //only occurs on client side, obviously the server doesn't need to do this stuff
-    if (m_client) {
-        if (m_initRenderers) {
-            m_skyRenderer->update(elapsedTime);
 
-            if (m_mainPlayer) {
-                m_camera->centerOn(m_mainPlayer->position());
-            }
-        }
+    if (m_mainPlayer) {
+        m_camera->centerOn(m_mainPlayer->position());
     }
 
     //calculateAttackPosition();

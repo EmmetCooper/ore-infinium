@@ -25,7 +25,6 @@
 #include "src/debug.h"
 #include "settings/settings.h"
 
-#include <vector>
 #include <iostream>
 #include <stdio.h>
 
@@ -820,7 +819,7 @@ void SkyRenderer::update(const float elapsedTime)
 
 //    Debug::log(Debug::StartupArea) << "m_time: " << m_time->toString();
     // sun position
-    m_celestialBodiesSprites[0].position = glm::vec2(newX, newY);
+    m_celestialBodiesSprites.at(0).position = glm::vec2(newX, newY);
     ////////////
 
     //////////// MOON
@@ -829,7 +828,7 @@ void SkyRenderer::update(const float elapsedTime)
     newY = viewportCenter.y + sin(angle) * 400.0f;
 
     // moon position
-    m_celestialBodiesSprites[1].position = glm::vec2(newX, newY);
+    m_celestialBodiesSprites.at(1).position = glm::vec2(newX, newY);
     /////////////////
 }
 

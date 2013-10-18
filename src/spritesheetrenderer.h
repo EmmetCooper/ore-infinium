@@ -26,8 +26,7 @@
 
 #include <map>
 #include <string>
-
-#include <QVector>
+#include <vector>
 
 class Torch;
 class Camera;
@@ -151,8 +150,8 @@ private:
     std::map<std::string, SpriteFrameIdentifier> m_spriteSheetCharactersDescription;
     std::map<std::string, SpriteFrameIdentifier> m_spriteSheetEntitiesDescription;
 
-    QVector<Sprite*> m_characterSprites;
-    QVector<Sprite*> m_entitySprites;
+    std::vector<Sprite*> m_characterSprites;
+    std::vector<Sprite*> m_entitySprites;
 
     GLuint m_vao; // vertex array object
     GLuint m_vbo; // vertex buffer object

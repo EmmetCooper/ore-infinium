@@ -30,7 +30,6 @@
 
 #include <yaml-cpp/yaml.h>
 
-#include <vector>
 #include <fstream>
 #include <iostream>
 #include <stdio.h>

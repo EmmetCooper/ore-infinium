@@ -23,7 +23,7 @@
 
 #include "glew.h"
 
-#include <QVector>
+#include <vector>
 
 class Camera;
 class Texture;
@@ -109,7 +109,7 @@ private:
     GLuint m_fboTextureSky = 0;
     GLuint m_rbSky = 0; //render buffer object
 
-    QVector<SpriteFrame> m_celestialBodiesSprites;
+    std::vector<SpriteFrame> m_celestialBodiesSprites;
 
     // sun, moon
     uint16_t m_maxCelestialBodies = 2;
