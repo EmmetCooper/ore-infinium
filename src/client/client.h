@@ -28,10 +28,13 @@
 #include <QtQuick/QQuickItem>
 #include <QtGui/QOpenGLShaderProgram>
 #include <QTime>
+#include <QMutex>
 
 #include <SDL2/SDL.h>
 #include <SDL_log.h>
 
+#include <atomic>
+#include <mutex>
 #include <thread>
 
 struct cpSpace;
@@ -99,8 +102,6 @@ private:
     qreal m_thread_t = 0.0;
     //FIXME: ////////////////////////////////////////////////// UGLY, REFACTOR
 
-    bool event(QEvent* event);
-
 public:
     Client();
     ~Client();
@@ -120,7 +121,7 @@ public:
     void tick(double frameTime);
     void render(double frameTime);
 
-    void handlePlayerInput(SDL_Event& event);
+    void viewKeyPressed(QKeyEvent* event);
 
     void enableWorldViewing() {
        m_worldViewingEnabled = true;
@@ -203,7 +204,6 @@ private:
 
     glm::vec2 mousePositionToWorldCoords();
 
-    void handleInputEvents();
     void drawDebugText(double frameTime);
 
 private:
@@ -228,13 +228,20 @@ private:
     std::thread* m_clientTickLogicThread = nullptr;
     bool m_connected = false;
 
-    int32_t m_playerInputDirectionX = 0;
-    int32_t m_playerInputDirectionY = 0;
+    int m_test = 1;
+
+    /////////////////////////
+    QMutex m_playerInputLock;
+    std::mutex m_lock;
+    std::atomic<int> m_playerInputDirectionX;
+    std::atomic<int> m_playerInputDirectionY;
+
+    bool m_playerJumpRequested = false;
+    /////////////////////////
 
     cpSpace* m_cpSpace = nullptr;
     PhysicsDebugRenderer* m_physicsDebugRenderer = nullptr;
 
-    bool m_playerJumpRequested = false;
     bool m_renderGUI = true;
     bool m_initialPlayersReceivedFinished = false;
 

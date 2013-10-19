@@ -78,7 +78,6 @@ void Client::init()
     m_view->setResizeMode(QQuickView::ResizeMode::SizeViewToRootObject);
     m_view->setMinimumWidth(1600);
     m_view->setMinimumHeight(900);
-//    connect(m_view, SIGNAL(keyPressed(QKeyEvent*)), this, SLOT(viewKeyPressed(QKeyEvent*)), Qt::ConnectionType::DirectConnection);
 
     QQmlContext *root = m_view->engine()->rootContext();
     root->setContextProperty("ClientBackend", this);
@@ -384,7 +383,6 @@ void Client::startMultiplayerJoinSlot(const QString& playerName, const QString& 
     Debug::log(Debug::ImportantArea) << "MP join slot, playername, addr, port: " << qPrintable(playerName) << " : " << qPrintable(address) << " : " << port;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////
 
 void Client::poll()
@@ -544,197 +542,127 @@ void Client::drawDebugText(double frameTime)
  //   m_debugMenu->update(frameTime);
 }
 
-bool Client::event(QEvent *event)
+
+void Client::viewKeyPressed(QKeyEvent* event)
 {
-        Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT!";
 //        if (m_mainPlayer && m_peer && m_connected && m_gui->inputDemanded() == false) {
 //            handlePlayerInput(event);
 //            m_quickBarMenu->handleEvent(event);
 //        }
 
+    assert(event);
 
-    switch (event->type()) {
-        case QEvent::KeyPress: {
-            QKeyEvent *key = dynamic_cast<QKeyEvent*>(event);
-            assert(key);
+/////    QMutexLocker lock(&m_playerInputLock);
+    std::lock_guard<std::mutex> lock(m_lock);
+    m_test = 2;
 
-            switch (key->key()) {
-                case Qt::Key_Escape: {
-                    //only if we are connected, do we allow hiding and showing (escape menu)
-                    if (m_peer) {
-                        //FIXME: HACK
-                        event->accept();
-                    //     if (!m_mainMenu->escapeMenuVisible()) {
-                    //         m_mainMenu->showEscapeMenu();
-                    //     } else {
-                    //         m_mainMenu->hideEscapeMenu();
-                    //     }
-                    }
-                }
-
-                case Qt::Key_F1: {
-                    //f1
-                    // m_debugMenu->setCollapsed(!m_debugMenu->collapsed());
-                }
-
-                case Qt::Key_F8: {
-                    Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! accepting event, f8";
-                    event->accept();
-                    //f8
-                    std::stringstream ss;
-                    ss << "Player";
-                    std::random_device device;
-                    std::mt19937 rand(device());
-                    std::uniform_int_distribution<> distribution(0, INT_MAX);
-
-                    ss << distribution(rand);
-                    Debug::log(Debug::ImportantArea) << "keypressevent THREAD ID: " << QThread::currentThreadId();
-
-                    Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! starting mp host";
-                    startMultiplayerHost(ss.str());
-                    Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! returned to keypressevent";
-                }
-
-                case Qt::Key_F10: {
-                    //FIXME:               m_renderGUI = !m_renderGUI;
-                }
-
-                case Qt::Key_F11: {
-                    //f11
-                    //if (m_debugSettings == nullptr) {
-                    //    m_debugSettings = new DebugSettings(this);
-                    //    m_debugSettings->show();
-                    //} else {
-                    //    if (m_debugSettings->visible()) {
-                    //        m_debugSettings->hide();
-                    //    } else {
-                    //        m_debugSettings->show();
-                    //    }
-                    //}
-                }
-            }
-        } // key press
-
-        case QEvent::KeyRelease:
-            //not yet used..
+    switch (event->key()) {
+        case Qt::Key_Left:
+            //fall through
+        case Qt::Key_A:
+            m_playerInputDirectionX = -1;
             break;
+
+        case Qt::Key_Right:
+            //fall through
+        case Qt::Key_D:
+            m_playerInputDirectionX = 1;
+            break;
+
+        case Qt::Key_Up:
+            //fall through
+        case Qt::Key_W:
+            m_playerInputDirectionY = -1;
+            break;
+
+        case Qt::Key_Down:
+            //fall through
+        case Qt::Key_S:
+            m_playerInputDirectionY = 1;
+            break;
+
+        case Qt::Key_Space:
+            m_playerJumpRequested = true;
+            break;
+
+        case Qt::Key_L:
+            //fall through
+        case Qt::Key_Equal:
+            if (m_world) {
+                //m_world->zoomIn();
+            }
+            break;
+
+        case Qt::Key_K:
+            //fall through
+        case Qt::Key_Minus:
+            if (m_world) {
+                //m_world->zoomOut();
+            }
+            break;
+
+        case Qt::Key_Escape: {
+            //only if we are connected, do we allow hiding and showing (escape menu)
+            if (m_peer) {
+                //FIXME: HACK
+                event->accept();
+            //     if (!m_mainMenu->escapeMenuVisible()) {
+            //         m_mainMenu->showEscapeMenu();
+            //     } else {
+            //         m_mainMenu->hideEscapeMenu();
+            //     }
+            }
+        }
+
+        case Qt::Key_F1: {
+            //f1
+            // m_debugMenu->setCollapsed(!m_debugMenu->collapsed());
+        }
+
+        case Qt::Key_F8: {
+            /* FIXME: move to main thread
+            Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! accepting event, f8";
+            event->accept();
+            //f8
+            std::stringstream ss;
+            ss << "Player";
+            std::random_device device;
+            std::mt19937 rand(device());
+            std::uniform_int_distribution<> distribution(0, INT_MAX);
+
+            ss << distribution(rand);
+            Debug::log(Debug::ImportantArea) << "keypressevent THREAD ID: " << QThread::currentThreadId();
+
+            Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! starting mp host";
+            startMultiplayerHost(ss.str());
+            Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! returned to keypressevent";
+            */
+        }
+
+        case Qt::Key_F10: {
+            //FIXME:               m_renderGUI = !m_renderGUI;
+        }
+
+        case Qt::Key_F11: {
+            //f11
+            //if (m_debugSettings == nullptr) {
+            //    m_debugSettings = new DebugSettings(this);
+            //    m_debugSettings->show();
+            //} else {
+            //    if (m_debugSettings->visible()) {
+            //        m_debugSettings->hide();
+            //    } else {
+            //        m_debugSettings->show();
+            //    }
+            //}
+        }
 
         default:
             break;
     }
-    return QQuickItem::event(event);
-}
 
-void Client::handleInputEvents()
-{
-//    SDL_Event event;
-//
-//    while (SDL_PollEvent(&event)) {
-//
-////        m_gui->handleEvent(event);
-//
-
-//            break;
-//
-//
-//        case SDL_WINDOWEVENT_CLOSE:
-//            //FIXME: fucking useless. doesn't get called for..gee, what would this event be called for? oh yeah, window closing. No, instead that's fucking SDL_QUIT, which is
-//            // also for some fucking reason, also ctrl-C/break. That shit don't make sense brah
-//
-//            // if (m_peer) {
-//            //     m_mainMenu->toggleShown();
-//            // } else {
-//            //     shutdown();
-//            // }
-//            break;
-//
-//        case SDL_QUIT:
-////            if (m_peer) {
-////                m_mainMenu->showEscapeMenu();
-////            } else {
-//            //NOTE: so far this seems to be ctrl-C as well as window close button. Who the fuck knows why the above one does nothing
-//            shutdown();
-//            //}
-//            break;
-//
-//        default:
-//            break;
-//        }
-//    }
-}
-
-void Client::handlePlayerInput(SDL_Event& event)
-{
-    Debug::assertf(false, "ENOTIMPL");
-    int32_t originalX = m_playerInputDirectionX;
-    int32_t originalY = m_playerInputDirectionY;
-
-    switch (event.type) {
-    case SDL_KEYDOWN:
-        if (event.key.keysym.sym == SDLK_d || event.key.keysym.sym == SDLK_RIGHT) {
-            m_playerInputDirectionX = 1;
-        }
-
-        if (event.key.keysym.sym == SDLK_a || event.key.keysym.sym == SDLK_LEFT) {
-            m_playerInputDirectionX = -1;
-        }
-
-        if (event.key.keysym.sym == SDLK_s || event.key.keysym.sym == SDLK_DOWN) {
-            m_playerInputDirectionY = 1;
-        }
-
-        if (event.key.keysym.sym == SDLK_w || event.key.keysym.sym == SDLK_UP) {
-            m_playerInputDirectionY = -1;
-        }
-
-        if (event.key.keysym.sym == SDLK_SPACE) {
-            m_playerJumpRequested = true;
-        }
-
-        if (event.key.keysym.sym == SDLK_EQUALS || event.key.keysym.sym == SDLK_l) {
-            if (m_world) {
-                m_world->zoomIn();
-            }
-        } else if (event.key.keysym.sym == SDLK_MINUS || event.key.keysym.sym == SDLK_k) {
-            if (m_world) {
-                m_world->zoomOut();
-            }
-        }
-        break;
-
-    case SDL_KEYUP:
-        if (event.key.keysym.sym == SDLK_d || event.key.keysym.sym == SDLK_RIGHT) {
-            m_playerInputDirectionX = 0;
-        }
-
-        if (event.key.keysym.sym == SDLK_a || event.key.keysym.sym == SDLK_LEFT) {
-            m_playerInputDirectionX = 0;
-        }
-
-        if (event.key.keysym.sym == SDLK_s || event.key.keysym.sym == SDLK_DOWN) {
-            m_playerInputDirectionY = 0;
-        }
-
-        if (event.key.keysym.sym == SDLK_w || event.key.keysym.sym == SDLK_UP) {
-            m_playerInputDirectionY = 0;
-        }
-
-        if (event.key.keysym.sym == SDLK_SPACE) {
-            m_playerJumpRequested = false;
-        }
-        break;
-
-    case SDL_MOUSEWHEEL:
-        //greater than 0 is moving mouse wheel *up*, so we want previous.
-        if (m_quickBarMenu) {
-            if (event.wheel.y > 0) {
- //               m_quickBarMenu->previousSlot();
-            } else if (event.wheel.y < 0) {
-//                m_quickBarMenu->nextSlot();
-            }
-        }
-        break;
-    }
+    m_playerInputDirectionX = -1;
+    Debug::log(Debug::ImportantArea) << "KEY PRESSED VALUE X: " << m_playerInputDirectionX;
 }
 
 void Client::shutdown()
@@ -863,10 +791,30 @@ void Client::sendChatMessage(const std::string& message)
 
 void Client::sendPlayerMovement()
 {
+    Debug::log(Debug::ImportantArea) << "SENDING PLAYER INPUT, input x: " << m_playerInputDirectionX << " Y : " << m_playerInputDirectionY;
+//    QMutexLocker lock(&m_playerInputLock);
+    std::lock_guard<std::mutex> lock(m_lock);
+
+    Debug::log(Debug::ImportantArea) << "SENDING PLAYER INPUT, input x: " << m_playerInputDirectionX << " Y : " << m_playerInputDirectionY;
+    if (m_test == 2) {
+        exit(1);
+    }
+
+    if (m_playerInputDirectionX != 0) {
+        assert(0);
+    }
+
+    Debug::log(Debug::ImportantArea) << "SENDING PLAYER INPUT, input x: " << m_playerInputDirectionX << " Y : " << m_playerInputDirectionY;
     PacketBuf::PlayerMoveFromClient message;
     message.set_directionx(m_playerInputDirectionX);
     message.set_directiony(m_playerInputDirectionY);
     message.set_jump(m_playerJumpRequested);
+
+    Debug::log(Debug::ImportantArea) << "SENDING PLAYER INPUT, input x: " << m_playerInputDirectionX << " Y : " << m_playerInputDirectionY;
+    //reset values back to initial state. that way no need to buggily handle keypress up events..
+//    m_playerInputDirectionX = 0;
+//    m_playerInputDirectionY = 0;
+//    m_playerJumpRequested = false;
 
     Packet::sendPacket(m_peer, &message, Packet::FromClientPacketContents::PlayerMoveFromClientPacket, ENET_PACKET_FLAG_RELIABLE);
 }
