@@ -66,6 +66,12 @@ public:
 signals:
     void tChanged();
 
+    /**
+     * for debug, but we still need to hide the main menu,
+     * which is why qml hooks onto this signal
+     */
+    void playNowStarted();
+
 public slots:
     void paintUnder();
     void cleanup();

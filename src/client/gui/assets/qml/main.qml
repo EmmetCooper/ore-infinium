@@ -143,5 +143,10 @@ Item {
             loops: Animation.Infinite
             running: true
         }
+
+        onPlayNowStarted: {
+            print("YO DOA");
+            stackView.clear()
+        }
     }
 }

@@ -314,6 +314,7 @@ void Client::paintUnder()
 
         Debug::log(Debug::ImportantArea) << "paintunder THREAD ID: " << QThread::currentThreadId();
         if (Settings::instance()->startupFlags() & Settings::PlayNowStartupFlag) {
+            emit playNowStarted();
             startMultiplayerHost("Dingo");
         }
 
