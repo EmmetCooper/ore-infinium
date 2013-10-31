@@ -37,6 +37,7 @@
 #include <mutex>
 #include <thread>
 
+class FboInSGRenderer;
 struct cpSpace;
 class DebugSettings;
 class PhysicsDebugRenderer;
@@ -250,6 +251,8 @@ private:
     bool m_firstGLInit = false;
 
     QuickView* m_view = nullptr;
+
+    FboInSGRenderer* m_sceneFBOItem = nullptr;
 
 private:
     ENetHost* m_client = nullptr;

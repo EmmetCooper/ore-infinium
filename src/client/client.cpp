@@ -17,9 +17,12 @@
 
 #include "client.h"
 
+#include "src/client/FboInSGRenderer.h"
+
 #include "src/network/packet.h"
 #include "src/packet.pb.h"
 #include "src/server/server.h"
+
 
 #include "src/physicsdebugrenderer.h"
 
@@ -52,6 +55,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_events.h>
 
+
 Client::Client()
 {
     connect(this, &Client::windowChanged, this, &Client::handleWindowChanged, Qt::DirectConnection);
@@ -62,6 +66,7 @@ Client::~Client()
     enet_host_destroy(m_client);
 
     delete m_mainPlayer;
+    delete m_sceneFBOItem;
 
     m_view->close();
     delete m_view;
@@ -73,14 +78,18 @@ void Client::init()
 
     qmlRegisterType<Client>("OpenGLUnderQML", 1, 0, "Client");
     qmlRegisterType<OptionsDialogBackend>("OptionsDialogBackend", 1, 0, "OptionsDialogBackend");
+    qmlRegisterType<FboInSGRenderer>("SceneGraphRendering", 1, 0, "Renderer");
 
     m_view = new QuickView(this);
     m_view->setResizeMode(QQuickView::ResizeMode::SizeViewToRootObject);
     m_view->setMinimumWidth(1600);
     m_view->setMinimumHeight(900);
 
+    m_sceneFBOItem = new FboInSGRenderer();
+
     QQmlContext *root = m_view->engine()->rootContext();
     root->setContextProperty("ClientBackend", this);
+    root->setContextProperty("sceneFBOItem", m_sceneFBOItem);
 
     //m_view->engine()->addImportPath(QString("../client/gui/assets/qml"));
     m_view->setSource(QUrl("../client/gui/assets/qml/main.qml"));

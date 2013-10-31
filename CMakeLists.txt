@@ -29,7 +29,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 #set (SANITIZER_FLAGS  " -fsanitize=integer -fsanitize=undefined")
 
 #set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${SANITIZER_FLAGS})
-endif() 
+endif()
 else(CMAKE_BUILD_TYPE STREQUAL "")
     set(CMAKE_CXX_FLAGS "-std=c++11 -O2 -Wall -Wno-unused-variable -Wno-unused-function -fexpensive-optimizations -Woverloaded-virtual")
     set(CMAKE_C_FLAGS "-O2 -Wall -Wno-unused-variable -Wno-unused-function -fexpensive-optimizations")

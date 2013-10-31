@@ -35,6 +35,7 @@ tool.cpp
 quickview.cpp
 
 client/client.cpp
+client/FboInSGRenderer.cpp
 client/gui/optionsdialogbackend.cpp
 
 server/server.cpp
@@ -94,6 +95,7 @@ include_directories(
 # ----------
 ${CMAKE_SOURCE_DIR}/utils/glm/
 ${CMAKE_SOURCE_DIR}/utils/GLEW/
+${CMAKE_CURRENT_BINARY_DIR}/ #for moc
 
 ${CMAKE_INSTALL_PREFIX}/utils/GLEW/
 #-----------
