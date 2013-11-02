@@ -9,129 +9,129 @@ import QtQuick.Layouts 1.0
 
 Item {
     id: main
-//
-//    Loader {
-//        id: mainMenuLoader
-//        anchors.fill: parent
-//
-//        // loaded at init
-//        source: "mainMenu.qml"
-//    }
-//
-//    Component {
-//        id: singleplayerMenu
-//
-//        SingleplayerMenu
-//        {
-//            id: menu
-//
-//            onCreateWorldClicked: {
-//                stackView.push(singleplayerCreateMenu)
-//            }
-//
-//            onLoadWorldClicked: {
-//                stackView.push(singleplayerLoadMenu)
-//            }
-//        }
-//    }
-//
-//    Component {
-//        id: multiplayerMenu
-//
-//        MultiplayerMenu
-//        {
-//            id: menu
-//
-//            onHostClicked: {
-//                stackView.push(multiplayerHostMenu)
-//            }
-//
-//            onJoinClicked: {
-//                stackView.push(multiplayerJoinMenu)
-//            }
-//        }
-//    }
-//
-//
-//    Component {
-//        id: singleplayerLoadMenu
-//
-//        SingleplayerLoadMenu
-//        {
-//        }
-//    }
-//
-//
-//    Component {
-//        id: singleplayerCreateMenu
-//
-//        SingleplayerCreateMenu
-//        {
-//        }
-//    }
-//
-//    Component {
-//        id: multiplayerHostMenu
-//
-//        MultiplayerHostMenu
-//        {
-//        }
-//    }
-//
-//    Component {
-//        id: multiplayerJoinMenu
-//
-//        MultiplayerJoinMenu
-//        {
-//        }
-//    }
-//
-//    Connections {
-//       id: mainMenuConnections
-//       target: mainMenuLoader.item
-//
-//       onSingleplayerClicked: {
-//           stackView.push(singleplayerMenu)
-//       }
-//
-//        onMultiplayerClicked: {
-//           stackView.push(multiplayerMenu)
-//       }
-//    }
-//
-//    StackView {
-//        id: stackView
-//
-//        anchors.fill: parent
-//
-//        //focus: true
-//
-//        delegate: StackViewDelegate {
-//            function transitionFinished(properties)
-//            {
-//                properties.exitItem.opacity = 1
-//                properties.enterItem.focus = true
-//            }
-//
-//            property Component pushTransition: StackViewTransition {
-//                PropertyAnimation {
-//                    target: enterItem
-//                    property: "opacity"
-//                    from: 0
-//                    to: 1
-//                }
-//                PropertyAnimation {
-//                    target: exitItem
-//                    property: "opacity"
-//                    from: 1
-//                    to: 0
-//                }
-//            }
-//        } // delegate
-//
-//        initialItem: mainMenuLoader.item
-//    }
-//
+
+    Loader {
+        id: mainMenuLoader
+        anchors.fill: parent
+
+        // loaded at init
+        source: "mainMenu.qml"
+    }
+
+    Component {
+        id: singleplayerMenu
+
+        SingleplayerMenu
+        {
+            id: menu
+
+            onCreateWorldClicked: {
+                stackView.push(singleplayerCreateMenu)
+            }
+
+            onLoadWorldClicked: {
+                stackView.push(singleplayerLoadMenu)
+            }
+        }
+    }
+
+    Component {
+        id: multiplayerMenu
+
+        MultiplayerMenu
+        {
+            id: menu
+
+            onHostClicked: {
+                stackView.push(multiplayerHostMenu)
+            }
+
+            onJoinClicked: {
+                stackView.push(multiplayerJoinMenu)
+            }
+        }
+    }
+
+
+    Component {
+        id: singleplayerLoadMenu
+
+        SingleplayerLoadMenu
+        {
+        }
+    }
+
+
+    Component {
+        id: singleplayerCreateMenu
+
+        SingleplayerCreateMenu
+        {
+        }
+    }
+
+    Component {
+        id: multiplayerHostMenu
+
+        MultiplayerHostMenu
+        {
+        }
+    }
+
+    Component {
+        id: multiplayerJoinMenu
+
+        MultiplayerJoinMenu
+        {
+        }
+    }
+
+    Connections {
+       id: mainMenuConnections
+       target: mainMenuLoader.item
+
+       onSingleplayerClicked: {
+           stackView.push(singleplayerMenu)
+       }
+
+        onMultiplayerClicked: {
+           stackView.push(multiplayerMenu)
+       }
+    }
+
+    StackView {
+        id: stackView
+
+        anchors.fill: parent
+
+        //focus: true
+
+        delegate: StackViewDelegate {
+            function transitionFinished(properties)
+            {
+                properties.exitItem.opacity = 1
+                properties.enterItem.focus = true
+            }
+
+            property Component pushTransition: StackViewTransition {
+                PropertyAnimation {
+                    target: enterItem
+                    property: "opacity"
+                    from: 0
+                    to: 1
+                }
+                PropertyAnimation {
+                    target: exitItem
+                    property: "opacity"
+                    from: 1
+                    to: 0
+                }
+            }
+        } // delegate
+
+        initialItem: mainMenuLoader.item
+    }
+
     //FIXME: gynormous hack, strip win size out into C++
     width: 1600
     height: 900

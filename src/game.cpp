@@ -99,6 +99,8 @@ void Game::init()
 
     QQmlEngine* engine = m_view->engine();
 
+    m_client = new Client(m_view);
+
     m_view->setSource(QUrl("../client/gui/assets/qml/main.qml"));
     m_view->show();
 
@@ -110,7 +112,6 @@ void Game::init()
     //                            QUrl::fromLocalFile("MyItem.qml"));
     //    QObject *object = component.create();
 
-    m_client = new Client(m_view);
 
     root->setContextProperty("ClientBackend", m_client);
 

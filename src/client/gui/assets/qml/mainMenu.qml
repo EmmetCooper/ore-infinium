@@ -2,13 +2,14 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.0
 
-import OpenGLUnderQML 1.0
 import QtQuick.Layouts 1.0
 
 //property alias label: text.text
 
 Item {
     id: mainMenu
+    width: 1024
+    height: 768
 
     signal singleplayerClicked()
     signal multiplayerClicked()

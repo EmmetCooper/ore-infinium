@@ -459,7 +459,7 @@ void Client::viewKeyPressed(QKeyEvent* event)
 //            handlePlayerInput(event);
 //            m_quickBarMenu->handleEvent(event);
 //        }
-
+return;//HACK:
     assert(event);
 
 /////    QMutexLocker lock(&m_playerInputLock);
