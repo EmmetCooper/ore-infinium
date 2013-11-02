@@ -330,6 +330,7 @@ Entities::Player* World::findPlayer(uint32_t playerID)
 
 void World::render()
 {
+    Debug::log(Debug::ImportantArea) << "WORLD RENDER";
     assert(m_mainPlayer && !m_server);
 
     m_lightRenderer->setRenderingEnabled(Settings::instance()->debugRendererFlags & Debug::RenderingDebug::LightRenderingPassDebug);

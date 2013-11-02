@@ -234,7 +234,7 @@ void Client::paint()
     } else {
 
         //   glDisable(GL_DEPTH_TEST);
-        glClearColor(0, 0, 0.2, 1);
+        glClearColor(0, 0.1, 0, 1);
         //    glClear(GL_COLOR_BUFFER_BIT);
 
         assert(m_view->openglContext());
@@ -349,7 +349,17 @@ void Client::poll()
 
 void Client::render(double frameTime)
 {
+    static bool swap = false;
+    if (swap) {
+        glClearColor(0.1, 0.0, 0.0, 1.0);
+        swap = false;
+    } else {
+        glClearColor(0.0, 0.1, 0.0, 1.0);
+        swap = true;
+    }
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    Debug::log(Debug::ImportantArea) << "CLIENT RENDER CALLED";
 
     if (m_world && m_mainPlayer) {
         m_world->render();
@@ -465,7 +475,6 @@ return;//HACK:
 /////    QMutexLocker lock(&m_playerInputLock);
     std::lock_guard<std::mutex> lock(m_lock);
     m_test = 2;
-
     switch (event->key()) {
         case Qt::Key_Left:
             //fall through

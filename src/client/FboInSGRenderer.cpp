@@ -52,8 +52,6 @@ public slots:
 
         glViewport(0, 0, size.width(), size.height());
 
- //       m_logoRenderer->render();
-
         emit renderCalled();
 
         m_fbo->bindDefault();
