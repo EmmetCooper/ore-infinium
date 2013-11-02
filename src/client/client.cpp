@@ -171,6 +171,8 @@ void Client::initGL()
     Debug::log(Debug::Area::StartupArea) << "Platform: Renderer: " << glGetString(GL_RENDERER);
     Debug::log(Debug::Area::StartupArea) << "OpenGL Version: " << glGetString(GL_VERSION);
     Debug::log(Debug::Area::StartupArea) << "GLSL Version: " << glGetString(GL_SHADING_LANGUAGE_VERSION);
+    Debug::log(Debug::Area::StartupArea) << "Built against Qt version: " << QT_VERSION_STR;
+    Debug::log(Debug::Area::StartupArea) << "Running against Qt version: " << qVersion();
 
     Debug::checkGLError();
 

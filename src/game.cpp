@@ -85,7 +85,6 @@ void Game::init()
 
 
     ////////////////////
-    qmlRegisterType<Client>("OpenGLUnderQML", 1, 0, "Client");
     qmlRegisterType<OptionsDialogBackend>("OptionsDialogBackend", 1, 0, "OptionsDialogBackend");
     qmlRegisterType<FboInSGRenderer>("SceneGraphRendering", 1, 0, "Renderer");
 
