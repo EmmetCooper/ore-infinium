@@ -54,9 +54,10 @@ public slots:
 
  //       m_logoRenderer->render();
 
+        emit renderCalled();
+
         m_fbo->bindDefault();
 
-        emit renderCalled();
 
         m_window->update();
     }
