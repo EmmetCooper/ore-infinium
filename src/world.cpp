@@ -327,7 +327,6 @@ Entities::Player* World::findPlayer(uint32_t playerID)
     return nullptr;
 }
 
-
 void World::render()
 {
     Debug::log(Debug::ImportantArea) << "WORLD RENDER";

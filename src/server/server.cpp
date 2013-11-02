@@ -155,7 +155,9 @@ void Server::poll()
             Debug::log(Debug::Area::NetworkServerContinuousArea) << "Peer has disconnected:  " << event.peer->address.host << " at port: " << event.peer->address.port;
             printf("%s disconnected.\n", event.peer->data);
 
-            for (auto & client : m_clients) {
+            for (auto& client : m_clients) {
+                assert(client.first);
+                assert(client.second);
                 if (client.first == event.peer) {
                     Debug::log(Debug::Area::NetworkServerContinuousArea) << "Found peer for disconnect, deleting it";
                     m_clients.erase(client.first);
