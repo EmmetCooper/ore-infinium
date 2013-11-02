@@ -55,10 +55,9 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_events.h>
 
-
-Client::Client()
+Client::Client(QQuickView* view)
+: m_view(view)
 {
-    connect(this, &Client::windowChanged, this, &Client::handleWindowChanged, Qt::DirectConnection);
 }
 
 Client::~Client()
@@ -66,60 +65,18 @@ Client::~Client()
     enet_host_destroy(m_client);
 
     delete m_mainPlayer;
-    delete m_sceneFBOItem;
-
-    m_view->close();
-    delete m_view;
 }
 
 void Client::init()
 {
     Debug::log(Debug::ImportantArea) << "CLIENT INIT START!";
 
-    qmlRegisterType<Client>("OpenGLUnderQML", 1, 0, "Client");
-    qmlRegisterType<OptionsDialogBackend>("OptionsDialogBackend", 1, 0, "OptionsDialogBackend");
-    qmlRegisterType<FboInSGRenderer>("SceneGraphRendering", 1, 0, "Renderer");
+    // FIXME:
+    // glViewport(0, 0, Settings::instance()->windowWidth, Settings::instance()->windowHeight);
 
-    m_view = new QuickView(this);
-    m_view->setResizeMode(QQuickView::ResizeMode::SizeViewToRootObject);
-    m_view->setMinimumWidth(1600);
-    m_view->setMinimumHeight(900);
+    // m_debugMenu = new DebugMenu(this);
+    // m_debugMenu->show();
 
-    m_sceneFBOItem = new FboInSGRenderer();
-
-    QQmlContext *root = m_view->engine()->rootContext();
-    root->setContextProperty("ClientBackend", this);
-    root->setContextProperty("sceneFBOItem", m_sceneFBOItem);
-
-    //m_view->engine()->addImportPath(QString("../client/gui/assets/qml"));
-    m_view->setSource(QUrl("../client/gui/assets/qml/main.qml"));
-    m_view->show();
-
-
-    //glClearColor(0.f, .5f, 0.f, 1.0f);
-//    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-    //FIXME:
-//    glViewport(0, 0, Settings::instance()->windowWidth, Settings::instance()->windowHeight);
-
-    // call this ONLY when linking with FreeImage as a static library
-
-//    m_gui = GUI::instance();
-//    m_mainMenu = new MainMenu(this);
-//    m_mainMenu->showMainMenu();
-//
-//    m_debugMenu = new DebugMenu(this);
-//    m_debugMenu->show();
-
-//dws    std::stringstream ss;
-//    ss << "Player";
-//    std::random_device device;
-//    std::mt19937 rand(device());
-//    std::uniform_int_distribution<> distribution(0, INT_MAX);
-//
-//    ss << distribution(rand);
-//
-//    startMultiplayerHost(ss.str());
     Debug::log(Debug::ImportantArea) << "CLIENT INIT END!";
 }
 
@@ -170,32 +127,11 @@ void Client::tickLogicThread()
 
 void Client::initGL()
 {
-//    Debug::log(Debug::Area::StartupArea) << "SDL on platform: " << SDL_GetPlatform();
-//
-//    SDL_version compiled;
-//    SDL_version linked;
-//    SDL_VERSION(&compiled);
-//    SDL_GetVersion(&linked);
-//
 //    Debug::log(Debug::Area::StartupArea) << "Compiled against SDL version: " << int(compiled.major) << "." << int(compiled.minor) << "-" << int(compiled.patch) <<
 //                                         " Running (linked) against version: " << int(linked.major) << "." << int(linked.minor) << "-" << int(linked.patch);
 //
-//    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) != 0) {
-//        std::string error = SDL_GetError();
-//        Debug::fatal(false, Debug::Area::ImportantArea, "failure to initialize SDL error: " + error);
-//    }
-//
 //    m_window = SDL_CreateWindow("Ore Infinium", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 //                                Settings::instance()->windowWidth, Settings::instance()->windowHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
-//
-//    if (!m_window) {
-//        Debug::checkSDLError();
-//    }
-//
-//    int ret = IMG_Init(IMG_INIT_PNG);
-//    assert(ret != 0);
-//
-////    glewExperimental = GL_TRUE;
 //    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
 //    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
 //    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
@@ -210,26 +146,7 @@ void Client::initGL()
 //     * You may need to change this to 16 or 32 for your system */
 //    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 //    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-//
-//    //TODO: we'll probably need some extension at some point in time..
-//    //SDL_GL_ExtensionSupported();
-//
-//    m_GLcontext = SDL_GL_CreateContext(m_window);
-//    Debug::assertf(m_GLcontext != nullptr, "SDL GL Context creation failure! Context nullptr.");
-//    Debug::checkGLError();
-//
-//    //FIXME: doesn't do shit
-//    SDL_GL_SetSwapInterval(1);
-//
-//    Debug::checkSDLError();
-//    Debug::checkGLError();
-//
-//    SDL_ShowCursor(0);
-//
-//    Debug::checkSDLError();
-//    Debug::checkGLError();
-//
-    glewExperimental = true;
+   glewExperimental = true;
 
     int retGLEW = glewInit();
 
@@ -273,42 +190,27 @@ void Client::initGL()
 
     Debug::fatal(enet_initialize() == 0, Debug::Area::ImportantArea, "An error occurred during ENet init (network init failure");
 
-}
-
-void Client::setT(qreal t)
-{
-    if (t == m_t) {
-        return;
-    }
-
-    m_t = t;
-    emit tChanged();
-
-    if (window()) {
-        window()->update();
-    }
+    Debug::log(Debug::Area::StartupArea) << "initGL finished";
 }
 
 void Client::handleWindowChanged(QQuickWindow *win)
 {
     if (win) {
+        Debug::log(Debug::ImportantArea) << "windowChanged slot hit";
         // Connect the beforeRendering signal to our paint function.
         // Since this call is executed on the rendering thread it must be
         // a Qt::DirectConnection
-        connect(win, SIGNAL(beforeRendering()), this, SLOT(paintUnder()), Qt::DirectConnection);
-        connect(win, SIGNAL(beforeSynchronizing()), this, SLOT(sync()), Qt::DirectConnection);
+//        connect(win, SIGNAL(beforeRendering()), this, SLOT(paintUnder()), Qt::DirectConnection);
+ //       connect(win, SIGNAL(beforeSynchronizing()), this, SLOT(sync()), Qt::DirectConnection);
 
         // If we allow QML to do the clearing, they would clear what we paint
         // and nothing would show.
-        win->setClearBeforeRendering(false);
+//        win->setClearBeforeRendering(false);
     }
 }
 
-void Client::paintUnder()
+void Client::paint()
 {
-    assert(window());
-    assert(window()->openglContext());
-
     if (!m_firstGLInit) {
         Debug::log(Debug::ImportantArea) << "first paintunder, not init'd perform initGL";
         m_firstGLInit = true;
@@ -317,10 +219,11 @@ void Client::paintUnder()
         //init logic thread now
 //        m_clientTickLogicThread = new std::thread(&Client::tickLogicThread, this);
         //FIXME: not needed move into initGL if not there already.
-        glViewport(0, 0, window()->width(), window()->height());
-        Debug::log(Debug::ImportantArea) << "WIN HEIGHT, W: " << window()->height() << " : " << window()->width();
+        glViewport(0, 0, m_view->width(), m_view->height());
+        Debug::log(Debug::ImportantArea) << "WIN HEIGHT, W: " << m_view->height() << " : " << m_view->width();
 
-        Debug::log(Debug::ImportantArea) << "paintunder THREAD ID: " << QThread::currentThreadId();
+        Debug::log(Debug::ImportantArea) << "Client paint THREAD ID: " << QThread::currentThreadId();
+
         if (Settings::instance()->startupFlags() & Settings::PlayNowStartupFlag) {
             emit playNowStarted();
             startMultiplayerHost("Dingo");
@@ -332,9 +235,7 @@ void Client::paintUnder()
         glClearColor(0, 0, 0.2, 1);
         //    glClear(GL_COLOR_BUFFER_BIT);
 
-        //       connect(window()->openglContext(), SIGNAL(aboutToBeDestroyed()),
-        //              this, SLOT(cleanup()), Qt::DirectConnection);
-        assert(window()->openglContext());
+        assert(m_view->openglContext());
 
         double frameTime = 0.0;
         if (m_frameCount == 0) {
@@ -362,7 +263,6 @@ void Client::paintUnder()
 
 void Client::sync()
 {
-    m_thread_t = m_t;
 }
 
 void Client::cleanup()
@@ -509,7 +409,6 @@ void Client::render(double frameTime)
 //        }
 //    }
 //
-//    SDL_GL_SwapWindow(m_window);
 }
 
 void Client::tick(double frameTime)

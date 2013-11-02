@@ -21,19 +21,26 @@
 
 #include <google/protobuf/stubs/common.h>
 
-#include "client/client.h"
-#include "server/server.h"
+#include "src/client/client.h"
+#include "src/client/FboInSGRenderer.h"
+#include "src/client/gui/optionsdialogbackend.h"
+#include "src/server/server.h"
 
 #include "src/fluids.h"
+#include "quickview.h"
 
 #include "settings/settings.h"
 
-#include <iostream>
-#include <sstream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string>
-#include <fstream>
+//#include <iostream>
+//#include <sstream>
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <string>
+//#include <fstream>
+//
+#include <QQmlContext>
+#include <QQuickView>
+#include <QQmlEngine>
 
 #include <vector>
 
@@ -48,6 +55,11 @@ Game::Game()
 
 Game::~Game()
 {
+    delete m_sceneFBOItem;
+
+    m_view->close();
+    delete m_view;
+
 //    delete m_world;
     enet_deinitialize();
     // Optional:  Delete all global objects allocated by libprotobuf.
@@ -71,7 +83,44 @@ void Game::init()
     Block::initBlockTypes();
     Fluids::initFluidTypes();
 
-    m_client = new Client();
+
+    ////////////////////
+    qmlRegisterType<Client>("OpenGLUnderQML", 1, 0, "Client");
+    qmlRegisterType<OptionsDialogBackend>("OptionsDialogBackend", 1, 0, "OptionsDialogBackend");
+    qmlRegisterType<FboInSGRenderer>("SceneGraphRendering", 1, 0, "Renderer");
+
+    m_view = new QuickView(m_client);
+    m_view->setResizeMode(QQuickView::ResizeMode::SizeViewToRootObject);
+    m_view->setMinimumWidth(1600);
+    m_view->setMinimumHeight(900);
+
+//    root->setContextProperty("sceneFBOItem", m_sceneFBOItem);
+
+    //m_view->engine()->addImportPath(QString("../client/gui/assets/qml"));
+
+    QQmlEngine* engine = m_view->engine();
+
+    m_view->setSource(QUrl("../client/gui/assets/qml/main.qml"));
+    m_view->show();
+
+    QQmlContext* root = m_view->engine()->rootContext();
+    QQuickItem* rootObject = m_view->rootObject();
+
+    //    QQmlEngine engine;
+    //    QQmlComponent component(&engine,
+    //                            QUrl::fromLocalFile("MyItem.qml"));
+    //    QObject *object = component.create();
+
+    m_client = new Client(m_view);
+
+    root->setContextProperty("ClientBackend", m_client);
+
+    QObject* obj = rootObject->findChild<QObject*>("renderer");
+    assert(obj);
+
+    m_sceneFBOItem = qobject_cast<FboInSGRenderer*>(obj);
+    assert(m_sceneFBOItem);
+
 
     if (Settings::instance()->startupFlags() & Settings::StartupFlags::WorldViewerStartupFlag) {
         m_client->enableWorldViewing();
@@ -90,9 +139,20 @@ void Game::init()
     }
 
     m_client->init();
+
+    connect(m_sceneFBOItem, SIGNAL(renderCalled()), this, SLOT(render()), Qt::ConnectionType::DirectConnection);
+
+//    connect(node, SIGNAL(renderCalled()), this, SIGNAL(renderCalled()));
+//    assert(0);
 }
 
 void Game::shutdown()
 {
     exit(0);
+}
+
+void Game::render()
+{
+    Debug::log(Debug::ImportantArea) << "game::render called";
+    m_client->paint();
 }

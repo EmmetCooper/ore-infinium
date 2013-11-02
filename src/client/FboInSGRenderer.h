@@ -10,6 +10,9 @@ class FboInSGRenderer : public QQuickItem
 public:
     FboInSGRenderer();
 
+signals:
+    void renderCalled();
+
 protected:
     QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *);
 };

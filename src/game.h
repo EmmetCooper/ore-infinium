@@ -22,25 +22,36 @@
 #include <stdlib.h>
 
 #include <string>
+#include <QObject>
 
+class QuickView;
+class FboInSGRenderer;
 class Server;
 class Client;
 
-class Game
+class Game : public QObject
 {
+    Q_OBJECT
+
 public:
     Game();
     ~Game();
 
     void init();
 
-private:
+private slots:
+    void render();
 
+private:
     void abort_game(const char* message);
     void shutdown();
 
+    QuickView* m_view = nullptr;
+
     Client* m_client = nullptr;
     Server* m_server = nullptr;
+
+    FboInSGRenderer* m_sceneFBOItem = nullptr;
 
     bool m_running = true;
 };

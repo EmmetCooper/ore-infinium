@@ -3,7 +3,9 @@
 #include <QtGui/QOpenGLFramebufferObject>
 
 #include <QtQuick/QQuickWindow>
-#include <qsgsimpletexturenode.h>
+#include <QtQuick/QSGSimpleTextureNode>
+
+#include <src/debug.h>
 
 class TextureNode : public QObject, public QSGSimpleTextureNode
 {
@@ -15,6 +17,7 @@ public:
         , m_texture(0)
         , m_window(window)
     {
+        Debug::log(Debug::ImportantArea) << "TextureNode ctor..";
         connect(m_window, SIGNAL(beforeRendering()), this, SLOT(renderFBO()));
     }
 
@@ -24,9 +27,14 @@ public:
         delete m_fbo;
     }
 
+signals:
+    void renderCalled();
+
 public slots:
     void renderFBO()
     {
+        Debug::log(Debug::ImportantArea) << "renderFBO called..";
+
         QSize size = rect().size().toSize();
 
         if (!m_fbo) {
@@ -48,31 +56,41 @@ public slots:
 
         m_fbo->bindDefault();
 
+        emit renderCalled();
+
         m_window->update();
     }
 
 private:
-    QOpenGLFramebufferObject *m_fbo;
-    QSGTexture *m_texture;
-    QQuickWindow *m_window;
-
-//    LogoRenderer *m_logoRenderer;
+    QOpenGLFramebufferObject* m_fbo;
+    QSGTexture* m_texture;
+    QQuickWindow* m_window;
 };
 
 FboInSGRenderer::FboInSGRenderer()
 {
+    Debug::log(Debug::ImportantArea) << "FboInSGRenderer ctor..";
+
+    setProperty("id", QVariant("renderer"));
+    setObjectName("renderer");
+
     setFlag(ItemHasContents, true);
 }
 
-QSGNode *FboInSGRenderer::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
+QSGNode *FboInSGRenderer::updatePaintNode(QSGNode* oldNode, UpdatePaintNodeData* data)
 {
+    Debug::log(Debug::ImportantArea) << "updatePaintNode called..";
+
     // Don't bother with resize and such, just recreate the node from scratch
     // when geometry changes.
-    if (oldNode)
+    if (oldNode) {
         delete oldNode;
+    }
 
     TextureNode *node = new TextureNode(window());
     node->setRect(boundingRect());
+
+    connect(node, SIGNAL(renderCalled()), this, SIGNAL(renderCalled()), Qt::ConnectionType::DirectConnection);
 
     return node;
 }

@@ -37,6 +37,7 @@
 #include <mutex>
 #include <thread>
 
+class QQuickView;
 class FboInSGRenderer;
 struct cpSpace;
 class DebugSettings;
@@ -55,10 +56,6 @@ class QQuickWindow;
 class Client : public QQuickItem
 {
     Q_OBJECT
-    Q_PROPERTY(qreal t READ t WRITE setT NOTIFY tChanged)
-
-    qreal t() const { return m_t; }
-    void setT(qreal t);
 
 public:
 
@@ -66,10 +63,9 @@ public:
         return DEFAULT_PORT;
     }
 
+    void paint();
 
 signals:
-    void tChanged();
-
     /**
      * for debug, but we still need to hide the main menu,
      * which is why qml hooks onto this signal
@@ -77,7 +73,6 @@ signals:
     void playNowStarted();
 
 public slots:
-    void paintUnder();
     void cleanup();
     void sync();
 
@@ -88,8 +83,6 @@ public slots:
     Q_INVOKABLE void startMultiplayerHostSlot(const QString& playerName, int port);
     Q_INVOKABLE void startMultiplayerJoinSlot(const QString& playerName, const QString& address, int port);
     Q_INVOKABLE void exitClicked();
-
-
     //-------------------
 
 private slots:
@@ -99,12 +92,10 @@ private:
     QTime m_time;
     int m_frameCount = 0;
 
-    qreal m_t = 0.0;
-    qreal m_thread_t = 0.0;
     //FIXME: ////////////////////////////////////////////////// UGLY, REFACTOR
 
 public:
-    Client();
+    Client(QQuickView* view);
     ~Client();
 
     void startSinglePlayer(const std::string& playername);
@@ -250,9 +241,8 @@ private:
 
     bool m_firstGLInit = false;
 
-    QuickView* m_view = nullptr;
-
-    FboInSGRenderer* m_sceneFBOItem = nullptr;
+    //pointer to the parent (qquickview)
+    QQuickView* m_view = nullptr;
 
 private:
     ENetHost* m_client = nullptr;
