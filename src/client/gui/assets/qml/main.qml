@@ -10,6 +10,16 @@ import QtQuick.Layouts 1.0
 Item {
     id: main
 
+    /**
+     *
+     * NOTE: at the top so it's underneath everything in z
+     *instantiation order (because qml reads from top of file to end of file, and z increases as it gets further down)..
+     */
+    Renderer {
+        id: renderer
+        anchors.fill: parent
+    }
+
     Loader {
         id: mainMenuLoader
         anchors.fill: parent
@@ -135,11 +145,6 @@ Item {
     //FIXME: gynormous hack, strip win size out into C++
     width: 1600
     height: 900
-
-    Renderer {
-        id: renderer
-        anchors.fill: parent
-    }
 
 //
 //    Client {
