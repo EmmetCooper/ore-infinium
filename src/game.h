@@ -47,8 +47,6 @@ public:
         m_glFBO = fbo;
     }
 
-
-
 private slots:
     void render();
 

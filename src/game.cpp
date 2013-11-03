@@ -90,6 +90,8 @@ void Game::init()
     qmlRegisterType<OptionsDialogBackend>("OptionsDialogBackend", 1, 0, "OptionsDialogBackend");
     qmlRegisterType<FboInSGRenderer>("SceneGraphRendering", 1, 0, "Renderer");
 
+    m_client = new Client();
+
     m_view = new QuickView(m_client);
     m_view->setResizeMode(QQuickView::ResizeMode::SizeViewToRootObject);
     m_view->setMinimumWidth(1600);
@@ -101,7 +103,6 @@ void Game::init()
 
     QQmlEngine* engine = m_view->engine();
 
-    m_client = new Client(m_view);
 
     m_view->setSource(QUrl("../client/gui/assets/qml/main.qml"));
     m_view->show();

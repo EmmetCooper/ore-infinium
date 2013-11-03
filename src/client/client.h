@@ -103,7 +103,7 @@ private:
     //FIXME: ////////////////////////////////////////////////// UGLY, REFACTOR
 
 public:
-    Client(QQuickView* view);
+    Client();
     ~Client();
 
     void startSinglePlayer(const std::string& playername);
@@ -245,9 +245,6 @@ private:
     bool m_worldViewingEnabled = false;
 
     bool m_firstGLInit = false;
-
-    //pointer to the parent (qquickview)
-    QuickView* m_view = nullptr;
 
     double m_frameTime = 0.0;
 

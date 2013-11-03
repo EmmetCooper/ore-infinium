@@ -370,7 +370,7 @@ void Server::sendLargeWorldChunk(ENetPeer* peer)
 
     player->lastLoadedChunk = glm::ivec2(centerX, centerY);
 
-    Debug::log(Debug::NetworkServerInitialArea) << " INITIAL CHUNK: startx: " << startX << " starty: " << startY << "end x: " << endX << " endY: " << endY;
+    Debug::log(Debug::NetworkServerInitialArea) << " INITIAL CHUNK: startx: " << startX << " endX: " << endX << " starty: " << startY << " endY: " << endY;
 
     message.set_startx(startX);
     message.set_endx(endX);

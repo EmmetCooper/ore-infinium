@@ -55,8 +55,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_events.h>
 
-Client::Client(QQuickView* view)
-: m_view(view)
+Client::Client()
 {
 }
 
@@ -219,8 +218,9 @@ void Client::paint()
         initGL();
 
         //FIXME: not needed move into initGL if not there already.
-        glViewport(0, 0, m_view->width(), m_view->height());
-        Debug::log(Debug::ImportantArea) << "WIN HEIGHT, W: " << m_view->height() << " : " << m_view->width();
+        glViewport(0, 0, Settings::instance()->windowWidth, Settings::instance()->windowHeight);
+
+        Debug::log(Debug::ImportantArea) << "WIN HEIGHT, W: " << Settings::instance()->windowWidth << " H: " << Settings::instance()->windowHeight;
 
         if (Settings::instance()->startupFlags() & Settings::PlayNowStartupFlag) {
             emit playNowStarted();
@@ -229,8 +229,6 @@ void Client::paint()
 
     } else {
         glClearColor(0.5, 0.0, 0.0, 1.0);
-
-        assert(m_view->openglContext());
 
         double frameTime = 0.0;
         if (m_frameCount == 0) {
