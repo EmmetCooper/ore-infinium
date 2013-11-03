@@ -218,13 +218,9 @@ void Client::paint()
         m_firstGLInit = true;
         initGL();
 
-        //init logic thread now
-//        m_clientTickLogicThread = new std::thread(&Client::tickLogicThread, this);
         //FIXME: not needed move into initGL if not there already.
         glViewport(0, 0, m_view->width(), m_view->height());
         Debug::log(Debug::ImportantArea) << "WIN HEIGHT, W: " << m_view->height() << " : " << m_view->width();
-
-        Debug::log(Debug::ImportantArea) << "Client paint THREAD ID: " << QThread::currentThreadId();
 
         if (Settings::instance()->startupFlags() & Settings::PlayNowStartupFlag) {
             emit playNowStarted();
@@ -233,7 +229,6 @@ void Client::paint()
 
     } else {
         glClearColor(0.5, 0.0, 0.0, 1.0);
-        //    glClear(GL_COLOR_BUFFER_BIT);
 
         assert(m_view->openglContext());
 
@@ -242,6 +237,9 @@ void Client::paint()
             m_time.start();
         } else {
             frameTime = (m_time.elapsed() / static_cast<double>(m_frameCount));
+            m_frameTime = frameTime;
+
+            emit frameTimeChanged(frameTime);
             //printf("ms/frame is %f ms\n", frameTime);
         }
 

@@ -155,6 +155,5 @@ void Game::shutdown()
 
 void Game::render()
 {
-    Debug::log(Debug::ImportantArea) << "game::render called";
     m_client->paint();
 }

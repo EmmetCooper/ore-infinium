@@ -19,7 +19,6 @@ public:
         , m_texture(0)
         , m_window(window)
     {
-        Debug::log(Debug::ImportantArea) << "TextureNode ctor..";
         connect(m_window, SIGNAL(beforeRendering()), this, SLOT(renderFBO()));
     }
 
@@ -35,8 +34,6 @@ signals:
 public slots:
     void renderFBO()
     {
-        Debug::log(Debug::ImportantArea) << "renderFBO called..";
-
         QSize size = rect().size().toSize();
 
         if (!m_fbo) {
@@ -52,9 +49,7 @@ public slots:
             int res = -1;
 
             glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &res);
-            Debug::log(Debug::ImportantArea) << "Game Scene FRAMEBUFFER ID IS (for rendering beneath qtquick): " << res;
             Game::setGLFBO(res);
-            Debug::log(Debug::ImportantArea) << "Game Scene FRAMEBUFFER ID IS (for rendering beneath qtquick): " << Game::GLFBO();
 
             m_texture = m_window->createTextureFromId(m_fbo->texture(), size);
             setTexture(m_texture);
@@ -80,8 +75,6 @@ private:
 
 FboInSGRenderer::FboInSGRenderer()
 {
-    Debug::log(Debug::ImportantArea) << "FboInSGRenderer ctor..";
-
     setProperty("id", QVariant("renderer"));
     setObjectName("renderer");
 
@@ -90,8 +83,6 @@ FboInSGRenderer::FboInSGRenderer()
 
 QSGNode *FboInSGRenderer::updatePaintNode(QSGNode* oldNode, UpdatePaintNodeData* data)
 {
-    Debug::log(Debug::ImportantArea) << "updatePaintNode called..";
-
     // Don't bother with resize and such, just recreate the node from scratch
     // when geometry changes.
     if (oldNode) {

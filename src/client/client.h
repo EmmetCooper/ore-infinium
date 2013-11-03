@@ -36,6 +36,7 @@
 #include <atomic>
 #include <mutex>
 #include <thread>
+#include <boost/concept_check.hpp>
 
 class QQuickView;
 class FboInSGRenderer;
@@ -56,8 +57,13 @@ class QQuickWindow;
 class Client : public QQuickItem
 {
     Q_OBJECT
+    Q_PROPERTY(double frameTime READ frameTime NOTIFY frameTimeChanged);
 
 public:
+
+    double frameTime() {
+        return m_frameTime;
+    }
 
      Q_INVOKABLE int defaultPort() {
         return DEFAULT_PORT;
@@ -71,6 +77,8 @@ signals:
      * which is why qml hooks onto this signal
      */
     void playNowStarted();
+
+    void frameTimeChanged(double frameTime);
 
 public slots:
     void cleanup();
@@ -243,6 +251,8 @@ private:
 
     //pointer to the parent (qquickview)
     QQuickView* m_view = nullptr;
+
+    double m_frameTime = 0.0;
 
 private:
     ENetHost* m_client = nullptr;
