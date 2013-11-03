@@ -687,6 +687,12 @@ void Client::sendChatMessage(const std::string& message)
 void Client::sendPlayerMovement()
 {
     QMutexLocker lock(&m_playerInputLock);
+
+    // ensure it's only between -1 and 1. The server has protections to prevent this, as this
+    // would be used maliciously, but this is to ensure there are no regressions client-side
+//    assert(m_playerInputDirectionX >= -1 && m_playerInputDirectionX <= 1);
+//    assert(m_playerInputDirectionY >= -1 && m_playerInputDirectionY <= 1);
+
     Debug::log(Debug::ImportantArea) << "SENDING PLAYER INPUT, input x: " << m_playerInputDirectionX << " Y : " << m_playerInputDirectionY;
 
     Debug::log(Debug::ImportantArea) << "SENDING PLAYER INPUT, input x: " << m_playerInputDirectionX << " Y : " << m_playerInputDirectionY;

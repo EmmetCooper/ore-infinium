@@ -286,6 +286,14 @@ void Server::receivePlayerMove(const std::string& packetContents, Entities::Play
     PacketBuf::PlayerMoveFromClient message;
     Packet::deserialize(packetContents, &message);
 
+    int32_t x = message.directionx();
+    int32_t y = message.directiony();
+
+    if ((x >= -1 && x <= 1 && y >= -1 && y <= 1) == false) {
+        Debug::log(Debug::NetworkServerContinuousArea) << "client sent malicious player move packet (direction x or y is not in bounds of -1 to 1, integer). Kicking client.";
+
+    }
+
     player->move(message.directionx(), message.directiony());
     if (message.jump()) {
         player->jump();
@@ -434,7 +442,7 @@ void Server::sendWorldChunk(Chunk* chunk)
 ENetPeer* Server::peerForPlayer(Entities::Player* player)
 {
     ENetPeer* peer = nullptr;
-    for (auto c : m_clients) {
+    for (auto& c : m_clients) {
         if (c.second == player) {
             peer = c.first;
             break;
