@@ -379,16 +379,14 @@ void World::renderCrosshair()
 
 void World::update(double elapsedTime)
 {
-    //FIXME: MAKE IT CENTER ON THE CENTER OF THE PLAYER SPRITE
     //only occurs on client side, obviously the server doesn't need to do this stuff
     if (m_client) {
         m_sky->update(elapsedTime);
     }
 
     if (m_server) {
-        for (auto * player : m_players) {
+        for (auto* player : m_players) {
             if (player->mouseLeftButtonHeld()) {
-
                 handlePlayerLeftMouse(player);
             }
         }
@@ -415,7 +413,7 @@ void World::update(double elapsedTime)
     }
 
     //NOTE: players are not exactly considered entities. they are, but they aren't
-    for (Entity * currentEntity : m_entities) {
+    for (Entity* currentEntity : m_entities) {
         currentEntity->update(elapsedTime, this);
         if (m_server) {
             if (currentEntity->dirtyFlags() & Entity::DirtyFlags::PositionDirty) {
@@ -425,8 +423,11 @@ void World::update(double elapsedTime)
         }
     }
 
-    for (Entities::Player * player : m_players) {
+    for (Entities::Player* player : m_players) {
         player->update(elapsedTime, this);
+
+        assert(player->position().x >= 0.0);
+        assert(player->position().y >= 0.0);
 
         if (m_server) {
             if (player->dirtyFlags() & Entity::DirtyFlags::PositionDirty) {

@@ -40,8 +40,10 @@ public slots:
 
             QOpenGLFramebufferObjectFormat format;
             format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
+
             glDisable(GL_DEPTH_TEST);
             glDisable(GL_STENCIL_TEST);
+
             m_fbo = new QOpenGLFramebufferObject(size, format);
 
             m_fbo->bind();
@@ -57,7 +59,6 @@ public slots:
 
         m_fbo->bind();
 
-//        glViewport(0, 0, size.width(), size.height());
         glViewport(0, 0, size.width(), size.height());
 
         emit renderCalled();

@@ -441,7 +441,6 @@ void Client::drawDebugText(double frameTime)
  //   m_debugMenu->update(frameTime);
 }
 
-
 void Client::viewKeyPressed(QKeyEvent* event)
 {
 //        if (m_mainPlayer && m_peer && m_connected && m_gui->inputDemanded() == false) {
@@ -687,8 +686,8 @@ void Client::sendChatMessage(const std::string& message)
 
 void Client::sendPlayerMovement()
 {
-    Debug::log(Debug::ImportantArea) << "SENDING PLAYER INPUT, input x: " << m_playerInputDirectionX << " Y : " << m_playerInputDirectionY;
     QMutexLocker lock(&m_playerInputLock);
+    Debug::log(Debug::ImportantArea) << "SENDING PLAYER INPUT, input x: " << m_playerInputDirectionX << " Y : " << m_playerInputDirectionY;
 
     Debug::log(Debug::ImportantArea) << "SENDING PLAYER INPUT, input x: " << m_playerInputDirectionX << " Y : " << m_playerInputDirectionY;
 

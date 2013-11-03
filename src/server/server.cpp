@@ -353,10 +353,19 @@ void Server::sendLargeWorldChunk(ENetPeer* peer)
 {
     PacketBuf::Chunk message;
 
+    Debug::log(Debug::NetworkServerInitialArea) << "Server::sendLargeWorldChunk..";
+
     Entities::Player* player = m_clients[peer];
+
+    assert(player->position().x >= 0.0);
+    assert(player->position().y >= 0.0);
 
     int32_t centerX = static_cast<int32_t>(player->position().x / Block::BLOCK_SIZE);
     int32_t centerY = static_cast<int32_t>(player->position().y / Block::BLOCK_SIZE);
+
+
+    Debug::log(Debug::NetworkServerInitialArea) << "centerX: " << centerX << " Y: " << centerY;
+    Debug::log(Debug::NetworkServerInitialArea) << "player position x: " << player->position().x << " y: " << player->position().y;
 
     int32_t maxWidth = static_cast<int32_t>(MAX_VIEWPORT_WIDTH * 0.5);
     int32_t maxHeight = static_cast<int32_t>(MAX_VIEWPORT_HEIGHT * 0.5);

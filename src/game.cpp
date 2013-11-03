@@ -85,7 +85,6 @@ void Game::init()
     Block::initBlockTypes();
     Fluids::initFluidTypes();
 
-
     ////////////////////
     qmlRegisterType<OptionsDialogBackend>("OptionsDialogBackend", 1, 0, "OptionsDialogBackend");
     qmlRegisterType<FboInSGRenderer>("SceneGraphRendering", 1, 0, "Renderer");
