@@ -32,7 +32,8 @@ Camera::Camera()
     m_viewMatrix = glm::translate(glm::mat4(), glm::vec3(x, y, 0.0f));
     Debug::log(Debug::Area::ClientRendererArea) << "camera init, screen at width: " << Settings::instance()->screenResolutionWidth << " height: " << Settings::instance()->screenResolutionHeight;
 //    m_orthoMatrix = glm::ortho(0.0f, float(Settings::instance()->screenResolutionWidth), float(Settings::instance()->screenResolutionHeight), 0.0f, -1.0f, 1.0f);
-    m_orthoMatrix = glm::ortho(0.0f, float(1600.0f / PIXELS_PER_METER), float(900.0f / PIXELS_PER_METER), 0.0f, -1.0f, 1.0f);
+   // m_orthoMatrix = glm::ortho(0.0f, float(1600.0f / PIXELS_PER_METER), float(900.0f / PIXELS_PER_METER), 0.0f, -1.0f, 1.0f);
+    m_orthoMatrix = glm::ortho(0.0f, float(1600.0f / PIXELS_PER_METER), 0.0f, float(900.0f / PIXELS_PER_METER), -1.0f, 1.0f);
 }
 
 //FIXME: unused

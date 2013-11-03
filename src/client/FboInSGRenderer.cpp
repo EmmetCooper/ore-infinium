@@ -56,23 +56,18 @@ public slots:
             Game::setGLFBO(res);
             Debug::log(Debug::ImportantArea) << "Game Scene FRAMEBUFFER ID IS (for rendering beneath qtquick): " << Game::GLFBO();
 
-
-
             m_texture = m_window->createTextureFromId(m_fbo->texture(), size);
-            //m_logoRenderer = new LogoRenderer();
-            //m_logoRenderer->initialize();
             setTexture(m_texture);
         }
 
         m_fbo->bind();
 
+//        glViewport(0, 0, size.width(), size.height());
         glViewport(0, 0, size.width(), size.height());
 
         emit renderCalled();
 
         m_fbo->bindDefault();
-
-
 
         m_window->update();
     }
