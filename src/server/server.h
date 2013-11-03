@@ -109,7 +109,7 @@ private:
      * If it passes validation, it begins sending initial data from the server (world data and the like).
      *
      */
-    void receiveInitialClientData(const std::string& packetContents, ENetEvent& event);
+    void receiveInitialClientData(const std::string& packetContents, ENetPeer* peer);
     void receiveChatMessage(const std::string& packetContents, Entities::Player* player);
     void receivePlayerMove(const std::string& packetContents, Entities::Player* player);
     void receivePlayerMouseState(const std::string& packetContents, Entities::Player* player);

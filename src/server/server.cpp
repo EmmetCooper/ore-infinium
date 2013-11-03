@@ -155,15 +155,23 @@ void Server::poll()
             Debug::log(Debug::Area::NetworkServerContinuousArea) << "Peer has disconnected:  " << event.peer->address.host << " at port: " << event.peer->address.port;
             printf("%s disconnected.\n", event.peer->data);
 
+            bool found = false;
             for (auto& client : m_clients) {
                 assert(client.first);
                 assert(client.second);
                 if (client.first == event.peer) {
                     Debug::log(Debug::Area::NetworkServerContinuousArea) << "Found peer for disconnect, deleting it";
                     m_clients.erase(client.first);
+                    found = true;
                 }
             }
-            Debug::log(Debug::Area::NetworkServerContinuousArea) << "m_clients size: " << m_clients.size();
+
+            if (!found) {
+                    Debug::log(Debug::Area::NetworkServerContinuousArea) << "Did not find peer for disconnect, something must have deleted it sooner. Should be safe to ignore."
+                    << " likely scenario was that the player was kicked during pre-join";
+            }
+
+            Debug::log(Debug::Area::NetworkServerContinuousArea) << "m_clients size is now at: " << m_clients.size();
 
             // Reset client's information
             event.peer->data = NULL;
@@ -189,7 +197,7 @@ void Server::processMessage(ENetEvent& event)
     switch (packetType) {
     case Packet::FromClientPacketContents::InitialConnectionDataFromClientPacket: {
         //checking for version mismatch, can't let him connect or else we'll have assloads of problems, among other things
-        receiveInitialClientData(packetContents, event);
+        receiveInitialClientData(packetContents, event.peer);
     }
 
     case Packet::FromClientPacketContents::ChatMessageFromClientPacket:
@@ -212,66 +220,82 @@ void Server::processMessage(ENetEvent& event)
     enet_packet_destroy(event.packet);
 }
 
-void Server::receiveInitialClientData(const std::string& packetContents, ENetEvent& event)
+void Server::receiveInitialClientData(const std::string& packetContents, ENetPeer* peer)
 {
     PacketBuf::ClientInitialConnection message;
     Packet::deserialize(packetContents, &message);
 
-    Debug::log(Debug::Area::NetworkServerInitialArea) << "receiving client's player name and version data. Name: " << message.playername() << " version major: " << message.versionmajor() << " minor: " << message.versionminor();
+    const int32_t major = message.versionmajor();
+    const int32_t minor = message.versionminor();
 
-    if (message.versionmajor() != ore_infinium_VERSION_MAJOR || message.versionminor() != ore_infinium_VERSION_MINOR) {
-        //NOTE: player has not yet been created, only a peer exists
-        QString("Player kicked for version mismatch.");
-        //            kickClient(event.peer, , result);
+    const QString playerName = QString::fromStdString(message.playername());
+
+    Debug::log(Debug::Area::NetworkServerInitialArea) << "receiving client's player name and version data. Name: " << message.playername()
+    << " version major: " << major << " minor: " << minor << " note our server version is: major: " << ore_infinium_VERSION_MAJOR << " minor: " << ore_infinium_VERSION_MINOR;
+
+    if (major != ore_infinium_VERSION_MAJOR || minor != ore_infinium_VERSION_MINOR) {
+        const QString clientVersion = QString::number(major) + "." + QString::number(minor);
+        const QString serverVersion = QString::number(ore_infinium_VERSION_MAJOR) + "." + QString::number(ore_infinium_VERSION_MINOR);
+
+        //NOTE: player has not yet been created, only a peer exists, no need to delete a player
+        const QString reason = "Player pre-join kicked for version mismatch. Client version: " + clientVersion + " Server version: " + serverVersion;
+
+        kickClient(peer, reason, Packet::ConnectionEventType::DisconnectedVersionMismatch);
         return;
     }
 
     //trying to trick us into using a blank name
     //TODO: perform other player name validation (e.g. only certain chars allowed), sanitize it.
-    if (message.playername().empty()) {
-        //NOTE: player has not yet been created, only a peer exists
-        kickClient(event.peer, QString("Player kicked for invalid player name"), Packet::ConnectionEventType::DisconnectedInvalidPlayerName);
+    //TODO: standardize the client and server side checks? otherwise code dupes..
+    if (playerName.isEmpty()) {
+        //NOTE: player has not yet been created, only a peer exists, no need to delete a player
+        kickClient(peer, QString("Player pre-join kicked for invalid player name"), Packet::ConnectionEventType::DisconnectedInvalidPlayerName);
         return;
     }
 
     // all initial validation checks have passed to connect the player to the actual server..begin doing so, and then sending initial data
-    m_clients[event.peer] = createPlayer(message.playername());
+    m_clients[peer] = createPlayer(playerName.toStdString());
 
     //he's good to go, validation succeeded, tell everyone, including himself that he joined
     for (auto& client : m_clients) {
-        sendInitialPlayerData(client.first, m_clients[event.peer]);
+        sendInitialPlayerData(client.first, m_clients[peer]);
     }
 
     for (auto& client : m_clients) {
         // now we have to send this new client every player we know about so far, except not himself (don't send his own player, obviously,
         // he already knows what it is) since we already sent that first.
-        if (client.first != event.peer) {
-            sendInitialPlayerData(event.peer, client.second);
+        if (client.first != peer) {
+            sendInitialPlayerData(peer, client.second);
         }
     }
 
-    sendInitialPlayerDataFinished(event.peer);
+    sendInitialPlayerDataFinished(peer);
     //HACK: FIXME:  unneeded            sendLargeWorldChunk(event.peer);
 
     // tell our (this) player/client what his quickbar inventory contains (send all items within it)
-    uint8_t maxIndex = m_clients[event.peer]->quickBarInventory()->maxEquippedSlots();
+    uint8_t maxIndex = m_clients[peer]->quickBarInventory()->maxEquippedSlots();
     for (uint8_t index = 0; index < maxIndex; ++index) {
-        sendPlayerQuickBarInventory(m_clients[event.peer], index);
+        sendPlayerQuickBarInventory(m_clients[peer], index);
     }
 
-    sendWorldTime(event.peer);
-    sendInitialVegetationSpawn(event.peer);
+    sendWorldTime(peer);
+    sendInitialVegetationSpawn(peer);
 }
 
 void Server::kickPlayer(Entities::Player* player, const QString& reason, uint32_t disconnectFlag)
 {
+    ENetPeer* peer = peerForPlayer(player);
+    m_clients.erase(peer);
+    m_world->removePlayer(player);
+    delete player;
 
+    kickClient(peer, reason, disconnectFlag);
 }
-
 
 void Server::kickClient(ENetPeer* peer, const QString& reason, uint32_t disconnectFlag)
 {
-//    enet_peer_disconnect_now(event.peer, result);
+    Debug::log(Debug::NetworkServerContinuousArea) << "kicking client, reason: " << reason.toStdString();
+    enet_peer_disconnect_now(peer, disconnectFlag);
 }
 
 void Server::receiveChatMessage(const std::string& packetContents, Entities::Player* player)
@@ -293,8 +317,8 @@ void Server::receivePlayerMove(const std::string& packetContents, Entities::Play
     int32_t y = message.directiony();
 
     if ((x >= -1 && x <= 1 && y >= -1 && y <= 1) == false) {
-        Debug::log(Debug::NetworkServerContinuousArea) << "client sent malicious player move packet (direction x or y is not in bounds of -1 to 1, integer). Kicking client.";
-
+        const QString reason = "Client sent malicious player move packet (direction x or y is not in bounds of -1 to 1, integer). Kicking client.";
+        kickPlayer(player, reason, Packet::ConnectionEventType::DisconnectedMaliciousIntent);
     }
 
     player->move(message.directionx(), message.directiony());

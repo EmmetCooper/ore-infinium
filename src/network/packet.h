@@ -94,7 +94,9 @@ public:
         None = 0,
         //client version does not match server version, forceful disconnect.
         DisconnectedVersionMismatch,
-        DisconnectedInvalidPlayerName
+        DisconnectedInvalidPlayerName,
+        // not guaranteed to be malicious, but very likely. (or it could just be a regression)
+        DisconnectedMaliciousIntent
     };
 
     enum class PacketCompression
