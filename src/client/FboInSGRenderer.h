@@ -2,6 +2,7 @@
 #define FBOINSGRENDERER_H
 
 #include <QQuickItem>
+#include <QTimer>
 
 class FboInSGRenderer : public QQuickItem
 {
@@ -14,7 +15,10 @@ signals:
     void renderCalled();
 
 protected:
-    QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *);
+    QSGNode* updatePaintNode(QSGNode *, UpdatePaintNodeData *);
+
+private:
+    QTimer m_timer;
 };
 
 #endif

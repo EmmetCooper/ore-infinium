@@ -398,7 +398,7 @@ void Client::render(double frameTime)
 //
 //        if (limiter > 10) {
 //            limiter = 0;
-//            Debug::log(Debug::ImportantArea) << "FPS: " << (1000.0 / frameTime) << " FrameTime: " << frameTime << " ms";
+            Debug::log(Debug::ImportantArea) << "FPS: " << (1000.0 / frameTime) << " FrameTime: " << frameTime << " ms";
 //        }
 //    }
 //

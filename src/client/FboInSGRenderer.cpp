@@ -79,6 +79,9 @@ FboInSGRenderer::FboInSGRenderer()
     setObjectName("renderer");
 
     setFlag(ItemHasContents, true);
+
+    m_timer.setInterval(1.0/60.0);
+    connect(&m_timer, SIGNAL(timeout()), this, SLOT(update()));
 }
 
 QSGNode *FboInSGRenderer::updatePaintNode(QSGNode* oldNode, UpdatePaintNodeData* data)
