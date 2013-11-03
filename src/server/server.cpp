@@ -568,7 +568,7 @@ void Server::sendWorldTime(ENetPeer* peer)
 
 void Server::sendPlayerQuickBarInventory(Entities::Player* player, uint8_t index)
 {
-    Item *item = player->quickBarInventory()->item(index);
+    Item* item = player->quickBarInventory()->item(index);
 
     if (item == nullptr) {
         Debug::log(Debug::Area::ServerInventoryArea) << "warning, BAD SHIT HAPPENED, server tried sending a player's quickbar inventory but an element was nullptr, which means we didn't send as much as we should have, so the client is empty for this element index..VERY BAD SHIT";
@@ -586,13 +586,13 @@ void Server::sendPlayerQuickBarInventory(Entities::Player* player, uint8_t index
 
     switch (item->type()) {
     case Item::ItemType::Torch: {
-        Torch *torch = dynamic_cast<Torch*>(item);
+        Torch* torch = dynamic_cast<Torch*>(item);
         message.set_radius(torch->radius());
         break;
     }
 
     case Item::ItemType::Tool: {
-        Tool *tool = dynamic_cast<Tool*>(item);
+        Tool* tool = dynamic_cast<Tool*>(item);
         message.set_tooltype(tool->toolType());
         message.set_material(tool->toolMaterial());
     }
@@ -600,7 +600,7 @@ void Server::sendPlayerQuickBarInventory(Entities::Player* player, uint8_t index
 
     // search for the client associated with this player
     ENetPeer* peer = nullptr;
-    for (auto c : m_clients) {
+    for (auto& c : m_clients) {
         if (c.second == player) {
             peer = c.first;
             break;
