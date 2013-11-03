@@ -249,14 +249,6 @@ void Client::paint()
 
         m_frameCount++;
     }
-
-    //    glEnable(GL_BLEND);
-    //   glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-    //
-    //    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    //
-    //    m_program->disableAttributeArray(0);
-    //    m_program->release();
 }
 
 void Client::sync()
@@ -346,7 +338,6 @@ void Client::poll()
 void Client::render(double frameTime)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    Debug::log(Debug::ImportantArea) << "CLIENT RENDER CALLED";
 
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_STENCIL_TEST);
