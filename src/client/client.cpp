@@ -398,7 +398,7 @@ void Client::render(double frameTime)
 //
 //        if (limiter > 10) {
 //            limiter = 0;
-            Debug::log(Debug::ImportantArea) << "FPS: " << (1000.0 / frameTime) << " FrameTime: " << frameTime << " ms";
+//            Debug::log(Debug::ImportantArea) << "FPS: " << (1000.0 / frameTime) << " FrameTime: " << frameTime << " ms";
 //        }
 //    }
 //
@@ -450,12 +450,10 @@ void Client::viewKeyPressed(QKeyEvent* event)
 //            handlePlayerInput(event);
 //            m_quickBarMenu->handleEvent(event);
 //        }
-return;//HACK:
     assert(event);
 
-/////    QMutexLocker lock(&m_playerInputLock);
-    std::lock_guard<std::mutex> lock(m_lock);
-    m_test = 2;
+    QMutexLocker lock(&m_playerInputLock);
+
     switch (event->key()) {
         case Qt::Key_Left:
             //fall through
@@ -692,17 +690,9 @@ void Client::sendChatMessage(const std::string& message)
 void Client::sendPlayerMovement()
 {
     Debug::log(Debug::ImportantArea) << "SENDING PLAYER INPUT, input x: " << m_playerInputDirectionX << " Y : " << m_playerInputDirectionY;
-//    QMutexLocker lock(&m_playerInputLock);
-    std::lock_guard<std::mutex> lock(m_lock);
+    QMutexLocker lock(&m_playerInputLock);
 
     Debug::log(Debug::ImportantArea) << "SENDING PLAYER INPUT, input x: " << m_playerInputDirectionX << " Y : " << m_playerInputDirectionY;
-    if (m_test == 2) {
-        exit(1);
-    }
-
-    if (m_playerInputDirectionX != 0) {
-        assert(0);
-    }
 
     Debug::log(Debug::ImportantArea) << "SENDING PLAYER INPUT, input x: " << m_playerInputDirectionX << " Y : " << m_playerInputDirectionY;
     PacketBuf::PlayerMoveFromClient message;

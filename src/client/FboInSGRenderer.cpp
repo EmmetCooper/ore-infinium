@@ -15,9 +15,9 @@ class TextureNode : public QObject, public QSGSimpleTextureNode
 public:
 
     TextureNode(QQuickWindow *window)
-        : m_fbo(0)
-        , m_texture(0)
-        , m_window(window)
+    :   m_fbo(0),
+        m_texture(0),
+        m_window(window)
     {
         connect(m_window, SIGNAL(beforeRendering()), this, SLOT(renderFBO()));
     }
@@ -84,7 +84,7 @@ FboInSGRenderer::FboInSGRenderer()
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(update()));
 }
 
-QSGNode *FboInSGRenderer::updatePaintNode(QSGNode* oldNode, UpdatePaintNodeData* data)
+QSGNode* FboInSGRenderer::updatePaintNode(QSGNode* oldNode, UpdatePaintNodeData* data)
 {
     // Don't bother with resize and such, just recreate the node from scratch
     // when geometry changes.

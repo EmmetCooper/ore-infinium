@@ -228,13 +228,10 @@ private:
     std::thread* m_clientTickLogicThread = nullptr;
     bool m_connected = false;
 
-    int m_test = 1;
-
     /////////////////////////
     QMutex m_playerInputLock;
-    std::mutex m_lock;
-    std::atomic<int> m_playerInputDirectionX;
-    std::atomic<int> m_playerInputDirectionY;
+    int m_playerInputDirectionX;
+    int m_playerInputDirectionY;
 
     bool m_playerJumpRequested = false;
     /////////////////////////
@@ -250,7 +247,7 @@ private:
     bool m_firstGLInit = false;
 
     //pointer to the parent (qquickview)
-    QQuickView* m_view = nullptr;
+    QuickView* m_view = nullptr;
 
     double m_frameTime = 0.0;
 
