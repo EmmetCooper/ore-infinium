@@ -188,50 +188,8 @@ void Server::processMessage(ENetEvent& event)
 
     switch (packetType) {
     case Packet::FromClientPacketContents::InitialConnectionDataFromClientPacket: {
-        //checking for version mismatch, can't let him connect or else we'll have assloads of problems, among other things..
-        uint32_t result = receiveInitialClientData(packetContents, event);
-        switch (result) {
-        case Packet::ConnectionEventType::None: {
-
-            //he's good to go, validation succeeded, tell everyone, including himself that he joined
-            for (auto& client : m_clients) {
-                sendInitialPlayerData(client.first, m_clients[event.peer]);
-            }
-
-            for (auto& client : m_clients) {
-                // now we have to send this new client every player we know about so far, except not himself (don't send his own player, obviously,
-                // he already knows what it is) since we already sent that first.
-                if (client.first != event.peer) {
-                    sendInitialPlayerData(event.peer, client.second);
-                }
-            }
-
-            sendInitialPlayerDataFinished(event.peer);
-            //HACK: FIXME:  unneeded            sendLargeWorldChunk(event.peer);
-
-            // tell our (this) player/client what his quickbar inventory contains (send all items within it)
-            uint8_t maxIndex = m_clients[event.peer]->quickBarInventory()->maxEquippedSlots();
-            for (uint8_t index = 0; index < maxIndex; ++index) {
-                sendPlayerQuickBarInventory(m_clients[event.peer], index);
-            }
-
-            sendWorldTime(event.peer);
-            sendInitialVegetationSpawn(event.peer);
-
-            break;
-        }
-
-        case Packet::ConnectionEventType::DisconnectedInvalidPlayerName:
-            kickClient(event.peer, QString("Player kicked for invalid player name"), result);
-            break;
-
-        case Packet::ConnectionEventType::DisconnectedVersionMismatch: {
-            QString("Player kicked for version mismatch.");
-//            kickClient(event.peer, , result);
-            break;
-        }
-        }
-        break;
+        //checking for version mismatch, can't let him connect or else we'll have assloads of problems, among other things
+        receiveInitialClientData(packetContents, event);
     }
 
     case Packet::FromClientPacketContents::ChatMessageFromClientPacket:
@@ -254,7 +212,7 @@ void Server::processMessage(ENetEvent& event)
     enet_packet_destroy(event.packet);
 }
 
-uint32_t Server::receiveInitialClientData(const std::string& packetContents, ENetEvent& event)
+void Server::receiveInitialClientData(const std::string& packetContents, ENetEvent& event)
 {
     PacketBuf::ClientInitialConnection message;
     Packet::deserialize(packetContents, &message);
@@ -263,19 +221,46 @@ uint32_t Server::receiveInitialClientData(const std::string& packetContents, ENe
 
     if (message.versionmajor() != ore_infinium_VERSION_MAJOR || message.versionminor() != ore_infinium_VERSION_MINOR) {
         //NOTE: player has not yet been created, only a peer exists
-        return Packet::ConnectionEventType::DisconnectedVersionMismatch;
+        QString("Player kicked for version mismatch.");
+        //            kickClient(event.peer, , result);
+        return;
     }
 
     //trying to trick us into using a blank name
     //TODO: perform other player name validation (e.g. only certain chars allowed), sanitize it.
     if (message.playername().empty()) {
         //NOTE: player has not yet been created, only a peer exists
-        return Packet::ConnectionEventType::DisconnectedInvalidPlayerName;
+        kickClient(event.peer, QString("Player kicked for invalid player name"), Packet::ConnectionEventType::DisconnectedInvalidPlayerName);
+        return;
     }
 
+    // all initial validation checks have passed to connect the player to the actual server..begin doing so, and then sending initial data
     m_clients[event.peer] = createPlayer(message.playername());
 
-    return Packet::ConnectionEventType::None;
+    //he's good to go, validation succeeded, tell everyone, including himself that he joined
+    for (auto& client : m_clients) {
+        sendInitialPlayerData(client.first, m_clients[event.peer]);
+    }
+
+    for (auto& client : m_clients) {
+        // now we have to send this new client every player we know about so far, except not himself (don't send his own player, obviously,
+        // he already knows what it is) since we already sent that first.
+        if (client.first != event.peer) {
+            sendInitialPlayerData(event.peer, client.second);
+        }
+    }
+
+    sendInitialPlayerDataFinished(event.peer);
+    //HACK: FIXME:  unneeded            sendLargeWorldChunk(event.peer);
+
+    // tell our (this) player/client what his quickbar inventory contains (send all items within it)
+    uint8_t maxIndex = m_clients[event.peer]->quickBarInventory()->maxEquippedSlots();
+    for (uint8_t index = 0; index < maxIndex; ++index) {
+        sendPlayerQuickBarInventory(m_clients[event.peer], index);
+    }
+
+    sendWorldTime(event.peer);
+    sendInitialVegetationSpawn(event.peer);
 }
 
 void Server::kickPlayer(Entities::Player* player, const QString& reason, uint32_t disconnectFlag)
@@ -286,7 +271,7 @@ void Server::kickPlayer(Entities::Player* player, const QString& reason, uint32_
 
 void Server::kickClient(ENetPeer* peer, const QString& reason, uint32_t disconnectFlag)
 {
-    enet_peer_disconnect_now(event.peer, result);
+//    enet_peer_disconnect_now(event.peer, result);
 }
 
 void Server::receiveChatMessage(const std::string& packetContents, Entities::Player* player)

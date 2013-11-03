@@ -103,16 +103,13 @@ private:
     void kickClient(ENetPeer* peer, const QString& reason, uint32_t disconnectFlag);
 
     /**
-     * Checks the client for validation, which includes player name checking, version checking, etc.
+     * Processes all data that the client sends when it first connects. Checks the client for validation,
+     * which includes player name checking, version checking, etc.
      *
-     * If the client validated successfully, also creates a player and appends client and player
+     * If it passes validation, it begins sending initial data from the server (world data and the like).
      *
-     * to @sa m_clients
-     * @returns uint32_t the Packet::ConnectionEventType. which could possibly be, for instance,
-     * a mismatching version, or a non-valid player name...returns Packet::ConnectionEventType::None
-     * if nothing bad happened (it's okay to keep them connected).
      */
-    uint32_t receiveInitialClientData(const std::string& packetContents, ENetEvent& event);
+    void receiveInitialClientData(const std::string& packetContents, ENetEvent& event);
     void receiveChatMessage(const std::string& packetContents, Entities::Player* player);
     void receivePlayerMove(const std::string& packetContents, Entities::Player* player);
     void receivePlayerMouseState(const std::string& packetContents, Entities::Player* player);
