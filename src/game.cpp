@@ -46,6 +46,8 @@
 
 #include <assert.h>
 
+int Game::m_glFBO;
+
 Game::Game()
 {
     // Verify that the version of the library that we linked against is

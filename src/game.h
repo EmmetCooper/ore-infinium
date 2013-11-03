@@ -39,6 +39,16 @@ public:
 
     void init();
 
+    static int GLFBO() {
+        return m_glFBO;
+    }
+
+    static void setGLFBO(int fbo) {
+        m_glFBO = fbo;
+    }
+
+
+
 private slots:
     void render();
 
@@ -52,6 +62,8 @@ private:
     Server* m_server = nullptr;
 
     FboInSGRenderer* m_sceneFBOItem = nullptr;
+
+    static int m_glFBO;
 
     bool m_running = true;
 };

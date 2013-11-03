@@ -214,7 +214,7 @@ void LightRenderer::renderToFBO()
 void LightRenderer::renderToBackbuffer()
 {
     Debug::checkGLError();
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, Game::GLFBO());
     Debug::checkGLError();
 
     m_shaderPassthrough->bindProgram();

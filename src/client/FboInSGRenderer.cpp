@@ -6,12 +6,14 @@
 #include <QtQuick/QSGSimpleTextureNode>
 
 #include <src/debug.h>
+#include <src/game.h>
 
 class TextureNode : public QObject, public QSGSimpleTextureNode
 {
     Q_OBJECT
 
 public:
+
     TextureNode(QQuickWindow *window)
         : m_fbo(0)
         , m_texture(0)
@@ -41,7 +43,21 @@ public slots:
 
             QOpenGLFramebufferObjectFormat format;
             format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
+            glDisable(GL_DEPTH_TEST);
+            glDisable(GL_STENCIL_TEST);
             m_fbo = new QOpenGLFramebufferObject(size, format);
+
+            m_fbo->bind();
+
+            int res = -1;
+
+            glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &res);
+            Debug::log(Debug::ImportantArea) << "Game Scene FRAMEBUFFER ID IS (for rendering beneath qtquick): " << res;
+            Game::setGLFBO(res);
+            Debug::log(Debug::ImportantArea) << "Game Scene FRAMEBUFFER ID IS (for rendering beneath qtquick): " << Game::GLFBO();
+
+
+
             m_texture = m_window->createTextureFromId(m_fbo->texture(), size);
             //m_logoRenderer = new LogoRenderer();
             //m_logoRenderer->initialize();
@@ -55,6 +71,7 @@ public slots:
         emit renderCalled();
 
         m_fbo->bindDefault();
+
 
 
         m_window->update();

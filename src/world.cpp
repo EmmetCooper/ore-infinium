@@ -340,7 +340,7 @@ void World::render()
     //TODO render tilemap..
 
     if (Settings::instance()->debugRendererFlags & Debug::RenderingDebug::SkyRenderingPassDebug) {
-        m_sky->render();
+//        m_sky->render();
     }
 
     //set our view so that the player will stay relative to the view, in the center.
@@ -363,7 +363,7 @@ void World::render()
 
 //FIXME unused    m_quadTreeRenderer->render();
 
-    renderCrosshair();
+//    renderCrosshair();
 }
 
 void World::renderCrosshair()

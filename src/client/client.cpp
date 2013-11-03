@@ -232,9 +232,7 @@ void Client::paint()
         }
 
     } else {
-
-        //   glDisable(GL_DEPTH_TEST);
-        glClearColor(0, 0.1, 0, 1);
+        glClearColor(0.5, 0.0, 0.0, 1.0);
         //    glClear(GL_COLOR_BUFFER_BIT);
 
         assert(m_view->openglContext());
@@ -349,17 +347,11 @@ void Client::poll()
 
 void Client::render(double frameTime)
 {
-    static bool swap = false;
-    if (swap) {
-        glClearColor(0.1, 0.0, 0.0, 1.0);
-        swap = false;
-    } else {
-        glClearColor(0.0, 0.1, 0.0, 1.0);
-        swap = true;
-    }
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     Debug::log(Debug::ImportantArea) << "CLIENT RENDER CALLED";
+
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_STENCIL_TEST);
 
     if (m_world && m_mainPlayer) {
         m_world->render();
