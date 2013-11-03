@@ -132,7 +132,7 @@ void Server::poll()
             Debug::log(Debug::Area::NetworkServerContinuousArea) << "client count, before adding: " << m_clients.size();
 
             //NOTE: we don't actually act on it, first we wait for them to send us a packet then we validate it and if so we add it to our client list
-            //FIXME: probably should timeout if they're not validated within n seconds, that way they can't just keep piling on top of us
+           //FIXME: probably should timeout if they're not validated within n seconds, that way they can't just keep piling on top of us, which would be a trivial malicious thing to do..
 
             // in debug mode, so set an insane timeout value
             if (Settings::instance()->startupFlags() & Settings::NoTimeoutStartupFlag) {
@@ -141,10 +141,10 @@ void Server::poll()
             }
 
             //DEFAULT IS 5000
-//                event.peer->timeoutMinimum = 2000;
-//                //DEFAULT IS 30000
-//                event.peer->timeoutMaximum = 8000;
-//                event.peer->timeoutLimit = 20;
+            //event.peer->timeoutMinimum = 2000;
+            ////DEFAULT IS 30000
+            //event.peer->timeoutMaximum = 8000;
+            //event.peer->timeoutLimit = 20;
             break;
 
         case ENET_EVENT_TYPE_RECEIVE:
@@ -178,9 +178,9 @@ void Server::poll()
 
 void Server::processMessage(ENetEvent& event)
 {
-//    std::cout << "(Server) Message from client : " << event.packet->data << "\n";
-//    std::cout << "(Server) Message from client, our client->server round trip latency is: " << event.peer->roundTripTime  << "\n";
-//    std::cout << "(Server) latency is: " << event.peer->lowestRoundTripTime  << "\n";
+    //std::cout << "(Server) Message from client : " << event.packet->data << "\n";
+    //std::cout << "(Server) Message from client, our client->server round trip latency is: " << event.peer->roundTripTime  << "\n";
+    //std::cout << "(Server) latency is: " << event.peer->lowestRoundTripTime  << "\n";
 
     std::string packetContents = std::string(reinterpret_cast<char*>(event.packet->data), event.packet->dataLength);
 
@@ -188,17 +188,17 @@ void Server::processMessage(ENetEvent& event)
 
     switch (packetType) {
     case Packet::FromClientPacketContents::InitialConnectionDataFromClientPacket: {
-        //check for version mismatch, can't let him connect or else we'll have assloads of problems
+        //checking for version mismatch, can't let him connect or else we'll have assloads of problems, among other things..
         uint32_t result = receiveInitialClientData(packetContents, event);
         switch (result) {
         case Packet::ConnectionEventType::None: {
 
             //he's good to go, validation succeeded, tell everyone, including himself that he joined
-            for (auto & client : m_clients) {
+            for (auto& client : m_clients) {
                 sendInitialPlayerData(client.first, m_clients[event.peer]);
             }
 
-            for (auto & client : m_clients) {
+            for (auto& client : m_clients) {
                 // now we have to send this new client every player we know about so far, except not himself (don't send his own player, obviously,
                 // he already knows what it is) since we already sent that first.
                 if (client.first != event.peer) {
@@ -207,7 +207,7 @@ void Server::processMessage(ENetEvent& event)
             }
 
             sendInitialPlayerDataFinished(event.peer);
-//HACK: FIXME:  unneeded            sendLargeWorldChunk(event.peer);
+            //HACK: FIXME:  unneeded            sendLargeWorldChunk(event.peer);
 
             // tell our (this) player/client what his quickbar inventory contains (send all items within it)
             uint8_t maxIndex = m_clients[event.peer]->quickBarInventory()->maxEquippedSlots();
@@ -222,10 +222,12 @@ void Server::processMessage(ENetEvent& event)
         }
 
         case Packet::ConnectionEventType::DisconnectedInvalidPlayerName:
-            //fall through
+            kickClient(event.peer, QString("Player kicked for invalid player name"), result);
+            break;
 
         case Packet::ConnectionEventType::DisconnectedVersionMismatch: {
-            enet_peer_disconnect_now(event.peer, result);
+            QString("Player kicked for version mismatch.");
+//            kickClient(event.peer, , result);
             break;
         }
         }
@@ -233,7 +235,7 @@ void Server::processMessage(ENetEvent& event)
     }
 
     case Packet::FromClientPacketContents::ChatMessageFromClientPacket:
-        receiveChatMessage(packetContents, m_clients[event.peer]->name());
+        receiveChatMessage(packetContents, m_clients[event.peer]);
         break;
 
     case Packet::FromClientPacketContents::PlayerMoveFromClientPacket:
@@ -260,25 +262,41 @@ uint32_t Server::receiveInitialClientData(const std::string& packetContents, ENe
     Debug::log(Debug::Area::NetworkServerInitialArea) << "receiving client's player name and version data. Name: " << message.playername() << " version major: " << message.versionmajor() << " minor: " << message.versionminor();
 
     if (message.versionmajor() != ore_infinium_VERSION_MAJOR || message.versionminor() != ore_infinium_VERSION_MINOR) {
+        //NOTE: player has not yet been created, only a peer exists
         return Packet::ConnectionEventType::DisconnectedVersionMismatch;
     }
 
     //trying to trick us into using a blank name
+    //TODO: perform other player name validation (e.g. only certain chars allowed), sanitize it.
     if (message.playername().empty()) {
+        //NOTE: player has not yet been created, only a peer exists
         return Packet::ConnectionEventType::DisconnectedInvalidPlayerName;
     }
 
     m_clients[event.peer] = createPlayer(message.playername());
 
-    return Packet::ConnectionEventType::None;;
+    return Packet::ConnectionEventType::None;
 }
 
-void Server::receiveChatMessage(const std::string& packetContents, const std::string& playerName)
+void Server::kickPlayer(Entities::Player* player, const QString& reason, uint32_t disconnectFlag)
+{
+
+}
+
+
+void Server::kickClient(ENetPeer* peer, const QString& reason, uint32_t disconnectFlag)
+{
+    enet_peer_disconnect_now(event.peer, result);
+}
+
+void Server::receiveChatMessage(const std::string& packetContents, Entities::Player* player)
 {
     PacketBuf::ChatMessageFromClient receiveMessage;
     Packet::deserialize(packetContents, &receiveMessage);
 
-    sendChatMessage(receiveMessage.message(), playerName);
+    //TODO: sanitize chat message, only allow certain sets of chars, etc.
+
+    sendChatMessage(receiveMessage.message(), player->name());
 }
 
 void Server::receivePlayerMove(const std::string& packetContents, Entities::Player* player)

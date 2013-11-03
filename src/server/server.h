@@ -20,10 +20,13 @@
 
 #include <enet/enet.h>
 
+#include <src/player.h>
+
 #include <sstream>
 
 #include <map>
-#include <src/player.h>
+
+#include <QString>
 
 class Item;
 class World;
@@ -39,6 +42,7 @@ public:
     ~Server();
 
     void init(uint8_t maxClients, uint16_t port = DEFAULT_PORT, Client* client = nullptr);
+
     void enableWorldViewing() {
         m_worldViewingEnabled = true;
     }
@@ -69,6 +73,11 @@ public:
     void sendItemSpawned(Item* item);
     void sendQuickBarInventoryItemCountChanged(Entities::Player* player, uint8_t index, uint8_t newCount);
 
+    /**
+     * Broadcast when the time changes outside of its regular tick interval. Basically, the clients, when they first connect, get the time
+     * and assume it keeps going at a steady rate. If there's some kind of in-game item, or the admin wants to change the time,
+     * then those are the scenarios that this will be needed.
+     */
     void sendWorldTimeChanged();
 
     /**
@@ -88,16 +97,23 @@ public:
      */
     void sendLargeWorldChunkForPlayer(Entities::Player* player);
 
+    void kickPlayer(Entities::Player* player, const QString& reason, uint32_t disconnectFlag);
+
 private:
+    void kickClient(ENetPeer* peer, const QString& reason, uint32_t disconnectFlag);
+
     /**
+     * Checks the client for validation, which includes player name checking, version checking, etc.
+     *
      * If the client validated successfully, also creates a player and appends client and player
+     *
      * to @sa m_clients
      * @returns uint32_t the Packet::ConnectionEventType. which could possibly be, for instance,
      * a mismatching version, or a non-valid player name...returns Packet::ConnectionEventType::None
      * if nothing bad happened (it's okay to keep them connected).
      */
     uint32_t receiveInitialClientData(const std::string& packetContents, ENetEvent& event);
-    void receiveChatMessage(const std::string& packetContents, const std::string& playerName);
+    void receiveChatMessage(const std::string& packetContents, Entities::Player* player);
     void receivePlayerMove(const std::string& packetContents, Entities::Player* player);
     void receivePlayerMouseState(const std::string& packetContents, Entities::Player* player);
     void receiveQuickBarInventorySelectSlotRequest(const std::string& packetContents, Entities::Player* player);
@@ -109,6 +125,10 @@ private:
     void sendLargeWorldChunk(ENetPeer* peer);
     void sendWorldTime(ENetPeer* peer);
 
+
+    /**
+     * Small helper function to iterate through the list of peers and players, if all you have is a player, then find the peer.
+     */
     ENetPeer* peerForPlayer(Entities::Player* player);
 
     Entities::Player* createPlayer(const std::string& playerName);
@@ -124,6 +144,9 @@ private:
 
     Client* m_client = nullptr;
 
+    /**
+     * For debug scenarios, see settings debug flag
+     */
     bool m_worldViewingEnabled = false;
 
 private:
