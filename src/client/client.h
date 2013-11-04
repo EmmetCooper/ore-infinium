@@ -230,8 +230,8 @@ private:
 
     /////////////////////////
     QMutex m_playerInputLock;
-    int m_playerInputDirectionX;
-    int m_playerInputDirectionY;
+    int m_playerInputDirectionX = 0;
+    int m_playerInputDirectionY = 0;
 
     bool m_playerJumpRequested = false;
     /////////////////////////
