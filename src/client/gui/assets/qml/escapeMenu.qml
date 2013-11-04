@@ -4,21 +4,16 @@ import QtQuick.Controls.Styles 1.0
 
 import QtQuick.Layouts 1.0
 
-//property alias label: text.text
-
 Item {
-    id: mainMenu
+    id: escapeMenu
     width: 1024
     height: 768
 
-    signal singleplayerClicked()
-    signal multiplayerClicked()
-    signal escapePressed()
-
     focus: true
 
+    signal disconnectClicked()
+
     Keys.onEscapePressed: {
-        escapePressed()
     }
 
     Component.onCompleted: {
@@ -32,8 +27,8 @@ Item {
         z: 200
 
         onLoaded: {
-            item.x = mainMenu.width * 0.5 - (item.width * 0.5)
-            item.y = mainMenu.height * 0.5 - (item.height * 0.5)
+            item.x = escapeMenu.width * 0.5 - (item.width * 0.5)
+            item.y = escapeMenu.height * 0.5 - (item.height * 0.5)
         }
 
         Connections {
@@ -54,7 +49,7 @@ Item {
             bottomMargin: 100
         }
 
-       text: "Ore Infinium"
+       text: "Ore Infinium (in game)"
        font.pixelSize: 40
     }
 
@@ -68,21 +63,10 @@ Item {
             Layout.fillHeight: true
 
             onClicked: {
-                singleplayerClicked()
+                disconnectClicked()
             }
 
-            text: "Singleplayer"
-        }
-
-        OreButton {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-
-            onClicked: {
-                multiplayerClicked()
-            }
-
-            text: "Multiplayer"
+            text: "Disconnect"
         }
 
         OreButton {

@@ -15,7 +15,7 @@ Item {
     }
 
     Connections {
-        target: main.ClientBackend
+        target: ClientBackend
 
         onGameStarted: {
             stackView.clear()
@@ -74,6 +74,18 @@ Item {
         }
     }
 
+    Component {
+        id: escapeMenu
+
+        EscapeMenu
+        {
+            id: menu
+
+            onDisconnectClicked: {
+                ClientBackend.disconnectClicked();
+            }
+        }
+    }
 
     Component {
         id: singleplayerLoadMenu
@@ -82,7 +94,6 @@ Item {
         {
         }
     }
-
 
     Component {
         id: singleplayerCreateMenu
@@ -119,6 +130,10 @@ Item {
         onMultiplayerClicked: {
            stackView.push(multiplayerMenu)
        }
+
+        onEscapePressed: {
+            stackView.push(escapeMenu)
+        }
     }
 
     StackView {

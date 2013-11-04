@@ -258,6 +258,12 @@ void Client::cleanup()
 
 }
 
+void Client::disconnectClicked()
+{
+    //FIXME:..
+    exit(1);
+}
+
 void Client::exitClicked()
 {
     Debug::log(Debug::ImportantArea) << "Shutting down...";
