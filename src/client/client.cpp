@@ -26,7 +26,6 @@
 
 #include "src/physicsdebugrenderer.h"
 
-#include "gui/debugsettings.h"
 #include "gui/optionsdialogbackend.h"
 
 #include "src/settings/settings.h"
