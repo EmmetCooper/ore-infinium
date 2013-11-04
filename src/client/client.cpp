@@ -223,7 +223,7 @@ void Client::paint()
         Debug::log(Debug::ImportantArea) << "WIN HEIGHT, W: " << Settings::instance()->windowWidth << " H: " << Settings::instance()->windowHeight;
 
         if (Settings::instance()->startupFlags() & Settings::PlayNowStartupFlag) {
-            emit playNowStarted();
+            emit gameStarted();
             startMultiplayerHost("Dingo");
         }
 
@@ -631,6 +631,8 @@ void Client::startSinglePlayer(const std::string& playername)
     Debug::log(Debug::Area::NetworkClientInitialArea) << "starting singleplayer! Entities::Playername: " << playername;
     m_playerName = playername;
 
+    emit gameStarted();
+
     //create a local server, and connect to it.
     m_server = new Server();
     m_server->init(1);
@@ -642,6 +644,8 @@ bool Client::startMultiplayerClientConnection(const std::string& playername, con
 {
     Debug::log(Debug::Area::NetworkClientInitialArea) << "starting multiplayer joining address: " << address << "! Entities::Playername: " << playername;
     m_playerName = playername;
+
+    emit gameStarted();
 
     if (connectTo(address, port)) {
         Debug::log(Debug::Area::NetworkClientInitialArea) << "connection success!";
@@ -663,6 +667,8 @@ void Client::startMultiplayerHost(const std::string& playername, uint16_t port)
         if (m_worldViewingEnabled) {
             m_server->enableWorldViewing();
         }
+
+        emit gameStarted();
 
         m_server->init(8 /* 8 players (max) */, port, this);
         m_serverThread = new std::thread(&Server::tick, m_server);

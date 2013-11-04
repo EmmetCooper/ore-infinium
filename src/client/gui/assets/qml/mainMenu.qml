@@ -17,7 +17,8 @@ Item {
     focus: true
 
     Keys.onEscapePressed: {
-        exit.clicked()
+//        exit.clicked()
+        print("ESCAPE")
     }
 
     Component.onCompleted: {

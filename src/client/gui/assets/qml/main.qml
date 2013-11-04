@@ -15,11 +15,9 @@ Item {
     }
 
     Connections {
-        target: ClientBackend
+        target: main.ClientBackend
 
-        onPlayNowStarted: {
-
-            print("YO DOA");
+        onGameStarted: {
             stackView.clear()
         }
     }

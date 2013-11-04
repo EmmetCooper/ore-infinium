@@ -104,18 +104,18 @@ void Game::init()
 
 
     m_view->setSource(QUrl("../client/gui/assets/qml/main.qml"));
-    m_view->show();
 
     QQmlContext* root = m_view->engine()->rootContext();
+    root->setContextProperty("ClientBackend", m_client);
+
+    m_view->show();
+
     QQuickItem* rootObject = m_view->rootObject();
 
     //    QQmlEngine engine;
     //    QQmlComponent component(&engine,
     //                            QUrl::fromLocalFile("MyItem.qml"));
     //    QObject *object = component.create();
-
-
-    root->setContextProperty("ClientBackend", m_client);
 
     QObject* obj = rootObject->findChild<QObject*>("renderer");
     assert(obj);

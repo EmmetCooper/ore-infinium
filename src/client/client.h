@@ -73,10 +73,9 @@ public:
 
 signals:
     /**
-     * for debug, but we still need to hide the main menu,
-     * which is why qml hooks onto this signal
+     * Hides the main menu, also used for debug. QML hooks into this.
      */
-    void playNowStarted();
+    void gameStarted();
 
     void frameTimeChanged(double frameTime);
 
