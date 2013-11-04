@@ -699,17 +699,11 @@ void Client::sendPlayerMovement()
     assert(m_playerInputDirectionX >= -1 && m_playerInputDirectionX <= 1);
     assert(m_playerInputDirectionY >= -1 && m_playerInputDirectionY <= 1);
 
-    Debug::log(Debug::ImportantArea) << "SENDING PLAYER INPUT, input x: " << m_playerInputDirectionX << " Y : " << m_playerInputDirectionY;
-
-    Debug::log(Debug::ImportantArea) << "SENDING PLAYER INPUT, input x: " << m_playerInputDirectionX << " Y : " << m_playerInputDirectionY;
-
-    Debug::log(Debug::ImportantArea) << "SENDING PLAYER INPUT, input x: " << m_playerInputDirectionX << " Y : " << m_playerInputDirectionY;
     PacketBuf::PlayerMoveFromClient message;
     message.set_directionx(m_playerInputDirectionX);
     message.set_directiony(m_playerInputDirectionY);
     message.set_jump(m_playerJumpRequested);
 
-    Debug::log(Debug::ImportantArea) << "SENDING PLAYER INPUT, input x: " << m_playerInputDirectionX << " Y : " << m_playerInputDirectionY;
     //reset values back to initial state. that way no need to buggily handle keypress up events..
     m_playerInputDirectionX = 0;
     m_playerInputDirectionY = 0;
