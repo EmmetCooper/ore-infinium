@@ -119,6 +119,7 @@ Item {
         }
     }
 
+    property bool shown: false;
     Connections {
        id: mainMenuConnections
        target: mainMenuLoader.item
@@ -132,8 +133,14 @@ Item {
        }
 
         onEscapePressed: {
-            //TODO: toggle..
-            stackView.push(escapeMenu)
+            print("ESC PRESSED!!!!!!!!!!!")
+            if (shown == false) {
+                shown = true;
+                stackView.push(escapeMenu)
+            } else {
+                shown = false;
+                stackView.pop()
+            }
         }
     }
 
