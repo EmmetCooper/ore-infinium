@@ -307,6 +307,7 @@ void Client::poll()
         case ENET_EVENT_TYPE_DISCONNECT: {
             Debug::log(Debug::Area::NetworkClientContinuousArea) << "Peer disconnected (that's us!)";
             m_connected = false;
+            emit gameConnected();
 
             switch (event.data) {
             case Packet::ConnectionEventType::DisconnectedVersionMismatch:
@@ -614,6 +615,7 @@ bool Client::connectTo(const char* address, uint16_t port)
         //NOTE: no world is created yet. we now wait for the server to receive our initial connection data, and give us back a
         //player id, which we then create as the main player and finally, create the world.
         m_connected = true;
+        emit gameConnected();
         sendInitialConnectionData();
         return true;
     } else {

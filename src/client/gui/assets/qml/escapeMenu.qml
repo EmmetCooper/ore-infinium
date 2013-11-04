@@ -9,7 +9,7 @@ Item {
     width: 1024
     height: 768
 
-    focus: false
+    focus: true
 
     signal disconnectClicked()
 
@@ -57,6 +57,17 @@ Item {
         id: mainButtonLayout
 
         anchors.centerIn: parent
+
+        OreButton {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            onClicked: {
+                escapeMenu.Stack.view.pop()
+            }
+
+            text: "Resume"
+        }
 
         OreButton {
             Layout.fillWidth: true

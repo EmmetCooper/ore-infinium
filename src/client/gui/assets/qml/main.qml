@@ -119,7 +119,6 @@ Item {
         }
     }
 
-    property bool shown: false;
     Connections {
        id: mainMenuConnections
        target: mainMenuLoader.item
@@ -133,16 +132,9 @@ Item {
        }
 
         onEscapePressed: {
-            print("ESC PRESSED!!!!!!!!!!!")
-//            if (shown == false) {
-//                shown = true;
-            if (stackView.depth < 2) {
+            if (ClientBackend.gameConnected) {
                 stackView.push(escapeMenu)
             }
-            //} else {
-                //shown = false;
-                //stackView.pop()
-            //}
         }
     }
 

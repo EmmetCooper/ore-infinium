@@ -58,8 +58,13 @@ class Client : public QQuickItem
 {
     Q_OBJECT
     Q_PROPERTY(double frameTime READ frameTime NOTIFY frameTimeChanged);
+    Q_PROPERTY(bool gameConnected READ gameConnected NOTIFY gameConnectedChanged);
 
 public:
+
+    bool gameConnected() {
+        return m_connected;
+    }
 
     double frameTime() {
         return m_frameTime;
@@ -76,6 +81,7 @@ signals:
      * Hides the main menu, also used for debug. QML hooks into this.
      */
     void gameStarted();
+    void gameConnectedChanged();
 
     void frameTimeChanged(double frameTime);
 
