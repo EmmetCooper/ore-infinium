@@ -563,9 +563,6 @@ void Client::viewKeyPressed(QKeyEvent* event)
         default:
             break;
     }
-
-    m_playerInputDirectionX = -1;
-    Debug::log(Debug::ImportantArea) << "KEY PRESSED VALUE X: " << m_playerInputDirectionX;
 }
 
 void Client::shutdown()
@@ -714,9 +711,9 @@ void Client::sendPlayerMovement()
 
     Debug::log(Debug::ImportantArea) << "SENDING PLAYER INPUT, input x: " << m_playerInputDirectionX << " Y : " << m_playerInputDirectionY;
     //reset values back to initial state. that way no need to buggily handle keypress up events..
-//    m_playerInputDirectionX = 0;
-//    m_playerInputDirectionY = 0;
-//    m_playerJumpRequested = false;
+    m_playerInputDirectionX = 0;
+    m_playerInputDirectionY = 0;
+    m_playerJumpRequested = false;
 
     Packet::sendPacket(m_peer, &message, Packet::FromClientPacketContents::PlayerMoveFromClientPacket, ENET_PACKET_FLAG_RELIABLE);
 }
