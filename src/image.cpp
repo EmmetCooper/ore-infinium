@@ -24,10 +24,6 @@
 
 #include <sys/stat.h>
 
-//Flip flags
-const int FLIP_VERTICAL = 1;
-const int FLIP_HORIZONTAL = 2;
-
 Image::Image(const std::string& fileName)
 {
     loadImage(fileName);
