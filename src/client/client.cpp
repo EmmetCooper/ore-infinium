@@ -596,7 +596,7 @@ bool Client::connectTo(const char* address, uint16_t port)
         enet_peer_timeout(m_peer, 0, 3600 * 1000, 3600 * 1000);
     }
 
-    if (m_peer == NULL) {
+    if (m_peer == nullptr) {
         Debug::log(Debug::Area::NetworkClientInitialArea) << "Client failed to connect to server";
         exit(EXIT_FAILURE);
     }
@@ -625,6 +625,7 @@ bool Client::connectTo(const char* address, uint16_t port)
 void Client::disconnect()
 {
     Debug::log(Debug::Area::NetworkClientInitialArea) << "attempting disconnect from server";
+    //TODO:send the right 2nd param, disconnect value..so the client knows it was voluntary.
     enet_peer_disconnect(m_peer, 0);
 }
 
@@ -698,8 +699,8 @@ void Client::sendPlayerMovement()
 
     // ensure it's only between -1 and 1. The server has protections to prevent this, as this
     // would be used maliciously, but this is to ensure there are no regressions client-side
-//    assert(m_playerInputDirectionX >= -1 && m_playerInputDirectionX <= 1);
-//    assert(m_playerInputDirectionY >= -1 && m_playerInputDirectionY <= 1);
+    assert(m_playerInputDirectionX >= -1 && m_playerInputDirectionX <= 1);
+    assert(m_playerInputDirectionY >= -1 && m_playerInputDirectionY <= 1);
 
     Debug::log(Debug::ImportantArea) << "SENDING PLAYER INPUT, input x: " << m_playerInputDirectionX << " Y : " << m_playerInputDirectionY;
 
