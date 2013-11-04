@@ -101,15 +101,16 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         m_spriteSheetRenderer = new SpriteSheetRenderer(m_camera);
         Debug::checkGLError();
 
-//FIXME:unused         m_quadTreeRenderer = new QuadTreeRenderer(m_camera);
-//FIXME:        m_quadTreeRenderer->addQuadTree(m_torchesQuadTree);
+        //FIXME:unused m_quadTreeRenderer = new QuadTreeRenderer(m_camera);
+        //FIXME: m_quadTreeRenderer->addQuadTree(m_torchesQuadTree);
 
         Debug::checkGLError();
         m_tileRenderer = new TileRenderer(this, m_camera, m_mainPlayer);
         Debug::checkGLError();
 
         //that's a HACK
-        Torch* torch = new Torch(glm::vec2(2400 / PIXELS_PER_METER, 1420 / PIXELS_PER_METER));
+        //Torch* torch = new Torch(glm::vec2(2400 / PIXELS_PER_METER, 1420 / PIXELS_PER_METER));
+        Torch* torch = new Torch(m_mainPlayer->position());
         m_torches.push_back(torch);
         m_spriteSheetRenderer->registerSprite(torch);
 
@@ -129,8 +130,8 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         m_sky = new SkyRenderer(this, m_camera, m_time);
         m_particleRenderer = new ParticleRenderer(this, m_camera, m_mainPlayer);
 
-//FIXME:        m_fluidRenderer = new FluidRenderer(m_camera, m_mainPlayer);
-//FIXME:        m_fluidRenderer->setWaterSpatialHash(m_waterSpatialHash);
+        //FIXME: m_fluidRenderer = new FluidRenderer(m_camera, m_mainPlayer);
+        //FIXME: m_fluidRenderer->setWaterSpatialHash(m_waterSpatialHash);
     }
 
     //client doesn't actually load/generate any world
@@ -138,15 +139,14 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         m_physicsRendererFlushTimer = new Timer();
         float x = Block::BLOCK_SIZE * WORLD_COLUMNCOUNT;
         float y = Block::BLOCK_SIZE * WORLD_ROWCOUNT;
-//HACK: FIXME:        m_torchesQuadTree = new QuadTree(QuadTree::XY(x / 2.0, y / 2.0), QuadTree::XY(x / 2.0, y / 2.0));
 
-//        cpVect gravity = cpv(0, -100);
+        // cpVect gravity = cpv(0, -100);
         cpVect gravity = cpv(0.0, 9.8);
         m_cpSpace = cpSpaceNew();
         cpSpaceSetGravity(m_cpSpace, gravity);
         cpSpaceSetIterations(m_cpSpace, 10);
         cpSpaceSetSleepTimeThreshold(m_cpSpace, 0.5);
-//        cpSpaceAddCollisionHandler(m_cpSpace, 0, 0, &ContactListener::begin, nullptr, nullptr, nullptr, this);
+        // cpSpaceAddCollisionHandler(m_cpSpace, 0, 0, &ContactListener::begin, nullptr, nullptr, nullptr, this);
 
         //FIXME: harcoded and just a value i chose because it seemed to be in this area.
         m_desiredChunks.reserve(8000);
@@ -157,16 +157,10 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         //HACK, as if that wasn't obvious.
         saveWorld();
 
-        // FIXME: load torches (this doesn't actually do anything but is in theory what we'll need to load shit)
-        for (auto * t : m_torches) {
-//FIXME:            m_torchesQuadTree->insert(t);
-        }
-
         Debug::log(Debug::WorldLoaderArea) << "World is x: " << (WORLD_COLUMNCOUNT * Block::BLOCK_SIZE) << " y: " << (WORLD_ROWCOUNT * Block::BLOCK_SIZE) << " meters big";
     }
 
     //FIXME: saveMap();
-
 }
 
 World::~World()
@@ -242,8 +236,20 @@ void World::addPlayer(Entities::Player* player)
             }
         }
 
-        //NOTE: you might be asking, why don't we send a chunk? that's because this happens as soon as the client is validated and its
-        // player is created. therefore the next calls will be sending player info, and then sending the initial world chunk at this player's position.
+        //FIXME: doesn't actually work because the server doesn't send clients the list of torches, or when they spawn
+        //FIXME: HACK..this is the optimal way, but wtf does push_back give me that bogus error?
+//        Torch* torch1 = new Torch(player->position() + glm::vec2(BLOCK_SIZE, BLOCK_SIZE));
+//        m_torches.push_back(torch1);
+//        m_server->sendItemSpawned(torch1);
+//
+//        Torch* torch2 = new Torch(player->position() + glm::vec2(BLOCK_SIZE * 4.0, BLOCK_SIZE * 4.0));
+//        m_torches.push_back(torch2);
+//        m_server->sendItemSpawned(torch2);
+
+
+        //NOTE: you might be asking, why don't we send a chunk? that's because this happens after this function, which is after the
+        // player is created. therefore the next calls will be sending player info to everyone else, and then sending the initial world chunk at this player's position.
+        // along with initial data for this one client, like world time and such, to get it up to sync.
 
     } else if (!m_server) {
         m_spriteSheetRenderer->registerSprite(player);
@@ -332,6 +338,7 @@ void World::render()
     assert(m_mainPlayer && !m_server);
 
     m_lightRenderer->setRenderingEnabled(Settings::instance()->debugRendererFlags & Debug::RenderingDebug::LightRenderingPassDebug);
+    assert(m_lightRenderer->lightRenderingEnabled());
     m_tileRenderer->setRenderingEnabled(Settings::instance()->debugRendererFlags & Debug::RenderingDebug::TileRenderingPassDebug);
 
     //Sky at bottom layer
@@ -889,12 +896,12 @@ void World::attemptItemPlacement(Entities::Player* player)
 
     std::vector<Entity*> list;
     float x = player->position().x;//Block::BLOCK_SIZE * WORLD_COLUMNCOUNT;
-    float y =player->position().y; //Block::BLOCK_SIZE * WORLD_ROWCOUNT;
+    float y = player->position().y; //Block::BLOCK_SIZE * WORLD_ROWCOUNT;
 
-//FIXME:    m_torchesQuadTree->queryRange(list, QuadTree::AABB(QuadTree::XY(x / 2.0, y / 2.0), QuadTree::XY(500, 500)));
+    //FIXME:    m_torchesQuadTree->queryRange(list, QuadTree::AABB(QuadTree::XY(x / 2.0, y / 2.0), QuadTree::XY(500, 500)));
 
     Debug::log(Debug::ImportantArea) << "server torch count: " << m_torches.size();
-//    Debug::log(Debug::ImportantArea) << "server torch quadtree query: " << list.size();
+    // Debug::log(Debug::ImportantArea) << "server torch quadtree query: " << list.size();
 
     //use player's placement timing and such.
     player->placeItem();
@@ -913,7 +920,7 @@ void World::attemptItemPlacement(Entities::Player* player)
         Torch* newTorch = dynamic_cast<Torch*>(torch->duplicate());
         newTorch->setStackSize(1);
         m_torches.push_back(newTorch);
-//FIXME:        m_torchesQuadTree->insert(torch);
+        //FIXME: m_torchesQuadTree->insert(torch);
 
         //send the new inventory item count to this player's client.
         m_server->sendQuickBarInventoryItemCountChanged(player, inventory->equippedIndex(), torch->stackSize());
