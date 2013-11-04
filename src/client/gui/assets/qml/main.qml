@@ -124,11 +124,11 @@ Item {
        target: mainMenuLoader.item
 
        onSingleplayerClicked: {
-           stackView.push(singleplayerMenu)
+            stackView.push(singleplayerMenu)
        }
 
         onMultiplayerClicked: {
-           stackView.push(multiplayerMenu)
+            stackView.push(multiplayerMenu)
        }
 
         onEscapePressed: {
