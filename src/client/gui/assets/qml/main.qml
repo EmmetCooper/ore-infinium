@@ -10,6 +10,20 @@ import QtQuick.Layouts 1.0
 Item {
     id: main
 
+    Component.onCompleted: {
+
+    }
+
+    Connections {
+        target: ClientBackend
+
+        onPlayNowStarted: {
+
+            print("YO DOA");
+            stackView.clear()
+        }
+    }
+
     /**
      *
      * NOTE: at the top so it's underneath everything in z
@@ -145,19 +159,4 @@ Item {
     //FIXME: gynormous hack, strip win size out into C++
     width: 1600
     height: 900
-
-//
-//    Client {
-//        SequentialAnimation on t {
-//            NumberAnimation { to: 1; duration: 2500; easing.type: Easing.InQuad }
-//            NumberAnimation { to: 0; duration: 2500; easing.type: Easing.OutQuad }
-//            loops: Animation.Infinite
-//            running: true
-//        }
-//
-//        onPlayNowStarted: {
-//            print("YO DOA");
-//            stackView.clear()
-//        }
-//    }
 }
