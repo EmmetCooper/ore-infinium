@@ -134,13 +134,15 @@ Item {
 
         onEscapePressed: {
             print("ESC PRESSED!!!!!!!!!!!")
-            if (shown == false) {
-                shown = true;
+//            if (shown == false) {
+//                shown = true;
+            if (stackView.depth < 2) {
                 stackView.push(escapeMenu)
-            } else {
-                shown = false;
-                stackView.pop()
             }
+            //} else {
+                //shown = false;
+                //stackView.pop()
+            //}
         }
     }
 
