@@ -21,7 +21,7 @@ Item {
 
     Loader {
         id: optionsLoader
-        parent: mainMenu
+        parent: escapeMenu
 //        anchors.fill: mainMenu
 //        anchors.centerIn: parent
         z: 200

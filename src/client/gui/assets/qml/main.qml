@@ -132,6 +132,7 @@ Item {
        }
 
         onEscapePressed: {
+            //TODO: toggle..
             stackView.push(escapeMenu)
         }
     }
