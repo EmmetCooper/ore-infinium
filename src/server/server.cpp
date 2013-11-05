@@ -77,6 +77,8 @@ void Server::init(uint8_t maxClients, uint16_t port, Client* client)
                                 0 /* assume any amount of incoming bandwidth */,
                                 0 /* assume any amount of outgoing bandwidth */);
 
+    m_server->duplicatePeers = 4;
+
    Debug::assertf(m_server, "failed to create ENet server");
 
     m_world = new World(nullptr, nullptr, this);
