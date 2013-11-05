@@ -20,9 +20,8 @@
 
 #include <string>
 
+#include <QImage>
 #include "glew.h"
-
-struct SDL_Surface;
 
 class Image
 {
@@ -56,9 +55,7 @@ private:
      */
     void loadImage(const std::string& filename);
 
-    int invert_surface_vertical(SDL_Surface *surface);
-
-    SDL_Surface* m_surface = nullptr;
+    QImage m_image;
 
     int m_format = GL_RGBA;
 };
