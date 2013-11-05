@@ -312,7 +312,7 @@ void World::updateTilePhysicsObjects()
     m_desiredChunks.clear();
 }
 
-Entities::Player* World::findPlayer(uint32_t playerID)
+Entities::Player* World::playerForID(uint32_t playerID)
 {
     for (auto* player : m_players) {
         if (player->playerID() == playerID) {

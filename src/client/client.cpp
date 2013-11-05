@@ -891,7 +891,7 @@ void Client::receivePlayerDisconnected(const std::string& packetContents)
     Packet::deserialize(packetContents, &message);
 
     Debug::assertf(m_world, "WARNING:, player disconnected, client attempted to remove him from the worlds player list..but we dont' have a world yet here? seems odd");
-    m_world->findPlayer(message.playerid());
+    m_world->playerForID(message.playerid());
 }
 
 void Client::receivePlayerMove(const std::string& packetContents)
@@ -899,7 +899,7 @@ void Client::receivePlayerMove(const std::string& packetContents)
     PacketBuf::PlayerMoveFromServer message;
     Packet::deserialize(packetContents, &message);
 
-    Entities::Player* player = m_world->findPlayer(message.playerid());
+    Entities::Player* player = m_world->playerForID(message.playerid());
     player->setPosition(message.x(), message.y());
     Debug::log(Debug::Area::NetworkClientContinuousArea) << "Setting player position to: " << player->position().x << " Y: " << player->position().y;
 }

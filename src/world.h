@@ -100,7 +100,7 @@ public:
      * Removes player from the world, but will *NOT* delete it. That's your job, bro
      */
     void removePlayer(Entities::Player* player);
-    Entities::Player* findPlayer(uint32_t playerID);
+    Entities::Player* playerForID(uint32_t playerID);
 
     void itemPrimaryActivated(Entities::Player* player, Item* item);
     void itemSecondaryActivated(Entities::Player* player, Item* item);
