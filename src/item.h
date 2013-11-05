@@ -20,7 +20,6 @@
 
 #include "entity.h"
 
-#include <vector>
 #include <string>
 
 class Player;

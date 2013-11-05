@@ -21,7 +21,6 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-#include <cstdint>
 #include <vector>
 
 class Shader;

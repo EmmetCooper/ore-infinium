@@ -18,8 +18,7 @@
 #ifndef CHUNK_H
 #define CHUNK_H
 
-#include <map>
-#include <string>
+#include <cstdint>
 #include <vector>
 #include "block.h"
 

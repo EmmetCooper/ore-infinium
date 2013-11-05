@@ -20,8 +20,6 @@
 
 #include "block.h"
 
-#include <map>
-#include <string>
 #include <vector>
 
 struct cpSpace;

@@ -26,6 +26,7 @@
 #include <SDL_timer.h>
 
 #include <fstream>
+#include <iostream>
 
 #include "glm/core/func_common.hpp"
 #include "glm/gtc/type_ptr.hpp"

@@ -19,7 +19,6 @@
 #define ENTITY_H
 
 #include "sprite.h"
-#include "spatialhash.h"
 
 #include "glm/core/type.hpp"
 
