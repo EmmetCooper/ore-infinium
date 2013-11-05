@@ -30,6 +30,8 @@
 #include <string>
 #include <vector>
 
+#include <QVector>
+
 namespace Entities
 {
 class Player;
@@ -52,7 +54,7 @@ public:
 
     void setCamera(Camera* camera);
 
-    void setTorches(std::vector<Torch*>* torches);
+    void setTorches(QVector<Torch*> torches);
     void setTileRendererTexture(GLuint texture);
 
     /**
@@ -87,7 +89,7 @@ private:
     void initGL();
     void initBackbufferGL();
 
-    std::vector<Torch*> *m_torches;
+    QVector<Torch*> m_torches;
 
     // GLuint m_tileMapTexture;
 

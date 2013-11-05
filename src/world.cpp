@@ -80,7 +80,7 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
     m_uselessEntity = new Entity("player1Standing1", SpriteSheetRenderer::SpriteSheetType::Character);
     m_uselessEntity->setPosition(2300 / PIXELS_PER_METER, 1400 / PIXELS_PER_METER);
-    m_entities.insert(m_entities.end(), m_uselessEntity);
+    m_entities.append(m_uselessEntity);
 
     m_treesSpatialHash = new SpatialHash(0.0, 0.0, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, Block::BLOCK_SIZE * WORLD_ROWCOUNT, 8.0, 4000);
     m_waterSpatialHash = new SpatialHash(0.0, 0.0, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, Block::BLOCK_SIZE * WORLD_ROWCOUNT, Block::BLOCK_SIZE, SpatialHash::SpatialHashContents::ObjectSpatialHashContents, 4000);
@@ -107,7 +107,7 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         //that's a HACK
         //Torch* torch = new Torch(glm::vec2(2400 / PIXELS_PER_METER, 1420 / PIXELS_PER_METER));
         Torch* torch = new Torch(m_mainPlayer->position());
-        m_torches.push_back(torch);
+        m_torches.append(torch);
         m_spriteSheetRenderer->registerSprite(torch);
 
         Debug::checkGLError();
@@ -121,7 +121,7 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         m_lightRenderer->setTileRendererTexture(m_tileRenderer->fboTexture());
 
         //FIXME: call each update, and make it only do visible ones
-        m_lightRenderer->setTorches(&m_torches);
+        m_lightRenderer->setTorches(m_torches);
 
         m_sky = new SkyRenderer(this, m_camera, m_time);
         m_particleRenderer = new ParticleRenderer(this, m_camera, m_mainPlayer);
@@ -167,10 +167,7 @@ World::~World()
     delete m_particleRenderer;
     delete m_sky;
 
-    for (auto * torch : m_torches) {
-        delete torch;
-    }
-    m_torches.clear();
+    qDeleteAll(m_torches);
 
     m_blocks.clear();
 
@@ -179,10 +176,7 @@ World::~World()
     }
     m_activeChunks.clear();
 
-    for (auto * entity : m_entities) {
-        delete entity;
-    }
-    m_entities.clear();
+    qDeleteAll(m_entities);
 
     delete m_blockPickingCrosshair;
     delete m_mainPlayer;
@@ -759,7 +753,7 @@ void World::itemQuickBarInventoryDropped(Entities::Player* player, Item* item, u
 
     droppedItem->setStackSize(item->dropStack(amount));
 
-    m_entities.insert(m_entities.end(), droppedItem);
+    m_entities.append(droppedItem);
 }
 
 void World::itemPrimaryActivated(Entities::Player* player, Item* item)
@@ -845,7 +839,7 @@ void World::attemptItemPlacement(Entities::Player* player)
 
         Torch* newTorch = dynamic_cast<Torch*>(torch->duplicate());
         newTorch->setStackSize(1);
-        m_torches.push_back(newTorch);
+        m_torches.append(newTorch);
         //FIXME: m_torchesQuadTree->insert(torch);
 
         //send the new inventory item count to this player's client.
@@ -873,7 +867,7 @@ void World::spawnItem(Item* item)
         Torch* torch = dynamic_cast<Torch*>(item);
 
         //FIXME: HACK;
-        m_torches.push_back(torch);
+        m_torches.append(torch);
         break;
     }
 

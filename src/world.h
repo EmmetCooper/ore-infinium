@@ -216,8 +216,8 @@ private:
      */
     bool tileBlendTypeMatch(int sourceTileX, int sourceTileY, int nearbyTileX, int nearbyTileY) const;
 
-    std::vector<Entity*> m_entities;
-    std::vector<Torch*> m_torches;
+    QVector<Entity*> m_entities;
+    QVector<Torch*> m_torches;
     SpatialHash* m_treesSpatialHash = nullptr;
     SpatialHash* m_waterSpatialHash = nullptr;
 
