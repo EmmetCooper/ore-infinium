@@ -64,6 +64,7 @@
 #include <boost/iostreams/filtering_streambuf.hpp>
 #include <boost/iostreams/copy.hpp>
 #include <boost/iostreams/filter/zlib.hpp>
+#include <QTimer>
 
 #include "glm/core/func_common.hpp"
 
@@ -211,12 +212,12 @@ void World::addPlayer(Entities::Player* player)
 
         //FIXME: HACK: this needs improvement. obviously..otherwise it could very easily destroy everything underneath wherever the player left off.
         //clear an area around the player's rect, of tiles, so he can spawn properly.
-        const int startX = ((playerPosition.x) / Block::BLOCK_SIZE) - (10);
+        const int startX = ((playerPosition.x) / Block::BLOCK_SIZE) - (20);
         const int endX = startX + (20);
 
         //columns are our X value, rows the Y
-        const int startY = ((playerPosition.y) / Block::BLOCK_SIZE) - (10);
-        const int endY = startY + (20);
+        const int startY = ((playerPosition.y) / Block::BLOCK_SIZE) - (20);
+        const int endY = startY + (30);
         int index = 0;
 
         for (int row = startY; row < endY; ++row) {
@@ -255,7 +256,12 @@ void World::removePlayer(Entities::Player* player)
 
 void World::updateTilePhysicsObjects()
 {
+    Debug::log(Debug::ImportantArea) << "Updating tile physics objects...";
+    QTime time;
+    time.start();
+
     for (Entities::Player* player : m_players) {
+
         // mark which chunks we want to be activated within this players viewport
 
         glm::ivec2 centerTile = glm::ivec2(int(ceil(player->position().x / BLOCK_SIZE)), int(ceil(player->position().y / BLOCK_SIZE)));
@@ -313,6 +319,8 @@ void World::updateTilePhysicsObjects()
     }
 
     m_desiredChunks.clear();
+
+    Debug::log(Debug::ImportantArea) << "Updating tile physics objects...time took:" << time.elapsed();
 }
 
 Entities::Player* World::playerForID(uint32_t playerID)
@@ -379,12 +387,14 @@ void World::renderCrosshair()
 
 void World::update(double elapsedTime)
 {
+
     //only occurs on client side, obviously the server doesn't need to do this stuff
     if (m_client) {
         m_sky->update(elapsedTime);
     }
 
     if (m_server) {
+
         for (auto* player : m_players) {
             if (player->mouseLeftButtonHeld()) {
                 handlePlayerLeftMouse(player);
