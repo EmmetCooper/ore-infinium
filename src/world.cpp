@@ -49,8 +49,6 @@
 
 #include <chipmunk/chipmunk.h>
 
-#include <noise/noise.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -68,9 +66,6 @@
 #include <boost/iostreams/filter/zlib.hpp>
 
 #include "glm/core/func_common.hpp"
-
-//HACK: thinkw e're going to go away from libnoise
-using namespace noise;
 
 World::World(Entities::Player* mainPlayer, Client* client, Server* server)
     : m_mainPlayer(mainPlayer),
@@ -597,38 +592,7 @@ void World::generateNoise()
     std::random_device device;
     std::mt19937 rand(device());
     std::uniform_int_distribution<> distribution(0, INT_MAX);
-    //because it's so fucking slow :(
-//HACK
-//HACK    module::RidgedMulti ridgedMulti;
-//HACK    ridgedMulti.SetSeed(distribution(rand));
-//HACK    ridgedMulti.SetFrequency(0.02);
-//HACK
-//HACK    module::Perlin perlin1;
-//HACK    perlin1.SetSeed(distribution(rand));
-//HACK    perlin1.SetFrequency(0.01);
-//HACK
-//HACK    module::Perlin perlin2;
-//HACK    perlin2.SetSeed(distribution(rand));
-//HACK    perlin2.SetFrequency(0.08);
-//HACK    perlin2.SetLacunarity(0.5);
-//HACK    perlin2.SetPersistence(0.05);
-//HACK    perlin2.SetNoiseQuality(noise::QUALITY_BEST);
-//HACK
-//HACK    module::Select finalTerrain;
-//HACK    finalTerrain.SetSourceModule(0, perlin1);
-//HACK    finalTerrain.SetSourceModule(1, ridgedMulti);
-//HACK    finalTerrain.SetControlModule(perlin2);
-//HACK    finalTerrain.SetBounds(0.01, 1000);
-//HACK
-//HACK    module::Perlin perlin3;
-//HACK    perlin3.SetSeed(distribution(rand));
-//HACK    perlin3.SetFrequency(0.02);
-//HACK    perlin3.SetNoiseQuality(noise::QUALITY_BEST);
-//HACK
-//HACK    module::Multiply add;
-//HACK    add.SetSourceModule(0, finalTerrain);
-//HACK    add.SetSourceModule(1, perlin3);
-//HACK
+
     for (int row = 15; row < WORLD_ROWCOUNT; ++row) {
         for (int column = 0; column < WORLD_COLUMNCOUNT; ++column) {
 //            const int value = add.GetValue(column, row, 2.0) * 0.5 + 1;
@@ -646,71 +610,24 @@ void World::generateNoise()
     }
 }
 
+//FIXME: unused
 void World::generateOres()
 {
+    assert(0);
     std::random_device device;
     std::mt19937 rand(device());
     std::uniform_int_distribution<> distribution(0, INT_MAX);
-
-    module::Perlin perlin;
-    perlin.SetSeed(distribution(rand));
-    perlin.SetFrequency(0.01);
-    perlin.SetLacunarity(0.5);
-    perlin.SetPersistence(0.05);
-    perlin.SetNoiseQuality(noise::QUALITY_BEST);
-
     for (int row = WORLD_SEA_LEVEL; row < WORLD_ROWCOUNT; ++row) {
         for (int column = 0; column < WORLD_COLUMNCOUNT; ++column) {
-            const int value = perlin.GetValue(column, row, 2.0) * 0.5 + 1;
 
             int index = column * WORLD_ROWCOUNT + row;
             Block& block = m_blocks[index];
 
-            if (value > 0.1 && block.primitiveType != Block::BlockType::NullBlockType) {
-                block.primitiveType = Block::BlockType::StoneBlockType;
-                block.wallType = Block::WallType::DirtWallType;
-            }
+            block.primitiveType = Block::BlockType::DirtBlockType;
+            block.wallType = Block::WallType::DirtWallType;
         }
     }
-
     /////////////////// done generating dirt world
-
-    /*
-//    const int width = WORLD_COLUMNCOUNT * 16 /  5;// / 2;
-    const int height = WORLD_ROWCOUNT * 16 /  45;// / 6;
-
-    const int width = WORLD_COLUMNCOUNT * 16 /  10;// / 2;
-
-    FIBITMAP* bitmap = FreeImage_Allocate(width, height, 24);
-
-    RGBQUAD color;
-    uint32_t row = 0;
-    uint32_t column = 0;
-
-    for (row = 0; row < height; ++row) {
-        for (column = 0; column < width; ++column) {
-
-            int value = add.GetValue(round(column / 16.0), round(row / 16.0), 2.0) * 0.5 + 1;
-
-            assert(value >= 0);
-
-            color.rgbRed = 0;
-            color.rgbBlue = 0;
-
-            //Debug::log(Debug::ImportantArea) << "VAL: " << value;
-
-            if (value > 0.1) {
-                color.rgbGreen = 255;
-            } else {
-                color.rgbGreen = 0;
-            }
-
-            FreeImage_SetPixelColor(bitmap, column, row, &color);
-        }
-    }
-
-    FreeImage_Save(FIF_JPEG, bitmap, "world.jpg", 0);
-    */
 }
 
 void World::generateVegetation()

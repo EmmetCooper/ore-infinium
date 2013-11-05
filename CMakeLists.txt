@@ -71,7 +71,6 @@ find_package(Chipmunk)
 
 find_package(enet)
 find_package(Protobuf)
-find_package(LibNoise)
 
 find_package(ZLIB)
 
@@ -92,9 +91,6 @@ set_package_properties(enet PROPERTIES TYPE REQUIRED PURPOSE "For networking, ob
 
 set_package_properties(Protobuf PROPERTIES DESCRIPTION "Google's protobuf Protocol Buffers implementation" URL "http://code.google.com/p/protobuf/")
 set_package_properties(Protobuf PROPERTIES TYPE REQUIRED PURPOSE "For serializing and deserializing data in a cross-architecture/platform manner. Used for network communication as well as saving game files and such.")
-
-set_package_properties(LibNoise PROPERTIES DESCRIPTION "libnoise" URL "libnoise")
-set_package_properties(LibNoise PROPERTIES TYPE REQUIRED PURPOSE "For easily generating brownian noise for world tilemap/terrain generation")
 
 set_package_properties(ZLIB PROPERTIES DESCRIPTION "zlib" URL "zlib")
 set_package_properties(ZLIB PROPERTIES TYPE REQUIRED PURPOSE "For compression for network communication as well as file loading/saving")
