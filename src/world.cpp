@@ -261,8 +261,7 @@ void World::updateTilePhysicsObjects()
     for (Entities::Player * player : m_players) {
         // mark which chunks we want to be activated within this players viewport
 
-        float blockSize = Block::BLOCK_SIZE;
-        glm::ivec2 centerTile = glm::ivec2(int(ceil(player->position().x / blockSize)), int(ceil(player->position().y / blockSize)));
+        glm::ivec2 centerTile = glm::ivec2(int(ceil(player->position().x / BLOCK_SIZE)), int(ceil(player->position().y / BLOCK_SIZE)));
 
         // half of what is specified, to get both left and right sides of the center (player position).
         glm::ivec2 tilesInViewport = glm::ivec2(int(MAX_VIEWPORT_WIDTH * 0.5f), int(MAX_VIEWPORT_HEIGHT * 0.5f));
