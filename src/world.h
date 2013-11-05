@@ -26,6 +26,7 @@
 #include <unordered_set>
 #include <stdlib.h>
 #include <list>
+#include <QList>
 
 class FluidRenderer;
 struct cpBody;
@@ -260,7 +261,7 @@ private:
     SpriteSheetRenderer* m_spriteSheetRenderer = nullptr;
 
     /// inclusive of m_mainEntities::Player as well.
-    std::list<Entities::Player*> m_players;
+    QList<Entities::Player*> m_players;
 
     //HACK: remove when we get beyond just testing stupid shit
     Entity* m_uselessEntity = nullptr;

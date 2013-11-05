@@ -189,10 +189,7 @@ World::~World()
     delete m_waterSpatialHash;
 //FIXME:    delete m_torchesQuadTree;
 
-    for (auto * player : m_players) {
-        delete player;
-    }
-    m_players.clear();
+    qDeleteAll(m_players);
 
     cpSpaceFree(m_cpSpace);
 
@@ -203,7 +200,7 @@ World::~World()
 
 void World::addPlayer(Entities::Player* player)
 {
-    m_players.push_back(player);
+    m_players.append(player);
 
     if (m_server) {
         Debug::log(Debug::Area::ServerEntityCreationArea) << "Adding player to world. Position X :"  << player->position().x << " Y : " << player->position().y;
@@ -253,12 +250,12 @@ void World::addPlayer(Entities::Player* player)
 
 void World::removePlayer(Entities::Player* player)
 {
-    m_players.remove(player);
+    m_players.removeOne(player);
 }
 
 void World::updateTilePhysicsObjects()
 {
-    for (Entities::Player * player : m_players) {
+    for (Entities::Player* player : m_players) {
         // mark which chunks we want to be activated within this players viewport
 
         glm::ivec2 centerTile = glm::ivec2(int(ceil(player->position().x / BLOCK_SIZE)), int(ceil(player->position().y / BLOCK_SIZE)));
@@ -317,7 +314,7 @@ void World::updateTilePhysicsObjects()
 
 Entities::Player* World::findPlayer(uint32_t playerID)
 {
-    for (auto * player : m_players) {
+    for (auto* player : m_players) {
         if (player->playerID() == playerID) {
             return player;
         }
