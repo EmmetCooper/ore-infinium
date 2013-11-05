@@ -265,9 +265,11 @@ void World::updateTilePhysicsObjects()
 
         // top-left start
         glm::ivec2 start = glm::ivec2(glm::max(centerTile - tilesInViewport, glm::ivec2(0, 0)));
+
         // bottom-right end
         glm::ivec2 end = glm::ivec2(glm::min(centerTile + tilesInViewport, glm::ivec2(WORLD_COLUMNCOUNT - ACTIVECHUNK_SIZE, WORLD_ROWCOUNT - ACTIVECHUNK_SIZE)));
 
+        //TODO: switch to uint..obviously cannot be negative, as with all things blocks.
         for (int currentRow = start.y; currentRow < end.y; currentRow += ACTIVECHUNK_SIZE) {
             for (int currentColumn = start.x; currentColumn < end.x; currentColumn += ACTIVECHUNK_SIZE) {
 
@@ -280,19 +282,20 @@ void World::updateTilePhysicsObjects()
 //    Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE pre-removal: " << desiredChunks.size();
 //   Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE post-removal: " << desiredChunks.size();
 
-    // set all refcounts to 0
+    // set all refcounts to 0 so that we start from scratch asking if anyone wants any of the chunks
     for (auto& activeChunk : m_activeChunks) {
         activeChunk.second->refcount = 0;
     }
 
-    // increment the refcount for each one we need
-    for (auto& d : m_desiredChunks) {
+    // increment the refcount for each desired chunk we need
+    for (auto& desired : m_desiredChunks) {
 
-        auto it = m_activeChunks.find(d);
+        auto it = m_activeChunks.find(desired);
         if (it == m_activeChunks.end()) {
             // active chunk does not exist, create it!
-            ActiveChunk* activeChunk = new ActiveChunk(d.row, d.column, &m_blocks, m_cpSpace);
-            m_activeChunks[d] = activeChunk;
+            ActiveChunk* activeChunk = new ActiveChunk(desired.row, desired.column, &m_blocks, m_cpSpace);
+            m_activeChunks[desired] = activeChunk;
+
             if (m_server->client()) {
                 m_server->client()->setActiveChunkCount(m_activeChunks.size());
             }

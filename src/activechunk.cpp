@@ -124,7 +124,7 @@ ActiveChunk::ActiveChunk(uint32_t row, uint32_t column, std::vector<Block>* bloc
 
             cpSpaceAddShape(m_cpSpace, tileShape);
 
-            m_tileShapes.push_back(tileShape);
+            m_tileShapes.append(tileShape);
         }
     }
     //Debug::log(Debug::StartupArea) << "ACTIVE CHUNK CTOR, tile object count: " << m_tileFixtures.size();
@@ -132,7 +132,7 @@ ActiveChunk::ActiveChunk(uint32_t row, uint32_t column, std::vector<Block>* bloc
 
 ActiveChunk::~ActiveChunk()
 {
-    for (cpShape * shape : m_tileShapes) {
+    for (cpShape* shape : m_tileShapes) {
         ContactListener::BodyUserData* userData = static_cast<ContactListener::BodyUserData*>(cpShapeGetUserData(shape));
         ContactListener::BlockWrapper* blockWrapper = static_cast<ContactListener::BlockWrapper*>(userData->data);
 
@@ -144,14 +144,16 @@ ActiveChunk::~ActiveChunk()
     }
 
     m_tileShapes.clear();
+
     //Debug::log(Debug::StartupArea) << "ACTIVE CHUNK DTOR, tile object count: " << m_tileFixtures.size();
 }
 
 void ActiveChunk::shapeRemoved(cpShape* shape)
 {
-    for (auto it = m_tileShapes.begin(); it < m_tileShapes.end(); ++it) {
-        if (*it == shape) {
-            m_tileShapes.erase(it);
+    for (int i = 0; i < m_tileShapes.size(); ++i) {
+        if (m_tileShapes.at(i) == shape) {
+            m_tileShapes.remove(i);
+            break;
         }
     }
 }

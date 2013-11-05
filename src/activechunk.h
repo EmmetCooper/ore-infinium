@@ -21,6 +21,7 @@
 #include "block.h"
 
 #include <vector>
+#include <qvector.h>
 
 struct cpSpace;
 struct cpShape;
@@ -46,13 +47,17 @@ public:
     ActiveChunk(uint32_t row, uint32_t column, std::vector<Block>* blocks, cpSpace* cpWorldSpace);
     ~ActiveChunk();
 
+    /**
+     * Informs this chunk that a tile physics shape within it has been removed outside of its control.
+     * aka destroyed via block picking and what not.
+     */
     void shapeRemoved(cpShape* shape);
 
 public:
     uint32_t refcount = 1;
 
 private:
-    std::vector<cpShape*> m_tileShapes;
+    QVector<cpShape*> m_tileShapes;
     std::vector<Block>* m_blocks = nullptr;
     cpSpace* m_cpSpace = nullptr;
 };
