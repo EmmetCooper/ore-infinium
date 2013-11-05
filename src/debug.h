@@ -81,7 +81,6 @@ public:
 
     static void checkGLError();
     static void checkGLErrorSafe();
-    static void checkSDLError();
 
     static void glDebugCallback(unsigned int source, unsigned int type,
                                 unsigned int id, unsigned int severity,

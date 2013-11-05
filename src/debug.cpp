@@ -24,8 +24,6 @@
 #include <iostream>
 #include <sstream>
 
-#include <SDL2/SDL.h>
-
 #include "glew.h"
 
 #ifndef NDEBUG
@@ -69,15 +67,6 @@ void Debug::checkGLErrorSafe()
 
     if (error != GL_NO_ERROR) {
 	Debug::log(Debug::Area::ClientRendererArea) << "GL error code: " << error << " STRING:" << gluErrorString(error);
-    }
-}
-
-void Debug::checkSDLError()
-{
-    std::string error = SDL_GetError();
-    if (*error.c_str() != '\0') {
-        Debug::log(Debug::Area::StartupArea) << "SDL Error: " << error;
-        SDL_ClearError();
     }
 }
 
