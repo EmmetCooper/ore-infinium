@@ -171,10 +171,11 @@ World::~World()
 
     m_blocks.clear();
 
-    for (auto it : m_activeChunks) {
-        delete it.second;
+    QMap<DesiredChunk, ActiveChunk*>::iterator i = m_activeChunks.begin();
+    while (i != m_activeChunks.end()) {
+        delete i.value();
+        ++i;
     }
-    m_activeChunks.clear();
 
     qDeleteAll(m_entities);
 
@@ -282,10 +283,14 @@ void World::updateTilePhysicsObjects()
     Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE pre-removal: " << m_desiredChunks.size();
     // Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE post-removal: " << desiredChunks.size();
 
+
     // set all refcounts to 0 so that we start from scratch asking if anyone wants any of the chunks
-    for (auto& activeChunk : m_activeChunks) {
-        activeChunk.second->refcount = 0;
+    QMap<DesiredChunk, ActiveChunk*>::iterator i = m_activeChunks.begin();
+    while (i != m_activeChunks.end()) {
+        i.value()->refcount = 0;
+        ++i;
     }
+
 
     // increment the refcount for each desired chunk we need
     for (auto& desired : m_desiredChunks) {
@@ -300,18 +305,21 @@ void World::updateTilePhysicsObjects()
                 m_server->client()->setActiveChunkCount(m_activeChunks.size());
             }
         } else {
-            it->second->refcount += 1;
+            it.value()->refcount += 1;
         }
     }
 
     Debug::log(Debug::StartupArea) << "Active CHUNKS SIZE pre-removal: " << m_activeChunks.size();
 
     // delete all active chunks with a refcount of 0
-    for (auto& activeChunk : m_activeChunks) {
-        if (activeChunk.second->refcount == 0) {
-            delete activeChunk.second;
-            m_activeChunks.erase(activeChunk.first);
+    QMap<DesiredChunk, ActiveChunk*>::iterator it = m_activeChunks.begin();
+    while (it != m_activeChunks.end()) {
+        if (it.value()->refcount == 0) {
+            delete it.value();
+            it = m_activeChunks.erase(it);
         }
+
+        ++it;
     }
 
     m_desiredChunks.clear();
@@ -898,7 +906,7 @@ void World::tileRemovedPostStepCallback(cpSpace* space, void* obj, void* data)
 
         // find the active chunk associated with this block, we need to remove that otherwise we'll have a double-delete on our hands.
         DesiredChunk desiredChunk(blockWrapper->row / ACTIVECHUNK_SIZE, blockWrapper->column / ACTIVECHUNK_SIZE);
-        world->m_activeChunks.at(desiredChunk)->shapeRemoved(shape);
+        world->m_activeChunks.find(desiredChunk).value()->shapeRemoved(shape);
 
         delete blockWrapper;
         delete userData;
