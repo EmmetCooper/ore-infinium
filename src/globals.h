@@ -31,7 +31,7 @@ static constexpr float MAX_VIEWPORT_WIDTH = 200.0f;
 static constexpr float MAX_VIEWPORT_HEIGHT = 200.0f;
 
 /// ACTIVECHUNK_SIZE^2 == total tiles within chunk
-static constexpr uint32_t ACTIVECHUNK_SIZE = 2;
+static constexpr uint32_t ACTIVECHUNK_SIZE = 128;
 
 static constexpr double FIXED_TIMESTEP = 1.0 / 60.0; // hertz
 

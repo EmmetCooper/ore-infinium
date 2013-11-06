@@ -252,6 +252,7 @@ void World::removePlayer(Entities::Player* player)
 void World::updateTilePhysicsObjects()
 {
     Debug::log(Debug::ImportantArea) << "Updating tile physics objects...";
+
     QTime time;
     time.start();
 
