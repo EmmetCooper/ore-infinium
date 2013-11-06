@@ -47,143 +47,51 @@ void DebugSettings::ProcessEvent(Rocket::Core::Event& event)
     const bool isChecked = event.GetCurrentElement()->HasAttribute("checked");
 
     if (id == "ClientRendererArea") {
-        if (isChecked) {
-            Settings::instance()->debugAreas |= Debug::Area::ClientRendererArea;
-        } else {
-            Settings::instance()->debugAreas &= ~Debug::Area::ClientRendererArea;
-        }
+        Debug::setAreaEnabled(Debug::Area::ClientRendererArea, isChecked);
     } else if (id == "TileRendererArea") {
-        if (isChecked) {
-            Settings::instance()->debugAreas |= Debug::Area::TileRendererArea;
-        } else {
-            Settings::instance()->debugAreas &= ~Debug::Area::TileRendererArea;
-        }
+        Debug::setAreaEnabled(Debug::Area::TileRendererArea, isChecked);
     } else if (id == "SpriteSheetRendererArea") {
-        if (isChecked) {
-            Settings::instance()->debugAreas |= Debug::Area::SpriteSheetRendererArea;
-        } else {
-            Settings::instance()->debugAreas &= ~Debug::Area::SpriteSheetRendererArea;
-        }
+        Debug::setAreaEnabled(Debug::Area::SpriteSheetRendererArea, isChecked);
     } else if (id == "LightingRendererArea") {
-        if (isChecked) {
-            Settings::instance()->debugAreas |= Debug::Area::LightingRendererArea;
-        } else {
-            Settings::instance()->debugAreas &= ~Debug::Area::LightingRendererArea;
-        }
+        Debug::setAreaEnabled(Debug::Area::LightingRendererArea, isChecked);
     } else if (id == "PhysicsArea") {
-        if (isChecked) {
-            Settings::instance()->debugAreas |= Debug::Area::PhysicsArea;
-        } else {
-            Settings::instance()->debugAreas &= ~Debug::Area::PhysicsArea;
-        }
+        Debug::setAreaEnabled(Debug::Area::PhysicsArea, isChecked);
     } else if (id == "AudioArea") {
-        if (isChecked) {
-            Settings::instance()->debugAreas |= Debug::Area::AudioArea;
-        } else {
-            Settings::instance()->debugAreas &= ~Debug::Area::AudioArea;
-        }
+        Debug::setAreaEnabled(Debug::Area::AudioArea, isChecked);
     } else if (id == "AudioLoaderArea") {
-        if (isChecked) {
-            Settings::instance()->debugAreas |= Debug::Area::AudioLoaderArea;
-        } else {
-            Settings::instance()->debugAreas &= ~Debug::Area::AudioLoaderArea;
-        }
+        Debug::setAreaEnabled(Debug::Area::AudioLoaderArea, isChecked);
     } else if (id == "GUILoggerArea") {
-        if (isChecked) {
-            Settings::instance()->debugAreas |= Debug::Area::GUILoggerArea;
-        } else {
-            Settings::instance()->debugAreas &= ~Debug::Area::GUILoggerArea;
-        }
+        Debug::setAreaEnabled(Debug::Area::GUILoggerArea, isChecked);
     } else if (id == "ShadersArea") {
-        if (isChecked) {
-            Settings::instance()->debugAreas |= Debug::Area::ShadersArea;
-        } else {
-            Settings::instance()->debugAreas &= ~Debug::Area::ShadersArea;
-        }
+        Debug::setAreaEnabled(Debug::Area::ShadersArea, isChecked);
     } else if (id == "NetworkClientInitialArea") {
-        if (isChecked) {
-            Settings::instance()->debugAreas |= Debug::Area::NetworkClientInitialArea;
-        } else {
-            Settings::instance()->debugAreas &= ~Debug::Area::NetworkClientInitialArea;
-        }
+        Debug::setAreaEnabled(Debug::Area::NetworkClientInitialArea, isChecked);
     } else if (id == "NetworkServerInitialArea") {
-        if (isChecked) {
-            Settings::instance()->debugAreas |= Debug::Area::NetworkServerInitialArea;
-        } else {
-            Settings::instance()->debugAreas &= ~Debug::Area::NetworkServerInitialArea;
-        }
+        Debug::setAreaEnabled(Debug::Area::NetworkServerInitialArea, isChecked);
     } else if (id == "NetworkClientContinuousArea") {
-        if (isChecked) {
-            Settings::instance()->debugAreas |= Debug::Area::NetworkClientContinuousArea;
-        } else {
-            Settings::instance()->debugAreas &= ~Debug::Area::NetworkClientContinuousArea;
-        }
+        Debug::setAreaEnabled(Debug::Area::NetworkClientContinuousArea, isChecked);
     } else if (id == "NetworkServerContinuousArea") {
-        if (isChecked) {
-            Settings::instance()->debugAreas |= Debug::Area::NetworkServerContinuousArea;
-        } else {
-            Settings::instance()->debugAreas &= ~Debug::Area::NetworkServerContinuousArea;
-        }
+        Debug::setAreaEnabled(Debug::Area::NetworkServerContinuousArea, isChecked);
     } else if (id == "ClientInventoryArea") {
-        if (isChecked) {
-            Settings::instance()->debugAreas |= Debug::Area::ClientInventoryArea;
-        } else {
-            Settings::instance()->debugAreas &= ~Debug::Area::ClientInventoryArea;
-        }
+        Debug::setAreaEnabled(Debug::Area::ClientInventoryArea, isChecked);
     } else if (id == "ServerInventoryArea") {
-        if (isChecked) {
-            Settings::instance()->debugAreas |= Debug::Area::ServerInventoryArea;
-        } else {
-            Settings::instance()->debugAreas &= ~Debug::Area::ServerInventoryArea;
-        }
+        Debug::setAreaEnabled(Debug::Area::ServerInventoryArea, isChecked);
     } else if (id == "ServerEntityLogicArea") {
-        if (isChecked) {
-            Settings::instance()->debugAreas |= Debug::Area::ServerEntityLogicArea;
-        } else {
-            Settings::instance()->debugAreas &= ~Debug::Area::ServerEntityLogicArea;
-        }
+        Debug::setAreaEnabled(Debug::Area::ServerEntityLogicArea, isChecked);
     } else if (id == "ImageLoaderArea") {
-        if (isChecked) {
-            Settings::instance()->debugAreas |= Debug::Area::ImageLoaderArea;
-        } else {
-            Settings::instance()->debugAreas &= ~Debug::Area::ImageLoaderArea;
-        }
+        Debug::setAreaEnabled(Debug::Area::ImageLoaderArea, isChecked);
     } else if (id == "WorldGeneratorArea") {
-        if (isChecked) {
-            Settings::instance()->debugAreas |= Debug::Area::WorldGeneratorArea;
-        } else {
-            Settings::instance()->debugAreas &= ~Debug::Area::WorldGeneratorArea;
-        }
+        Debug::setAreaEnabled(Debug::Area::WorldGeneratorArea, isChecked);
     } else if (id == "WorldLoaderArea") {
-        if (isChecked) {
-            Settings::instance()->debugAreas |= Debug::Area::WorldLoaderArea;
-        } else {
-            Settings::instance()->debugAreas &= ~Debug::Area::WorldLoaderArea;
-        }
+        Debug::setAreaEnabled(Debug::Area::WorldLoaderArea, isChecked);
     } else if (id == "ClientEntityCreationArea") {
-        if (isChecked) {
-            Settings::instance()->debugAreas |= Debug::Area::ClientEntityCreationArea;
-        } else {
-            Settings::instance()->debugAreas &= ~Debug::Area::ClientEntityCreationArea;
-        }
+        Debug::setAreaEnabled(Debug::Area::ClientEntityCreationArea, isChecked);
     } else if (id == "ServerEntityCreationArea") {
-        if (isChecked) {
-            Settings::instance()->debugAreas |= Debug::Area::ServerEntityCreationArea;
-        } else {
-            Settings::instance()->debugAreas &= ~Debug::Area::ServerEntityCreationArea;
-        }
+        Debug::setAreaEnabled(Debug::Area::ServerEntityCreationArea, isChecked);
     } else if (id == "SettingsArea") {
-        if (isChecked) {
-            Settings::instance()->debugAreas |= Debug::Area::SettingsArea;
-        } else {
-            Settings::instance()->debugAreas &= ~Debug::Area::SettingsArea;
-        }
+        Debug::setAreaEnabled(Debug::Area::SettingsArea, isChecked);
     } else if (id == "StartupArea") {
-        if (isChecked) {
-            Settings::instance()->debugAreas |= Debug::Area::StartupArea;
-        } else {
-            Settings::instance()->debugAreas &= ~Debug::Area::StartupArea;
-        }
+        Debug::setAreaEnabled(Debug::Area::StartupArea, isChecked);
     }
 
     //////////////// RENDERER SETTINGS

@@ -70,6 +70,8 @@ public:
         ChipmunkAABBRenderingDebug = 1 << 7
     };
 
+    static void setAreaEnabled(Area area, bool enable);
+
     static LogStream log(Area area);
 
     static void assertf(bool value, const std::string& message);

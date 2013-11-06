@@ -42,6 +42,15 @@ void Debug::assertf(bool value, const std::string& message)
     }
 }
 
+void Debug::setAreaEnabled(Debug::Area area, bool enable)
+{
+    if (enable) {
+        Settings::instance()->debugAreas |= area;
+    } else {
+        Settings::instance()->debugAreas &= ~area;
+    }
+}
+
 void Debug::fatal(bool value, Debug::Area area, const std::string& message)
 {
     if (!value) {

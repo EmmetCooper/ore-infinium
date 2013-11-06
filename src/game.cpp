@@ -78,8 +78,12 @@ void Game::abort_game(const char* message)
 void Game::init()
 {
     if (Settings::instance()->startupFlags() & Settings::StartupFlags::DebugLoggingStartupFlag) {
-        Settings::instance()->debugAreas |= Debug::Area::StartupArea | Debug::Area::ImageLoaderArea | Debug::Area::GUILoggerArea | Debug::Area::SettingsArea
-        | Debug::Area::ShadersArea | Debug::Area::ImportantArea;
+        Debug::setAreaEnabled(Debug::Area::StartupArea, true);
+        Debug::setAreaEnabled(Debug::Area::ImageLoaderArea, true);
+        Debug::setAreaEnabled(Debug::Area::GUILoggerArea, true);
+        Debug::setAreaEnabled(Debug::Area::SettingsArea, true);
+        Debug::setAreaEnabled(Debug::Area::ShadersArea, true);
+        Debug::setAreaEnabled(Debug::Area::ImportantArea, true);
     }
 
     Block::initBlockTypes();
@@ -133,11 +137,28 @@ void Game::init()
     }
 
     if (Settings::instance()->startupFlags() & Settings::StartupFlags::FullDebugStartupFlag) {
-        Settings::instance()->debugAreas |= Debug::Area::AudioArea | Debug::Area::AudioLoaderArea | Debug::Area::ClientEntityCreationArea |
-        Debug::Area::ClientInventoryArea | Debug::Area::ClientRendererArea | Debug::Area::GUILoggerArea | Debug::Area::ImageLoaderArea | Debug::Area::ImportantArea |
-        Debug::Area::LightingRendererArea | Debug::Area::NetworkClientContinuousArea | Debug::Area::NetworkClientInitialArea | Debug::Area::NetworkServerContinuousArea |
-        Debug::Area::NetworkServerInitialArea | Debug::Area::PhysicsArea | Debug::Area::ServerEntityCreationArea | Debug::Area::ServerEntityLogicArea | Debug::Area::SettingsArea |
-        Debug::Area::ShadersArea | Debug::Area::SpriteSheetRendererArea | Debug::Area::StartupArea | Debug::Area::TileRendererArea | Debug::Area::WorldGeneratorArea;
+        Debug::setAreaEnabled(Debug::Area::AudioArea, true);
+        Debug::setAreaEnabled(Debug::Area::AudioLoaderArea, true);
+        Debug::setAreaEnabled(Debug::Area::ClientEntityCreationArea, true);
+        Debug::setAreaEnabled(Debug::Area::ClientInventoryArea, true);
+        Debug::setAreaEnabled(Debug::Area::ClientRendererArea, true);
+        Debug::setAreaEnabled(Debug::Area::GUILoggerArea, true);
+        Debug::setAreaEnabled(Debug::Area::ImageLoaderArea, true);
+        Debug::setAreaEnabled(Debug::Area::ImportantArea, true);
+        Debug::setAreaEnabled(Debug::Area::LightingRendererArea, true);
+        Debug::setAreaEnabled(Debug::Area::NetworkClientContinuousArea, true);
+        Debug::setAreaEnabled(Debug::Area::NetworkClientInitialArea, true);
+        Debug::setAreaEnabled(Debug::Area::NetworkServerContinuousArea, true);
+        Debug::setAreaEnabled(Debug::Area::NetworkServerInitialArea, true);
+        Debug::setAreaEnabled(Debug::Area::PhysicsArea, true);
+        Debug::setAreaEnabled(Debug::Area::ServerEntityCreationArea, true);
+        Debug::setAreaEnabled(Debug::Area::ServerEntityLogicArea, true);
+        Debug::setAreaEnabled(Debug::Area::SettingsArea, true);
+        Debug::setAreaEnabled(Debug::Area::ShadersArea, true);
+        Debug::setAreaEnabled(Debug::Area::SpriteSheetRendererArea, true);
+        Debug::setAreaEnabled(Debug::Area::StartupArea, true);
+        Debug::setAreaEnabled(Debug::Area::TileRendererArea, true);
+        Debug::setAreaEnabled(Debug::Area::WorldGeneratorArea, true);
     }
 
     m_client->init();
