@@ -280,7 +280,7 @@ void World::updateTilePhysicsObjects()
     }
 
     Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE pre-removal: " << m_desiredChunks.size();
-//   Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE post-removal: " << desiredChunks.size();
+    // Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE post-removal: " << desiredChunks.size();
 
     // set all refcounts to 0 so that we start from scratch asking if anyone wants any of the chunks
     for (auto& activeChunk : m_activeChunks) {
@@ -303,6 +303,8 @@ void World::updateTilePhysicsObjects()
             it->second->refcount += 1;
         }
     }
+
+    Debug::log(Debug::StartupArea) << "Active CHUNKS SIZE pre-removal: " << m_activeChunks.size();
 
     // delete all active chunks with a refcount of 0
     for (auto& activeChunk : m_activeChunks) {
