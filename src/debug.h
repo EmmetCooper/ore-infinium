@@ -21,6 +21,7 @@
 #include <string>
 #include <sstream>
 
+#include <QDebug>
 #include <QLoggingCategory>
 
 Q_DECLARE_LOGGING_CATEGORY(ORE_CLIENT_RENDERER)
@@ -114,6 +115,11 @@ public:
 
     static void registerGLDebugCallback();
 };
+
+inline QDebug& operator<<(QDebug debug, const std::string& str)
+{
+    return debug << QString::fromStdString(str);
+}
 
 class LogStream : public std::stringstream
 {
