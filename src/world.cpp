@@ -724,7 +724,7 @@ void World::loadChunk(Chunk* chunk)
         for (uint32_t column = chunk->startX(); column < chunk->endX(); ++column) {
 
             uint32_t index = column * WORLD_ROWCOUNT + row;
-            m_blocks.at(index) = chunk->blocks()->at(sourceIndex);
+            m_blocks[index] = chunk->blocks()->at(sourceIndex);
             ++sourceIndex;
         }
     }
