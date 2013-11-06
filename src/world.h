@@ -251,7 +251,7 @@ private:
 //    std::unordered_map<DesiredChunk, ActiveChunk, KeyHashDesiredChunk, KeyEqualDesiredChunk> m_activeChunks;
     std::map<DesiredChunk, ActiveChunk*> m_activeChunks;
 
-    QList<cpShape*> m_tileShapesToDestroy;
+    QVector<cpShape*> m_tileShapesToDestroy;
 
     TileRenderer* m_tileRenderer = nullptr;
     LightRenderer* m_lightRenderer = nullptr;

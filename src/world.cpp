@@ -814,7 +814,6 @@ void World::attemptItemPlacement(Entities::Player* player)
         return;
     }
 
-    std::vector<Entity*> list;
     float x = player->position().x;//Block::BLOCK_SIZE * WORLD_COLUMNCOUNT;
     float y = player->position().y; //Block::BLOCK_SIZE * WORLD_ROWCOUNT;
 
