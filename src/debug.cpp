@@ -34,6 +34,31 @@
 #ifndef NDEBUG
 #endif
 
+Q_LOGGING_CATEGORY(ORE_CLIENT_RENDERER,           "oreinfinium.ClientRenderer")
+Q_LOGGING_CATEGORY(ORE_TILE_RENDERER,             "oreinfinium.TileRenderer")
+Q_LOGGING_CATEGORY(ORE_SPRITE_SHEET_RENDERER,     "oreinfinium.SpriteSheetRenderer")
+Q_LOGGING_CATEGORY(ORE_LIGHTING_RENDERER,         "oreinfinium.LightingRenderer")
+Q_LOGGING_CATEGORY(ORE_PHYSICS,                   "oreinfinium.Physics")
+Q_LOGGING_CATEGORY(ORE_AUDIO,                     "oreinfinium.Audio")
+Q_LOGGING_CATEGORY(ORE_AUDIO_LOADER,              "oreinfinium.AudioLoader")
+Q_LOGGING_CATEGORY(ORE_GUI_LOGGER,                "oreinfinium.GuiLogger")
+Q_LOGGING_CATEGORY(ORE_SHADERS,                   "oreinfinium.Shaders")
+Q_LOGGING_CATEGORY(ORE_NETWORK_CLIENT_INITIAL,    "oreinfinium.NetworkClientInitial")
+Q_LOGGING_CATEGORY(ORE_NETWORK_SERVER_INITIAL,    "oreinfinium.NetworkServerInitial")
+Q_LOGGING_CATEGORY(ORE_NETWORK_CLIENT_CONTINUOUS, "oreinfinium.NetworkClientContinuous")
+Q_LOGGING_CATEGORY(ORE_NETWORK_SERVER_CONTINUOUS, "oreinfinium.NetworkServerContinuous")
+Q_LOGGING_CATEGORY(ORE_CLIENT_INVENTORY,          "oreinfinium.ClientInventory")
+Q_LOGGING_CATEGORY(ORE_SERVER_INVENTORY,          "oreinfinium.ServerInventory")
+Q_LOGGING_CATEGORY(ORE_SERVER_ENTITY_LOGIC,       "oreinfinium.ServerEntityLogic")
+Q_LOGGING_CATEGORY(ORE_IMAGE_LOADER,              "oreinfinium.ImageLoader")
+Q_LOGGING_CATEGORY(ORE_WORLD_GENERATOR,           "oreinfinium.WorldGenerator")
+Q_LOGGING_CATEGORY(ORE_WORLD_LOADER,              "oreinfinium.WorldLoader")
+Q_LOGGING_CATEGORY(ORE_CLIENT_ENTITY_CREATION,    "oreinfinium.ClientEntityCreation")
+Q_LOGGING_CATEGORY(ORE_SERVER_ENTITY_CREATION,    "oreinfinium.ServerEntityCreation")
+Q_LOGGING_CATEGORY(ORE_SETTINGS,                  "oreinfinium.Settings")
+Q_LOGGING_CATEGORY(ORE_STARTUP,                   "oreinfinium.Startup")
+Q_LOGGING_CATEGORY(ORE_IMPORTANT,                 "oreinfinium.Important")
+
 LogStream Debug::log(Debug::Area area)
 {
     return LogStream(area);
