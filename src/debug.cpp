@@ -23,6 +23,8 @@
 #include <iostream>
 #include <sstream>
 
+#include <QMap>
+
 #include "glew.h"
 
 #ifdef _WIN32
@@ -58,6 +60,39 @@ Q_LOGGING_CATEGORY(ORE_SERVER_ENTITY_CREATION,    "oreinfinium.ServerEntityCreat
 Q_LOGGING_CATEGORY(ORE_SETTINGS,                  "oreinfinium.Settings")
 Q_LOGGING_CATEGORY(ORE_STARTUP,                   "oreinfinium.Startup")
 Q_LOGGING_CATEGORY(ORE_IMPORTANT,                 "oreinfinium.Important")
+
+static QMap<Debug::Area, QLoggingCategory*> makeCategoryMap() {
+    QMap<Debug::Area, QLoggingCategory*> categoryMap;
+#define MAP_AREA(area, category) categoryMap.insert(Debug::area, &category());
+    MAP_AREA(ClientRendererArea, ORE_CLIENT_RENDERER)
+    MAP_AREA(TileRendererArea, ORE_TILE_RENDERER)
+    MAP_AREA(SpriteSheetRendererArea, ORE_SPRITE_SHEET_RENDERER)
+    MAP_AREA(LightingRendererArea, ORE_LIGHTING_RENDERER)
+    MAP_AREA(PhysicsArea, ORE_PHYSICS)
+    MAP_AREA(AudioArea, ORE_AUDIO)
+    MAP_AREA(AudioLoaderArea, ORE_AUDIO_LOADER)
+    MAP_AREA(GUILoggerArea, ORE_GUI_LOGGER)
+    MAP_AREA(ShadersArea, ORE_SHADERS)
+    MAP_AREA(NetworkClientInitialArea, ORE_NETWORK_CLIENT_INITIAL)
+    MAP_AREA(NetworkServerInitialArea, ORE_NETWORK_SERVER_INITIAL)
+    MAP_AREA(NetworkClientContinuousArea, ORE_NETWORK_CLIENT_CONTINUOUS)
+    MAP_AREA(NetworkServerContinuousArea, ORE_NETWORK_SERVER_CONTINUOUS)
+    MAP_AREA(ClientInventoryArea, ORE_CLIENT_INVENTORY)
+    MAP_AREA(ServerInventoryArea, ORE_SERVER_INVENTORY)
+    MAP_AREA(ServerEntityLogicArea, ORE_SERVER_ENTITY_LOGIC)
+    MAP_AREA(ImageLoaderArea, ORE_IMAGE_LOADER)
+    MAP_AREA(WorldGeneratorArea, ORE_WORLD_GENERATOR)
+    MAP_AREA(WorldLoaderArea, ORE_WORLD_LOADER)
+    MAP_AREA(ClientEntityCreationArea, ORE_CLIENT_ENTITY_CREATION)
+    MAP_AREA(ServerEntityCreationArea, ORE_SERVER_ENTITY_CREATION)
+    MAP_AREA(SettingsArea, ORE_SETTINGS)
+    MAP_AREA(StartupArea, ORE_STARTUP)
+    MAP_AREA(ImportantArea, ORE_IMPORTANT)
+#undef MAP_AREA
+    return categoryMap;
+}
+
+static const QMap<Debug::Area, QLoggingCategory*> categoryMap = makeCategoryMap();
 
 LogStream Debug::log(Debug::Area area)
 {
