@@ -34,7 +34,6 @@ public:
     int windowWidth = 1600;//screenResolutionWidth;
     int windowHeight = 900;//screenResolutionHeight;
 
-    int debugAreas;
     int debugRendererFlags;
 
 //static int SDL_LOGPRIORITY = SDL_LOG_PRIORITY_WARN;
@@ -61,6 +60,16 @@ public:
     uint32_t startupFlags() const {
         return m_startupFlags;
     }
+    void setDebugAreaEnabled(int area, bool enable) {
+        if (enable) {
+            debugAreas |= area;
+        } else {
+            debugAreas &= ~area;
+        }
+    }
+    bool isDebugAreaEnabled(int area) {
+        return (debugAreas & area) != 0;
+    }
 
 private:
     Settings();
@@ -70,6 +79,7 @@ private:
     static Settings* s_instance;
 
     uint32_t m_startupFlags;
+    int debugAreas;
 };
 
 #endif

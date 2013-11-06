@@ -44,11 +44,7 @@ void Debug::assertf(bool value, const std::string& message)
 
 void Debug::setAreaEnabled(Debug::Area area, bool enable)
 {
-    if (enable) {
-        Settings::instance()->debugAreas |= area;
-    } else {
-        Settings::instance()->debugAreas &= ~area;
-    }
+    Settings::instance()->setDebugAreaEnabled(area, enable);
 }
 
 void Debug::fatal(bool value, Debug::Area area, const std::string& message)
@@ -83,7 +79,7 @@ void Debug::checkGLErrorSafe()
 //COLOR HOWTO: http://www.ibm.com/developerworks/linux/library/l-tip-prompt/ , only for linux..obviously
 void Debug::glDebugCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int length, const char* message, void* userParam)
 {
-    if ((Settings::instance()->debugAreas & Debug::Area::ShadersArea) == false) {
+    if (!Settings::instance()->isDebugAreaEnabled(Debug::Area::ShadersArea)) {
         return;
     }
 
@@ -244,7 +240,7 @@ LogStream::~LogStream()
 
     areaString.append("\e[36;40m");
 
-    if ((Settings::instance()->debugAreas & m_area) == false) {
+    if (!Settings::instance()->isDebugAreaEnabled(Debug::Area::ShadersArea)) {
         return;
     }
 
