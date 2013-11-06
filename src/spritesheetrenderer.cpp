@@ -134,7 +134,7 @@ void SpriteSheetRenderer::registerSprite(Sprite* sprite)
 {
     switch (sprite->spriteSheetType()) {
     case SpriteSheetType::Character: {
-        m_characterSprites.insert(m_characterSprites.end(), sprite);
+        m_characterSprites.append(sprite);
         // TODO: look up the size of the graphic/frame, in the spritesheet map.
 
         auto frameIdentifier = m_spriteSheetCharactersDescription.find(sprite->frameName());
@@ -147,7 +147,7 @@ void SpriteSheetRenderer::registerSprite(Sprite* sprite)
     }
 
     case SpriteSheetType::Entity: {
-        m_entitySprites.insert(m_entitySprites.end(), sprite);
+        m_entitySprites.append(sprite);
 
         auto frameIdentifier = m_spriteSheetEntitiesDescription.find(sprite->frameName());
         SpriteFrameIdentifier& frame = frameIdentifier.value();

@@ -24,9 +24,10 @@
 
 #include "glew.h"
 
-#include <map>
 #include <string>
 #include <vector>
+
+#include <QVector>
 #include <QMap>
 
 class Torch;
@@ -151,8 +152,8 @@ private:
     QMap<std::string, SpriteFrameIdentifier> m_spriteSheetCharactersDescription;
     QMap<std::string, SpriteFrameIdentifier> m_spriteSheetEntitiesDescription;
 
-    std::vector<Sprite*> m_characterSprites;
-    std::vector<Sprite*> m_entitySprites;
+    QVector<Sprite*> m_characterSprites;
+    QVector<Sprite*> m_entitySprites;
 
     GLuint m_vao; // vertex array object
     GLuint m_vbo; // vertex buffer object
