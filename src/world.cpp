@@ -890,7 +890,7 @@ void World::tileRemovedPostStepCallback(cpSpace* space, void* obj, void* data)
     assert(space);
     World* world = static_cast<World*>(data);
 
-    for (cpShape * shape : world->m_tileShapesToDestroy) {
+    for (cpShape* shape : world->m_tileShapesToDestroy) {
         ContactListener::BodyUserData* userData = static_cast<ContactListener::BodyUserData*>(cpShapeGetUserData(shape));
 
         ContactListener::BlockWrapper* blockWrapper = static_cast<ContactListener::BlockWrapper*>(userData->data);
@@ -930,7 +930,7 @@ void World::attackTilePhysicsObjectCallback(cpShape* shape, void *data)
     //FIXME: decrement health..
     block->primitiveType = Block::BlockType::NullBlockType;
 
-    world->m_tileShapesToDestroy.push_back(shape);
+    world->m_tileShapesToDestroy.append(shape);
     cpSpaceAddPostStepCallback(world->m_cpSpace, &World::tileRemovedPostStepCallback, nullptr, world);
 
     uint32_t column = blockWrapper->column;
