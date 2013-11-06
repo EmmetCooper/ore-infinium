@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <list>
 #include <QList>
+#include <QHash>
 
 class FluidRenderer;
 struct cpBody;
@@ -241,7 +242,9 @@ private:
     };
 
     // holds the chunks that every player wants to have activated. made unique after it's done adding
-    std::unordered_set<DesiredChunk, KeyHashDesiredChunk, KeyEqualDesiredChunk> m_desiredChunks;
+ //   std::unordered_set<DesiredChunk, KeyHashDesiredChunk, KeyEqualDesiredChunk> m_desiredChunks;
+    QVector<DesiredChunk> m_desiredChunks;
+//    QHash<>;
 
 //    std::unordered_map<Key, SpriteList, KeyHash, KeyEqual> m_spriteObjects;
 

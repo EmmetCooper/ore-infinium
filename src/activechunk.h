@@ -27,6 +27,11 @@ struct cpSpace;
 struct cpShape;
 
 struct DesiredChunk {
+    //for container::reserve *only*
+    DesiredChunk() {
+
+    }
+
     DesiredChunk(uint32_t _row, uint32_t _column) : row(_row), column(_column) {
 
     }

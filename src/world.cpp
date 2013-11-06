@@ -274,12 +274,12 @@ void World::updateTilePhysicsObjects()
             for (int currentColumn = start.x; currentColumn < end.x; currentColumn += ACTIVECHUNK_SIZE) {
 
                 DesiredChunk desiredChunk(currentRow / ACTIVECHUNK_SIZE, currentColumn / ACTIVECHUNK_SIZE);
-                m_desiredChunks.insert(desiredChunk);
+                m_desiredChunks.append(desiredChunk);
             }
         }
     }
 
-//    Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE pre-removal: " << desiredChunks.size();
+    Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE pre-removal: " << m_desiredChunks.size();
 //   Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE post-removal: " << desiredChunks.size();
 
     // set all refcounts to 0 so that we start from scratch asking if anyone wants any of the chunks
