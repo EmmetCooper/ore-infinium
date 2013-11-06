@@ -109,7 +109,14 @@ void Debug::assertf(bool value, const std::string& message)
 
 void Debug::setAreaEnabled(Debug::Area area, bool enable)
 {
+    Q_ASSERT(categoryMap.contains(area));
+
+    // enable the LogStream-based debug area
     Settings::instance()->setDebugAreaEnabled(area, enable);
+
+    // enable the Qt logging category
+    categoryMap.value(area)->setEnabled(QtDebugMsg, enable);
+    categoryMap.value(area)->setEnabled(QtWarningMsg, enable);
 }
 
 void Debug::fatal(bool value, Debug::Area area, const std::string& message)
