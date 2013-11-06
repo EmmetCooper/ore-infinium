@@ -317,9 +317,9 @@ void World::updateTilePhysicsObjects()
         if (it.value()->refcount == 0) {
             delete it.value();
             it = m_activeChunks.erase(it);
+        } else {
+            ++it;
         }
-
-        ++it;
     }
 
     m_desiredChunks.clear();
