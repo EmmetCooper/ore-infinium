@@ -94,16 +94,18 @@ void SpriteSheetRenderer::loadSpriteSheet(const std::string& fileName, SpriteShe
 
 void SpriteSheetRenderer::unloadSpriteSheet(SpriteSheetRenderer::SpriteSheetType type)
 {
-    delete m_spriteSheetTextures.at(type).texture;
-    m_spriteSheetTextures.erase(type);
+    auto it = m_spriteSheetTextures.find(type);
+    delete it.value().texture;
+    m_spriteSheetTextures.erase(it);
 }
 
 void SpriteSheetRenderer::unloadAllSpriteSheets()
 {
-    std::map<SpriteSheetRenderer::SpriteSheetType, SpriteSheet>::const_iterator i = m_spriteSheetTextures.begin();
+    QMap<SpriteSheetRenderer::SpriteSheetType, SpriteSheet>::const_iterator i = m_spriteSheetTextures.begin();
 
     while (i != m_spriteSheetTextures.end()) {
-        unloadSpriteSheet(i->first);
+        unloadSpriteSheet(i.key());
+        ++i;
     }
 
     m_spriteSheetTextures.clear();
@@ -118,14 +120,14 @@ void SpriteSheetRenderer::bindSpriteSheet(SpriteSheetRenderer::SpriteSheetType t
 glm::vec2 SpriteSheetRenderer::spriteSheetSize(SpriteSheetRenderer::SpriteSheetType type)
 {
     auto texture = m_spriteSheetTextures.find(type);
-    glm::vec2 imageSize(float(texture->second.texture->width()), float(texture->second.texture->height()));
+    glm::vec2 imageSize(float(texture.value().texture->width()), float(texture.value().texture->height()));
 
     return imageSize;
 }
 
 SpriteSheetRenderer::SpriteFrameIdentifier SpriteSheetRenderer::spriteFrame(const std::string& frameName)
 {
-    return m_spriteSheetEntitiesDescription.find(frameName)->second;
+    return m_spriteSheetEntitiesDescription.find(frameName).value();
 }
 
 void SpriteSheetRenderer::registerSprite(Sprite* sprite)
@@ -136,7 +138,7 @@ void SpriteSheetRenderer::registerSprite(Sprite* sprite)
         // TODO: look up the size of the graphic/frame, in the spritesheet map.
 
         auto frameIdentifier = m_spriteSheetCharactersDescription.find(sprite->frameName());
-        SpriteFrameIdentifier& frame = frameIdentifier->second;
+        SpriteFrameIdentifier& frame = frameIdentifier.value();
         sprite->m_sizeMeters = glm::vec2(frame.width / PIXELS_PER_METER, frame.height / PIXELS_PER_METER);
 
         //NOTE: terraria's player size is (blocksize*2, blocksize*3), and that's a great default. sprite->m_size = glm::vec2(Block::blockSize * 2, Block::blockSize * 3);
@@ -148,7 +150,7 @@ void SpriteSheetRenderer::registerSprite(Sprite* sprite)
         m_entitySprites.insert(m_entitySprites.end(), sprite);
 
         auto frameIdentifier = m_spriteSheetEntitiesDescription.find(sprite->frameName());
-        SpriteFrameIdentifier& frame = frameIdentifier->second;
+        SpriteFrameIdentifier& frame = frameIdentifier.value();
         sprite->m_sizeMeters = glm::vec2(frame.width / PIXELS_PER_METER, frame.height / PIXELS_PER_METER);
 
         Debug::log(Debug::Area::SpriteSheetRendererArea) << "entity sprite registered, setting default size, which is that of source texture: width: " << frame.width << " height: " << frame.height << " new sprite count: " << m_entitySprites.size();
@@ -172,9 +174,9 @@ void operator >> (const YAML::Node& node, SpriteSheetRenderer::SpriteFrameIdenti
     node["height"] >> frame.height;
 }
 
-std::map<std::string, SpriteSheetRenderer::SpriteFrameIdentifier> SpriteSheetRenderer::parseSpriteSheet(const std::string& filename)
+QMap<std::string, SpriteSheetRenderer::SpriteFrameIdentifier> SpriteSheetRenderer::parseSpriteSheet(const std::string& filename)
 {
-    std::map<std::string, SpriteFrameIdentifier> descriptionMap;
+    QMap<std::string, SpriteFrameIdentifier> descriptionMap;
 
     struct stat fileAttribute;
     bool fileExists = stat(filename.c_str(), &fileAttribute) == 0;
@@ -218,7 +220,7 @@ void SpriteSheetRenderer::renderCharacters()
         auto frameIdentifier = m_spriteSheetCharactersDescription.find(sprite->frameName());
         Debug::fatal(frameIdentifier != m_spriteSheetCharactersDescription.end(), Debug::Area::SpriteSheetRendererArea, "sprite sheet character frame description could not be located, name: " + sprite->frameName());
 
-        SpriteFrameIdentifier& frame = frameIdentifier->second;
+        SpriteFrameIdentifier& frame = frameIdentifier.value();
 
         // vertices that will be uploaded.
         Vertex vertices[4];
@@ -335,7 +337,7 @@ void SpriteSheetRenderer::renderEntities()
         auto frameIdentifier = m_spriteSheetEntitiesDescription.find(sprite->frameName());
         Debug::fatal(frameIdentifier != m_spriteSheetEntitiesDescription.end(), Debug::Area::SpriteSheetRendererArea, "sprite sheet entity frame description could not be located framename: " + sprite->frameName());
 
-        SpriteFrameIdentifier& frame = frameIdentifier->second;
+        SpriteFrameIdentifier& frame = frameIdentifier.value();
 
         // vertices that will be uploaded.
         Vertex vertices[4];

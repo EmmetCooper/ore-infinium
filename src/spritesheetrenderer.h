@@ -27,6 +27,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <QMap>
 
 class Torch;
 class Camera;
@@ -112,7 +113,9 @@ private:
     };
 
     void parseAllSpriteSheets();
-    std::map<std::string, SpriteFrameIdentifier> parseSpriteSheet(const std::string& filename);
+
+    QMap<std::string, SpriteFrameIdentifier> parseSpriteSheet(const std::string& filename);
+
     void loadAllSpriteSheets();
     void loadSpriteSheet(const std::string& fileName, SpriteSheetType type);
 
@@ -139,14 +142,14 @@ private:
      * there will only be a handful. 1 texture per sprite sheet type
      * aka one for characters, 1 for entity, etc.
      */
-    std::map<SpriteSheetType, SpriteSheet> m_spriteSheetTextures;
+    QMap<SpriteSheetType, SpriteSheet> m_spriteSheetTextures;
 
     /**
      * Map containing all the sprite frame names and their properties for this
      * particular spritesheet. e.g. x, y, width, height.
      */
-    std::map<std::string, SpriteFrameIdentifier> m_spriteSheetCharactersDescription;
-    std::map<std::string, SpriteFrameIdentifier> m_spriteSheetEntitiesDescription;
+    QMap<std::string, SpriteFrameIdentifier> m_spriteSheetCharactersDescription;
+    QMap<std::string, SpriteFrameIdentifier> m_spriteSheetEntitiesDescription;
 
     std::vector<Sprite*> m_characterSprites;
     std::vector<Sprite*> m_entitySprites;
