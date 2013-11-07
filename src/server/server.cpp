@@ -526,8 +526,8 @@ Entities::Player* Server::createPlayer(const std::string& playerName)
 
     //TODO:make better server player first-spawning code
     //TODO: (much later) make it try to load the player position from previous world data, if any.
-    float posX = 2500.0f / PIXELS_PER_METER;
-    float posY = 15 * Block::BLOCK_SIZE; //start at the overground
+    float posX = 2600.0f / PIXELS_PER_METER;
+    float posY = 14 * Block::BLOCK_SIZE; //start at the overground
     Debug::log(Debug::Area::NetworkServerInitialArea) << "CREATING PLAYER, SETTING PLAYER POS X : " << posX << " Y : " << posY;
 
     //HACK FIXME: HOLY FUCK BACKMAN this is fucked horribly until physics integration is 100% complete. both of these have to be at the same position, and that simpyl shouldn't be needed..
