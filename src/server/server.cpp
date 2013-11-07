@@ -107,7 +107,7 @@ void Server::tick()
 
         while (accumulator >= dt) {
             m_world->update(dt);
-            Debug::log(Debug::Area::StartupArea) << "server frametime: " << frameTime << " ms";
+            printf("Server ms/frame is %f ms\n", dt);
 
             t += dt;
             accumulator -= dt;
@@ -119,7 +119,6 @@ void Server::tick()
         // do network shit
         // sleep so we don't burn cpu
         std::chrono::milliseconds timeUntilNextFrame(int(dt - accumulator));
-//        std::this_thread::sleep_for(timeUntilNextFrame);
         QThread::msleep(timeUntilNextFrame.count());
     }
 }
