@@ -43,32 +43,36 @@ uint32_t Image::height() const
 
 void Image::loadImage(const std::string& filename)
 {
-    Debug::log(Debug::Area::ImageLoaderArea) << "Loading image: " << filename << " ... ";
+    qCDebug(ORE_IMAGE_LOADER) << "Loading image:" << filename << "... ";
 
     struct stat fileAttribute;
     bool fileExists = stat(filename.c_str(), &fileAttribute) == 0;
 
-    Debug::fatal(fileExists, Debug::Area::ImageLoaderArea, "image file failed to load, file does not exist. Filename: " + filename);
+    if (!fileExists) {
+        qFatal("image file failed to load, file does not exist");
+    }
 
     m_image.load(QString::fromStdString(filename));
 
-    Debug::fatal(!m_image.isNull(), Debug::Area::ImageLoaderArea, "failure to load image");
+    if (m_image.isNull()) {
+        qFatal("failure to load image");
+    }
 
     if(m_image.format() == QImage::Format_ARGB32) {
         m_format = GL_BGRA;
     } else {
-        Debug::fatal(false, Debug::ImageLoaderArea, "image format is different than what we're used to. format is NOT RGBA");
+        qFatal("image format is different than what we're used to. format is NOT RGBA");
     }
 }
 
 void Image::flipVertically()
 {
-    Debug::fatal(!m_image.isNull(), Debug::Area::ImageLoaderArea, "bitmap invalid!");
+    Q_ASSERT(!m_image.isNull());
     m_image = m_image.mirrored(false, true);
 }
 
 void* Image::bytes()
 {
-    Debug::fatal(!m_image.isNull(), Debug::Area::ImageLoaderArea, "bitmap invalid!");
+    Q_ASSERT(!m_image.isNull());
     return m_image.bits();
 }
