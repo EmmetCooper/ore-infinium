@@ -31,18 +31,18 @@
 #include <iostream>
 #include <fstream>
 
-std::string Packet::serialize(google::protobuf::Message* message, uint32_t packetType, PacketCompression compressed)
+std::string Packet::serialize(google::protobuf::Message* message, uint32_t packetType)
 {
 
     std::string stringPacketContents;
     google::protobuf::io::StringOutputStream stringStreamPacketContents(&stringPacketContents);
 
-    PacketCompression actualCompression = serializeStreamContents(&stringStreamPacketContents, message, packetType, compressed);
+    serializeStreamContents(&stringStreamPacketContents, message, packetType);
 
     std::string stringPacketHeader;
     google::protobuf::io::StringOutputStream stringStreamPacketHeader(&stringPacketHeader);
 
-    serializeStreamHeader(&stringStreamPacketHeader, packetType, actualCompression);
+    serializeStreamHeader(&stringStreamPacketHeader, packetType);
 
     assert(stringPacketContents.size() > 0);
 
@@ -53,7 +53,7 @@ std::string Packet::serialize(google::protobuf::Message* message, uint32_t packe
     return ss.str();
 }
 
-void Packet::serializeStreamHeader(google::protobuf::io::StringOutputStream* stringOut, uint32_t packetType, PacketCompression compressed)
+void Packet::serializeStreamHeader(google::protobuf::io::StringOutputStream* stringOut, uint32_t packetType)
 {
     google::protobuf::io::CodedOutputStream coded_out(stringOut);
 
@@ -62,8 +62,6 @@ void Packet::serializeStreamHeader(google::protobuf::io::StringOutputStream* str
     // write packet header, containing type of message we're sending
     PacketBuf::Packet p;
     p.set_type(packetType);
-    bool isCompressed = (compressed == PacketCompression::CompressedPacket);
-    p.set_compressed(isCompressed);
     p.SerializeToString(&headerString);
 
     // write the size of the serialized packet header and the contents itself
@@ -71,7 +69,7 @@ void Packet::serializeStreamHeader(google::protobuf::io::StringOutputStream* str
     coded_out.WriteRaw(headerString.data(), headerString.size());
 }
 
-Packet::PacketCompression Packet::serializeStreamContents(google::protobuf::io::StringOutputStream* stringOut, google::protobuf::Message* message, uint32_t packetType, PacketCompression compressed)
+void Packet::serializeStreamContents(google::protobuf::io::StringOutputStream* stringOut, google::protobuf::Message* message, uint32_t packetType)
 {
     google::protobuf::io::CodedOutputStream coded_out(stringOut);
 
@@ -79,71 +77,8 @@ Packet::PacketCompression Packet::serializeStreamContents(google::protobuf::io::
     // write actual contents
     message->SerializeToString(&contentsString);
 
-    if ((compressed == PacketCompression::CompressedPacket) && (contentsString.size() <= 60)) {
-        Debug::log(Debug::NetworkServerContinuousArea) << "packet serialization, forgoing packet compression, packet size is too small to likely have a positive yield.";
-        compressed = PacketCompression::UncompressedPacket;
-    }
-
-    //FIXME: SECURITY: packet exception is not caught if the packet claims it's compressed but boost's zlib fails
-    switch (compressed) {
-    case PacketCompression::CompressedPacket: {
-        std::stringstream uncompressedStream(contentsString);
-        std::string compressedString = compress(&uncompressedStream);
-
-        coded_out.WriteVarint32(contentsString.size());
-        coded_out.WriteString(compressedString);
-        break;
-    }
-
-    case PacketCompression::UncompressedPacket: {
-        coded_out.WriteVarint32(contentsString.size());
-        coded_out.WriteString(contentsString);
-        break;
-    }
-    }
-
-    return compressed;
-}
-
-std::string Packet::compress(std::stringstream* in)
-{
-//    Debug::log(Debug::NetworkServerContinuousArea) << "compressing packet..precompressed size: " << in->str().size();
-//    /////////////////////////////////////////////////////////////////////////////////////////////
-//    boost::iostreams::filtering_streambuf<boost::iostreams::input> out;
-//    std::stringstream compressedStream;
-//
-//    boost::iostreams::zlib_params params;
-//    params.level = boost::iostreams::zlib::best_compression;
-//
-//    out.push(boost::iostreams::zlib_compressor(params));
-//    out.push(*in);
-//
-//    boost::iostreams::copy(out, compressedStream);
-//    /////////////////////////////////////////////////////////////////////////////////////////////
-//    Debug::log(Debug::NetworkServerContinuousArea) << "compressing packet..compressed size: " << compressedStream.str().size();
-//
-    return in->str();//compressedStream.str();
-}
-
-std::string Packet::decompress(std::stringstream* in)
-{
-//    /////////////////////////////////////////////////////////////////////////////////////////////
-//    boost::iostreams::filtering_streambuf<boost::iostreams::input> inbuf;
-//
-//    std::stringstream decompressedStream;
-//
-//    boost::iostreams::zlib_params params;
-//
-//    inbuf.push(boost::iostreams::zlib_decompressor(params));
-//    inbuf.push(*in);
-//
-//    std::stringstream compressed;
-//    boost::iostreams::copy(inbuf, decompressedStream);
-//
-//    /////////////////////////////////////////////////////////////////////////////////////////////
-//
-//    return decompressedStream.str();
-    return in->str();//compressedStream.str();
+    coded_out.WriteVarint32(contentsString.size());
+    coded_out.WriteString(contentsString);
 }
 
 uint32_t Packet::deserializePacketType(const std::string& packet)
@@ -191,12 +126,9 @@ void Packet::deserialize(const std::string& packetToDeserialize, google::protobu
     coded_in.ReadVarint32(&msgSize);
     assert(msgSize > 0);
 
-    bool compressed = false;
     if (coded_in.ReadString(&s, msgSize)) {
         PacketBuf::Packet p;
         p.ParseFromString(s);
-
-        compressed = p.compressed();
     } else {
         assert(0);
     }
@@ -204,38 +136,11 @@ void Packet::deserialize(const std::string& packetToDeserialize, google::protobu
     // retrieve the size of the uncompressed message..this size is part of the uncompressed data
     coded_in.ReadVarint32(&msgSize);
 
-    if (compressed == false) {
-        //packet contents
-        if (coded_in.ReadString(&s, msgSize)) {
-            message->ParseFromString(s);
-        } else {
-            assert(0);
-        }
+    //packet contents
+    if (coded_in.ReadString(&s, msgSize)) {
+        message->ParseFromString(s);
     } else {
-        // we need to decompress the packet contents before giving it to protobuf to deserialize
-        //seek to the end of the header so everything after is the contents
-        std::string rawContentsRemaining = packetToDeserialize.substr(coded_in.CurrentPosition(), packetToDeserialize.size());
-
-        std::stringstream compressedStream(rawContentsRemaining);
-
-        //Debug::log(Debug::StartupArea) << "COMPRESSED STREAM: " << compressedStream.str().size();
-
-        std::string decompressedString = decompress(&compressedStream);
-
-        //Debug::log(Debug::StartupArea) << "DECOMPRESSED STR: " << decompressedString.size();
-
-        std::stringstream decompressedStream(decompressedString);
-
-        //Debug::log(Debug::StartupArea) << " DECOMPRESSED STREAM STR: " << decompressedStream.str().size();
-
-        google::protobuf::io::IstreamInputStream decompressedRaw(&decompressedStream);
-        google::protobuf::io::CodedInputStream decompressedCoded(&decompressedRaw);
-
-        if (decompressedCoded.ReadString(&s, msgSize)) {
-            message->ParseFromString(s);
-        } else {
-            assert(0);
-        }
+        assert(0);
     }
 }
 
@@ -243,43 +148,19 @@ void Packet::sendPacket(ENetPeer* peer, google::protobuf::Message* message, uint
 {
     assert(peer && message);
 
-    std::string packetContents = Packet::serialize(message, packetType, PacketCompression::UncompressedPacket);
+    std::string packetContents = Packet::serialize(message, packetType);
 
     ENetPacket *packet = enet_packet_create(packetContents.data(), packetContents.size(), enetPacketType);
     assert(packet);
 
     enet_peer_send(peer, 0, packet);
-}
-
-void Packet::sendPacketCompressed(ENetPeer* peer, google::protobuf::Message* message, uint32_t packetType, uint32_t enetPacketType)
-{
-    assert(peer && message);
-
-    std::string packetContents = Packet::serialize(message, packetType, PacketCompression::CompressedPacket);
-
-    ENetPacket *packet = enet_packet_create(packetContents.data(), packetContents.size(), enetPacketType);
-    assert(packet);
-
-    enet_peer_send(peer, 0, packet);
-}
-
-void Packet::sendPacketCompressedBroadcast(ENetHost* host, google::protobuf::Message* message, uint32_t packetType, uint32_t enetPacketType)
-{
-    assert(host && message);
-
-    std::string packetContents = Packet::serialize(message, packetType, PacketCompression::CompressedPacket);
-
-    ENetPacket *packet = enet_packet_create(packetContents.data(), packetContents.size(), enetPacketType);
-    assert(packet);
-
-    enet_host_broadcast(host, 0, packet);
 }
 
 void Packet::sendPacketBroadcast(ENetHost* host, google::protobuf::Message* message, uint32_t packetType, uint32_t enetPacketType)
 {
     assert(host && message);
 
-    std::string packetContents = Packet::serialize(message, packetType, PacketCompression::UncompressedPacket);
+    std::string packetContents = Packet::serialize(message, packetType);
 
     ENetPacket *packet = enet_packet_create(packetContents.data(), packetContents.size(), enetPacketType);
     assert(packet);

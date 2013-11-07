@@ -99,21 +99,15 @@ public:
         DisconnectedMaliciousIntent
     };
 
-    enum class PacketCompression
-    {
-        CompressedPacket,
-        UncompressedPacket
-    };
-
     /**
      * Serializes the @p message into a string, along with the packet header and @p packetType which specifies
      * what kind of data is inside it.
      *
     * packet structure is: (size of header message + header message) + (size of precompressed message contents + compressed message contents)
      */
-    static std::string serialize(google::protobuf::Message* message, uint32_t packetType, PacketCompression compressed);
-    static void serializeStreamHeader(google::protobuf::io::StringOutputStream* stringOut, uint32_t packetType, PacketCompression compressed);
-    static PacketCompression serializeStreamContents(google::protobuf::io::StringOutputStream* stringOut, google::protobuf::Message* message, uint32_t packetType, PacketCompression compressed);
+    static std::string serialize(google::protobuf::Message* message, uint32_t packetType);
+    static void serializeStreamHeader(google::protobuf::io::StringOutputStream* stringOut, uint32_t packetType);
+    static void serializeStreamContents(google::protobuf::io::StringOutputStream* stringOut, google::protobuf::Message* message, uint32_t packetType);
 
     /**
      * Deserializes the provided stringstream, @p in and puts the data into @p message
@@ -128,19 +122,13 @@ public:
      */
     static uint32_t deserializePacketType(const std::string& packet);
 
-    //FIXME unused
-    static std::string compress(std::stringstream* in);
-    static std::string decompress(std::stringstream* in);
-
-    /**
+   /**
      * Send a packet containing the message @p message to the peer @p peer with the packet type (e.g. InvalidFromClientPacket, InvalidFromServerPacket, etc.)
      * @p enetPacketType e.g. whether ENET_PACKET_FLAG_RELIABLE or something else..
      */
     static void sendPacket(ENetPeer* peer, google::protobuf::Message* message, uint32_t packetType, uint32_t enetPacketType);
-    static void sendPacketCompressed(ENetPeer* peer, google::protobuf::Message* message, uint32_t packetType, uint32_t enetPacketType);
 
     static void sendPacketBroadcast(ENetHost* host, google::protobuf::Message* message, uint32_t packetType, uint32_t enetPacketType);
-    static void sendPacketCompressedBroadcast(ENetHost* host, google::protobuf::Message* message, uint32_t packetType, uint32_t enetPacketType);
 
 private:
     Packet();

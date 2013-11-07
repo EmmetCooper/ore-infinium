@@ -442,7 +442,7 @@ void Server::sendLargeWorldChunk(ENetPeer* peer)
         }
     }
 
-    Packet::sendPacketCompressed(peer, &message, Packet::FromServerPacketContents::ChunkFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
+    Packet::sendPacket(peer, &message, Packet::FromServerPacketContents::ChunkFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
 }
 
 void Server::sendWorldChunk(Chunk* chunk)
@@ -467,7 +467,7 @@ void Server::sendWorldChunk(Chunk* chunk)
         }
     }
 
-    Packet::sendPacketCompressedBroadcast(m_server, &message, Packet::FromServerPacketContents::ChunkFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
+    Packet::sendPacketBroadcast(m_server, &message, Packet::FromServerPacketContents::ChunkFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
 }
 
 /// search for the client associated with this player
@@ -505,7 +505,7 @@ void Server::sendItemSpawned(Item* item)
         break;
     }
 
-    Packet::sendPacketCompressedBroadcast(m_server, &message, Packet::FromServerPacketContents::ItemSpawnedFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
+    Packet::sendPacketBroadcast(m_server, &message, Packet::FromServerPacketContents::ItemSpawnedFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
 }
 
 void Server::sendQuickBarInventoryItemCountChanged(Entities::Player* player, uint8_t index, uint8_t newCount)
@@ -641,7 +641,7 @@ void Server::sendPlayerQuickBarInventory(Entities::Player* player, uint8_t index
         }
     }
 
-    Packet::sendPacketCompressed(peer, &message, Packet::QuickBarInventoryItemFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
+    Packet::sendPacket(peer, &message, Packet::QuickBarInventoryItemFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
 }
 
 void Server::sendInitialVegetationSpawn(ENetPeer* peer)
@@ -656,5 +656,5 @@ void Server::sendInitialVegetationSpawn(ENetPeer* peer)
         message.add_x(pos.x);
         message.add_y(pos.y);
     }
-    Packet::sendPacketCompressed(peer, &message, Packet::InitialVegetationSpawningFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
+    Packet::sendPacket(peer, &message, Packet::InitialVegetationSpawningFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
 }
