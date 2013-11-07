@@ -240,7 +240,7 @@ LogStream::~LogStream()
 
     areaString.append("\e[36;40m");
 
-    if (!Settings::instance()->isDebugAreaEnabled(Debug::Area::ShadersArea)) {
+    if (!Settings::instance()->isDebugAreaEnabled(m_area)) {
         return;
     }
 
