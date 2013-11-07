@@ -63,7 +63,7 @@ Client::~Client()
 
 void Client::init()
 {
-    Debug::log(Debug::ImportantArea) << "CLIENT INIT START!";
+    qCDebug(ORE_IMPORTANT) << "CLIENT INIT START!";
 
     // FIXME:
     // glViewport(0, 0, Settings::instance()->windowWidth, Settings::instance()->windowHeight);
@@ -71,14 +71,14 @@ void Client::init()
     // m_debugMenu = new DebugMenu(this);
     // m_debugMenu->show();
 
-    Debug::log(Debug::ImportantArea) << "CLIENT INIT END!";
+    qCDebug(ORE_IMPORTANT) << "CLIENT INIT END!";
 }
 
 void Client::tickLogicThread()
 {
     /*
-    Debug::log(Debug::ImportantArea) << "CLIENT EXEC!";
-    Debug::log(Debug::ImportantArea) << "GAME TICK!";
+    qCDebug(ORE_IMPORTANT) << "CLIENT EXEC!";
+    qCDebug(ORE_IMPORTANT) << "GAME TICK!";
 
     std::chrono::system_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
 
@@ -104,7 +104,7 @@ void Client::tickLogicThread()
         t += dt;
         accumulator -= dt;
 
-        Debug::log(Debug::ImportantArea) << "TICKING LOGIC THREAD AND SUB TICK!";
+        qCDebug(ORE_IMPORTANT) << "TICKING LOGIC THREAD AND SUB TICK!";
         tick(frameTime);
     }
 
@@ -125,7 +125,7 @@ void Client::initGL()
 
     int retGLEW = glewInit();
 
-    Debug::log(Debug::Area::StartupArea) << "glewInit return code: " << retGLEW;
+    qCDebug(ORE_STARTUP) << "glewInit return code:" << retGLEW;
 
     for(int i = 0; i < 100; ++i) {
       Debug::checkGLErrorSafe();
@@ -142,19 +142,19 @@ void Client::initGL()
     //FIXME: MOVE INTO INITGL
     Debug::checkGLError();
 
-    Debug::log(Debug::Area::StartupArea) << "Platform: Driver Vendor: " << glGetString(GL_VENDOR);
-    Debug::log(Debug::Area::StartupArea) << "Platform: Renderer: " << glGetString(GL_RENDERER);
-    Debug::log(Debug::Area::StartupArea) << "OpenGL Version: " << glGetString(GL_VERSION);
-    Debug::log(Debug::Area::StartupArea) << "GLSL Version: " << glGetString(GL_SHADING_LANGUAGE_VERSION);
-    Debug::log(Debug::Area::StartupArea) << "Built against Qt version: " << QT_VERSION_STR;
-    Debug::log(Debug::Area::StartupArea) << "Running against Qt version: " << qVersion();
+    qCDebug(ORE_STARTUP) << "Platform: Driver Vendor:" << glGetString(GL_VENDOR);
+    qCDebug(ORE_STARTUP) << "Platform: Renderer:" << glGetString(GL_RENDERER);
+    qCDebug(ORE_STARTUP) << "OpenGL Version:" << glGetString(GL_VERSION);
+    qCDebug(ORE_STARTUP) << "GLSL Version:" << glGetString(GL_SHADING_LANGUAGE_VERSION);
+    qCDebug(ORE_STARTUP) << "Built against Qt version:" << QT_VERSION_STR;
+    qCDebug(ORE_STARTUP) << "Running against Qt version:" << qVersion();
 
     Debug::checkGLError();
 
     GLint textureSize;
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, &textureSize);
 
-    Debug::log(Debug::Area::StartupArea) << "Maximum OpenGL texture size allowed: " << textureSize;
+    qCDebug(ORE_STARTUP) << "Maximum OpenGL texture size allowed:" << textureSize;
 
 
 #ifdef GLEW_KHR_debug
@@ -163,20 +163,22 @@ void Client::initGL()
         Debug::registerGLDebugCallback();
         glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, 0, GL_TRUE);
     } else {
-        Debug::log(Debug::Area::ImportantArea) << "GLEW_KHR_debug is not available, disabling OpenGL debug reporting facilities. The extension was compiled in but is not available at runtime.";
+        qCDebug(ORE_IMPORTANT) << "GLEW_KHR_debug is not available, disabling OpenGL debug reporting facilities. The extension was compiled in but is not available at runtime.";
     }
 #endif
 
-    Debug::fatal(enet_initialize() == 0, Debug::Area::ImportantArea, "An error occurred during ENet init (network init failure");
+    if (enet_initialize() != 0) {
+        qFatal("An error occurred during ENet init (network init failure)");
+    }
 
-    Debug::log(Debug::Area::StartupArea) << "initGL finished";
+    qCDebug(ORE_STARTUP) << "initGL finished";
     qDebug() << "\n--------------------------------------------------------------------------------------";
 }
 
 void Client::handleWindowChanged(QQuickWindow *win)
 {
     if (win) {
-        Debug::log(Debug::ImportantArea) << "windowChanged slot hit";
+        qCDebug(ORE_IMPORTANT) << "windowChanged slot hit";
         // Connect the beforeRendering signal to our paint function.
         // Since this call is executed on the rendering thread it must be
         // a Qt::DirectConnection
@@ -192,14 +194,14 @@ void Client::handleWindowChanged(QQuickWindow *win)
 void Client::paint()
 {
     if (!m_firstGLInit) {
-        Debug::log(Debug::ImportantArea) << "first paintunder, not init'd perform initGL";
+        qCDebug(ORE_IMPORTANT) << "first paintunder, not init'd perform initGL";
         m_firstGLInit = true;
         initGL();
 
         //FIXME: not needed move into initGL if not there already.
         glViewport(0, 0, Settings::instance()->windowWidth, Settings::instance()->windowHeight);
 
-        Debug::log(Debug::ImportantArea) << "WIN HEIGHT, W: " << Settings::instance()->windowWidth << " H: " << Settings::instance()->windowHeight;
+        qCDebug(ORE_IMPORTANT) << "WIN HEIGHT, W:" << Settings::instance()->windowWidth << "H:" << Settings::instance()->windowHeight;
 
         if (Settings::instance()->startupFlags() & Settings::PlayNowStartupFlag) {
             m_connected = true;
@@ -257,24 +259,24 @@ void Client::disconnectClicked()
 
 void Client::exitClicked()
 {
-    Debug::log(Debug::ImportantArea) << "Shutting down...";
+    qCDebug(ORE_IMPORTANT) << "Shutting down...";
     //TODO: do something sane, and  flush configs and shit?
     shutdown();
 }
 
 void Client::startSingleplayerCreateSlot(const QString& playerName, const QString& worldName)
 {
-    Debug::log(Debug::ImportantArea) << "SP start slot, playername, world: " << qPrintable(playerName) << " : " << qPrintable(worldName);
+    qCDebug(ORE_IMPORTANT) << "SP start slot, playername, world:" << qPrintable(playerName) << ":" << qPrintable(worldName);
 }
 
 void Client::startMultiplayerHostSlot(const QString& playerName, int port)
 {
-    Debug::log(Debug::ImportantArea) << "MP host slot, playername, addr, port: " << qPrintable(playerName) << " : " << port;
+    qCDebug(ORE_IMPORTANT) << "MP host slot, playername, addr, port: " << qPrintable(playerName) << " : " << port;
 }
 
 void Client::startMultiplayerJoinSlot(const QString& playerName, const QString& address, int port)
 {
-    Debug::log(Debug::ImportantArea) << "MP join slot, playername, addr, port: " << qPrintable(playerName) << " : " << qPrintable(address) << " : " << port;
+    qCDebug(ORE_IMPORTANT) << "MP join slot, playername, addr, port: " << qPrintable(playerName) << " : " << qPrintable(address) << " : " << port;
 }
 
 void Client::mouseAreaPressed(int buttons)

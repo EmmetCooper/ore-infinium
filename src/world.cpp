@@ -561,15 +561,15 @@ void World::calculateAttackPosition()
 
 void World::loadWorld()
 {
-    Debug::log(Debug::Area::WorldLoaderArea) << "Loading world!";
-    Debug::log(Debug::Area::ImportantArea) << "SIZEOF Block class: " << sizeof(Block);
-    Debug::log(Debug::Area::ImportantArea) << "SIZEOF m_blocks: " << (sizeof(Block) * m_blocks.size()) / 1e6 << " MiB";
+    qCDebug(ORE_WORLD_LOADER) << "Loading world!";
+    qCDebug(ORE_IMPORTANT) << "SIZEOF Block class:" << sizeof(Block);
+    qCDebug(ORE_IMPORTANT) << "SIZEOF m_blocks:" << (sizeof(Block) * m_blocks.size()) / 1e6 << " MiB";
     generateWorld();
 }
 
 void World::generateWorld()
 {
-    Debug::log(Debug::Area::WorldGeneratorArea) << "Generating a new world.";
+    qCDebug(ORE_WORLD_GENERATOR) << "Generating a new world.";
 
     Timer timer;
 
@@ -597,7 +597,7 @@ void World::generateWorld()
 
     generateTileMeshes();
 
-    Debug::log(Debug::Area::WorldGeneratorArea) << "Time taken for world generation: " << timer.milliseconds() << " milliseconds";
+    qCDebug(ORE_WORLD_GENERATOR) << "Time taken for world generation:" << timer.milliseconds() << "milliseconds";
 }
 
 void World::generateNoise()

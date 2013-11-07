@@ -83,7 +83,7 @@ std::string Shader::loadFile(const char* fileName)
     bool fileExists = stat(fileName, &fileAttribute) == 0;
     Debug::fatal(fileExists, Debug::Area::ImageLoaderArea, "shader file failed to load, file does not exist. Filename: " + std::string(fileName));
 
-    Debug::log(Debug::Area::ShadersArea) << "shader : " << fileName << " loaded successfully";
+    qCDebug(ORE_SHADERS) << "shader:" << fileName << "loaded successfully";
 
     std::ifstream in(fileName);
 
@@ -106,9 +106,9 @@ void Shader::loadShaders(const char* vertexShader, const char* fragmentShader)
     glCompileShader(m_vertexShader);
 
     if (!checkShaderCompileStatus(m_vertexShader)) {
-        Debug::assertf(false, "vertex shader failed to compile properly");
+        qFatal("vertex shader failed to compile properly");
     } else {
-        Debug::log(Debug::Area::ShadersArea) << "vertex shader compiled!";
+        qCDebug(ORE_SHADERS) << "vertex shader compiled!";
     }
 
     m_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -119,9 +119,9 @@ void Shader::loadShaders(const char* vertexShader, const char* fragmentShader)
     glCompileShader(m_fragmentShader);
 
     if (!checkShaderCompileStatus(m_fragmentShader)) {
-        Debug::assertf(false, "fragment shader failed to compile properly");
+        qFatal("fragment shader failed to compile properly");
     } else {
-        Debug::log(Debug::Area::ShadersArea) << "fragment shader compiled!";
+        qCDebug(ORE_SHADERS) << "fragment shader compiled!";
     }
 
     m_shaderProgram = glCreateProgram();
@@ -136,9 +136,9 @@ void Shader::loadShaders(const char* vertexShader, const char* fragmentShader)
     glLinkProgram(m_shaderProgram);
 
     if (checkProgramLinkStatus(m_shaderProgram)) {
-        Debug::log(Debug::Area::ShadersArea) << "shader program linked!";
+        qCDebug(ORE_SHADERS) << "shader program linked!";
     } else {
-        Debug::fatal(false, Debug::Area::ShadersArea, "shader program link FAILURE");
+        qFatal("shader program link FAILURE");
     }
 
 }
@@ -156,7 +156,7 @@ bool Shader::checkShaderCompileStatus(GLuint obj)
         std::unique_ptr<char[]> log(new char[length]);
         glGetShaderInfoLog(obj, length, &length, log.get());
 
-        Debug::log(Debug::Area::ShadersArea) << log.get();
+        qCDebug(ORE_SHADERS) << log.get();
         return false;
     }
     return true;
@@ -173,10 +173,9 @@ bool Shader::checkProgramLinkStatus(GLuint obj)
         glGetProgramiv(obj, GL_INFO_LOG_LENGTH, &length);
 
         std::unique_ptr<char[]> log(new char[length]);
-
         glGetProgramInfoLog(obj, length, &length, log.get());
 
-        Debug::log(Debug::Area::ShadersArea) << log.get();
+        qCDebug(ORE_SHADERS) << log.get();
         return false;
     }
     return true;
@@ -195,7 +194,7 @@ void Shader::printShaderInfoLog(GLuint shader)
         std::unique_ptr<char[]> infoLog(new GLchar[infoLogLen]);
         glGetShaderInfoLog(shader, infoLogLen, &charsWritten, infoLog.get());
 
-        Debug::log(Debug::Area::ShadersArea) << "Shader info log: " << infoLog.get();
+        qCDebug(ORE_SHADERS) << "Shader info log: " << infoLog.get();
     }
 
     // should additionally check for OpenGL errors here
