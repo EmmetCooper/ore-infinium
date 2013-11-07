@@ -52,6 +52,7 @@
 #include <unordered_set>
 
 #include <algorithm>
+#include <QThread>
 
 Server::Server()
 {
@@ -106,6 +107,7 @@ void Server::tick()
 
         while (accumulator >= dt) {
             m_world->update(dt);
+            Debug::log(Debug::Area::StartupArea) << "server frametime: " << frameTime << " ms";
 
             t += dt;
             accumulator -= dt;
@@ -117,7 +119,8 @@ void Server::tick()
         // do network shit
         // sleep so we don't burn cpu
         std::chrono::milliseconds timeUntilNextFrame(int(dt - accumulator));
-        std::this_thread::sleep_for(timeUntilNextFrame);
+//        std::this_thread::sleep_for(timeUntilNextFrame);
+        QThread::msleep(timeUntilNextFrame.count());
     }
 }
 
