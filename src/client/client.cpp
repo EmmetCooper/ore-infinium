@@ -428,7 +428,7 @@ void Client::tick(double frameTime)
        if (m_mainPlayer) {
            //NOTE: we send this shit regardless of input events..for obvious reasons. (aka fossils of a once living bug lie here ;)
            sendPlayerMovement();
-           sendPlayerMouseState();
+           //HACK: awaiting move to qt sendPlayerMouseState();
        }
 
        m_world->update(frameTime);
