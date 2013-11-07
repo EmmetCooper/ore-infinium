@@ -592,6 +592,7 @@ bool Client::connectTo(const char* address, uint16_t port)
                                 14400 / 8 /* 56K modem with 14 Kbps upstream bandwidth */);
 
     Debug::assertf(m_client, "failed to create ENet client host");
+    enet_host_compress_with_range_coder(m_client);
 
     enet_address_set_host(&m_address, address);
     m_address.port = port;
