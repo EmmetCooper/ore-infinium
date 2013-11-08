@@ -28,6 +28,7 @@
 #include <iostream>
 #include <unordered_set>
 #include <thread>
+#include <QTime>
 
 UnitTest::UnitTest()
 {
@@ -46,6 +47,8 @@ void UnitTest::testSpatialHash()
     std::cout << "beginning!" << '\n';
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    QTime time;
+    time.start();
 
     const double width = 85000.0;
     const double height = 85000.0;
@@ -57,14 +60,16 @@ void UnitTest::testSpatialHash()
         hash->insert(torch);
     }
 
-    std::cout << "added test items! sleeping for 3 seconds" << '\n';
+    std::cout << "added test items! sleeping for 3 seconds. Time took: " << time.msec() << " ms" << '\n';
     std::this_thread::sleep_for(std::chrono::seconds(3));
     std::cout << "Sleep done; querying entire range" << '\n';
 
-    std::unordered_set<Sprite*> results;
-    hash->queryRange(&results, 0.0, 0.0, width, height);
+    time.restart();
 
-    std::cout << "Range query finished. Full query count, was: " << results.size() << " should be: " << max << '\n';
+    QSet<Sprite*> results;
+    hash->queryRange2(&results, 0.0, 0.0, width, height);
+
+    std::cout << "Range query finished. Full query count, was: " << results.size() << " should be: " << max << " time took: " << time.msec() << " ms" <<  '\n';
 
     results.clear();
     delete hash;
@@ -75,6 +80,8 @@ void UnitTest::testSpatialHash()
     std::cout << "sleeping for 3 seconds" << '\n';
     std::this_thread::sleep_for(std::chrono::seconds(3));
     std::cout << "Sleep done; adding test items for next range query" << '\n';
+
+    time.restart();
 
     hash = new SpatialHash(0.0, 0.0, width, height, 5.0, 100.0);
 
@@ -96,13 +103,15 @@ void UnitTest::testSpatialHash()
         hash->insert(torch);
     }
 
-    std::cout << "done; sleeping for 3 seconds" << '\n';
+    std::cout << "done; sleeping for 3 seconds. Time took: " << time.msec() << " ms" << '\n';
     std::this_thread::sleep_for(std::chrono::seconds(3));
     std::cout << "Sleep done; querying range, verifying the propery query results due to the size of the objects instead of positions" << '\n';
 
-    hash->queryRange(&results, 0.0, 0.0, 5.0, 5.0);
+    time.restart();
 
-    std::cout << "Range query finished. Query count, was: " << results.size() << " should be: " << "1" << '\n';
+    hash->queryRange2(&results, 0.0, 0.0, 5.0, 5.0);
+
+    std::cout << "Range query finished. Query count, was: " << results.size() << " should be: " << "1" <<  " took: " << time.msec() << " ms" << '\n';
 
     results.clear();
     delete hash;
@@ -113,6 +122,8 @@ void UnitTest::testSpatialHash()
     std::cout << "sleeping for 3 seconds" << '\n';
     std::this_thread::sleep_for(std::chrono::seconds(3));
     std::cout << "Sleep done; adding test items for next range query" << '\n';
+
+    time.restart();
 
     hash = new SpatialHash(0.0, 0.0, width, height, 5.0, 100.0);
 
@@ -128,13 +139,16 @@ void UnitTest::testSpatialHash()
 //        hash->insert(torch);
     }
 
-    std::cout << "done; sleeping for 3 seconds" << '\n';
+    std::cout << "done; Took: " << time.msec() << " ms " << "sleeping for 3 seconds" << '\n';
+
     std::this_thread::sleep_for(std::chrono::seconds(3));
     std::cout << "Sleep done; querying range, verifying the propery query results due to the size of the objects instead of positions" << '\n';
 
-    hash->queryRange(&results, 1400.0, 1400.0, 2000.0, 2000.0);
+    time.restart();
 
-    std::cout << "Range query finished. Query count, was: " << results.size() << " should be: " << "1" << '\n';
+    hash->queryRange2(&results, 1400.0, 1400.0, 2000.0, 2000.0);
+
+    std::cout << "Range query finished. Took: " << time.msec() << " ms " << "Query count, was: " << results.size() << " should be: " << "1" << '\n';
 
     std::cout << "spatial hash test finished, sleeping for 5 seconds" << '\n';
     std::this_thread::sleep_for(std::chrono::seconds(5));
