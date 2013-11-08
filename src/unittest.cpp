@@ -67,7 +67,7 @@ void UnitTest::testSpatialHash()
     time.restart();
 
     QSet<Sprite*> results;
-    hash->queryRange2(&results, 0.0, 0.0, width, height);
+    hash->queryRange(&results, 0.0, 0.0, width, height);
 
     std::cout << "Range query finished. Full query count, was: " << results.size() << " should be: " << max << " time took: " << time.msec() << " ms" <<  '\n';
 
@@ -109,7 +109,7 @@ void UnitTest::testSpatialHash()
 
     time.restart();
 
-    hash->queryRange2(&results, 0.0, 0.0, 5.0, 5.0);
+    hash->queryRange(&results, 0.0, 0.0, 5.0, 5.0);
 
     std::cout << "Range query finished. Query count, was: " << results.size() << " should be: " << "1" <<  " took: " << time.msec() << " ms" << '\n';
 
@@ -146,7 +146,7 @@ void UnitTest::testSpatialHash()
 
     time.restart();
 
-    hash->queryRange2(&results, 1400.0, 1400.0, 2000.0, 2000.0);
+    hash->queryRange(&results, 1400.0, 1400.0, 2000.0, 2000.0);
 
     std::cout << "Range query finished. Took: " << time.msec() << " ms " << "Query count, was: " << results.size() << " should be: " << "1" << '\n';
 

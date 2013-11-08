@@ -646,7 +646,7 @@ void Server::sendPlayerQuickBarInventory(Entities::Player* player, uint8_t index
 
 void Server::sendInitialVegetationSpawn(ENetPeer* peer)
 {
-    std::unordered_set<Sprite*> results;
+    QSet<Sprite*> results;
     m_world->m_treesSpatialHash->queryRange(&results, 0.0, 0.0, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, Block::BLOCK_SIZE * WORLD_ROWCOUNT);
 
     PacketBuf::InitialVegetationSpawn message;

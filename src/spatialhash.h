@@ -26,6 +26,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include <QSet>
+
 //FIXME:class SpatialHashRenderer;
 
 class Sprite;
@@ -69,7 +71,7 @@ public:
 
     void clear();
 
-    void queryRange(std::unordered_set<Sprite*> *results, double x, double y, double x2, double y2);
+    void queryRange(QSet<Sprite*> *results, double x, double y, double x2, double y2);
 
     /**
      * Different from traditional @sa queryRange

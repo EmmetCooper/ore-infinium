@@ -140,7 +140,7 @@ void SpatialHash::clear()
 
 }
 
-void SpatialHash::queryRange(std::unordered_set<Sprite*> *results, double x, double y, double x2, double y2)
+void SpatialHash::queryRange(QSet<Sprite*> *results, double x, double y, double x2, double y2)
 {
     assert(m_contents == SpatialHashContents::SpriteSpatialHashContents);
 
