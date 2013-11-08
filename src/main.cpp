@@ -98,9 +98,9 @@ int main(int argc, char* argv[])
         }
 
         if (params.contains("--test-spatial-hash")) {
- //           UnitTest* t = new UnitTest();
-  //          t->testSpatialHash();
-   //         delete t;
+           UnitTest* t = new UnitTest();
+            t->testSpatialHash();
+            delete t;
             exit(0);
         }
 
