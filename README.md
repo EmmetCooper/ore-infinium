@@ -58,11 +58,6 @@ need to get this.)
 * FreeType (librocket already requires that so if you have that you should be
 fine).
 
-* WebP (libwebp) all of the shipped images/textures are stored in this format,
-just for kicks. Google's WebP has a lot of nice things with it, one of which is
-better compression than PNG.
-
-
 * OpenAL-Soft >= 1.14 (http://kcat.strangesoft.net/openal.html#download) - NOT
 PRESENTLY USED, NO AUDIO SYSTEM CREATED YET, SO DONT WORRY ABOUT IT YET.
 
