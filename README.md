@@ -53,8 +53,6 @@ binary, which e.g. ubuntu ships in a separate package
 (NOTE: this is internal with the game, so it builds automatically with it. No
 need to get this.)
 
-* libRocket (http://librocket.com) GUI HTML/CSS C++ library
-
 * OpenAL-Soft >= 1.14 (http://kcat.strangesoft.net/openal.html#download) - NOT
 PRESENTLY USED, NO AUDIO SYSTEM CREATED YET, SO DONT WORRY ABOUT IT YET.
 
@@ -115,8 +113,6 @@ libyaml-cpp-dev zlib1g-dev libopenal-dev'
 Okay, so basically this gives us everything except the following:
 
 * SDL 2.0
-
-* librocket
 
 So those need to be built from source.
 
