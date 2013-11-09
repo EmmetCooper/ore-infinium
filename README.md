@@ -55,9 +55,6 @@ need to get this.)
 
 * libRocket (http://librocket.com) GUI HTML/CSS C++ library
 
-* FreeType (librocket already requires that so if you have that you should be
-fine).
-
 * OpenAL-Soft >= 1.14 (http://kcat.strangesoft.net/openal.html#download) - NOT
 PRESENTLY USED, NO AUDIO SYSTEM CREATED YET, SO DONT WORRY ABOUT IT YET.
 
