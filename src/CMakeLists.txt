@@ -1,3 +1,6 @@
+
+PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS packet.proto)
+
 set(SRC
 activechunk.cpp
 block.cpp
@@ -44,7 +47,7 @@ server/contactlistener.cpp
 settings/settings.cpp
 
 network/packet.cpp
-${CMAKE_CURRENT_BINARY_DIR}/packet.pb.cc
+${PROTO_SRCS}
 
 unittest.cpp
 
@@ -56,13 +59,6 @@ include(FindPkgConfig)
 
 add_executable(ore-infinium ${SRC})
 
-# ----------------------- Generate protoc (somefile.pb.cc and somefile.pb.h) from a given somefile.proto file and build against that. the 'protoc' binary has to exist, but apparently distros have 2 packages mostly, libprotobuf and protoc, both of which are needed  -----------------------------------------
-add_custom_command(
-  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/packet.pb.cc
-  COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}  -I=${CMAKE_CURRENT_SOURCE_DIR} --cpp_out=${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/packet.proto
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/packet.proto
-#;protobuf
-)
 
 include_directories(
 # ----------
