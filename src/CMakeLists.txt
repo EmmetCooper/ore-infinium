@@ -56,29 +56,10 @@ include(FindPkgConfig)
 
 add_executable(ore-infinium ${SRC})
 
-find_program(PROTOC_EXEC NAME protoc
-PATHS
-${CMAKE_INSTALL_PREFIX}/bin
-${CMAKE_INSTALL_PREFIX}/protobuf/src
-/usr/bin/
-/usr/local/bin
-/opt/bin
-)
-
-
-if (NOT PROTOC_EXEC)
-    message(FATAL_ERROR
-    "ERROR: We couldn't launch launch protoc. We need the 'protoc' binary at build time to generate network shit. If this message is in error, check the output of 'which protoc' maybe the search paths need fixed in this file."
-    )
-endif (NOT PROTOC_EXEC)
-
-message("FOUND PROTOC BINARY! (good), path is: " + ${PROTOC_EXEC})
-message("RUNNING PROTOC BINARY WITH COMMAND: " + ${PROTOC_EXEC}  -I=${CMAKE_CURRENT_SOURCE_DIR} --cpp_out=${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/packet.proto)
-
 # ----------------------- Generate protoc (somefile.pb.cc and somefile.pb.h) from a given somefile.proto file and build against that. the 'protoc' binary has to exist, but apparently distros have 2 packages mostly, libprotobuf and protoc, both of which are needed  -----------------------------------------
 add_custom_command(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/packet.pb.cc
-  COMMAND ${PROTOC_EXEC}  -I=${CMAKE_CURRENT_SOURCE_DIR} --cpp_out=${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/packet.proto
+  COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}  -I=${CMAKE_CURRENT_SOURCE_DIR} --cpp_out=${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/packet.proto
   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/packet.proto
 #;protobuf
 )
