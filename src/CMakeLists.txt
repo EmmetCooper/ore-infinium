@@ -64,14 +64,6 @@ add_custom_command(
 #;protobuf
 )
 
-add_custom_target(
-  do_protoc
-  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/packet.pb.cc
-# ;protobuf
-)
-
-add_dependencies(ore-infinium do_protoc)
-
 include_directories(
 # ----------
 ${CMAKE_SOURCE_DIR}/utils/glm/
