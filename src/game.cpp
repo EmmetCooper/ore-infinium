@@ -22,6 +22,7 @@
 #include <google/protobuf/stubs/common.h>
 
 #include "src/client/client.h"
+#include "src/client/graph.h"
 #include "src/client/FboInSGRenderer.h"
 #include "src/client/gui/optionsdialogbackend.h"
 #include "src/server/server.h"
@@ -92,6 +93,7 @@ void Game::init()
     ////////////////////
     qmlRegisterType<OptionsDialogBackend>("OptionsDialogBackend", 1, 0, "OptionsDialogBackend");
     qmlRegisterType<FboInSGRenderer>("SceneGraphRendering", 1, 0, "Renderer");
+    qmlRegisterType<Graph>("Graph", 1, 0, "Graph");
 
     m_client = new Client();
 

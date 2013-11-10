@@ -4,6 +4,7 @@ import QtQuick.Controls.Styles 1.0
 
 import SceneGraphRendering 1.0
 import QtQuick.Layouts 1.0
+import Graph 1.0
 
 //property alias label: text.text
 
@@ -30,6 +31,19 @@ Item {
     Renderer {
         id: renderer
         anchors.fill: parent
+    }
+
+    Graph {
+        anchors {
+            left: parent.left
+            bottom: parent.bottom
+
+            leftMargin: 20
+            bottomMargin: 20
+        }
+
+        height: 300
+        width: 300
     }
 
     Loader {
