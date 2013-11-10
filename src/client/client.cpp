@@ -236,7 +236,7 @@ void Client::paint()
             frameTime = (m_time.elapsed() / static_cast<double>(m_frameCount));
             m_frameTime = frameTime;
 
-            printf("Client ms/frame is %f ms\n", frameTime);
+            //printf("Client ms/frame is %f ms\n", frameTime);
 
             emit frameTimeChanged(frameTime);
         }
