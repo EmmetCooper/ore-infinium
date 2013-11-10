@@ -98,8 +98,7 @@ set_package_properties(Protobuf PROPERTIES TYPE REQUIRED PURPOSE "For serializin
 set_package_properties(ZLIB PROPERTIES DESCRIPTION "zlib" URL "zlib")
 set_package_properties(ZLIB PROPERTIES TYPE REQUIRED PURPOSE "For compression for network communication as well as file loading/saving")
 
-feature_summary(WHAT ALL)
-#FATAL_ON_MISSING_REQUIRED_PACKAGES
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 #   DEPENDS ${proj_DEPENDENCIES}
 
