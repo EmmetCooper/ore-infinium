@@ -30,9 +30,6 @@
 #include <QTime>
 #include <QMutex>
 
-#include <SDL2/SDL.h>
-#include <SDL_log.h>
-
 #include <atomic>
 #include <mutex>
 #include <thread>
@@ -221,9 +218,6 @@ private:
     DebugMenu* m_debugMenu = nullptr;
     QuickBarMenu* m_quickBarMenu = nullptr;
     DebugSettings* m_debugSettings = nullptr;
-
-    SDL_Window *m_window = nullptr;
-    SDL_GLContext m_GLcontext;
 
     std::string m_playerName;
 

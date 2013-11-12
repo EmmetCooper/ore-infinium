@@ -124,26 +124,7 @@ void Client::tickLogicThread()
 
 void Client::initGL()
 {
-//    Debug::log(Debug::Area::StartupArea) << "Compiled against SDL version: " << int(compiled.major) << "." << int(compiled.minor) << "-" << int(compiled.patch) <<
-//                                         " Running (linked) against version: " << int(linked.major) << "." << int(linked.minor) << "-" << int(linked.patch);
-//
-//    m_window = SDL_CreateWindow("Ore Infinium", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-//                                Settings::instance()->windowWidth, Settings::instance()->windowHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
-//    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-//    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-//    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-//
-//    // Request opengl 3.3 context.
-//    // FIXME: i *want 3.2, but Mesa 9 only has 3.0.. :(
-//    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-//    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-//    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
-//
-//    /* Turn on double buffering with a 24bit Z buffer.
-//     * You may need to change this to 16 or 32 for your system */
-//    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-//    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-   glewExperimental = true;
+    glewExperimental = true;
 
     int retGLEW = glewInit();
 
