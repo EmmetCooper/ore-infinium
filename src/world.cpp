@@ -661,64 +661,9 @@ void World::generateVegetation()
 
 void World::saveWorld()
 {
-    /*
-
-     std::cout << "Time taken for map saving: " << elapsedTime << " Milliseconds" << std::endl;
-     */
-
-    /*
-
-    std::stringstream ss(std::stringstream::out | std::stringstream::binary);
-
-    int index = 0;
-    for (int row = 0; row < WORLD_ROWCOUNT; ++row) {
-        for (int column = 0; column < WORLD_COLUMNCOUNT; ++column) {
-            index = column * WORLD_ROWCOUNT + row;
-            Block* block = &m_blocks[index];
-            ss.write((char*)(block), sizeof(Block));
-        }
-    }
-
-
-    boost::iostreams::filtering_streambuf<boost::iostreams::input> out;
-    boost::iostreams::zlib_params params;
-    params.level = boost::iostreams::zlib::best_compression;
-
-    out.push(boost::iostreams::zlib_compressor(params));
-    out.push(ss);
-
-    std::stringstream compressed;
-    boost::iostreams::copy(out, compressed);
-
-    //  out.push(file);
-    //   char data[5] = {'a', 'b', 'c', 'd', 'e'};
-    //    boost::iostreams::copy(boost::iostreams::basic_array_source<char>(data, sizeof(data)), out);
-
-    std::ofstream file("TESTWORLDDATA", std::ios::binary);
-    file << compressed.str();
-    file.close();
-
-    */
-
-//    file.close();
+    qWarning() << "Not implemented";
 }
-/*
-std::string
-compress
-(
-)
-{
-    std::stringstream compressed;
-    std::stringstream decompressed;
-    decompressed << data;
-    boost::iostreams::filtering_streambuf<boost::iostreams::input> out;
-    out.push(boost::iostreams::zlib_compressor());
-    out.push(decompressed);
-    boost::iostreams::copy(out, compressed);
-    return compressed.str();
 
-}
-*/
 
 void World::loadChunk(Chunk* chunk)
 {
