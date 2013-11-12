@@ -18,10 +18,8 @@
 #include "spritesheetrenderer.h"
 
 #include "sprite.h"
-#include "torch.h"
 #include "entity.h"
 #include "debug.h"
-#include "game.h"
 #include "camera.h"
 #include "shader.h"
 #include "texture.h"
@@ -31,7 +29,6 @@
 #include <yaml-cpp/yaml.h>
 
 #include <fstream>
-#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
