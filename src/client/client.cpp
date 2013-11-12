@@ -17,29 +17,25 @@
 
 #include "client.h"
 
-#include "src/client/FboInSGRenderer.h"
-
 #include "src/network/packet.h"
 #include "src/packet.pb.h"
 #include "src/server/server.h"
 
-
-#include "src/physicsdebugrenderer.h"
-
-#include "gui/optionsdialogbackend.h"
+// not used at the moment
+//#include "src/physicsdebugrenderer.h"
+//#include "gui/optionsdialogbackend.h"
 
 #include "src/settings/settings.h"
 
-#include "src/quickview.h"
 #include "src/quickbarinventory.h"
 #include "src/world.h"
 #include "src/player.h"
 #include "src/camera.h"
 #include "src/debug.h"
-#include <src/item.h>
-#include <src/torch.h>
-#include <src/tool.h>
-#include <src/vegetation.h>
+#include "src/item.h"
+#include "src/torch.h"
+#include "src/tool.h"
+#include "src/vegetation.h"
 #include "src/../config.h"
 
 #include <random>

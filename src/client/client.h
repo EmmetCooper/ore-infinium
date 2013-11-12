@@ -20,18 +20,15 @@
 
 #include "glew.h"
 
+#include "src/player.h"
+
 #include <enet/enet.h>
 #include <string>
 
-#include "src/player.h"
-
 #include <QtQuick/QQuickItem>
-#include <QtGui/QOpenGLShaderProgram>
 #include <QTime>
 #include <QMutex>
 
-#include <atomic>
-#include <mutex>
 #include <thread>
 
 class QQuickView;
