@@ -58,12 +58,7 @@
 #include <math.h>
 #include <fstream>
 #include <chrono>
-#include <unordered_set>
-#include <fstream>
 
-#include <boost/iostreams/filtering_streambuf.hpp>
-#include <boost/iostreams/copy.hpp>
-#include <boost/iostreams/filter/zlib.hpp>
 #include <QTimer>
 
 #include "glm/core/func_common.hpp"

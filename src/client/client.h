@@ -36,7 +36,6 @@
 #include <atomic>
 #include <mutex>
 #include <thread>
-#include <boost/concept_check.hpp>
 
 class QQuickView;
 class FboInSGRenderer;

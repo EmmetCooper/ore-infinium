@@ -51,7 +51,6 @@
 #include <QOpenGLContext>
 #include <QThread>
 
-#include <SDL2/SDL_image.h>
 #include <SDL2/SDL_events.h>
 
 Client::Client()

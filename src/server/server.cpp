@@ -41,15 +41,7 @@
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/io/coded_stream.h>
 
-#include <SDL2/SDL.h>
-#include <zlib.h>
-
-#include <iostream>
-#include <fstream>
-#include <random>
 #include <chrono>
-#include <thread>
-#include <unordered_set>
 
 #include <algorithm>
 #include <QThread>
