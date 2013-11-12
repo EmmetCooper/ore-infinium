@@ -20,6 +20,8 @@
 
 #include <cstdint>
 
+//TODO: use constexpr when MSVC 2013+n gets it..sigh.
+
 // 50px per 1 meter. so that box2d has a range of entity sizes between 0.1 and 10 meters.
 static constexpr double PIXELS_PER_METER = 50;
 static constexpr float BLOCK_SIZE = 16.0f / PIXELS_PER_METER;

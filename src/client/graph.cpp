@@ -1,7 +1,6 @@
 #include "graph.h"
 
 #include <QPainter>
-
 #include <QDebug>
 
 Graph::Graph(): QQuickPaintedItem()
@@ -10,11 +9,17 @@ Graph::Graph(): QQuickPaintedItem()
     setRenderTarget(FramebufferObject);
     setOpaquePainting(true);
 
-    connect(&m_timer, SIGNAL(timeout()), this, SLOT(timeout()));
-    m_timer.setInterval(16);
-    m_timer.start();
-
     m_points.reserve(1000);
+}
+
+void Graph::setMax(double max)
+{
+    m_max = max;
+}
+
+void Graph::setMin(double min)
+{
+    m_min = min;
 }
 
 void Graph::paint(QPainter* painter)
@@ -62,20 +67,11 @@ void Graph::paint(QPainter* painter)
     painter->drawPolygon(poly, Qt::FillRule::WindingFill);
 }
 
-void Graph::timeout()
-{
-    update();
-
-    int rand = qrand() % 100;
-    qDebug() << "RAND: " << rand;
-    addSample(rand);
-
-    shiftLeft();
-}
-
 void Graph::addSample(double value)
 {
     m_points.append(QPointF(boundingRect().width(), value));
+    shiftLeft();
+    update();
 }
 
 void Graph::shiftLeft()

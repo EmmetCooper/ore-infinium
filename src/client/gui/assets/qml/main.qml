@@ -12,7 +12,6 @@ Item {
     id: main
 
     Component.onCompleted: {
-
     }
 
     Connections {
@@ -20,6 +19,11 @@ Item {
 
         onGameStarted: {
             stackView.clear()
+        }
+
+        onFrameTimeChanged: {
+            print("FRAMETIME" + frameTime);
+            clientFrametimeGraph.addSample(frameTime);
         }
     }
 
@@ -34,6 +38,8 @@ Item {
     }
 
     Graph {
+        id: clientFrametimeGraph
+
         anchors {
             left: parent.left
             bottom: parent.bottom
