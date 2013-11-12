@@ -58,8 +58,6 @@
 #include <math.h>
 #include <fstream>
 #include <chrono>
-#include <unordered_set>
-#include <fstream>
 
 #include <QTimer>
 

@@ -19,8 +19,6 @@
 
 #include "src/packet.pb.h"
 
-#include <zlib.h>
-
 #include <google/protobuf/stubs/common.h>
 #include <google/protobuf/io/zero_copy_stream.h>
 #include <google/protobuf/io/zero_copy_stream_impl.h>
@@ -28,8 +26,7 @@
 
 #include "src/debug.h"
 
-#include <iostream>
-#include <fstream>
+#include <sstream>
 
 std::string Packet::serialize(google::protobuf::Message* message, uint32_t packetType)
 {

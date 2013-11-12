@@ -22,8 +22,6 @@
 
 #include <enet/enet.h>
 
-#include <iostream>
-
 namespace google
 {
 namespace protobuf

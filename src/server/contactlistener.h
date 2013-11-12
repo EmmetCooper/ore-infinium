@@ -18,7 +18,6 @@
 #ifndef CONTACTLISTENER_H
 #define CONTACTLISTENER_H
 
-#include <set>
 #include <src/block.h>
 
 struct cpArbiter;

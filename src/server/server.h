@@ -22,8 +22,7 @@
 
 #include <src/player.h>
 
-#include <sstream>
-
+#include <string>
 #include <map>
 
 #include <QString>
