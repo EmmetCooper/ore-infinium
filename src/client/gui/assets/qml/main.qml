@@ -48,6 +48,9 @@ Item {
             bottomMargin: 20
         }
 
+        min: 0.0
+        max: 60.0
+
         height: 300
         width: 300
     }

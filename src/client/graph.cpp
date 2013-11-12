@@ -1,6 +1,11 @@
 #include "graph.h"
+#include <qt/QtCore/QEvent>
+#include <qt/QtCore/qcoreevent.h>
+#include <qt/QtGui/qevent.h>
 
 #include <QPainter>
+#include <QEvent>
+
 #include <QDebug>
 
 Graph::Graph(): QQuickPaintedItem()
@@ -10,16 +15,24 @@ Graph::Graph(): QQuickPaintedItem()
     setOpaquePainting(true);
 
     m_points.reserve(1000);
+    setAcceptHoverEvents(true);
 }
 
 void Graph::setMax(double max)
 {
     m_max = max;
+    updateScalar();
 }
 
 void Graph::setMin(double min)
 {
     m_min = min;
+    updateScalar();
+}
+
+void Graph::updateScalar()
+{
+    m_scalar = boundingRect().height() / m_max;
 }
 
 void Graph::paint(QPainter* painter)
@@ -53,7 +66,7 @@ void Graph::paint(QPainter* painter)
     for (int i = 0; i < m_points.size(); ++i) {
         Sample sample = m_points.at(i);
 
-        QPointF point(sample.x, sample.scaledValue);
+        QPointF point(sample.x, rect.height() - sample.scaledValue);
         poly << point;
     }
 
@@ -72,6 +85,15 @@ void Graph::paint(QPainter* painter)
     poly << firstPoint;
 
     painter->drawPolygon(poly, Qt::FillRule::WindingFill);
+
+    painter->setPen(Qt::red);
+    QString text = QString::number((rect.height() - m_tooltipPoint.y()) / m_scalar);
+    painter->drawText(m_tooltipPoint, text);
+}
+
+void Graph::hoverMoveEvent(QHoverEvent * event)
+{
+    m_tooltipPoint = event->oldPosF();
 }
 
 void Graph::addSample(double value)

@@ -3,12 +3,18 @@
 
 #include <QQuickPaintedItem>
 #include <QTimer>
+#include <qt/QtCore/qpoint.h>
+
+class QMouseEvent;
+class QPainter;
+class QHoverEvent;
 
 class Graph : public QQuickPaintedItem
 {
     Q_OBJECT
 
-    Q_PROPERTY(double min READ min WRITE setMin NOTIFY minChanged);
+    Q_PROPERTY(double min READ min WRITE setMin)
+    Q_PROPERTY(double max READ max WRITE setMax)
 
 public:
     Graph();
@@ -28,14 +34,10 @@ public slots:
     void addSample(double value);
 
 protected:
-    void paint(QPainter* painter);
-
-signals:
-    void minChanged(int min);
+    virtual void paint(QPainter* painter);
+    virtual void hoverMoveEvent(QHoverEvent* event);
 
 private:
-    void shiftLeft();
-
     struct Sample {
         Sample()
         {
@@ -55,6 +57,9 @@ private:
         double originalValue = 0.0;
     };
 
+    void shiftLeft();
+    void updateScalar();
+
 private:
     double m_min = 0.0;
     double m_max = 0.0;
@@ -62,6 +67,8 @@ private:
     // how much to move for left shift operation
     double m_leftMovement = 2.0;
     double m_scalar = 1.0;
+
+    QPointF m_tooltipPoint;
 
     QVector<Sample> m_points;
 };
