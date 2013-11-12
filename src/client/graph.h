@@ -36,13 +36,34 @@ signals:
 private:
     void shiftLeft();
 
+    struct Sample {
+        Sample()
+        {
+
+        }
+
+        Sample(double _x, double _scaledValue, double _originalValue) :
+        x(_x),
+        scaledValue(_scaledValue),
+        originalValue(_originalValue)
+        {
+
+        }
+
+        double x = 0.0;
+        double scaledValue = 0.0;
+        double originalValue = 0.0;
+    };
+
 private:
     double m_min = 0.0;
     double m_max = 0.0;
 
+    // how much to move for left shift operation
     double m_leftMovement = 2.0;
+    double m_scalar = 1.0;
 
-    QVector<QPointF> m_points;
+    QVector<Sample> m_points;
 };
 
 #endif

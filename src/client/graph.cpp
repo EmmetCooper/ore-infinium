@@ -51,16 +51,23 @@ void Graph::paint(QPainter* painter)
     // draw filled graph
     QPolygonF poly;
     for (int i = 0; i < m_points.size(); ++i) {
-        poly << m_points.at(i);
+        Sample sample = m_points.at(i);
+
+        QPointF point(sample.x, sample.scaledValue);
+        poly << point;
     }
 
     //finalize the shape so we can fill it
-    QPointF lastPoint = m_points.at(m_points.size() - 1);
+    Sample lastSample = m_points.at(m_points.size() - 1);
+    QPointF lastPoint(lastSample.x, lastSample.scaledValue);
+
     lastPoint.setY(rect.height());
     poly << lastPoint;
 
 
-    QPointF firstPoint = m_points.at(0);
+    Sample firstSample = m_points.at(0);
+    QPointF firstPoint(firstSample.x, firstSample.scaledValue);
+
     firstPoint.setY(rect.height());
     poly << firstPoint;
 
@@ -69,18 +76,21 @@ void Graph::paint(QPainter* painter)
 
 void Graph::addSample(double value)
 {
-    m_points.append(QPointF(boundingRect().width(), value));
+    Sample sample(boundingRect().width(), value * m_scalar, value);
+    m_points.append(sample);
+
     shiftLeft();
-    update();
+    this->update();
 }
 
 void Graph::shiftLeft()
 {
     for (int i = 0; i < m_points.size(); ++i) {
-        m_points[i].rx() -= m_leftMovement;
+        m_points[i].x -= m_leftMovement;
 
-        if (m_points[i].x() < 0.0) {
+        if (m_points[i].x < 0.0) {
             m_points.remove(i);
         }
     }
+    qDebug() << "COUNT:" << m_points.size();
 }
