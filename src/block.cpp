@@ -17,12 +17,6 @@
 
 #include "block.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <iostream>
-#include <vector>
-#include <assert.h>
-
 Block::Block()
 {
 }

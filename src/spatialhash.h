@@ -18,13 +18,9 @@
 #ifndef SPATIALHASH_H
 #define SPATIALHASH_H
 
-#include <chipmunk/chipmunk.h>
-
 #include <vector>
-#include <set>
 #include <list>
 #include <unordered_map>
-#include <unordered_set>
 
 #include <QSet>
 

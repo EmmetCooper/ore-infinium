@@ -17,7 +17,6 @@
 
 #include "spatialhash.h"
 
-#include "src/entity.h"
 #include "src/object.h"
 #include "src/sprite.h"
 

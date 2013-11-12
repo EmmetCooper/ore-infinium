@@ -17,7 +17,6 @@
 
 #include "time.h"
 
-#include <iostream>
 #include <sstream>
 
 Time::Time()

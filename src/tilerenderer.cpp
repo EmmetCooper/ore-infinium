@@ -17,8 +17,10 @@
 
 #include "tilerenderer.h"
 
+#include <cstdlib>
+#include <vector>
+
 #include "debug.h"
-#include "game.h"
 #include "camera.h"
 #include "shader.h"
 #include "image.h"
@@ -27,11 +29,6 @@
 #include "src/player.h"
 
 #include "settings/settings.h"
-
-#include <fstream>
-#include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
 
 TileRenderer::TileRenderer(World* world, Camera* camera, Entities::Player* mainPlayer)
     :   m_mainPlayer(mainPlayer),

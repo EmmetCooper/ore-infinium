@@ -20,7 +20,6 @@
 
 #include "item.h"
 
-#include <vector>
 #include <string>
 
 /**

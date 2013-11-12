@@ -18,19 +18,8 @@
 #ifndef TILERENDERER_H
 #define TILERENDERER_H
 
-#include "debug.h"
-#include "block.h"
-
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-
 #include "glew.h"
 
-#include <map>
-#include <string>
-#include <vector>
-
-class Image;
 namespace Entities
 {
 class Player;
