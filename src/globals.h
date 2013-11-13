@@ -44,6 +44,7 @@ static constexpr float movementUnits = 1.0f / 100.0f;
 //HACK: was 10, 1.0 now for debugging
 static constexpr float movementSpeed = 1.0f * movementUnits;
 
+static constexpr int maximumChatCharCount = 256;
 
 //FIXME: find good values for this. Basically this is as far out as *anyone* can see when they zoom out, regardless of resolution they will all only be able to see
 // this many blocks out.

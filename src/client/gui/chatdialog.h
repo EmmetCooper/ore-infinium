@@ -54,8 +54,6 @@ public:
 
     Rocket::Core::ElementDocument* document();
 
-    static constexpr int maximumChatCharCount = 256;
-
 private:
     void loadDocument();
     void reloadChatHistory();
