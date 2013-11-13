@@ -20,6 +20,12 @@
 
 #include <cstdint>
 
+
+//height
+static constexpr uint16_t WORLD_ROWCOUNT = 8400;
+//width
+static constexpr uint16_t WORLD_COLUMNCOUNT = 2400;
+
 // 50px per 1 meter. so that box2d has a range of entity sizes between 0.1 and 10 meters.
 static constexpr double PIXELS_PER_METER = 50.0;
 

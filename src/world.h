@@ -51,11 +51,6 @@ class PhysicsDebugRenderer;
 class ParticleRenderer;
 class Timer;
 
-//height
-static constexpr uint16_t WORLD_ROWCOUNT = 8400;
-//width
-static constexpr uint16_t WORLD_COLUMNCOUNT = 2400;
-
 /*
  e.g. [ ] [ ] [ ] [ ] [ ]  ... 8400
         [ ] [ ] [ ] [ ] [ ]  ... 8400
