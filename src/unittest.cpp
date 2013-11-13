@@ -20,13 +20,10 @@
 #include "src/spatialhash.h"
 #include "src/torch.h"
 
-#include "src/debug.h"
-
 #include <zlib.h>
 #include <cstring>
 
 #include <iostream>
-#include <unordered_set>
 #include <thread>
 #include <QTime>
 

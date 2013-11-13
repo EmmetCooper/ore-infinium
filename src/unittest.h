@@ -18,9 +18,6 @@
 #ifndef UNITTEST_H
 #define UNITTEST_H
 
-#include <vector>
-#include <string>
-
 /**
  */
 class UnitTest
