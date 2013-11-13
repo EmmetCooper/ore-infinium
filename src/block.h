@@ -18,10 +18,11 @@
 #ifndef BLOCK_H
 #define BLOCK_H
 
+#include "globals.h"
+
 #include <vector>
 #include <map>
 #include <limits>
-#include "globals.h"
 
 class Block
 {
@@ -65,6 +66,7 @@ public:
     };
 
     struct BlockStruct {
+        //TODO: add "flammable"
         BlockStruct(const char *_texture, bool _collides) {
             texture = _texture;
             collides = _collides;

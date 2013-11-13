@@ -30,7 +30,6 @@ static constexpr double BLOCK_SIZE = 16.0 / PIXELS_PER_METER;
 //Block size in pixels, should NOT be used for ingame calculations but only for texture thangs.
 static constexpr double BLOCK_SIZE_PIXELS = 16.0;
 
-
 //FIXME: find good values for this. Basically this is as far out as *anyone* can see when they zoom out, regardless of resolution they will all only be able to see
 // this many blocks out.
 // units are just tile counts, not in meters, just number of tiles.
@@ -48,6 +47,7 @@ static constexpr int32_t POSITION_ITERATIONS = 2;
 
 static constexpr uint32_t WORLD_SEA_LEVEL = 16;
 
+static constexpr int MAXPLAYERS = 8;
 static constexpr uint16_t DEFAULT_PORT = 44543;
 
 #endif

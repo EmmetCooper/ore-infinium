@@ -50,8 +50,6 @@ public:
     void tick();
     void processMessage(ENetEvent& event);
 
-    static constexpr int MAXPLAYERS = 8;
-
     /**
      * Returns the client that started this server. This is ONLY VALID if it's a self-hosted server/client session.
      * Use world's m_client for indication that the world is in client mode, instead.
