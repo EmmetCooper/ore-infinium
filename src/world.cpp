@@ -77,8 +77,8 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
     m_uselessEntity->setPosition(2300 / PIXELS_PER_METER, 1400 / PIXELS_PER_METER);
     m_entities.append(m_uselessEntity);
 
-    m_treesSpatialHash = new SpatialHash(0.0, 0.0, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, Block::BLOCK_SIZE * WORLD_ROWCOUNT, 8.0, 4000);
-    m_waterSpatialHash = new SpatialHash(0.0, 0.0, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, Block::BLOCK_SIZE * WORLD_ROWCOUNT, Block::BLOCK_SIZE, SpatialHash::SpatialHashContents::ObjectSpatialHashContents, 4000);
+    m_treesSpatialHash = new SpatialHash(0.0, 0.0, BLOCK_SIZE * WORLD_COLUMNCOUNT, BLOCK_SIZE * WORLD_ROWCOUNT, 8.0, 4000);
+    m_waterSpatialHash = new SpatialHash(0.0, 0.0, BLOCK_SIZE * WORLD_COLUMNCOUNT, BLOCK_SIZE * WORLD_ROWCOUNT, BLOCK_SIZE, SpatialHash::SpatialHashContents::ObjectSpatialHashContents, 4000);
 
     // time has to be init'ed early on
     m_time = new Time();
@@ -128,8 +128,8 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
     //client doesn't actually load/generate any world
     if (m_server) {
         m_physicsRendererFlushTimer = new Timer();
-        float x = Block::BLOCK_SIZE * WORLD_COLUMNCOUNT;
-        float y = Block::BLOCK_SIZE * WORLD_ROWCOUNT;
+        float x = BLOCK_SIZE * WORLD_COLUMNCOUNT;
+        float y = BLOCK_SIZE * WORLD_ROWCOUNT;
 
         // cpVect gravity = cpv(0, -100);
         cpVect gravity = cpv(0.0, 9.8);
@@ -148,7 +148,7 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         //HACK, as if that wasn't obvious.
         saveWorld();
 
-        Debug::log(Debug::WorldLoaderArea) << "World is x: " << (WORLD_COLUMNCOUNT * Block::BLOCK_SIZE) << " y: " << (WORLD_ROWCOUNT * Block::BLOCK_SIZE) << " meters big";
+        Debug::log(Debug::WorldLoaderArea) << "World is x: " << (WORLD_COLUMNCOUNT * BLOCK_SIZE) << " y: " << (WORLD_ROWCOUNT * BLOCK_SIZE) << " meters big";
     }
 
     //FIXME: saveMap();
@@ -202,11 +202,11 @@ void World::addPlayer(Entities::Player* player)
 
         //FIXME: HACK: this needs improvement. obviously..otherwise it could very easily destroy everything underneath wherever the player left off.
         //clear an area around the player's rect, of tiles, so he can spawn properly.
-        const int startX = ((playerPosition.x) / Block::BLOCK_SIZE) - (20);
+        const int startX = ((playerPosition.x) / BLOCK_SIZE) - (20);
         const int endX = startX + (20);
 
         //columns are our X value, rows the Y
-        const int startY = ((playerPosition.y) / Block::BLOCK_SIZE) - (20);
+        const int startY = ((playerPosition.y) / BLOCK_SIZE) - (20);
         const int endY = startY + (30);
         int index = 0;
 
@@ -378,7 +378,7 @@ void World::renderCrosshair()
 {
     glm::vec2 mouse = m_mainPlayer->mousePositionWorldCoords();
 
-    glm::vec2 crosshairPosition = glm::vec2(Block::BLOCK_SIZE * floor(mouse.x / Block::BLOCK_SIZE), Block::BLOCK_SIZE * floor(mouse.y / Block::BLOCK_SIZE));
+    glm::vec2 crosshairPosition = glm::vec2(BLOCK_SIZE * floor(mouse.x / BLOCK_SIZE), BLOCK_SIZE * floor(mouse.y / BLOCK_SIZE));
     glm::vec2 crosshairOriginOffset = glm::vec2(m_blockPickingCrosshair->sizeMeters().x * 0.5f, m_blockPickingCrosshair->sizeMeters().y * 0.5f);
     glm::vec2 crosshairFinalPosition = glm::vec2(crosshairPosition.x + crosshairOriginOffset.x, crosshairPosition.y + crosshairOriginOffset.y);
 
@@ -444,7 +444,7 @@ void World::update(double elapsedTime)
                 m_server->sendPlayerMove(player);
                 player->clearDirtyFlag(Entity::DirtyFlags::PositionDirty);
 
-                const glm::ivec2& currentChunkPosition = glm::ivec2(static_cast<int>(player->position().x / Block::BLOCK_SIZE), static_cast<int>(player->position().y / Block::BLOCK_SIZE));
+                const glm::ivec2& currentChunkPosition = glm::ivec2(static_cast<int>(player->position().x / BLOCK_SIZE), static_cast<int>(player->position().y / BLOCK_SIZE));
 
                 if (glm::distance(currentChunkPosition, player->lastLoadedChunk) > 20) {
                     Debug::log(Debug::ImportantArea) << " server sending large world chunk..: ";
@@ -497,8 +497,8 @@ uint8_t World::calculateTileMeshingType(int tileX, int tileY) const
 
 bool World::isBlockSolid(const glm::vec2& vecDest) const
 {
-    const int column = int(std::ceil(vecDest.x) / Block::BLOCK_SIZE);
-    const int row = int(std::ceil(vecDest.y) / Block::BLOCK_SIZE);
+    const int column = int(std::ceil(vecDest.x) / BLOCK_SIZE);
+    const int row = int(std::ceil(vecDest.y) / BLOCK_SIZE);
 
     int index = column * WORLD_ROWCOUNT + row;
     assert(index < WORLD_ROWCOUNT * WORLD_COLUMNCOUNT);
@@ -511,8 +511,8 @@ bool World::isBlockSolid(const glm::vec2& vecDest) const
 
 uint8_t World::blockType(const glm::vec2& vecPoint) const
 {
-    const int column = int(std::ceil(vecPoint.x) / Block::BLOCK_SIZE);
-    const int row = int(std::ceil(vecPoint.y) / Block::BLOCK_SIZE);
+    const int column = int(std::ceil(vecPoint.x) / BLOCK_SIZE);
+    const int row = int(std::ceil(vecPoint.y) / BLOCK_SIZE);
 
     int index = column * WORLD_ROWCOUNT + row;
     assert(index < WORLD_ROWCOUNT * WORLD_COLUMNCOUNT);
@@ -647,8 +647,8 @@ void World::generateVegetation()
             int index = column * WORLD_ROWCOUNT + row;
             if (m_blocks[index].primitiveType != Block::BlockType::NullBlockType) {
                 Vegetation* tree = new Vegetation("tree1", SpriteSheetRenderer::SpriteSheetType::Entity);
-                float x = column * Block::BLOCK_SIZE;
-                float y = row * Block::BLOCK_SIZE;
+                float x = column * BLOCK_SIZE;
+                float y = row * BLOCK_SIZE;
                 y -= tree->sizeMeters().y;
 
                 tree->setPosition(x, y);
@@ -820,8 +820,8 @@ void World::attemptItemPlacement(Entities::Player* player)
         return;
     }
 
-    float x = player->position().x;//Block::BLOCK_SIZE * WORLD_COLUMNCOUNT;
-    float y = player->position().y; //Block::BLOCK_SIZE * WORLD_ROWCOUNT;
+    float x = player->position().x;//BLOCK_SIZE * WORLD_COLUMNCOUNT;
+    float y = player->position().y; //BLOCK_SIZE * WORLD_ROWCOUNT;
 
     //FIXME:    m_torchesQuadTree->queryRange(list, QuadTree::AABB(QuadTree::XY(x / 2.0, y / 2.0), QuadTree::XY(500, 500)));
 

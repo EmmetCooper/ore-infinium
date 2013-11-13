@@ -64,13 +64,6 @@ public:
         OnFireBlockFlag = 1 << 0
     };
 
-    // height is the same as width (they're square)
-    // Block size in meters.
-    static constexpr double BLOCK_SIZE = 16.0f / PIXELS_PER_METER;
-
-    //Block size in pixels, should NOT be used for ingame calculations but only for texture thangs.
-    static constexpr float BLOCK_SIZE_PIXELS = 16.0f;
-
     struct BlockStruct {
         BlockStruct(const char *_texture, bool _collides) {
             texture = _texture;

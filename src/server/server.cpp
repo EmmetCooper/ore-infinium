@@ -392,8 +392,8 @@ void Server::sendLargeWorldChunk(ENetPeer* peer)
     assert(player->position().x >= 0.0);
     assert(player->position().y >= 0.0);
 
-    int32_t centerX = static_cast<int32_t>(player->position().x / Block::BLOCK_SIZE);
-    int32_t centerY = static_cast<int32_t>(player->position().y / Block::BLOCK_SIZE);
+    int32_t centerX = static_cast<int32_t>(player->position().x / BLOCK_SIZE);
+    int32_t centerY = static_cast<int32_t>(player->position().y / BLOCK_SIZE);
 
 
     Debug::log(Debug::NetworkServerInitialArea) << "centerX: " << centerX << " Y: " << centerY;
@@ -522,7 +522,7 @@ Entities::Player* Server::createPlayer(const std::string& playerName)
     //TODO:make better server player first-spawning code
     //TODO: (much later) make it try to load the player position from previous world data, if any.
     float posX = 2600.0f / PIXELS_PER_METER;
-    float posY = 14 * Block::BLOCK_SIZE; //start at the overground
+    float posY = 14 * BLOCK_SIZE; //start at the overground
     Debug::log(Debug::Area::NetworkServerInitialArea) << "CREATING PLAYER, SETTING PLAYER POS X : " << posX << " Y : " << posY;
 
     //HACK FIXME: HOLY FUCK BACKMAN this is fucked horribly until physics integration is 100% complete. both of these have to be at the same position, and that simpyl shouldn't be needed..
@@ -639,7 +639,7 @@ void Server::sendPlayerQuickBarInventory(Entities::Player* player, uint8_t index
 void Server::sendInitialVegetationSpawn(ENetPeer* peer)
 {
     QSet<Sprite*> results;
-    m_world->m_treesSpatialHash->queryRange(&results, 0.0, 0.0, Block::BLOCK_SIZE * WORLD_COLUMNCOUNT, Block::BLOCK_SIZE * WORLD_ROWCOUNT);
+    m_world->m_treesSpatialHash->queryRange(&results, 0.0, 0.0, BLOCK_SIZE * WORLD_COLUMNCOUNT, BLOCK_SIZE * WORLD_ROWCOUNT);
 
     PacketBuf::InitialVegetationSpawn message;
 

@@ -37,7 +37,7 @@ Player::Player(const std::string& frameName)
 {
     m_placeableDelayTimer = new Timer();
     m_jumpTimer = new Timer();
-    m_sizeMeters = glm::vec2(Block::BLOCK_SIZE * 2, Block::BLOCK_SIZE * 3);
+    m_sizeMeters = glm::vec2(BLOCK_SIZE * 2, BLOCK_SIZE * 3);
 }
 
 Player::~Player()
@@ -223,7 +223,7 @@ void Player::jump()
 
 int32_t Player::depthBelowSeaLevel()
 {
-    int32_t position = static_cast<int32_t>(this->position().x / Block::BLOCK_SIZE);
+    int32_t position = static_cast<int32_t>(this->position().x / BLOCK_SIZE);
     return position - World::seaLevel();
 }
 

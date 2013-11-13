@@ -34,5 +34,5 @@ FluidCell::~FluidCell()
 void FluidCell::setCellPosition(const glm::ivec2& pos)
 {
     m_cellPosition = pos;
-    setPosition(glm::vec2(pos.x * Block::BLOCK_SIZE, pos.y * Block::BLOCK_SIZE));
+    setPosition(glm::vec2(pos.x * BLOCK_SIZE, pos.y * BLOCK_SIZE));
 }

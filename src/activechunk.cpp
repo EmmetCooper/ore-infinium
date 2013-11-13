@@ -84,15 +84,15 @@ ActiveChunk::ActiveChunk(uint32_t row, uint32_t column, std::vector<Block>* bloc
             }
 
 //
-//            b2Vec2 pos = b2Vec2(Block::BLOCK_SIZE * float(currentColumn) + (Block::BLOCK_SIZE * 0.5f), Block::BLOCK_SIZE * float(currentRow) + (Block::BLOCK_SIZE * 0.5f));
+//            b2Vec2 pos = b2Vec2(BLOCK_SIZE * float(currentColumn) + (BLOCK_SIZE * 0.5f), BLOCK_SIZE * float(currentRow) + (BLOCK_SIZE * 0.5f));
 //
 //            ContactListener::BodyUserData* userData = new ContactListener::BodyUserData();
 //            userData->type = ContactListener::BodyType::Block;
 //            userData->data = &m_blocks[index];
 //
 //            b2PolygonShape box;
-//            box.SetAsBox(Block::BLOCK_SIZE * 0.5f , Block::BLOCK_SIZE * 0.5f, pos, 0.0f);
-//            box.m_centroid = b2Vec2(Block::BLOCK_SIZE * float(currentColumn) + (Block::BLOCK_SIZE * 0.5f), Block::BLOCK_SIZE * float(currentRow) + (Block::BLOCK_SIZE * 0.5f));
+//            box.SetAsBox(BLOCK_SIZE * 0.5f , BLOCK_SIZE * 0.5f, pos, 0.0f);
+//            box.m_centroid = b2Vec2(BLOCK_SIZE * float(currentColumn) + (BLOCK_SIZE * 0.5f), BLOCK_SIZE * float(currentRow) + (BLOCK_SIZE * 0.5f));
 //
 //            // create main body's fixture
 //            b2FixtureDef fixtureDef;
@@ -104,10 +104,10 @@ ActiveChunk::ActiveChunk(uint32_t row, uint32_t column, std::vector<Block>* bloc
 //            b2Fixture* fixture = m_mainTileBody->CreateFixture(&fixtureDef);
 //            m_tileFixtures.push_back(fixture);
 
-            float x = Block::BLOCK_SIZE * float(currentColumn);
-            float y = Block::BLOCK_SIZE * float(currentRow);
+            float x = BLOCK_SIZE * float(currentColumn);
+            float y = BLOCK_SIZE * float(currentRow);
 
-            cpBB bb = cpBBNew(x, y, x + Block::BLOCK_SIZE, y + BLOCK_SIZE);
+            cpBB bb = cpBBNew(x, y, x + BLOCK_SIZE, y + BLOCK_SIZE);
             cpShape *tileShape = cpBoxShapeNew2(m_cpSpace->staticBody , bb);
             cpShapeSetFriction(tileShape, 2.7);
 

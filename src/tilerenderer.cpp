@@ -57,7 +57,7 @@ TileRenderer::TileRenderer(World* world, Camera* camera, Entities::Player* mainP
     Debug::checkGLError();
 
     const GLint level = 0;
-    glTexImage3D(GL_TEXTURE_2D_ARRAY, level, GL_RGBA, Block::BLOCK_SIZE_PIXELS, Block::BLOCK_SIZE_PIXELS, Block::blockTypes.size() + Block::wallTypes.size(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr /* if it's null it tells GL we will send in 2D images as elements one by one, later */);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, level, GL_RGBA, BLOCK_SIZE_PIXELS, BLOCK_SIZE_PIXELS, Block::blockTypes.size() + Block::wallTypes.size(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr /* if it's null it tells GL we will send in 2D images as elements one by one, later */);
 
     const GLint xoffset = 0;
     const GLint yoffset = 0;
@@ -67,13 +67,13 @@ TileRenderer::TileRenderer(World* world, Camera* camera, Entities::Player* mainP
     for (size_t i = 0; i < Block::blockTypes.size(); ++i) {
         Image image(Block::blockTypes.at(i).texture);
 
-        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, level, xoffset, yoffset, i, Block::BLOCK_SIZE_PIXELS, Block::BLOCK_SIZE_PIXELS, depth, GL_RGBA, GL_UNSIGNED_BYTE, image.bytes());
+        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, level, xoffset, yoffset, i, BLOCK_SIZE_PIXELS, BLOCK_SIZE_PIXELS, depth, GL_RGBA, GL_UNSIGNED_BYTE, image.bytes());
     }
 
     for (size_t i = 0; i < Block::wallTypes.size(); ++i) {
         Image image(Block::wallTypes.at(i).texture);
 
-        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, level, xoffset, yoffset, (Block::blockTypes.size() + i), Block::BLOCK_SIZE_PIXELS, Block::BLOCK_SIZE_PIXELS, depth, GL_RGBA, GL_UNSIGNED_BYTE, image.bytes());
+        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, level, xoffset, yoffset, (Block::blockTypes.size() + i), BLOCK_SIZE_PIXELS, BLOCK_SIZE_PIXELS, depth, GL_RGBA, GL_UNSIGNED_BYTE, image.bytes());
     }
     Debug::checkGLError();
 }
@@ -132,11 +132,11 @@ void TileRenderer::render()
     Debug::checkGLError();
     glm::vec2 playerPosition = m_mainPlayer->position();
 
-    float tilesBeforeX = playerPosition.x / Block::BLOCK_SIZE;
-    float tilesBeforeY = playerPosition.y / Block::BLOCK_SIZE;
+    float tilesBeforeX = playerPosition.x / BLOCK_SIZE;
+    float tilesBeforeY = playerPosition.y / BLOCK_SIZE;
 
     // determine what the size of the tiles are but convert that to our zoom level
-    const float blockSizePixels = Block::BLOCK_SIZE;
+    const float blockSizePixels = BLOCK_SIZE;
     glm::vec4 tileSize = glm::vec4(blockSizePixels, 0.0f, 0.0f, 0.0f);
     const float transformedTileSize = glm::vec4(m_camera->view() * tileSize).x;
 
@@ -223,14 +223,14 @@ void TileRenderer::render()
             // vertices[2] -> bottom right
             // vertices[3] -> top right
 
-            float positionX = Block::BLOCK_SIZE * float(currentColumn);
-            float positionY = Block::BLOCK_SIZE * float(currentRow);
+            float positionX = BLOCK_SIZE * float(currentColumn);
+            float positionY = BLOCK_SIZE * float(currentRow);
 
             float x = positionX;
-            float width = x +  Block::BLOCK_SIZE;
+            float width = x +  BLOCK_SIZE;
 
             float y = positionY;
-            float height = y  +  Block::BLOCK_SIZE;
+            float height = y  +  BLOCK_SIZE;
 
             quad.vertices[0].x = x; // top left X
             quad.vertices[0].y = y; //top left Y

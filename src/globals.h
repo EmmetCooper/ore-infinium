@@ -21,8 +21,15 @@
 #include <cstdint>
 
 // 50px per 1 meter. so that box2d has a range of entity sizes between 0.1 and 10 meters.
-static constexpr double PIXELS_PER_METER = 50;
-static constexpr float BLOCK_SIZE = 16.0f / PIXELS_PER_METER;
+static constexpr double PIXELS_PER_METER = 50.0;
+
+// height is the same as width (they're square)
+// Block size in meters.
+static constexpr double BLOCK_SIZE = 16.0 / PIXELS_PER_METER;
+
+//Block size in pixels, should NOT be used for ingame calculations but only for texture thangs.
+static constexpr double BLOCK_SIZE_PIXELS = 16.0;
+
 
 //FIXME: find good values for this. Basically this is as far out as *anyone* can see when they zoom out, regardless of resolution they will all only be able to see
 // this many blocks out.
