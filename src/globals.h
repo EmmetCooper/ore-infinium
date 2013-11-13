@@ -22,29 +22,34 @@
 
 
 //height
-static constexpr uint16_t WORLD_ROWCOUNT = 8400;
+//uint16_t
+#define WORLD_ROWCOUNT 8400
+
 //width
-static constexpr uint16_t WORLD_COLUMNCOUNT = 2400;
+//uint16_t
+#define WORLD_COLUMNCOUNT 2400
 
 // 50px per 1 meter. so that box2d has a range of entity sizes between 0.1 and 10 meters.
-static constexpr double PIXELS_PER_METER = 50.0;
+#define PIXELS_PER_METER 50.0
 
 // height is the same as width (they're square)
 // Block size in meters.
-static constexpr double BLOCK_SIZE = 16.0 / PIXELS_PER_METER;
+//double
+#define BLOCK_SIZE (16.0 / PIXELS_PER_METER)
 
 //Block size in pixels, should NOT be used for ingame calculations but only for texture thangs.
-static constexpr double BLOCK_SIZE_PIXELS = 16.0;
+//double
+#define BLOCK_SIZE_PIXELS 16.0
 
 // radius indicating how many pixels out the player can pick blocks
 static constexpr float blockPickingRadius = BLOCK_SIZE * 8.0f;
 
 //FIXME: MOVE MORE UPSTREAM, halfass attempt at making a unit system, instead of making it pixel based for movement.
-static constexpr float movementUnits = 1.0f / 100.0f;
+#define movementUnits (1.0f / 100.0f)
 //HACK: was 10, 1.0 now for debugging
-static constexpr float movementSpeed = 1.0f * movementUnits;
+#define movementSpeed (1.0f * movementUnits)
 
-static constexpr int maximumChatCharCount = 256;
+#define maximumChatCharCount 256
 
 //FIXME: find good values for this. Basically this is as far out as *anyone* can see when they zoom out, regardless of resolution they will all only be able to see
 // this many blocks out.
