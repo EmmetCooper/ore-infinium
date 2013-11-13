@@ -4,6 +4,7 @@
 #include <qt/QtGui/qevent.h>
 
 #include <QPainter>
+#include <QString>
 #include <QEvent>
 
 #include <QDebug>
@@ -44,15 +45,6 @@ void Graph::paint(QPainter* painter)
         return;
     }
 
-    ///// draw grid lines
-    painter->setPen(Qt::white);
-
-    QVector<QLine> gridLines;
-    gridLines << QLine(0, 0, rect.width(), 0);
-
-    painter->drawLines(gridLines);
-    /////////
-
     painter->setPen(Qt::blue);
 
     QBrush b;
@@ -87,6 +79,25 @@ void Graph::paint(QPainter* painter)
     painter->drawPolygon(poly, Qt::FillRule::WindingFill);
 
     painter->setPen(Qt::red);
+    /////////////////////////////////////////
+
+    ///// draw grid lines
+    painter->setPen(Qt::white);
+
+    QVector<QLine> gridLines;
+    for (int i = rect.height(); i > 0; i -= 5) {
+        //qDebug() << "GRID Y: " << y;
+
+        int y = (rect.height() - i) * m_scalar;
+        gridLines << QLine(0, y, rect.width(), y);
+
+        QString text = QString::number((rect.height() - y) / m_scalar);
+        painter->drawText(QPointF(0.0, y), text);
+    }
+
+    painter->drawLines(gridLines);
+
+    /////////
 
     QString text = QString::number((rect.height() - m_tooltipPoint.y()) / m_scalar);
     painter->drawText(m_tooltipPoint, text);
@@ -94,7 +105,7 @@ void Graph::paint(QPainter* painter)
 
 void Graph::hoverMoveEvent(QHoverEvent * event)
 {
-    m_tooltipPoint = event->oldPosF();
+    m_tooltipPoint = event->posF();
 }
 
 void Graph::addSample(double value)
