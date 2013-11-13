@@ -37,6 +37,7 @@ Item {
         anchors.fill: parent
     }
 
+
     Graph {
         id: clientFrametimeGraph
 
@@ -53,6 +54,16 @@ Item {
 
         height: 300
         width: 300
+    }
+
+    OreLabel {
+        anchors {
+            bottom: clientFrametimeGraph.top
+            horizontalCenter: clientFrametimeGraph.horizontalCenter
+        }
+
+        text: "Client Frame Time"
+
     }
 
     Loader {

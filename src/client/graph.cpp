@@ -87,6 +87,7 @@ void Graph::paint(QPainter* painter)
     painter->drawPolygon(poly, Qt::FillRule::WindingFill);
 
     painter->setPen(Qt::red);
+
     QString text = QString::number((rect.height() - m_tooltipPoint.y()) / m_scalar);
     painter->drawText(m_tooltipPoint, text);
 }
