@@ -37,9 +37,26 @@ Item {
         anchors.fill: parent
     }
 
-
     Graph {
         id: clientFrametimeGraph
+
+        anchors {
+            left: parent.left
+            bottom: parent.bottom
+
+            leftMargin: 20
+            bottomMargin: 20
+        }
+
+        min: 0.0
+        max: 60.0
+
+        height: 300
+        width: 300
+    }
+
+    Graph {
+        id: serverFrametimeGraph
 
         anchors {
             left: parent.left
@@ -62,8 +79,7 @@ Item {
             horizontalCenter: clientFrametimeGraph.horizontalCenter
         }
 
-        text: "Client Frame Time"
-
+        text: "Client Frame Time (ms / frame)"
     }
 
     Loader {

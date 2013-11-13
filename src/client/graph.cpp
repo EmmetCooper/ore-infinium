@@ -49,9 +49,10 @@ void Graph::paint(QPainter* painter)
 
     QBrush b;
     b.setStyle(Qt::SolidPattern);
-    b.setColor(Qt::blue);
-
+    b.setColor(Qt::green);
     painter->setBrush(b);
+
+    painter->setPen(Qt::darkGreen);
 
     // draw filled graph
     QPolygonF poly;
@@ -78,7 +79,6 @@ void Graph::paint(QPainter* painter)
 
     painter->drawPolygon(poly, Qt::FillRule::WindingFill);
 
-    painter->setPen(Qt::red);
     /////////////////////////////////////////
 
     ///// draw grid lines
@@ -97,10 +97,28 @@ void Graph::paint(QPainter* painter)
 
     painter->drawLines(gridLines);
 
-    /////////
+    painter->setPen(Qt::blue);
 
-    QString text = QString::number((rect.height() - m_tooltipPoint.y()) / m_scalar);
+    /////////
+    QBrush b2;
+    b2.setStyle(Qt::SolidPattern);
+    b2.setColor(Qt::black);
+    painter->setBrush(b2);
+
+    painter->setPen(Qt::darkGreen);
+
+
+    float x = m_tooltipPoint.x();
+    float y = m_tooltipPoint.y();
+
+    qDebug() << "DRAWING RECT AT X: " << x << " Y :" << y;
+    painter->drawRect(x - 15.0, y - 15.0, 45.0f, 30.0f);
+
+    painter->setPen(Qt::blue);
+
+    QString text = QString::number((rect.height() - y) / m_scalar);
     painter->drawText(m_tooltipPoint, text);
+
 }
 
 void Graph::hoverMoveEvent(QHoverEvent * event)
