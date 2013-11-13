@@ -42,7 +42,7 @@
 #define BLOCK_SIZE_PIXELS 16.0
 
 // radius indicating how many pixels out the player can pick blocks
-static constexpr float blockPickingRadius = BLOCK_SIZE * 8.0f;
+#define blockPickingRadius (BLOCK_SIZE * 8.0f)
 
 //FIXME: MOVE MORE UPSTREAM, halfass attempt at making a unit system, instead of making it pixel based for movement.
 #define movementUnits (1.0f / 100.0f)
