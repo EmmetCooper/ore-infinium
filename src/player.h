@@ -118,13 +118,6 @@ public:
     //    uint16_t playerOwned = 1;
 
 public:
-    // radius indicating how many pixels out the player can pick blocks
-    static constexpr float blockPickingRadius = BLOCK_SIZE * 8.0f;
-
-    //FIXME: MOVE MORE UPSTREAM, halfass attempt at making a unit system, instead of making it pixel based for movement.
-    static constexpr float movementUnits = 1.0f / 100.0f;
-    //HACK: was 10, 1.0 now for debugging
-    static constexpr float movementSpeed = 1.0f * movementUnits;
 
 private:
     static void playerUpdateVelocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);

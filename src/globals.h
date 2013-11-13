@@ -30,6 +30,15 @@ static constexpr double BLOCK_SIZE = 16.0 / PIXELS_PER_METER;
 //Block size in pixels, should NOT be used for ingame calculations but only for texture thangs.
 static constexpr double BLOCK_SIZE_PIXELS = 16.0;
 
+// radius indicating how many pixels out the player can pick blocks
+static constexpr float blockPickingRadius = BLOCK_SIZE * 8.0f;
+
+//FIXME: MOVE MORE UPSTREAM, halfass attempt at making a unit system, instead of making it pixel based for movement.
+static constexpr float movementUnits = 1.0f / 100.0f;
+//HACK: was 10, 1.0 now for debugging
+static constexpr float movementSpeed = 1.0f * movementUnits;
+
+
 //FIXME: find good values for this. Basically this is as far out as *anyone* can see when they zoom out, regardless of resolution they will all only be able to see
 // this many blocks out.
 // units are just tile counts, not in meters, just number of tiles.
