@@ -54,21 +54,27 @@ static constexpr float blockPickingRadius = BLOCK_SIZE * 8.0f;
 //FIXME: find good values for this. Basically this is as far out as *anyone* can see when they zoom out, regardless of resolution they will all only be able to see
 // this many blocks out.
 // units are just tile counts, not in meters, just number of tiles.
-static constexpr float MAX_VIEWPORT_WIDTH = 200.0f;
-static constexpr float MAX_VIEWPORT_HEIGHT = 200.0f;
+//float
+#define MAX_VIEWPORT_WIDTH 200.0f
+#define MAX_VIEWPORT_HEIGHT 200.0f
 
 /// ACTIVECHUNK_SIZE^2 == total tiles within chunk
-static constexpr uint32_t ACTIVECHUNK_SIZE = 128;
+//uint32_t
+#define ACTIVECHUNK_SIZE 128
 
-static constexpr double FIXED_TIMESTEP = 1.0 / 60.0; // hertz
+//double
+// hertz
+#define FIXED_TIMESTEP (1.0 / 60.0)
 
 // for chipmunk physics
-static constexpr int32_t VELOCITY_ITERATIONS = 6;
-static constexpr int32_t POSITION_ITERATIONS = 2;
+// int32_t
+#define VELOCITY_ITERATIONS = 6
+#define POSITION_ITERATIONS = 2
 
-static constexpr uint32_t WORLD_SEA_LEVEL = 16;
+//uint32_T
+#define WORLD_SEA_LEVEL 16
 
-static constexpr int MAXPLAYERS = 8;
-static constexpr uint16_t DEFAULT_PORT = 44543;
+#define MAXPLAYERS 8
+#define DEFAULT_PORT 44543
 
 #endif
