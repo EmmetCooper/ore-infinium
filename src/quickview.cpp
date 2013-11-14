@@ -51,6 +51,11 @@ QuickView::QuickView(Client* client, QWindow* parent)
     create();
 }
 
+void QuickView::mousePressEvent(QMouseEvent* event)
+{
+    QQuickView::mousePressEvent(event);
+}
+
 void QuickView::keyPressEvent(QKeyEvent* event)
 {
     m_client->viewKeyPressed(event);

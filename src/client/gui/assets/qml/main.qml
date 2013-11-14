@@ -4,6 +4,7 @@ import QtQuick.Controls.Styles 1.0
 
 import SceneGraphRendering 1.0
 import QtQuick.Layouts 1.0
+import Graph 1.0
 
 //property alias label: text.text
 
@@ -11,7 +12,6 @@ Item {
     id: main
 
     Component.onCompleted: {
-
     }
 
     Connections {
@@ -19,6 +19,14 @@ Item {
 
         onGameStarted: {
             stackView.clear()
+        }
+
+        onFrameTimeChanged: {
+            //print("FRAMETIME" + frameTime);
+            clientFrameTimeGraph.addSample(frameTime);
+            //rint("SERVER, qml, FRAMETIME" + ClientBackend.serverFrameTime);
+            serverFrameTimeGraph.addSample(ClientBackend.serverFrameTime);
+//            serverFrameTimeGraph.addSample(10.0);
         }
     }
 
@@ -30,6 +38,59 @@ Item {
     Renderer {
         id: renderer
         anchors.fill: parent
+    }
+
+    Graph {
+        id: clientFrameTimeGraph
+
+        anchors {
+            left: parent.left
+            bottom: parent.bottom
+
+            leftMargin: 20
+            bottomMargin: 20
+        }
+
+        min: 0.0
+        max: 60.0
+
+        height: 300
+        width: 300
+    }
+
+    Graph {
+        id: serverFrameTimeGraph
+
+        anchors {
+            left: clientFrameTimeGraph.right
+            bottom: clientFrameTimeGraph.bottom
+
+            leftMargin: 20
+        }
+
+        min: 0.0
+        max: 60.0
+
+        height: 300
+        width: 300
+    }
+
+    OreLabel {
+        anchors {
+            bottom: clientFrameTimeGraph.top
+            horizontalCenter: clientFrameTimeGraph.horizontalCenter
+        }
+
+        text: "Client Thread Frame Time (ms / frame)"
+    }
+
+    OreLabel {
+        anchors {
+            bottom: serverFrameTimeGraph.top
+            horizontalCenter: serverFrameTimeGraph.horizontalCenter
+        }
+
+        text: "Server Thread Frame Time (ms / frame)"
     }
 
     Loader {

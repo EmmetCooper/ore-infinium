@@ -50,7 +50,10 @@ class QQuickWindow;
 class Client : public QQuickItem
 {
     Q_OBJECT
+    //NOTE: qml receives the frametimechanged signal for the client frametime, when it changes..
+    //and it sets server frametime which a copy is stored here (on the client) and obtained from server each client tick
     Q_PROPERTY(double frameTime READ frameTime NOTIFY frameTimeChanged);
+    Q_PROPERTY(double serverFrameTime READ serverFrameTime);
     Q_PROPERTY(bool gameConnected READ gameConnected NOTIFY gameConnectedChanged);
 
 public:
@@ -90,6 +93,10 @@ public slots:
     Q_INVOKABLE void startMultiplayerJoinSlot(const QString& playerName, const QString& address, int port);
     Q_INVOKABLE void disconnectClicked();
     Q_INVOKABLE void exitClicked();
+    Q_INVOKABLE double serverFrameTime() {
+        return m_serverFrameTime;
+    }
+
     //-------------------
 
 private slots:
@@ -243,6 +250,7 @@ private:
     bool m_firstGLInit = false;
 
     double m_frameTime = 0.0;
+    double m_serverFrameTime = 0.0;
 
 private:
     ENetHost* m_client = nullptr;

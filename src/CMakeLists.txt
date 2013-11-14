@@ -38,6 +38,7 @@ tool.cpp
 quickview.cpp
 
 client/client.cpp
+client/graph.cpp
 client/FboInSGRenderer.cpp
 client/gui/optionsdialogbackend.cpp
 

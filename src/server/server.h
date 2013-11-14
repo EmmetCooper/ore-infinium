@@ -26,6 +26,8 @@
 #include <map>
 
 #include <QString>
+#include <atomic>
+
 
 class Item;
 class World;
@@ -49,6 +51,10 @@ public:
     void poll();
     void tick();
     void processMessage(ENetEvent& event);
+
+    double frameTime() {
+        return m_frameTime.load();
+    }
 
     /**
      * Returns the client that started this server. This is ONLY VALID if it's a self-hosted server/client session.
@@ -137,6 +143,8 @@ private:
     World* m_world = nullptr;
 
     Client* m_client = nullptr;
+
+    std::atomic<double> m_frameTime;
 
     /**
      * For debug scenarios, see settings debug flag

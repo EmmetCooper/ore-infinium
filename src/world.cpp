@@ -246,7 +246,7 @@ void World::removePlayer(Entities::Player* player)
 
 void World::updateTilePhysicsObjects()
 {
-    Debug::log(Debug::ImportantArea) << "Updating tile physics objects...";
+    //Debug::log(Debug::ImportantArea) << "Updating tile physics objects...";
 
     QTime time;
     time.start();
@@ -276,7 +276,7 @@ void World::updateTilePhysicsObjects()
         }
     }
 
-    Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE pre-removal: " << m_desiredChunks.size();
+    //Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE pre-removal: " << m_desiredChunks.size();
     // Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE post-removal: " << desiredChunks.size();
 
 
@@ -305,7 +305,7 @@ void World::updateTilePhysicsObjects()
         }
     }
 
-    Debug::log(Debug::StartupArea) << "Active CHUNKS SIZE pre-removal: " << m_activeChunks.size();
+    //Debug::log(Debug::StartupArea) << "Active CHUNKS SIZE pre-removal: " << m_activeChunks.size();
 
     // delete all active chunks with a refcount of 0
     QMap<DesiredChunk, ActiveChunk*>::iterator it = m_activeChunks.begin();
@@ -320,7 +320,7 @@ void World::updateTilePhysicsObjects()
 
     m_desiredChunks.clear();
 
-    Debug::log(Debug::ImportantArea) << "Updating tile physics objects...time took:" << time.elapsed();
+    //Debug::log(Debug::ImportantArea) << "Updating tile physics objects...time took:" << time.elapsed();
 }
 
 Entities::Player* World::playerForID(uint32_t playerID)
@@ -447,7 +447,7 @@ void World::update(double elapsedTime)
                 const glm::ivec2& currentChunkPosition = glm::ivec2(static_cast<int>(player->position().x / BLOCK_SIZE), static_cast<int>(player->position().y / BLOCK_SIZE));
 
                 if (glm::distance(currentChunkPosition, player->lastLoadedChunk) > 20) {
-                    Debug::log(Debug::ImportantArea) << " server sending large world chunk..: ";
+                    //Debug::log(Debug::ImportantArea) << " server sending large world chunk..: ";
                     m_server->sendLargeWorldChunkForPlayer(player);
                 }
             }

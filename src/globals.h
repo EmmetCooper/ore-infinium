@@ -20,6 +20,7 @@
 
 #include <cstdint>
 
+//TODO: use constexpr when MSVC 2013+n gets it..sigh. where n could very well be 2
 
 //height
 //uint16_t
