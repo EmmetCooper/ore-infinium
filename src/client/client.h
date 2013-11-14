@@ -100,8 +100,9 @@ public slots:
     Q_INVOKABLE void disconnectClicked();
     Q_INVOKABLE void exitClicked();
     Q_INVOKABLE double serverFrameTime() {
-        return m_frameTime;
+        return m_serverFrameTime;
     }
+
     //-------------------
 
 private slots:

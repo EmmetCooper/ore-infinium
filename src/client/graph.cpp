@@ -49,10 +49,10 @@ void Graph::paint(QPainter* painter)
 
     QBrush b;
     b.setStyle(Qt::SolidPattern);
-    b.setColor(Qt::green);
+    b.setColor(Qt::darkGreen);
     painter->setBrush(b);
 
-    painter->setPen(Qt::darkGreen);
+    painter->setPen(Qt::green);
 
     // draw filled graph
     QPolygonF poly;
@@ -105,19 +105,23 @@ void Graph::paint(QPainter* painter)
     b2.setColor(Qt::black);
     painter->setBrush(b2);
 
-    painter->setPen(Qt::darkGreen);
+    painter->setPen(Qt::green);
 
 
     float x = m_tooltipPoint.x();
     float y = m_tooltipPoint.y();
 
-    qDebug() << "DRAWING RECT AT X: " << x << " Y :" << y;
     painter->drawRect(x - 15.0, y - 15.0, 45.0f, 30.0f);
 
     painter->setPen(Qt::blue);
 
-    QString text = QString::number((rect.height() - y) / m_scalar);
-    painter->drawText(m_tooltipPoint, text);
+    QString tooltip = QString::number((rect.height() - y) / m_scalar);
+    painter->drawText(m_tooltipPoint, tooltip);
+
+    painter->setPen(Qt::white);
+
+    QString currentTime = QString::number(lastSample.originalValue);
+    painter->drawText(rect.width() * 0.5 - 5,  15, currentTime);
 
 }
 
@@ -144,5 +148,4 @@ void Graph::shiftLeft()
             m_points.remove(i);
         }
     }
-    qDebug() << "COUNT:" << m_points.size();
 }

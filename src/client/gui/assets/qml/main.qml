@@ -22,10 +22,11 @@ Item {
         }
 
         onFrameTimeChanged: {
-            print("FRAMETIME" + frameTime);
+            //print("FRAMETIME" + frameTime);
             clientFrameTimeGraph.addSample(frameTime);
-//            serverFrameTimeGraph.addSample(ClientBackend.serverFrameTime);
-            serverFrameTimeGraph.addSample(10.0);
+            //rint("SERVER, qml, FRAMETIME" + ClientBackend.serverFrameTime);
+            serverFrameTimeGraph.addSample(ClientBackend.serverFrameTime);
+//            serverFrameTimeGraph.addSample(10.0);
         }
     }
 
@@ -76,11 +77,20 @@ Item {
 
     OreLabel {
         anchors {
-            bottom: clientFrametimeGraph.top
-            horizontalCenter: clientFrametimeGraph.horizontalCenter
+            bottom: clientFrameTimeGraph.top
+            horizontalCenter: clientFrameTimeGraph.horizontalCenter
         }
 
-        text: "Client Frame Time (ms / frame)"
+        text: "Client Thread Frame Time (ms / frame)"
+    }
+
+    OreLabel {
+        anchors {
+            bottom: serverFrameTimeGraph.top
+            horizontalCenter: serverFrameTimeGraph.horizontalCenter
+        }
+
+        text: "Server Thread Frame Time (ms / frame)"
     }
 
     Loader {

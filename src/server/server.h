@@ -26,6 +26,8 @@
 #include <map>
 
 #include <QString>
+#include <atomic>
+
 
 class Item;
 class World;
@@ -53,7 +55,7 @@ public:
     static constexpr int MAXPLAYERS = 8;
 
     double frameTime() {
-        return m_frameTime;
+        return m_frameTime.load();
     }
 
     /**
@@ -144,7 +146,7 @@ private:
 
     Client* m_client = nullptr;
 
-    double m_frameTime = 0.0;
+    std::atomic<double> m_frameTime;
 
     /**
      * For debug scenarios, see settings debug flag

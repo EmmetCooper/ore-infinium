@@ -48,6 +48,7 @@
 
 Server::Server()
 {
+    m_frameTime.store(0.0);
 
 }
 
@@ -100,8 +101,9 @@ void Server::tick()
 
         while (accumulator >= dt) {
             m_world->update(dt);
+
             //printf("Server ms/frame is %f ms\n", dt);
-            m_frameTime = dt;
+            m_frameTime.store(dt);
 
             t += dt;
             accumulator -= dt;
