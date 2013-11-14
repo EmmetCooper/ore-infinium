@@ -21,7 +21,6 @@
 #include "entity.h"
 #include "block.h"
 
-#include <SDL2/SDL_events.h>
 #include <chipmunk/chipmunk.h>
 
 struct cpVect;
@@ -48,8 +47,6 @@ public:
     void enableNoClip() {
         m_noClipEnabled = true;
     }
-
-//    void handleEvent(const SDL_Event& event);
 
     void setName(const std::string& name);
     std::string name() const;

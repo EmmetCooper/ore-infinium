@@ -36,8 +36,6 @@ public:
 
     int debugRendererFlags;
 
-//static int SDL_LOGPRIORITY = SDL_LOG_PRIORITY_WARN;
-
     enum StartupFlags {
         DebugLoggingStartupFlag = 1 << 0,
         WorldViewerStartupFlag = 1 << 1,

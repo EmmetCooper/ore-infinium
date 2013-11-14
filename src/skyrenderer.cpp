@@ -29,7 +29,6 @@
 #include <stdio.h>
 
 #include <math.h>
-#include <SDL_timer.h>
 
 SkyRenderer::SkyRenderer(World* world, Camera* camera, Time* time) :
     m_camera(camera),
@@ -583,7 +582,7 @@ void SkyRenderer::renderSkyBackgroundNight()
 
     GLint timeLoc = glGetUniformLocation(m_skyBackgroundNightShader->shaderProgram(), "time");
 
-    float time = float(SDL_GetTicks());
+    float time = float(m_time->hour()) + (float(m_time->minute()) / 60.0);
     glUniform1f(timeLoc, time);
 
     int index = 0;

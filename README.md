@@ -10,7 +10,7 @@ See http://www.oreinfinium.org for more (slightly) up to date information.
 
 ------------------------------------------------------------------------------------
 
-Written in C++11, SDL 2.0, OpenGL 3.1 and using and contains only Free Software and Free
+Written in C++11, Qt 5.1, OpenGL 3.1 and using and contains only Free Software and Free
 assets.
 
 
@@ -38,9 +38,7 @@ Here's a list of the dependencies I use, just to keep in mind. Commands are furt
 NOTE: There is a python automatic dependency build script (TODO, very much so ;)
 ---------------------
 
-* SDL 2.0+ (http://www.libsdl.org/hg.php)
-
-* SDL_image for loading images so we can use them as textures
+* Qt 5.1+ (http://
 
 * protobuf (google's libprotobuf. needs both the library and the 'protoc'
 binary, which e.g. ubuntu ships in a separate package
@@ -109,8 +107,6 @@ libyaml-cpp-dev libopenal-dev'
 --------------------------------------
 
 Okay, so basically this gives us everything except the following:
-
-* SDL 2.0
 
 So those need to be built from source.
 

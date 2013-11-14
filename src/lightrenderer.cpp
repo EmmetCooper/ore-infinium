@@ -34,8 +34,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <SDL_timer.h>
-
 LightRenderer::LightRenderer(World* world, Camera* camera, Entities::Player* mainPlayer)
     :   m_mainPlayer(mainPlayer),
         m_world(world)

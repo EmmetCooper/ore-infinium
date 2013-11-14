@@ -62,8 +62,6 @@ set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib64 ${CMAKE_INSTALL_PREFIX}/li
 
 include(FindProtobuf)
 
-find_package(SDL2)
-
 find_package(Qt5Quick)
 
 find_package(OpenGL)
@@ -74,9 +72,6 @@ find_package(Chipmunk)
 
 find_package(enet)
 find_package(Protobuf)
-
-set_package_properties(SDL2 PROPERTIES DESCRIPTION "SDL2" URL "http://hg.libsdl.org/SDL/")
-set_package_properties(SDL2 PROPERTIES TYPE REQUIRED PURPOSE "Used for setting up an OpenGL 3.0+ context as well as for input.")
 
 set_package_properties(OpenGL PROPERTIES DESCRIPTION "OpenGL >= 3.0 is required. Version check is done at runtime" URL "-")
 set_package_properties(OpenGL PROPERTIES TYPE REQUIRED PURPOSE "OpenGL is used for all rendering, without it you won't see anything :)")

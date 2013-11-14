@@ -217,31 +217,28 @@ void QuickBarMenu::reloadSlot(uint8_t index)
     }
 }
 
-void QuickBarMenu::handleEvent(const SDL_Event& event)
-{
-    switch (event.type) {
-    case SDL_KEYDOWN:
-        if (event.key.keysym.sym == SDLK_1) {
-            selectSlot(0);
-        } else if (event.key.keysym.sym == SDLK_2) {
-            selectSlot(1);
-        } else if (event.key.keysym.sym == SDLK_3) {
-            selectSlot(2);
-        } else if (event.key.keysym.sym == SDLK_4) {
-            selectSlot(3);
-        } else if (event.key.keysym.sym == SDLK_5) {
-            selectSlot(4);
-        } else if (event.key.keysym.sym == SDLK_6) {
-            selectSlot(5);
-        } else if (event.key.keysym.sym == SDLK_7) {
-            selectSlot(6);
-        } else if (event.key.keysym.sym == SDLK_8) {
-            selectSlot(7);
-        }
-        break;
-    }
-}
-
+//    switch (event.type) {
+//    case KEYDOWN:
+//        if (event.key.keysym.sym == K_1) {
+//            selectSlot(0);
+//        } else if (event.key.keysym.sym == K_2) {
+//            selectSlot(1);
+//        } else if (event.key.keysym.sym == K_3) {
+//            selectSlot(2);
+//        } else if (event.key.keysym.sym == K_4) {
+//            selectSlot(3);
+//        } else if (event.key.keysym.sym == K_5) {
+//            selectSlot(4);
+//        } else if (event.key.keysym.sym == K_6) {
+//            selectSlot(5);
+//        } else if (event.key.keysym.sym == K_7) {
+//            selectSlot(6);
+//        } else if (event.key.keysym.sym == K_8) {
+//            selectSlot(7);
+//        }
+//        break;
+//    }
+//
 bool QuickBarMenu::visible()
 {
     return m_menu->IsVisible();

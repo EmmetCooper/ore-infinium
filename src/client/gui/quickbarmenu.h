@@ -22,7 +22,6 @@
 #include <string>
 
 #include <Rocket/Core.h>
-#include <SDL_events.h>
 #include <src/timer.h>
 
 class SpriteSheetRenderer;
@@ -53,8 +52,6 @@ public:
     void show();
 
     void update();
-
-    void handleEvent(const SDL_Event& event);
 
     void nextSlot();
     void previousSlot();

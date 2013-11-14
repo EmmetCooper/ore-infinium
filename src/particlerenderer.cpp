@@ -23,8 +23,6 @@
 #include "src/texture.h"
 #include "shader.h"
 
-#include <SDL_timer.h>
-
 #include <fstream>
 #include <iostream>
 

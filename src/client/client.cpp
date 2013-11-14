@@ -47,8 +47,6 @@
 #include <QOpenGLContext>
 #include <QThread>
 
-#include <SDL2/SDL_events.h>
-
 Client::Client()
 {
 }
@@ -730,18 +728,20 @@ glm::vec2 Client::mousePositionToWorldCoords()
 {
     assert(m_world);
 
-    int x; int y;
-    SDL_GetMouseState(&x, &y);
+//FIXME: HACK: use qt, obviously..
+//    int x; int y;
+//    GetMouseState(&x, &y);
+//
+//    glm::vec2 mouse = glm::vec2(x, Settings::instance()->windowHeight - y);
+//
+//    glm::vec4 viewport = glm::vec4(0, 0, Settings::instance()->windowWidth, Settings::instance()->windowHeight);
+//    glm::vec3 wincoord = glm::vec3(mouse.x, mouse.y, 0);
+//    glm::vec3 unproject = glm::unProject(wincoord, m_world->camera()->view(), m_world->camera()->ortho(), viewport);
+//
+ //   mouse = glm::vec2(unproject.x, unproject.y);
 
-    glm::vec2 mouse = glm::vec2(x, Settings::instance()->windowHeight - y);
-
-    glm::vec4 viewport = glm::vec4(0, 0, Settings::instance()->windowWidth, Settings::instance()->windowHeight);
-    glm::vec3 wincoord = glm::vec3(mouse.x, mouse.y, 0);
-    glm::vec3 unproject = glm::unProject(wincoord, m_world->camera()->view(), m_world->camera()->ortho(), viewport);
-
-    mouse = glm::vec2(unproject.x, unproject.y);
-
-    return mouse;
+//    return mouse;
+    return glm::vec2(0, 0);
 }
 
 void Client::sendPlayerMouseState()
@@ -752,8 +752,8 @@ void Client::sendPlayerMouseState()
     // (e.g. rendering crosshair vs. networked picking/block selection..both would otherwise require two different solutions but now do not)
     m_mainPlayer->setMousePositionWorldCoords(mousePosition.x, mousePosition.y);
 
-    bool leftHeld = SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(1);
-    bool rightHeld = SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(3);
+    bool leftHeld = false; //GetMouseState(nullptr, nullptr) & MOUSE_BUTTON(1);
+    bool rightHeld = false; //GetMouseState(nullptr, nullptr) & MOUSE BUTTON(3);
 
     PacketBuf::PlayerMouseStateFromClient message;
     message.set_x(mousePosition.x);
