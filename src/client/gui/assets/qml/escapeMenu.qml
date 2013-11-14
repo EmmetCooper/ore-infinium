@@ -5,7 +5,7 @@ import QtQuick.Controls.Styles 1.0
 import QtQuick.Layouts 1.0
 
 Item {
-    id: escapeMenu
+    id: main
     width: 1024
     height: 768
 
@@ -14,6 +14,10 @@ Item {
     signal disconnectClicked()
 
     Keys.onEscapePressed: {
+        print("ESCP MENU, key pressed, setting visible to false, clearing stack");
+        ClientBackend.setEscapeMenuVisible(false);
+        main.Stack.view.pop(null)
+        print("done");
     }
 
     Component.onCompleted: {
@@ -21,14 +25,14 @@ Item {
 
     Loader {
         id: optionsLoader
-        parent: escapeMenu
+        parent: main
 //        anchors.fill: mainMenu
 //        anchors.centerIn: parent
         z: 200
 
         onLoaded: {
-            item.x = escapeMenu.width * 0.5 - (item.width * 0.5)
-            item.y = escapeMenu.height * 0.5 - (item.height * 0.5)
+            item.x = main.width * 0.5 - (item.width * 0.5)
+            item.y = main.height * 0.5 - (item.height * 0.5)
         }
 
         Connections {
@@ -63,7 +67,7 @@ Item {
             Layout.fillHeight: true
 
             onClicked: {
-                escapeMenu.Stack.view.pop()
+                main.Stack.view.clear()
             }
 
             text: "Resume"

@@ -19,6 +19,8 @@ Item {
 
         onGameStarted: {
             stackView.clear()
+                    ClientBackend.setEscapeMenuVisible(true);
+                    stackView.push(escapeMenu)
         }
 
         onFrameTimeChanged: {
@@ -53,6 +55,10 @@ Item {
         onPositionChanged: {
             ClientBackend.mouseAreaMoved(mouse.x, mouse.y);
         }
+    }
+
+    Keys.onEscapePressed: {
+        print("MAIN ESC PRESSED");
     }
 
     Graph {
@@ -199,20 +205,32 @@ Item {
        id: mainMenuConnections
        target: mainMenuLoader.item
 
-       onSingleplayerClicked: {
+        onSingleplayerClicked: {
             stackView.push(singleplayerMenu)
-       }
+        }
 
         onMultiplayerClicked: {
             stackView.push(multiplayerMenu)
-       }
+        }
 
         onEscapePressed: {
+            print("main.qml ESCAPE PRESSED CAUGHT, escape menu visible: " + ClientBackend.escapeMenuVisible());
+
+                print("PRE-eval-PRE-POP count: " + stackView.depth);
             if (ClientBackend.gameConnected) {
-                stackView.push(escapeMenu)
-            }
-        }
-    }
+                if (ClientBackend.escapeMenuVisible()) {
+                print("PRE-POP count: " + stackView.depth);
+                    ClientBackend.setEscapeMenuVisible(false);
+
+                    stackView.pop(null);
+                print("POST-POP count: " + stackView.depth);
+                } else {
+//                    stackView.push(escapeMenu)
+                } //!gameconnected
+            } //game connected
+        } //onEscapePressed
+    } //connections
+
 
     StackView {
         id: stackView
