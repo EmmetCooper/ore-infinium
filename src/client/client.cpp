@@ -237,6 +237,10 @@ void Client::paint()
 
             //printf("Client ms/frame is %f ms\n", frameTime);
 
+            if (m_server) {
+                m_serverFrameTime = m_server->frameTime();
+            }
+
             emit frameTimeChanged(frameTime);
         }
 

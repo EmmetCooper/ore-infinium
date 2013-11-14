@@ -23,7 +23,9 @@ Item {
 
         onFrameTimeChanged: {
             print("FRAMETIME" + frameTime);
-            clientFrametimeGraph.addSample(frameTime);
+            clientFrameTimeGraph.addSample(frameTime);
+//            serverFrameTimeGraph.addSample(ClientBackend.serverFrameTime);
+            serverFrameTimeGraph.addSample(10.0);
         }
     }
 
@@ -38,7 +40,7 @@ Item {
     }
 
     Graph {
-        id: clientFrametimeGraph
+        id: clientFrameTimeGraph
 
         anchors {
             left: parent.left
@@ -56,14 +58,13 @@ Item {
     }
 
     Graph {
-        id: serverFrametimeGraph
+        id: serverFrameTimeGraph
 
         anchors {
-            left: parent.left
-            bottom: parent.bottom
+            left: clientFrameTimeGraph.right
+            bottom: clientFrameTimeGraph.bottom
 
             leftMargin: 20
-            bottomMargin: 20
         }
 
         min: 0.0

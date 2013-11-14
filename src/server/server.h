@@ -52,6 +52,10 @@ public:
 
     static constexpr int MAXPLAYERS = 8;
 
+    double frameTime() {
+        return m_frameTime;
+    }
+
     /**
      * Returns the client that started this server. This is ONLY VALID if it's a self-hosted server/client session.
      * Use world's m_client for indication that the world is in client mode, instead.
@@ -139,6 +143,8 @@ private:
     World* m_world = nullptr;
 
     Client* m_client = nullptr;
+
+    double m_frameTime = 0.0;
 
     /**
      * For debug scenarios, see settings debug flag
