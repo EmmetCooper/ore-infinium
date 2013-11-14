@@ -40,6 +40,21 @@ Item {
         anchors.fill: parent
     }
 
+    MouseArea {
+        anchors.fill: parent
+        onPressed: {
+            ClientBackend.mouseAreaPressed(mouse.buttons);
+        }
+
+        onReleased: {
+            ClientBackend.mouseAreaReleased(mouse.buttons);
+        }
+
+        onPositionChanged: {
+            ClientBackend.mouseAreaMoved(mouse.x, mouse.y);
+        }
+    }
+
     Graph {
         id: clientFrameTimeGraph
 

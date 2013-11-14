@@ -97,6 +97,10 @@ public slots:
         return m_serverFrameTime;
     }
 
+    Q_INVOKABLE void mouseAreaPressed(int buttons);
+    Q_INVOKABLE void mouseAreaReleased(int buttons);
+    Q_INVOKABLE void mouseAreaMoved(double mouseX, double mouseY);
+
     //-------------------
 
 private slots:
