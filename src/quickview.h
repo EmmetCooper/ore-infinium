@@ -36,6 +36,7 @@ signals:
 
 private:
     virtual void keyPressEvent(QKeyEvent* event);
+    virtual void mousePressEvent(QMouseEvent* event);
 
     Client* m_client = nullptr;
 };
