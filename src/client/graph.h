@@ -3,7 +3,7 @@
 
 #include <QQuickPaintedItem>
 #include <QTimer>
-#include <qt/QtCore/qpoint.h>
+#include <QPoint>
 
 class QMouseEvent;
 class QPainter;

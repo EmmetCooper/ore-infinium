@@ -1,11 +1,9 @@
 #include "graph.h"
-#include <qt/QtCore/QEvent>
-#include <qt/QtCore/qcoreevent.h>
-#include <qt/QtGui/qevent.h>
+
+#include <QtGui/qevent.h>
 
 #include <QPainter>
 #include <QString>
-#include <QEvent>
 
 #include <QDebug>
 
