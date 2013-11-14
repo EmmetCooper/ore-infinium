@@ -64,8 +64,6 @@ Kind of a pain in the ass, but whatever.
 
 * Chipmunk physics library (http://chipmunk-physics.net) >= 6.1
 
-* ZLib (http://www.zlib.net/ and https://github.com/madler/zlib)  for compression, for both my network packets and file saving, etc.
-
 --------------------------------------
 
 NOTE: you need a C++11 compatible compiler (at least GCC 4.7 is fine and clang 3.2 or above).
@@ -107,7 +105,7 @@ this on Windows since it's work to compile things there).
 
 NOTE: IGNORE THIS CRAP FOR NOW --------------
 'apt-get install libenet-dev libglew-dev libprotobuf-dev protobuf-compiler
-libyaml-cpp-dev zlib1g-dev libopenal-dev'
+libyaml-cpp-dev libopenal-dev'
 --------------------------------------
 
 Okay, so basically this gives us everything except the following:

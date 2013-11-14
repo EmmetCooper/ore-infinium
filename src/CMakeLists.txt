@@ -82,7 +82,6 @@ target_link_libraries(
 ore-infinium
 ${SDL2_LIBRARY}
 ${SDL2MAIN_LIBRARY}
-${ZLIB_LIBRARY}
 ${OPENGL_LIBRARIES}
 ${YAMLCPP_LIBRARY}
 ${ENET_LIBRARIES}
