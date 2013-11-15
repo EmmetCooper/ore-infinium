@@ -18,6 +18,7 @@
 #ifndef SPATIALHASH_H
 #define SPATIALHASH_H
 
+#include <cstdint>
 #include <vector>
 #include <list>
 #include <unordered_map>

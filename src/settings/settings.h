@@ -18,6 +18,7 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#include <cstdint>
 #include <string>
 
 class Settings

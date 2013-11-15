@@ -18,6 +18,7 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+#include <cstdint>
 #include <string>
 
 #include "glew.h"

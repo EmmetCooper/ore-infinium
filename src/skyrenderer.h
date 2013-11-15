@@ -23,6 +23,7 @@
 
 #include "glew.h"
 
+#include <cstdint>
 #include <vector>
 
 class Camera;

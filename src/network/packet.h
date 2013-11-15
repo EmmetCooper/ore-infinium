@@ -18,6 +18,8 @@
 #ifndef PACKET_H
 #define PACKET_H
 
+#include <cstdint>
+
 #include "src/packet.pb.h"
 
 #include <enet/enet.h>

@@ -18,6 +18,8 @@
 #ifndef TILERENDERER_H
 #define TILERENDERER_H
 
+#include <cstdint>
+
 #include "glew.h"
 
 namespace Entities

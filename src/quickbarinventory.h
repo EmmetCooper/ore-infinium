@@ -18,6 +18,7 @@
 #ifndef QUICKINVENTORY_H
 #define QUICKINVENTORY_H
 
+#include <cstdint>
 #include <vector>
 #include <string>
 
