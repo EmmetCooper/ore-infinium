@@ -6,10 +6,17 @@
 #
 
 find_path(YAMLCPP_INCLUDE_DIR yaml-cpp/yaml.h)
-find_library(YAMLCPP_LIBRARY yaml-cpp)
-
 set(YAMLCPP_INCLUDE_DIRS ${YAMLCPP_INCLUDE_DIR})
-set(YAMLCPP_LIBRARIES ${YAMLCPP_LIBRARY})
+
+if(WIN32)
+    find_library(YAMLCPP_LIBRARY libyaml-cppmd)
+    find_library(YAMLCPP_DEBUG_LIBRARY libyaml-cppmdd)
+    set(YAMLCPP_LIBRARIES optimized ${YAMLCPP_LIBRARY} debug ${YAMLCPP_DEBUG_LIBRARY})
+else()
+    find_library(YAMLCPP_LIBRARY yaml-cpp)
+    set(YAMLCPP_LIBRARIES ${YAMLCPP_LIBRARY})
+endif()
+
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(YamlCpp DEFAULT_MSG YAMLCPP_LIBRARY YAMLCPP_INCLUDE_DIR)
+find_package_handle_standard_args(YamlCpp DEFAULT_MSG YAMLCPP_LIBRARIES YAMLCPP_INCLUDE_DIR)
