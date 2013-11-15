@@ -31,9 +31,14 @@
 
 #include <thread>
 
+class QQmlContext;
 class QQuickView;
-class FboInSGRenderer;
+class QQuickWindow;
+
 struct cpSpace;
+class QuickView;
+class FboInSGRenderer;
+
 class DebugSettings;
 class PhysicsDebugRenderer;
 class QuickBarMenu;
@@ -44,8 +49,7 @@ class ChatDialog;
 class DebugMenu;
 class World;
 class Server;
-class QuickView;
-class QQuickWindow;
+class ChatModel;
 
 class Client : public QQuickItem
 {
@@ -71,6 +75,11 @@ public:
     }
 
     void paint();
+
+    void setChatModel(ChatModel* chatModel) {
+        Q_ASSERT(chatModel);
+        m_chatModel = chatModel;
+    }
 
 signals:
     /**
@@ -231,7 +240,9 @@ private:
 
     GUI* m_gui = nullptr;
     MainMenu* m_mainMenu = nullptr;
-    ChatDialog* m_chat = nullptr;
+
+    ChatModel* m_chatModel = nullptr;
+
     DebugMenu* m_debugMenu = nullptr;
     QuickBarMenu* m_quickBarMenu = nullptr;
     DebugSettings* m_debugSettings = nullptr;

@@ -5,6 +5,7 @@ import QtQuick.Controls.Styles 1.0
 import SceneGraphRendering 1.0
 import QtQuick.Layouts 1.0
 import Graph 1.0
+import ChatModel 1.0
 
 //property alias label: text.text
 
@@ -268,4 +269,40 @@ Item {
     //FIXME: gynormous hack, strip win size out into C++
     width: 1600
     height: 900
+
+    Timer {
+        id: timer1
+        interval: 5000
+
+        onTriggered: {
+            chatView.model = chatModel
+            print("TIRRGGER");
+        }
+
+    }
+
+    ChatModel {
+        id: chatModel
+    }
+
+    ListView {
+        id: chatView
+
+
+        Component.onCompleted: {
+            timer1.start()
+
+        }
+
+        anchors.fill: parent
+
+        delegate: Rectangle {
+            height: 50
+            width: 800
+
+            Text {
+                text: "timeStamp: " + timeStamp + "PLAYERNAME: " + playerName + "CHAT TEXT: " + chatText
+            }
+        }
+    }
 }

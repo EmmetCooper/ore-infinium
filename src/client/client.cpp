@@ -28,6 +28,7 @@
 #include "src/settings/settings.h"
 
 #include "src/quickbarinventory.h"
+#include "src/client/gui/chatmodel.h"
 #include "src/world.h"
 #include "src/player.h"
 #include "src/camera.h"
@@ -49,6 +50,7 @@
 
 Client::Client()
 {
+    m_chatModel = new ChatModel(this);
 }
 
 Client::~Client()
@@ -56,6 +58,7 @@ Client::~Client()
     enet_host_destroy(m_client);
 
     delete m_mainPlayer;
+    delete m_chatModel;
 }
 
 void Client::init()
@@ -604,10 +607,18 @@ bool Client::connectTo(const char* address, uint16_t port)
     ENetEvent event;
     if (enet_host_service(m_client, &event, 5000) > 0 && event.type == ENET_EVENT_TYPE_CONNECT) {
         Debug::log(Debug::Area::NetworkClientInitialArea) << "Client connection to server succeeded!";
-//        m_mainMenu->hideMainMenu();
-//
-//        m_chat = new ChatDialog(this, m_mainMenu);
-//        m_chat->show();
+
+    //        m_mainMenu->hideMainMenu();
+    //        m_chat = new ChatDialog(this, m_mainMenu);
+    //        m_chat->show();
+
+        //HACK
+        Q_ASSERT(m_chatModel);
+        m_chatModel->addChatLine("08:24", "player1", "some chat text!");
+        m_chatModel->addChatLine("08:26", "player2", "sssssssssssssssssssooomme moaaarr text!");
+        m_chatModel->addChatLine("08:28", "player5", "moooooooooooooaaaaaaaaaarrr");
+        m_chatModel->addChatLine("08:32", "player5", "ssssssssssssssssssssssssssssssssssaaaayyyinng");
+        m_chatModel->addChatLine("08:41", "player5", "ccccccchhhhaaaaattt");
 
         //NOTE: no world is created yet. we now wait for the server to receive our initial connection data, and give us back a
         //player id, which we then create as the main player and finally, create the world.

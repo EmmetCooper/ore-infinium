@@ -25,6 +25,7 @@
 #include "src/client/graph.h"
 #include "src/client/FboInSGRenderer.h"
 #include "src/client/gui/optionsdialogbackend.h"
+#include "src/client/gui/chatmodel.h"
 #include "src/server/server.h"
 
 #include "src/fluids.h"
@@ -94,6 +95,7 @@ void Game::init()
     qmlRegisterType<OptionsDialogBackend>("OptionsDialogBackend", 1, 0, "OptionsDialogBackend");
     qmlRegisterType<FboInSGRenderer>("SceneGraphRendering", 1, 0, "Renderer");
     qmlRegisterType<Graph>("Graph", 1, 0, "Graph");
+    qmlRegisterType<ChatModel>("ChatModel", 1, 0, "ChatModel");
 
     m_client = new Client();
 
@@ -118,6 +120,7 @@ void Game::init()
 
     QQuickItem* rootObject = m_view->rootObject();
 
+
     //    QQmlEngine engine;
     //    QQmlComponent component(&engine,
     //                            QUrl::fromLocalFile("MyItem.qml"));
@@ -126,6 +129,11 @@ void Game::init()
     QObject* obj = rootObject->findChild<QObject*>("renderer");
     assert(obj);
 
+    ChatModel* model = rootObject->findChild<ChatModel*>("chatModel");
+    Q_ASSERT(model);
+    m_client->setChatModel(model);
+
+    Q_ASSERT(model);
     m_sceneFBOItem = qobject_cast<FboInSGRenderer*>(obj);
     assert(m_sceneFBOItem);
 

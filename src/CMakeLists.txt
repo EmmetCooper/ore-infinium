@@ -41,6 +41,7 @@ client/client.cpp
 client/graph.cpp
 client/FboInSGRenderer.cpp
 client/gui/optionsdialogbackend.cpp
+client/gui/chatmodel.cpp
 
 server/server.cpp
 server/contactlistener.cpp
