@@ -38,6 +38,10 @@ else(CMAKE_BUILD_TYPE STREQUAL "")
 #    set(CMAKE_C_FLAGS "-O2 -Wall -Wno-unused-variable -Wno-unused-function -fexpensive-optimizations")
 endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
+if(WIN32)
+    add_definitions(-DNOMINMAX)
+endif()
+
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 
 # Set version information in a config.h file

@@ -9,10 +9,6 @@ class QMouseEvent;
 class QPainter;
 class QHoverEvent;
 
-// some compilers define 'min' and 'max' macros
-#undef min
-#undef max
-
 class Graph : public QQuickPaintedItem
 {
     Q_OBJECT
