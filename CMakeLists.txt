@@ -64,8 +64,6 @@ set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib64 ${CMAKE_INSTALL_PREFIX}/li
 #######  # without -fPIE. We add that here.
 #######  set(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
 
-include(FindProtobuf)
-
 find_package(Qt5Quick)
 
 find_package(OpenGL)
