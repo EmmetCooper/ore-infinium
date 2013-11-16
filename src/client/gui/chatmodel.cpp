@@ -28,7 +28,9 @@ ChatModel::ChatModel(QObject* parent)
 {
     setObjectName("chatModel");
 
-    m_chatText = "UNINIT TEXT";
+    //FIXME: find a better average value to prevent reallocs
+    m_chatText.reserve(8000);
+    m_chatText = "";
 }
 
 ChatModel::~ChatModel()
