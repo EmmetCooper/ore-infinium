@@ -57,8 +57,6 @@ ${CMAKE_SOURCE_DIR}/utils/GLEW/glew.c
 
 )
 
-include(FindPkgConfig)
-
 add_executable(ore-infinium ${SRC})
 
 
