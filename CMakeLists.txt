@@ -39,6 +39,9 @@ else(CMAKE_BUILD_TYPE STREQUAL "")
 endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 if(WIN32)
+    # Don't let MSVC define min() and max() as preprocessor macros,
+    # so that things like numeric_limits<int>::max() can work,
+    # and the identifiers can be used as function names in our own code too.
     add_definitions(-DNOMINMAX)
 endif()
 
