@@ -57,6 +57,11 @@ ${CMAKE_SOURCE_DIR}/utils/GLEW/glew.c
 
 )
 
+# When building glew as a static library, linking to the static library,
+# or including glew in the executable's sources directly, this macro
+# must be defined.
+add_definitions(-DGLEW_STATIC)
+
 add_executable(ore-infinium ${SRC})
 
 
