@@ -277,8 +277,11 @@ Item {
         id: chatModel
     }
 
-    Text {
+    TextEdit {
         id: chatViewText
+        readOnly: true
+        selectByMouse: true
+        selectByKeyboard: true
     }
 
     //text: "timeStamp: " + timeStamp + "PLAYERNAME: " + playerName + "CHAT TEXT: " + chatText
