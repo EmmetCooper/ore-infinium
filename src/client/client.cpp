@@ -158,7 +158,7 @@ void Client::initGL()
 #ifdef GLEW_KHR_debug
     if (GLEW_KHR_debug) {
         glEnable(GL_DEBUG_OUTPUT);
-        glDebugMessageCallback(&Debug::glDebugCallback, 0);
+        Debug::registerGLDebugCallback();
         glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, 0, GL_TRUE);
     } else {
         Debug::log(Debug::Area::ImportantArea) << "GLEW_KHR_debug is not available, disabling OpenGL debug reporting facilities. The extension was compiled in but is not available at runtime.";

@@ -84,9 +84,7 @@ public:
     static void checkGLError();
     static void checkGLErrorSafe();
 
-    static void glDebugCallback(unsigned int source, unsigned int type,
-                                unsigned int id, unsigned int severity,
-                                int length, const char* message, void* userParam);
+    static void registerGLDebugCallback();
 };
 
 class LogStream : public std::stringstream
