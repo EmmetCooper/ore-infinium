@@ -20,8 +20,11 @@ Item {
 
         onGameStarted: {
             stackView.clear()
-                    ClientBackend.setEscapeMenuVisible(true);
-                    stackView.push(escapeMenu)
+            ClientBackend.setEscapeMenuVisible(true);
+            stackView.push(escapeMenu)
+
+            //so that it will load the text
+            chatViewText.text = chatModel.chatText
         }
 
         onFrameTimeChanged: {
@@ -270,39 +273,14 @@ Item {
     width: 1600
     height: 900
 
-    Timer {
-        id: timer1
-        interval: 5000
-
-        onTriggered: {
-            chatView.model = chatModel
-            print("TIRRGGER");
-        }
-
-    }
-
     ChatModel {
         id: chatModel
     }
 
-    ListView {
-        id: chatView
-
-
-        Component.onCompleted: {
-            timer1.start()
-
-        }
-
-        anchors.fill: parent
-
-        delegate: Rectangle {
-            height: 50
-            width: 800
-
-            Text {
-                text: "timeStamp: " + timeStamp + "PLAYERNAME: " + playerName + "CHAT TEXT: " + chatText
-            }
-        }
+    Text {
+        id: chatViewText
     }
+
+    //text: "timeStamp: " + timeStamp + "PLAYERNAME: " + playerName + "CHAT TEXT: " + chatText
+    //wrapMode: Text.WrapAnywhere
 }

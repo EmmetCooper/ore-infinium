@@ -133,7 +133,6 @@ void Game::init()
     Q_ASSERT(model);
     m_client->setChatModel(model);
 
-    Q_ASSERT(model);
     m_sceneFBOItem = qobject_cast<FboInSGRenderer*>(obj);
     assert(m_sceneFBOItem);
 

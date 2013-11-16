@@ -24,68 +24,25 @@
 #include <QVariant>
 
 ChatModel::ChatModel(QObject* parent)
-: QAbstractListModel(parent)
+: QObject(parent)
 {
     setObjectName("chatModel");
+
+    m_chatText = "UNINIT TEXT";
 }
 
 ChatModel::~ChatModel()
 {
 }
 
-QVariant ChatModel::data(const QModelIndex& index, int role) const
-{
-    if (!index.isValid())
-        return QVariant();
-
-    ChatLine line = m_chatLines.at(index.row());
-
-    switch (role) {
-        case TimeStampRole:
-            return line.timeStamp;
-
-        case PlayerNameRole:
-            return line.playerName;
-
-        case ChatTextRole:
-            return line.chatText;
-
-        default:
-            Q_ASSERT_X(0, "chat model", "role not handled!");
-    }
-}
-
-QHash< int, QByteArray > ChatModel::roleNames() const
-{
-    QHash<int, QByteArray> roles;
-
-    roles[TimeStampRole] = "timeStamp";
-    roles[PlayerNameRole] = "playerName";
-    roles[ChatTextRole] = "chatText";
-
-    return roles;
-}
-
-
-Qt::ItemFlags ChatModel::flags(const QModelIndex& index) const
-{
-    return Qt::NoItemFlags;
-}
-
-int ChatModel::rowCount(const QModelIndex& parent) const
-{
-    return m_chatLines.size();
-}
-
 void ChatModel::addChatLine(const QString& timestamp, const QString& playerName, const QString& line)
 {
     int row = m_chatLines.size();
-
-    beginInsertRows(QModelIndex(), row, row);
 
     ChatLine chat(timestamp, playerName, line);
 
     m_chatLines.append(chat);
 
-    endInsertRows();
+    m_chatText += "timestamp: " + chat.timeStamp + " name: " + chat.playerName + " line: " + chat.chatText + '\n';
+    emit chatTextChanged();
 }
