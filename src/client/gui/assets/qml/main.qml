@@ -20,8 +20,11 @@ Item {
 
         onGameStarted: {
             stackView.clear()
-                    ClientBackend.setEscapeMenuVisible(true);
-                    stackView.push(escapeMenu)
+            ClientBackend.setEscapeMenuVisible(true);
+            stackView.push(escapeMenu)
+
+            //so that it will load the text
+            chatViewText.text = chatModel.chatText
         }
 
         onFrameTimeChanged: {
@@ -270,39 +273,64 @@ Item {
     width: 1600
     height: 900
 
-    Timer {
-        id: timer1
-        interval: 5000
-
-        onTriggered: {
-            chatView.model = chatModel
-            print("TIRRGGER");
-        }
-
-    }
-
     ChatModel {
         id: chatModel
     }
 
-    ListView {
-        id: chatView
+    Rectangle {
+        color: "black"
 
-
-        Component.onCompleted: {
-            timer1.start()
-
+        anchors {
+            left: parent.left
+            top: parent.top
+//            bottom: parent.bottom
         }
 
-        anchors.fill: parent
+        height: 300
+        width: 500
 
-        delegate: Rectangle {
-            height: 50
-            width: 800
-
-            Text {
-                text: "timeStamp: " + timeStamp + "PLAYERNAME: " + playerName + "CHAT TEXT: " + chatText
+        TextEdit {
+            anchors {
+                top: parent.top
+                left: parent.left
+                right: parent.right
             }
+
+            id: chatViewText
+
+            wrapMode: TextEdit.WrapAnywhere
+            readOnly: true
+            selectByMouse: true
+            selectByKeyboard: true
+
+            color: "white"
+        }
+
+        OreTextBox {
+            anchors {
+                left: parent.left
+//                bottom: parent.bottom
+                top: chatViewText.bottom
+                rightMargin: 5
+            }
+
+            id: chatTextBox
+
+            text: "EDITABLE!"
+        }
+
+        OreButton {
+            anchors {
+                left: chatTextBox.right
+                right: parent.right
+                top: chatTextBox.top
+                bottom: chatTextBox.bottom
+            }
+
+            text: "Send"
         }
     }
+
+    //text: "timeStamp: " + timeStamp + "PLAYERNAME: " + playerName + "CHAT TEXT: " + chatText
+    //wrapMode: Text.WrapAnywhere
 }

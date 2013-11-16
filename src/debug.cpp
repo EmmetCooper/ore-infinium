@@ -76,8 +76,18 @@ void Debug::checkGLErrorSafe()
 }
 
 #ifdef GLEW_KHR_debug
+
+static void oreGLDebugCallback(unsigned int source, unsigned int type,
+                               unsigned int id, unsigned int severity,
+                               int length, const char* message, void* userParam);
+
+void Debug::registerGLDebugCallback()
+{
+    glDebugMessageCallback(&oreGLDebugCallback, 0);
+}
+
 //COLOR HOWTO: http://www.ibm.com/developerworks/linux/library/l-tip-prompt/ , only for linux..obviously
-void Debug::glDebugCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int length, const char* message, void* userParam)
+void oreGLDebugCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int length, const char* message, void* userParam)
 {
     if (!Settings::instance()->isDebugAreaEnabled(Debug::Area::ShadersArea)) {
         return;
@@ -224,7 +234,7 @@ void Debug::glDebugCallback(unsigned int source, unsigned int type, unsigned int
     idString.append("\nError ID: ");
     idString.append("\e[32;40m\e[0m");
 
-    log(Debug::Area::ClientRendererArea) << "\nOpenGL Error Report: " << sourceString << typeString << idString << severityString << messageString << "\n";
+    Debug::log(Debug::Area::ClientRendererArea) << "\nOpenGL Error Report: " << sourceString << typeString << idString << severityString << messageString << "\n";
 }
 #endif
 

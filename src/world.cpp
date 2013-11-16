@@ -444,9 +444,13 @@ void World::update(double elapsedTime)
                 m_server->sendPlayerMove(player);
                 player->clearDirtyFlag(Entity::DirtyFlags::PositionDirty);
 
-                const glm::ivec2& currentChunkPosition = glm::ivec2(static_cast<int>(player->position().x / BLOCK_SIZE), static_cast<int>(player->position().y / BLOCK_SIZE));
+                const glm::vec2& currentChunkPosition = glm::vec2((player->position().x / BLOCK_SIZE), (player->position().y / BLOCK_SIZE));
 
-                if (glm::distance(currentChunkPosition, player->lastLoadedChunk) > 20) {
+                // conversion because glm::distance only allows float comparisons. and i don't want to
+                // change player->lastLoadedChunk because that doesn't make sense as a float, and
+                // would cause more issues
+                const glm::vec2& lastChunk = glm::vec2(player->lastLoadedChunk);
+                if (glm::distance(currentChunkPosition, lastChunk) > 20.0) {
                     //Debug::log(Debug::ImportantArea) << " server sending large world chunk..: ";
                     m_server->sendLargeWorldChunkForPlayer(player);
                 }

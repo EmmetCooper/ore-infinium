@@ -158,7 +158,7 @@ void Client::initGL()
 #ifdef GLEW_KHR_debug
     if (GLEW_KHR_debug) {
         glEnable(GL_DEBUG_OUTPUT);
-        glDebugMessageCallback(&Debug::glDebugCallback, 0);
+        Debug::registerGLDebugCallback();
         glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, 0, GL_TRUE);
     } else {
         Debug::log(Debug::Area::ImportantArea) << "GLEW_KHR_debug is not available, disabling OpenGL debug reporting facilities. The extension was compiled in but is not available at runtime.";
@@ -615,9 +615,9 @@ bool Client::connectTo(const char* address, uint16_t port)
         //HACK
         Q_ASSERT(m_chatModel);
         m_chatModel->addChatLine("08:24", "player1", "some chat text!");
-        m_chatModel->addChatLine("08:26", "player2", "sssssssssssssssssssooomme moaaarr text!");
+        m_chatModel->addChatLine("08:26", "player2", "sssssssssssaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaassssssssooomme moaaarr text!");
         m_chatModel->addChatLine("08:28", "player5", "moooooooooooooaaaaaaaaaarrr");
-        m_chatModel->addChatLine("08:32", "player5", "ssssssssssssssssssssssssssssssssssaaaayyyinng");
+        m_chatModel->addChatLine("08:32", "player5", "ssssssssssssssssssssssssssssssssssaaaayysssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssyinng");
         m_chatModel->addChatLine("08:41", "player5", "ccccccchhhhaaaaattt");
 
         //NOTE: no world is created yet. we now wait for the server to receive our initial connection data, and give us back a

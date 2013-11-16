@@ -18,34 +18,28 @@
 #ifndef CHATMODEL_H
 #define CHATMODEL_H
 
-#include <QAbstractListModel>
+#include <QObject>
 
 #include <QList>
 #include <QString>
 
-class ChatModel : public QAbstractListModel
+class ChatModel : public QObject
 {
     Q_OBJECT
-//    Q_PROPERTY(QString name READ name WRITE setName)
+    Q_PROPERTY(QString chatText READ chatText NOTIFY chatTextChanged);
 
 public:
     ChatModel(QObject* parent = 0);
     ~ChatModel();
 
-    enum ChatRoles {
-        TimeStampRole = Qt::UserRole + 1,
-        PlayerNameRole,
-        ChatTextRole
-    };
-
-    int rowCount(const QModelIndex &parent) const;
-
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    Qt::ItemFlags flags(const QModelIndex &index) const;
-
-    QHash<int, QByteArray> roleNames() const;
-
     void addChatLine(const QString& timeStamp,const QString& playerName, const QString& line);
+
+    QString chatText() {
+        return m_chatText;
+    }
+
+signals:
+    void chatTextChanged();
 
 private:
     struct ChatLine {
@@ -62,6 +56,8 @@ private:
         QString playerName;
         QString chatText;
     };
+
+    QString m_chatText;
 
     QList<ChatLine> m_chatLines;
 };
