@@ -277,11 +277,58 @@ Item {
         id: chatModel
     }
 
-    TextEdit {
-        id: chatViewText
-        readOnly: true
-        selectByMouse: true
-        selectByKeyboard: true
+    Rectangle {
+        color: "black"
+
+        anchors {
+            left: parent.left
+            top: parent.top
+//            bottom: parent.bottom
+        }
+
+        height: 300
+        width: 500
+
+        TextEdit {
+            anchors {
+                top: parent.top
+                left: parent.left
+                right: parent.right
+            }
+
+            id: chatViewText
+
+            wrapMode: TextEdit.WrapAnywhere
+            readOnly: true
+            selectByMouse: true
+            selectByKeyboard: true
+
+            color: "white"
+        }
+
+        OreTextBox {
+            anchors {
+                left: parent.left
+//                bottom: parent.bottom
+                top: chatViewText.bottom
+                rightMargin: 5
+            }
+
+            id: chatTextBox
+
+            text: "EDITABLE!"
+        }
+
+        OreButton {
+            anchors {
+                left: chatTextBox.right
+                right: parent.right
+                top: chatTextBox.top
+                bottom: chatTextBox.bottom
+            }
+
+            text: "Send"
+        }
     }
 
     //text: "timeStamp: " + timeStamp + "PLAYERNAME: " + playerName + "CHAT TEXT: " + chatText

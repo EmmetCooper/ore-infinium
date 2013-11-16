@@ -10,6 +10,8 @@ TextField {
         rightMargin: 10
     }
 
+    height: 20
+
         style: TextFieldStyle {
             textColor: "black"
 
