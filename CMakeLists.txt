@@ -39,6 +39,18 @@ else(CMAKE_BUILD_TYPE STREQUAL "")
 endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 if(WIN32)
+    # Several Qt headers include windows.h, which includes winsock.h by
+    # default. The enet headers include winsock2.h. winsock.h and winsock2.h
+    # can't both be included, since they have conflicting declarations.
+    # Thus, to be able to include Qt headers and enet headers in
+    # the same compilation unit, we define WIN32_LEAN_AND_MEAN so that
+    # windows.h doesn't include winsock.h.
+    # See: http://msdn.microsoft.com/en-us/library/ms738562.aspx
+    #
+    # This also disables other windows headers and features,
+    # which should speed up compilation.
+    add_definitions(-DWIN32_LEAN_AND_MEAN)
+
     # Don't let MSVC define min() and max() as preprocessor macros,
     # so that things like numeric_limits<int>::max() can work,
     # and the identifiers can be used as function names in our own code too.
