@@ -19,12 +19,17 @@
 #include "game.h"
 #include "settings/settings.h"
 
-
 #include <assert.h>
 #include <iostream>
 #include <sstream>
 
 #include "glew.h"
+
+#ifdef _WIN32
+# include <windows.h>
+#else
+# define CALLBACK /*nothing*/
+#endif
 
 #ifndef NDEBUG
 #endif
@@ -77,9 +82,11 @@ void Debug::checkGLErrorSafe()
 
 #ifdef GLEW_KHR_debug
 
-static void oreGLDebugCallback(unsigned int source, unsigned int type,
-                               unsigned int id, unsigned int severity,
-                               int length, const char* message, void* userParam);
+static void CALLBACK oreGLDebugCallback(
+    unsigned int source, unsigned int type,
+    unsigned int id, unsigned int severity,
+    int length, const char* message, void* userParam
+);
 
 void Debug::registerGLDebugCallback()
 {
@@ -87,7 +94,7 @@ void Debug::registerGLDebugCallback()
 }
 
 //COLOR HOWTO: http://www.ibm.com/developerworks/linux/library/l-tip-prompt/ , only for linux..obviously
-void oreGLDebugCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int length, const char* message, void* userParam)
+void CALLBACK oreGLDebugCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int length, const char* message, void* userParam)
 {
     if (!Settings::instance()->isDebugAreaEnabled(Debug::Area::ShadersArea)) {
         return;
