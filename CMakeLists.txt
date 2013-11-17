@@ -71,6 +71,8 @@ find_package(Chipmunk)
 find_package(enet)
 find_package(Protobuf)
 
+set_package_properties(Qt5Quick PROPERTIES TYPE REQUIRED)
+
 set_package_properties(OpenGL PROPERTIES DESCRIPTION "OpenGL >= 3.0 is required. Version check is done at runtime" URL "-")
 set_package_properties(OpenGL PROPERTIES TYPE REQUIRED PURPOSE "OpenGL is used for all rendering, without it you won't see anything :)")
 
