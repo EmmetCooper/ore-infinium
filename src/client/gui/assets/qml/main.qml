@@ -66,57 +66,74 @@ Item {
         print("MAIN ESC PRESSED");
     }
 
-    Graph {
-        id: clientFrameTimeGraph
+    Keys.onPressed: {
+        if (event.key == Qt.Key_F11) {
+            graphs.visible = !graphs.visible
+        }
+    }
 
+    Rectangle {
+        id: graphs
         anchors {
             left: parent.left
             bottom: parent.bottom
-
-            leftMargin: 20
-            bottomMargin: 20
         }
 
-        min: 0.0
-        max: 60.0
+        color: "black"
 
-        height: 300
-        width: 300
-    }
+        Graph {
+            id: clientFrameTimeGraph
 
-    Graph {
-        id: serverFrameTimeGraph
+            anchors {
+                left: parent.left
+                bottom: parent.bottom
 
-        anchors {
-            left: clientFrameTimeGraph.right
-            bottom: clientFrameTimeGraph.bottom
+                leftMargin: 20
+                bottomMargin: 20
+            }
 
-            leftMargin: 20
+            min: 0.0
+            max: 60.0
+
+            height: 300
+            width: 300
         }
 
-        min: 0.0
-        max: 60.0
+        Graph {
+            id: serverFrameTimeGraph
 
-        height: 300
-        width: 300
-    }
+            anchors {
+                left: clientFrameTimeGraph.right
+                bottom: clientFrameTimeGraph.bottom
 
-    OreLabel {
-        anchors {
-            bottom: clientFrameTimeGraph.top
-            horizontalCenter: clientFrameTimeGraph.horizontalCenter
+                leftMargin: 20
+            }
+
+            min: 0.0
+            max: 60.0
+
+            height: 300
+            width: 300
         }
 
-        text: "Client Thread Frame Time (ms / frame)"
-    }
+        OreLabel {
+            anchors {
+                bottom: clientFrameTimeGraph.top
+                horizontalCenter: clientFrameTimeGraph.horizontalCenter
+            }
 
-    OreLabel {
-        anchors {
-            bottom: serverFrameTimeGraph.top
-            horizontalCenter: serverFrameTimeGraph.horizontalCenter
+            text: "Client Thread Frame Time (ms / frame)"
         }
 
-        text: "Server Thread Frame Time (ms / frame)"
+        OreLabel {
+            anchors {
+                bottom: serverFrameTimeGraph.top
+                horizontalCenter: serverFrameTimeGraph.horizontalCenter
+            }
+
+            text: "Server Thread Frame Time (ms / frame)"
+        }
+
     }
 
     Loader {
