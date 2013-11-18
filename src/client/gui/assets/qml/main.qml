@@ -1,10 +1,11 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.0
+import QtQuick.Layouts 1.0
 
 import SceneGraphRendering 1.0
-import QtQuick.Layouts 1.0
 import Graph 1.0
+
 import ChatModel 1.0
 
 //property alias label: text.text
@@ -24,7 +25,7 @@ Item {
             stackView.push(escapeMenu)
 
             //so that it will load the text
-            chatViewText.text = chatModel.chatText
+//            chatView.text = chatModel.chatText
         }
 
         onFrameTimeChanged: {
@@ -277,58 +278,9 @@ Item {
         id: chatModel
     }
 
-    Rectangle {
-        color: "black"
-
-        anchors {
-            left: parent.left
-            top: parent.top
-//            bottom: parent.bottom
-        }
-
-        height: 300
-        width: 500
-
-        TextEdit {
-            anchors {
-                top: parent.top
-                left: parent.left
-                right: parent.right
-            }
-
-            id: chatViewText
-
-            wrapMode: TextEdit.WrapAnywhere
-            readOnly: true
-            selectByMouse: true
-            selectByKeyboard: true
-
-            color: "white"
-        }
-
-        OreTextBox {
-            anchors {
-                left: parent.left
-//                bottom: parent.bottom
-                top: chatViewText.bottom
-                rightMargin: 5
-            }
-
-            id: chatTextBox
-
-            text: "EDITABLE!"
-        }
-
-        OreButton {
-            anchors {
-                left: chatTextBox.right
-                right: parent.right
-                top: chatTextBox.top
-                bottom: chatTextBox.bottom
-            }
-
-            text: "Send"
-        }
+    ChatView {
+        id: chatView
+        text: chatModel.chatText
     }
 
     //text: "timeStamp: " + timeStamp + "PLAYERNAME: " + playerName + "CHAT TEXT: " + chatText

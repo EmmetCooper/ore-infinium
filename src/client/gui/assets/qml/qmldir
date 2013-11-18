@@ -10,6 +10,7 @@ MultiplayerHostMenu 0.1 multiplayerHostMenu.qml
 MultiplayerJoinMenu 0.1 multiplayerJoinMenu.qml
 
 EscapeMenu 0.1 escapeMenu.qml
+ChatView 0.1 chatView.qml
 
 OptionsDialog 0.1 optionsDialog.qml
 OreButton 0.1 OreButton.qml
