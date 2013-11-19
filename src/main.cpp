@@ -84,6 +84,7 @@ int main(int argc, char* argv[])
             std::cout << "--no-sky-renderer Disables sky renderer (for tricky/slow systems, for debugging. More optimal approaches and settings will exist later)" << '\n';
             std::cout << "--play-now Hosts and joins a local session immediately on startup (for fast debugging)." << '\n';
             std::cout << "--debug-full Enable all debugging flags (cout)" << '\n';
+            std::cout << "F11 for toggling performance graphs (client, server frametime)" << '\n';
 
             exit(0);
         } else if (params.contains("--authors")) {
