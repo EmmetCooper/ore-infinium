@@ -275,16 +275,28 @@ void Client::startMultiplayerJoinSlot(const QString& playerName, const QString& 
 void Client::mouseAreaPressed(int buttons)
 {
     qDebug() << " MOUSE pressed, buttons: " << buttons;
+    QMutexLocker lock (&m_playerMouseInputLock);
+
+    m_playerMouseLeftHeld = (buttons & Qt::MouseButton::LeftButton);
+    m_playerMouseRightHeld = (buttons & Qt::MouseButton::RightButton);
 }
 
 void Client::mouseAreaReleased(int buttons)
 {
     qDebug() << " MOUSE released, buttons: " << buttons;
+    QMutexLocker lock (&m_playerMouseInputLock);
+
+    m_playerMouseLeftHeld = (buttons & Qt::MouseButton::LeftButton);
+    m_playerMouseRightHeld = (buttons & Qt::MouseButton::RightButton);
 }
 
 void Client::mouseAreaMoved(double mouseX, double mouseY)
 {
     qDebug() << " MOUSE MOVED x: " << mouseX << " y: " << mouseY;
+    QMutexLocker lock (&m_playerMouseInputLock);
+
+    m_playerMouseX = mouseX;
+    m_playerMouseY = mouseY;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -430,7 +442,7 @@ void Client::tick(double frameTime)
        if (m_mainPlayer) {
            //NOTE: we send this shit regardless of input events..for obvious reasons. (aka fossils of a once living bug lie here ;)
            sendPlayerMovement();
-           //HACK: awaiting move to qt sendPlayerMouseState();
+           sendPlayerMouseState();
        }
 
        m_world->update(frameTime);
@@ -731,43 +743,43 @@ void Client::sendPlayerMovement()
     Packet::sendPacket(m_peer, &message, Packet::FromClientPacketContents::PlayerMoveFromClientPacket, ENET_PACKET_FLAG_RELIABLE);
 }
 
-glm::vec2 Client::mousePositionToWorldCoords()
+glm::vec2 Client::mousePositionToWorldCoords(int x, int y)
 {
     assert(m_world);
 
-//FIXME: HACK: use qt, obviously..
-//    int x; int y;
-//    GetMouseState(&x, &y);
-//
-//    glm::vec2 mouse = glm::vec2(x, Settings::instance()->windowHeight - y);
-//
-//    glm::vec4 viewport = glm::vec4(0, 0, Settings::instance()->windowWidth, Settings::instance()->windowHeight);
-//    glm::vec3 wincoord = glm::vec3(mouse.x, mouse.y, 0);
-//    glm::vec3 unproject = glm::unProject(wincoord, m_world->camera()->view(), m_world->camera()->ortho(), viewport);
-//
- //   mouse = glm::vec2(unproject.x, unproject.y);
+    glm::vec2 mouse = glm::vec2(x, Settings::instance()->windowHeight - y);
 
-//    return mouse;
-    return glm::vec2(0, 0);
+    glm::vec4 viewport = glm::vec4(0, 0, Settings::instance()->windowWidth, Settings::instance()->windowHeight);
+    glm::vec3 wincoord = glm::vec3(mouse.x, mouse.y, 0);
+    glm::vec3 unproject = glm::unProject(wincoord, m_world->camera()->view(), m_world->camera()->ortho(), viewport);
+
+    mouse = glm::vec2(unproject.x, unproject.y);
+
+    return mouse;
 }
 
 void Client::sendPlayerMouseState()
 {
-    glm::vec2 mousePosition = mousePositionToWorldCoords();
+    m_playerMouseInputLock.lock();
+
+    bool leftHeld = m_playerMouseLeftHeld;
+    bool rightHeld = m_playerMouseRightHeld;
+    int mouseX = m_playerMouseX;
+    int mouseY = m_playerMouseY;
+
+    m_playerMouseInputLock.unlock();
+
+    glm::vec2 mousePosition = mousePositionToWorldCoords(mouseX, mouseY);
 
     //set the main player's mouse position, which we can then use for generalized lookups regardless if we're in server or client mode
     // (e.g. rendering crosshair vs. networked picking/block selection..both would otherwise require two different solutions but now do not)
     m_mainPlayer->setMousePositionWorldCoords(mousePosition.x, mousePosition.y);
-
-    bool leftHeld = false; //GetMouseState(nullptr, nullptr) & MOUSE_BUTTON(1);
-    bool rightHeld = false; //GetMouseState(nullptr, nullptr) & MOUSE BUTTON(3);
 
     PacketBuf::PlayerMouseStateFromClient message;
     message.set_x(mousePosition.x);
     message.set_y(mousePosition.y);
     message.set_leftbuttonheld(leftHeld);
     message.set_rightbuttonheld(rightHeld);
-
 
     //FIXME: make UNRELIABLE, and verify it is safe to do so..
     Packet::sendPacket(m_peer, &message, Packet::FromClientPacketContents::PlayerMouseStateFromClient, ENET_PACKET_FLAG_RELIABLE);

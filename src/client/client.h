@@ -232,7 +232,7 @@ private:
 private:
     void initGL();
 
-    glm::vec2 mousePositionToWorldCoords();
+    glm::vec2 mousePositionToWorldCoords(int x, int y);
 
     void drawDebugText(double frameTime);
 
@@ -259,6 +259,12 @@ private:
 
     /////////////////////////
     QMutex m_playerInputLock;
+    QMutex m_playerMouseInputLock;
+    bool m_playerMouseLeftHeld = false;
+    bool m_playerMouseRightHeld = false;
+    int m_playerMouseX = 0;
+    int m_playerMouseY = 0;
+
     int m_playerInputDirectionX = 0;
     int m_playerInputDirectionY = 0;
 
