@@ -224,6 +224,7 @@ Item {
 
     EscapeMenu {
         id: escapeMenu
+        visible: false
 
         anchors.centerIn: parent
 
