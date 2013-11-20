@@ -475,9 +475,8 @@ void Client::viewKeyPressed(QKeyEvent* event)
 //            handlePlayerInput(event);
 //            m_quickBarMenu->handleEvent(event);
 //        }
+
     assert(event);
-    //HACK, remove when lag is located. obviously I suspect it's here;
-    return;
 
     QMutexLocker lock(&m_playerInputLock);
 
@@ -721,9 +720,7 @@ void Client::sendChatMessage(const std::string& message)
 
 void Client::sendPlayerMovement()
 {
-//    QMutexLocker lock(&m_playerInputLock);
-
-    m_playerInputDirectionX = 1;
+    m_playerInputLock.lock();
 
     // ensure it's only between -1 and 1. The server has protections to prevent this, as this
     // would be used maliciously, but this is to ensure there are no regressions client-side
@@ -739,6 +736,8 @@ void Client::sendPlayerMovement()
     m_playerInputDirectionX = 0;
     m_playerInputDirectionY = 0;
     m_playerJumpRequested = false;
+
+    m_playerInputLock.unlock();
 
     Packet::sendPacket(m_peer, &message, Packet::FromClientPacketContents::PlayerMoveFromClientPacket, ENET_PACKET_FLAG_RELIABLE);
 }
