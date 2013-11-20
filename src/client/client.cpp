@@ -274,7 +274,6 @@ void Client::startMultiplayerJoinSlot(const QString& playerName, const QString& 
 
 void Client::mouseAreaPressed(int buttons)
 {
-    qDebug() << " MOUSE pressed, buttons: " << buttons;
     QMutexLocker lock (&m_playerMouseInputLock);
 
     m_playerMouseLeftHeld = (buttons & Qt::MouseButton::LeftButton);
@@ -283,7 +282,6 @@ void Client::mouseAreaPressed(int buttons)
 
 void Client::mouseAreaReleased(int buttons)
 {
-    qDebug() << " MOUSE released, buttons: " << buttons;
     QMutexLocker lock (&m_playerMouseInputLock);
 
     m_playerMouseLeftHeld = (buttons & Qt::MouseButton::LeftButton);
@@ -292,7 +290,6 @@ void Client::mouseAreaReleased(int buttons)
 
 void Client::mouseAreaMoved(double mouseX, double mouseY)
 {
-    qDebug() << " MOUSE MOVED x: " << mouseX << " y: " << mouseY;
     QMutexLocker lock (&m_playerMouseInputLock);
 
     m_playerMouseX = mouseX;
