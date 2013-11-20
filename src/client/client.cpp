@@ -199,6 +199,8 @@ void Client::paint()
         Debug::log(Debug::ImportantArea) << "WIN HEIGHT, W: " << Settings::instance()->windowWidth << " H: " << Settings::instance()->windowHeight;
 
         if (Settings::instance()->startupFlags() & Settings::PlayNowStartupFlag) {
+            m_connected = true;
+            emit gameConnected();
             emit gameStarted();
             startMultiplayerHost("Dingo");
         }
@@ -510,16 +512,7 @@ void Client::viewKeyPressed(QKeyEvent* event)
             break;
 
         case Qt::Key_Escape: {
-            //only if we are connected, do we allow hiding and showing (escape menu)
-            if (m_peer) {
-                //FIXME: HACK
-                event->accept();
-            //     if (!m_mainMenu->escapeMenuVisible()) {
-            //         m_mainMenu->showEscapeMenu();
-            //     } else {
-            //         m_mainMenu->hideEscapeMenu();
-            //     }
-            }
+
         }
 
         case Qt::Key_F1: {

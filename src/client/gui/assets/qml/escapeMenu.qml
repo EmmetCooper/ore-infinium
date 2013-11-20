@@ -9,24 +9,16 @@ Item {
     width: 1024
     height: 768
 
-    focus: true
+//    focus: true
 
     signal disconnectClicked()
-
-    Keys.onEscapePressed: {
-        print("ESCP MENU, key pressed, setting visible to false, clearing stack");
-        ClientBackend.setEscapeMenuVisible(false);
-        main.Stack.view.pop(null)
-        print("done");
-    }
 
     Component.onCompleted: {
     }
 
     Loader {
         id: optionsLoader
-        parent: main
-//        anchors.fill: mainMenu
+        anchors.fill: main
 //        anchors.centerIn: parent
         z: 200
 

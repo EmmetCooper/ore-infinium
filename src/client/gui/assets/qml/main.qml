@@ -21,11 +21,6 @@ Item {
 
         onGameStarted: {
             stackView.clear()
-            ClientBackend.setEscapeMenuVisible(true);
-            stackView.push(escapeMenu)
-
-            //so that it will load the text
-//            chatView.text = chatModel.chatText
         }
 
         onFrameTimeChanged: {
@@ -33,7 +28,6 @@ Item {
             clientFrameTimeGraph.addSample(frameTime);
             //rint("SERVER, qml, FRAMETIME" + ClientBackend.serverFrameTime);
             serverFrameTimeGraph.addSample(ClientBackend.serverFrameTime);
-//            serverFrameTimeGraph.addSample(10.0);
         }
     }
 
@@ -60,10 +54,6 @@ Item {
         onPositionChanged: {
             ClientBackend.mouseAreaMoved(mouse.x, mouse.y);
         }
-    }
-
-    Keys.onEscapePressed: {
-        print("MAIN ESC PRESSED");
     }
 
     Keys.onPressed: {
@@ -178,16 +168,11 @@ Item {
         }
     }
 
-    Component {
+    EscapeMenu {
         id: escapeMenu
 
-        EscapeMenu
-        {
-            id: menu
-
-            onDisconnectClicked: {
-                ClientBackend.disconnectClicked();
-            }
+        onDisconnectClicked: {
+            ClientBackend.disconnectClicked();
         }
     }
 
@@ -236,21 +221,11 @@ Item {
         }
 
         onEscapePressed: {
-            print("main.qml ESCAPE PRESSED CAUGHT, escape menu visible: " + ClientBackend.escapeMenuVisible());
-
-                print("PRE-eval-PRE-POP count: " + stackView.depth);
+            //FIXME:
             if (ClientBackend.gameConnected) {
-                if (ClientBackend.escapeMenuVisible()) {
-                print("PRE-POP count: " + stackView.depth);
-                    ClientBackend.setEscapeMenuVisible(false);
-
-                    stackView.pop(null);
-                print("POST-POP count: " + stackView.depth);
-                } else {
-//                    stackView.push(escapeMenu)
-                } //!gameconnected
-            } //game connected
-        } //onEscapePressed
+                escapeMenu.visible = !escapeMenu.visible
+           }
+        }
     } //connections
 
 

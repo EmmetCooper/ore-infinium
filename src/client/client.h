@@ -103,14 +103,6 @@ public slots:
     Q_INVOKABLE void disconnectClicked();
     Q_INVOKABLE void exitClicked();
 
-    Q_INVOKABLE bool escapeMenuVisible() {
-        return m_escapeMenuVisible;
-    }
-
-    Q_INVOKABLE void setEscapeMenuVisible(bool visible) {
-        m_escapeMenuVisible = visible;
-    }
-
     Q_INVOKABLE double serverFrameTime() {
         return m_serverFrameTime;
     }
@@ -276,7 +268,6 @@ private:
     double m_frameTime = 0.0;
     double m_serverFrameTime = 0.0;
 
-    bool m_escapeMenuVisible = false;
 private:
     ENetHost* m_client = nullptr;
 
