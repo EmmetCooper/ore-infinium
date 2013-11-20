@@ -28,6 +28,8 @@ Item {
             clientFrameTimeGraph.addSample(frameTime);
             //rint("SERVER, qml, FRAMETIME" + ClientBackend.serverFrameTime);
             serverFrameTimeGraph.addSample(ClientBackend.serverFrameTime);
+            clientPacketReceivedCountGraph.addSample(ClientBackend.clientPacketReceivedCount);
+            serverPacketReceivedCountGraph.addSample(ClientBackend.serverPacketReceivedCount);
         }
     }
 
@@ -106,6 +108,40 @@ Item {
             width: 300
         }
 
+        Graph {
+            id: clientPacketReceivedCountGraph
+
+            anchors {
+                left: serverFrameTimeGraph.right
+                bottom: serverFrameTimeGraph.bottom
+
+                leftMargin: 20
+            }
+
+            min: 0.0
+            max: 60.0
+
+            height: 300
+            width: 300
+        }
+
+        Graph {
+            id: serverPacketReceivedCountGraph
+
+            anchors {
+                left: clientPacketReceivedCountGraph.right
+                bottom: clientPacketReceivedCountGraph.bottom
+
+                leftMargin: 20
+            }
+
+            min: 0.0
+            max: 60.0
+
+            height: 300
+            width: 300
+        }
+
         OreLabel {
             anchors {
                 bottom: clientFrameTimeGraph.top
@@ -122,6 +158,24 @@ Item {
             }
 
             text: "Server Thread Frame Time (ms / frame)"
+        }
+
+        OreLabel {
+            anchors {
+                bottom: clientPacketReceivedCountGraph.top
+                horizontalCenter: clientPacketReceivedCountGraph.horizontalCenter
+            }
+
+            text: "Client Packet Received Count (packets / frame)"
+        }
+
+        OreLabel {
+            anchors {
+                bottom: serverPacketReceivedCountGraph.top
+                horizontalCenter: serverPacketReceivedCountGraph.horizontalCenter
+            }
+
+            text: "Server Packet Received Count (packets / frame)"
         }
 
     }

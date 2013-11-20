@@ -58,6 +58,8 @@ class Client : public QQuickItem
     //and it sets server frametime which a copy is stored here (on the client) and obtained from server each client tick
     Q_PROPERTY(double frameTime READ frameTime NOTIFY frameTimeChanged);
     Q_PROPERTY(double serverFrameTime READ serverFrameTime);
+    Q_PROPERTY(int clientPacketReceivedCount READ clientPacketReceivedCount);
+    Q_PROPERTY(int serverPacketReceivedCount READ serverPacketReceivedCount);
     Q_PROPERTY(bool gameConnected READ gameConnected NOTIFY gameConnectedChanged);
 
 public:
@@ -68,6 +70,14 @@ public:
 
     double frameTime() {
         return m_frameTime;
+    }
+
+    int clientPacketReceivedCount() {
+        return m_clientPacketReceivedCount;
+    }
+
+    int serverPacketReceivedCount() {
+        return m_serverPacketReceivedCount;
     }
 
      Q_INVOKABLE int defaultPort() {
@@ -267,6 +277,9 @@ private:
 
     double m_frameTime = 0.0;
     double m_serverFrameTime = 0.0;
+
+    int m_clientPacketReceivedCount = 0;
+    int m_serverPacketReceivedCount = 0;
 
 private:
     ENetHost* m_client = nullptr;

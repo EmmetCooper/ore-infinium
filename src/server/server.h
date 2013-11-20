@@ -56,6 +56,13 @@ public:
         return m_frameTime.load();
     }
 
+    int packetReceivedCount() {
+        int ret = m_packetReceivedCount.load();
+        m_packetReceivedCount.store(0);
+
+        return ret;
+    }
+
     /**
      * Returns the client that started this server. This is ONLY VALID if it's a self-hosted server/client session.
      * Use world's m_client for indication that the world is in client mode, instead.
@@ -145,6 +152,7 @@ private:
     Client* m_client = nullptr;
 
     std::atomic<double> m_frameTime;
+    std::atomic<int> m_packetReceivedCount;
 
     /**
      * For debug scenarios, see settings debug flag
