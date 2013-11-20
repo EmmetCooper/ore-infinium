@@ -9,8 +9,6 @@ Item {
     width: 1024
     height: 768
 
-//    focus: true
-
     signal disconnectClicked()
 
     Component.onCompleted: {
@@ -18,8 +16,9 @@ Item {
 
     Loader {
         id: optionsLoader
-        anchors.fill: main
-//        anchors.centerIn: parent
+
+        anchors.centerIn: main
+
         z: 200
 
         onLoaded: {

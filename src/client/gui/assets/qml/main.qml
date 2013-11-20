@@ -171,6 +171,8 @@ Item {
     EscapeMenu {
         id: escapeMenu
 
+        anchors.centerIn: parent
+
         onDisconnectClicked: {
             ClientBackend.disconnectClicked();
         }
