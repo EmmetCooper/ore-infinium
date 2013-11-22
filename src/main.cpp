@@ -160,9 +160,6 @@ int main(int argc, char* argv[])
 
             Settings::instance()->windowHeight = height;
             Settings::instance()->windowWidth = width;
-
-            Settings::instance()->screenResolutionHeight = height;
-            Settings::instance()->screenResolutionWidth = width;
         }
 
         Game game;
