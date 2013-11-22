@@ -153,7 +153,9 @@ void Client::initGL()
 
     GLint textureSize;
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, &textureSize);
-    Debug::log(Debug::Area::StartupArea) << "Maximum OpenGL texture size allowed: " << textureSize << "\n\n\n";
+
+    Debug::log(Debug::Area::StartupArea) << "Maximum OpenGL texture size allowed: " << textureSize;
+
 
 #ifdef GLEW_KHR_debug
     if (GLEW_KHR_debug) {
@@ -168,6 +170,7 @@ void Client::initGL()
     Debug::fatal(enet_initialize() == 0, Debug::Area::ImportantArea, "An error occurred during ENet init (network init failure");
 
     Debug::log(Debug::Area::StartupArea) << "initGL finished";
+    qDebug() << "\n--------------------------------------------------------------------------------------";
 }
 
 void Client::handleWindowChanged(QQuickWindow *win)
