@@ -152,14 +152,17 @@ int main(int argc, char* argv[])
             Settings::instance()->setStartupFlag(Settings::StartupFlags::FullDebugStartupFlag);
         }
 
-        int height = -1;
-        int width = -1;
+        int height;
+        int width;
         if (parser.isSet("height") && parser.isSet("width")) {
             int height = parser.value("height").toInt();
             int width = parser.value("width").toInt();
 
             Settings::instance()->windowHeight = height;
             Settings::instance()->windowWidth = width;
+
+            Settings::instance()->screenResolutionHeight = height;
+            Settings::instance()->screenResolutionWidth = width;
         }
 
         Game game;

@@ -101,8 +101,8 @@ void Game::init()
 
     m_view = new QuickView(m_client);
     m_view->setResizeMode(QQuickView::ResizeMode::SizeViewToRootObject);
-    m_view->setMinimumWidth(1600);
-    m_view->setMinimumHeight(900);
+    m_view->setMinimumWidth(Settings::instance()->screenResolutionWidth);
+    m_view->setMinimumHeight(Settings::instance()->screenResolutionWidth);
 
 //    root->setContextProperty("sceneFBOItem", m_sceneFBOItem);
 
@@ -118,8 +118,11 @@ void Game::init()
 
     m_view->show();
 
+    int width = Settings::instance()->windowHeight;
+    int width = Settings::instance()->windowWidth;
     QQuickItem* rootObject = m_view->rootObject();
-
+    rootObject->setProperty("width", 800);
+    rootObject->setProperty("height", 800);
 
     //    QQmlEngine engine;
     //    QQmlComponent component(&engine,
@@ -135,7 +138,6 @@ void Game::init()
 
     m_sceneFBOItem = qobject_cast<FboInSGRenderer*>(obj);
     assert(m_sceneFBOItem);
-
 
     if (Settings::instance()->startupFlags() & Settings::StartupFlags::WorldViewerStartupFlag) {
         m_client->enableWorldViewing();
