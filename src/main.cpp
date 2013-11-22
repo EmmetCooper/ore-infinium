@@ -43,12 +43,60 @@
 #include <QtQuick/QQuickView>
 #include <QOpenGLFunctions>
 #include <QOpenGLContext>
+#include <QtCore/QCommandLineParser>
 
 int main(int argc, char* argv[])
 {
 //    QOpenGLFunctions funcs(QOpenGLContext::currentContext());
 //    bool npot = funcs.hasOpenGLFeature(QOpenGLFunctions::NPOTTextures);
 
+    const QString version = QString::number(ore_infinium_VERSION_MAJOR) + "." + QString::number(ore_infinium_VERSION_MINOR);
+
+    QCommandLineParser parser;
+    parser.addHelpOption();
+    parser.addVersionOption();
+    parser.setApplicationDescription(
+        "\n"
+        "Ore Infinium - An Open Source 2D Block Exploration, Survival, Science Fiction Open World Game\n"
+        "\n"
+        "F11 for toggling performance graphs (client, server frametime)\n"
+        "\n"
+        "Authors:\n"
+        "       Lead Developer - Shaun Reich <sreich@kde.org>\n"
+    );
+
+//    QCommandLineOption debug(QStringList() << "d" << "debug", QCoreApplication::translate("main",
+//        "Start the game with core debug areas enabled."
+//        "This applies to initial logging as it starts up. "
+//        "After it finishes starting, you can use an ingame UI to enable logging areas."));
+//    parser.addOption(showProgressOption);
+
+    QCommandLineOption testSpatialHash(QStringList() << "test-spatial-hash", QCoreApplication::translate("main",
+        "Runs various unit tests on the spatial hash to verify there are no regressions, report and exit."));
+    parser.addOption(testSpatialHash);
+
+    // aka noclip
+    QCommandLineOption worldViewer(QStringList() << "world-viewer", QCoreApplication::translate("main",
+        "Enables special client modes to make the game world easier to troubleshoot (only applicable to client-hosted server mode)."));
+    parser.addOption(worldViewer);
+
+    QCommandLineOption noTimeout(QStringList() << "no-timeout", QCoreApplication::translate("main",
+        "Configures connection timeouts and other things to allow for debugging, especially via e.g. valgrind."));
+    parser.addOption(noTimeout);
+
+    QCommandLineOption noSkyRenderer(QStringList() << "no-sky-renderer", QCoreApplication::translate("main",
+        "Disables sky renderer (for tricky/slow systems, for debugging. More optimal approaches and settings will exist later)"));
+    parser.addOption(noSkyRenderer);
+
+    QCommandLineOption playNow(QStringList() << "play-now", QCoreApplication::translate("main",
+        "Hosts and joins a local session immediately on startup (for fast debugging)."));
+    parser.addOption(playNow);
+
+    QCommandLineOption debugFull(QStringList() << "debug-full", QCoreApplication::translate("main",
+        "--debug-full Enable all debugging flags (cout)"));
+    parser.addOption(debugFull);
+
+   /*
     bool startupDebugEnabled = false;
     bool fullDebugEnabled = false;
     bool worldViewer = false;
@@ -68,34 +116,19 @@ int main(int argc, char* argv[])
 
         }
 
+
         if (params.contains("--help") || params.contains("-h")) {
-            std::cout << "Ore Infinium - An Open Source 2D Block Exploration, Survival, Science Fiction and Open World Game" << '\n' << '\n';
+            std::cout << "
 
             std::cout << "Options:" << '\n' << '\n';
             std::cout << "-h --help Show this message" << '\n';
             std::cout << "-v --version Show version information" << '\n';
-            std::cout << "--authors Show author information" << '\n';
-            std::cout << "-d --debug Start the game with core debug areas enabled. This applies to initial logging as it starts up. After it finishes starting, you can use an ingame UI to enable logging areas." << '\n';
 
-            std::cout << '\n' << '\n' << '\n' << "----------------------------------------- debug methods -----------------------------------------" << '\n';
-            std::cout << "--test-spatial-hash Runs various unit tests on the spatial hash to verify there are no regressions, report and exit." << '\n';
-            std::cout << "--world-viewer Enables special client modes to make the game world easier to troubleshoot (only applicable to client-hosted server mode)." << '\n';
-            std::cout << "--no-timeout Configures connection timeouts and other things to allow for debugging, especially via e.g. valgrind." << '\n';
-            std::cout << "--no-sky-renderer Disables sky renderer (for tricky/slow systems, for debugging. More optimal approaches and settings will exist later)" << '\n';
-            std::cout << "--play-now Hosts and joins a local session immediately on startup (for fast debugging)." << '\n';
-            std::cout << "--debug-full Enable all debugging flags (cout)" << '\n';
-            std::cout << "F11 for toggling performance graphs (client, server frametime)" << '\n';
+            std::cout << "
 
             exit(0);
         } else if (params.contains("--authors")) {
-            std::cout << "Lead Developer - Shaun Reich <sreich@kde.org>\n";
             exit(0);
-        }
-
-        if (params.contains("-d") || params.contains("--debug")) {
-            startupDebugEnabled = true;
-            params.removeOne("-d");
-            params.removeOne("--debug");
         }
 
         if (params.contains("--test-spatial-hash")) {
@@ -144,8 +177,10 @@ int main(int argc, char* argv[])
         }
     }
 
-    std::cout << "Ore Infinium Version " << ore_infinium_VERSION_MAJOR << "." << ore_infinium_VERSION_MINOR << "\n";
+    qDebug() << "Ore Infinium Version " << version;
+    */
 
+    /*
     if (startupDebugEnabled) {
         Settings::instance()->setStartupFlag(Settings::StartupFlags::DebugLoggingStartupFlag);
     }
@@ -169,17 +204,24 @@ int main(int argc, char* argv[])
     if (fullDebugEnabled) {
         Settings::instance()->setStartupFlag(Settings::StartupFlags::FullDebugStartupFlag);
     }
+    */
 
     //TODO: may wanna run without gui for dedicated server...have the option to, at least
 
 
     if (1) {
         QGuiApplication app(argc, argv);
+        QCoreApplication::setApplicationName("ore-infinium");
+        QCoreApplication::setApplicationVersion(version);
 
-        Game game;
-        game.init();
+        parser.process(app);
 
-        return app.exec();
+
+
+//        Game game;
+//        game.init();
+//
+//        return app.exec();
     } else {
         //TODO: execDedicatedServer
     }
