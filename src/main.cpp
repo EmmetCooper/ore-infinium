@@ -66,14 +66,14 @@ int main(int argc, char* argv[])
     );
 
     //FIXME: unused..we're loud by default. We'll prolly change that later on, but for now i'm fine with it.
-    QCommandLineOption startupDebug(QStringList() << "d" << "debug", QCoreApplication::translate("main",
+    QCommandLineOption startupDebug(QStringList() << "d" << "startupDebug", QCoreApplication::translate("main",
         "Start the game with core debug areas enabled."
         "This applies to initial logging as it starts up. "
         "After it finishes starting, you can always use the ingame UI to enable logging areas (regardless of this switch)."));
     parser.addOption(startupDebug);
 
     QCommandLineOption testSpatialHash(QStringList() << "test-spatial-hash", QCoreApplication::translate("main",
-        "Runs various unit tests on the spatial hash to verify there are no regressions, report and exit."));
+        "Runs various performance and functionality unit tests on the spatial hash to verify there are no regressions, report and exit."));
     parser.addOption(testSpatialHash);
 
     // aka noclip
@@ -102,6 +102,15 @@ int main(int argc, char* argv[])
 
     //TODO: may wanna run without gui for dedicated server...have the option to, at least
 
+    QCommandLineOption height(QStringList() << "height",
+        QCoreApplication::translate("main", "Set height of the window"),
+        QCoreApplication::translate("main", "height in pixels"));
+    parser.addOption(height);
+
+    QCommandLineOption width(QStringList() << "width",
+        QCoreApplication::translate("main", "Set width of the window"),
+        QCoreApplication::translate("main", "width in pixels"));
+    parser.addOption(width);
 
     if (1) {
         QGuiApplication app(argc, argv);
@@ -143,11 +152,20 @@ int main(int argc, char* argv[])
             Settings::instance()->setStartupFlag(Settings::StartupFlags::FullDebugStartupFlag);
         }
 
+        int height = -1;
+        int width = -1;
+        if (parser.isSet("height") && parser.isSet("width")) {
+            int height = parser.value("height").toInt();
+            int width = parser.value("width").toInt();
 
-//        Game game;
-//        game.init();
-//
-//        return app.exec();
+            Settings::instance()->windowHeight = height;
+            Settings::instance()->windowWidth = width;
+        }
+
+        Game game;
+        game.init();
+
+        return app.exec();
     } else {
         //TODO: execDedicatedServer
     }
