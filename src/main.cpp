@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
         "\n"
         "Ore Infinium - An Open Source 2D Block Exploration, Survival, Science Fiction Open World Game\n"
         "\n"
-        "F11 for toggling performance graphs (client, server frametime)\n"
+        "F11 for toggling performance graphs (client, server frametime, packet count)\n"
         "\n"
         "Authors:\n"
         "       Lead Developer - Shaun Reich <sreich@kde.org>\n"
@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
     parser.addOption(noSkyRenderer);
 
     QCommandLineOption playNow(QStringList() << "play-now", QCoreApplication::translate("main",
-        "Hosts and joins a local session immediately on startup (for fast debugging)."));
+        "Hosts and joins a local session immediately (multiplayer) on startup (for fast debugging)."));
     parser.addOption(playNow);
 
     QCommandLineOption debugFull(QStringList() << "debug-full", QCoreApplication::translate("main",
@@ -97,61 +97,6 @@ int main(int argc, char* argv[])
     parser.addOption(debugFull);
 
    /*
-    bool startupDebugEnabled = false;
-    bool fullDebugEnabled = false;
-    bool worldViewer = false;
-    bool noTimeout = false;
-    bool playNow = false;
-    bool noSkyRenderer = false;
-
-    if (argc > 1) {
-        //NOTE: we start at 1 because the first element(0) is app name.
-        QStringList params;
-        for (int i = 1; i < argc; ++i) {
-            QString string(argv[i]);
-
-            if (string.trimmed() != "") {
-                params.append(string);
-            }
-
-        }
-
-
-        if (params.contains("--help") || params.contains("-h")) {
-            std::cout << "
-
-            std::cout << "Options:" << '\n' << '\n';
-            std::cout << "-h --help Show this message" << '\n';
-            std::cout << "-v --version Show version information" << '\n';
-
-            std::cout << "
-
-            exit(0);
-        } else if (params.contains("--authors")) {
-            exit(0);
-        }
-
-        if (params.contains("--test-spatial-hash")) {
-           UnitTest* t = new UnitTest();
-            t->testSpatialHash();
-            delete t;
-            exit(0);
-        }
-
-        if (params.contains("--world-viewer")) {
-            worldViewer = true;
-            params.removeOne("--world-viewer");
-        }
-
-        if (params.contains("--no-timeout")) {
-            noTimeout = true;
-            params.removeOne("--no-timeout");
-        }
-
-        if (params.contains("--play-now")) {
-            playNow = true;
-            params.removeOne("--play-now");
-        }
 
         if (params.contains("--no-sky-renderer")) {
             noSkyRenderer = true;
