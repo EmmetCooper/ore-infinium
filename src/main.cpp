@@ -97,38 +97,6 @@ int main(int argc, char* argv[])
         "--debug-full Enable all debugging flags (cout)"));
     parser.addOption(debugFull);
 
-    //TODO: option is pointless right now
-    if (parser.isSet("startupDebug")) {
-        Settings::instance()->setStartupFlag(Settings::StartupFlags::DebugLoggingStartupFlag);
-    }
-
-    if (parser.isSet("world-viewer")) {
-        Settings::instance()->setStartupFlag(Settings::StartupFlags::WorldViewerStartupFlag);
-    }
-
-    if (parser.isSet("no-timeout")) {
-        Settings::instance()->setStartupFlag(Settings::StartupFlags::NoTimeoutStartupFlag);
-    }
-
-    if (parser.isSet("play-now")) {
-        Settings::instance()->setStartupFlag(Settings::StartupFlags::PlayNowStartupFlag);
-    }
-
-    if (parser.isSet("no-sky-renderer")) {
-        Settings::instance()->setStartupFlag(Settings::StartupFlags::NoSkyRendererStartupFlag);
-    }
-
-    if (parser.isSet("test-spatial-hash")) {
-        UnitTest* t = new UnitTest();
-        t->testSpatialHash();
-        delete t;
-
-        exit(0);
-    }
-
-    if (parser.isSet("debug-full")) {
-        Settings::instance()->setStartupFlag(Settings::StartupFlags::FullDebugStartupFlag);
-    }
 
     //TODO: may wanna run without gui for dedicated server...have the option to, at least
 
@@ -140,6 +108,38 @@ int main(int argc, char* argv[])
 
         parser.process(app);
 
+        //TODO: option is pointless right now
+        if (parser.isSet("startupDebug")) {
+            Settings::instance()->setStartupFlag(Settings::StartupFlags::DebugLoggingStartupFlag);
+        }
+
+        if (parser.isSet("world-viewer")) {
+            Settings::instance()->setStartupFlag(Settings::StartupFlags::WorldViewerStartupFlag);
+        }
+
+        if (parser.isSet("no-timeout")) {
+            Settings::instance()->setStartupFlag(Settings::StartupFlags::NoTimeoutStartupFlag);
+        }
+
+        if (parser.isSet("play-now")) {
+            Settings::instance()->setStartupFlag(Settings::StartupFlags::PlayNowStartupFlag);
+        }
+
+        if (parser.isSet("no-sky-renderer")) {
+            Settings::instance()->setStartupFlag(Settings::StartupFlags::NoSkyRendererStartupFlag);
+        }
+
+        if (parser.isSet("test-spatial-hash")) {
+            UnitTest* t = new UnitTest();
+            t->testSpatialHash();
+            delete t;
+
+            exit(0);
+        }
+
+        if (parser.isSet("debug-full")) {
+            Settings::instance()->setStartupFlag(Settings::StartupFlags::FullDebugStartupFlag);
+        }
 
 
 //        Game game;
