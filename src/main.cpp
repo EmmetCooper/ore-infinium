@@ -78,7 +78,9 @@ int main(int argc, char* argv[])
 
     // aka noclip
     QCommandLineOption worldViewer(QStringList() << "world-viewer", QCoreApplication::translate("main",
-        "Enables special client modes to make the game world easier to troubleshoot (only applicable to client-hosted server mode)."));
+        "Enables special client modes to make the game world easier to troubleshoot (only applicable to client-hosted server mode)."
+        "Doesn't attach the player to a physics object and reroutes it"
+        "Effectively it is no-clip."));
     parser.addOption(worldViewer);
 
     QCommandLineOption noTimeout(QStringList() << "no-timeout", QCoreApplication::translate("main",
@@ -94,7 +96,7 @@ int main(int argc, char* argv[])
     parser.addOption(playNow);
 
     QCommandLineOption debugFull(QStringList() << "debug-full", QCoreApplication::translate("main",
-        "--debug-full Enable all debugging flags (cout)"));
+        "--debug-full Enable all terminal output debugging flags"));
     parser.addOption(debugFull);
 
 
