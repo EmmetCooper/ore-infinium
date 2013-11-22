@@ -59,17 +59,18 @@ int main(int argc, char* argv[])
         "\n"
         "Ore Infinium - An Open Source 2D Block Exploration, Survival, Science Fiction Open World Game\n"
         "\n"
-        "F11 for toggling performance graphs (client, server frametime, packet count)\n"
+        "Use F11 for toggling performance graphs (client, server frametime, packet count)\n"
         "\n"
         "Authors:\n"
         "       Lead Developer - Shaun Reich <sreich@kde.org>\n"
     );
 
-//    QCommandLineOption debug(QStringList() << "d" << "debug", QCoreApplication::translate("main",
-//        "Start the game with core debug areas enabled."
-//        "This applies to initial logging as it starts up. "
-//        "After it finishes starting, you can use an ingame UI to enable logging areas."));
-//    parser.addOption(showProgressOption);
+    //FIXME: unused..we're loud by default. We'll prolly change that later on, but for now i'm fine with it.
+    QCommandLineOption startupDebug(QStringList() << "d" << "debug", QCoreApplication::translate("main",
+        "Start the game with core debug areas enabled."
+        "This applies to initial logging as it starts up. "
+        "After it finishes starting, you can always use the ingame UI to enable logging areas (regardless of this switch)."));
+    parser.addOption(startupDebug);
 
     QCommandLineOption testSpatialHash(QStringList() << "test-spatial-hash", QCoreApplication::translate("main",
         "Runs various unit tests on the spatial hash to verify there are no regressions, report and exit."));
@@ -96,60 +97,38 @@ int main(int argc, char* argv[])
         "--debug-full Enable all debugging flags (cout)"));
     parser.addOption(debugFull);
 
-   /*
-
-        if (params.contains("--no-sky-renderer")) {
-            noSkyRenderer = true;
-            params.removeOne("--no-sky-renderer");
-        }
-
-        if (params.contains("--debug-full")) {
-            fullDebugEnabled = true;
-            params.removeOne("--debug-full");
-        }
-
-        if (params.contains("--version") || params.contains("-v")) {
-            std::cout << "Ore Infinium Version " << ore_infinium_VERSION_MAJOR << "." << ore_infinium_VERSION_MINOR << "\n";
-            exit(0);
-        }
-
-        ////// END OF PARAMS, verify no extraneous ones (aka non-existent params)
-
-        if (params.count() > 0) {
-            qDebug() << params << '\n';
-            std:: cout << "Parameter not recognized! Bailing out!" << '\n';
-            exit(1);
-        }
-    }
-
-    qDebug() << "Ore Infinium Version " << version;
-    */
-
-    /*
-    if (startupDebugEnabled) {
+    //TODO: option is pointless right now
+    if (parser.isSet("startupDebug")) {
         Settings::instance()->setStartupFlag(Settings::StartupFlags::DebugLoggingStartupFlag);
     }
 
-    if (worldViewer) {
+    if (parser.isSet("world-viewer")) {
         Settings::instance()->setStartupFlag(Settings::StartupFlags::WorldViewerStartupFlag);
     }
 
-    if (noTimeout) {
+    if (parser.isSet("no-timeout")) {
         Settings::instance()->setStartupFlag(Settings::StartupFlags::NoTimeoutStartupFlag);
     }
 
-    if (playNow) {
+    if (parser.isSet("play-now")) {
         Settings::instance()->setStartupFlag(Settings::StartupFlags::PlayNowStartupFlag);
     }
 
-    if (noSkyRenderer) {
+    if (parser.isSet("no-sky-renderer")) {
         Settings::instance()->setStartupFlag(Settings::StartupFlags::NoSkyRendererStartupFlag);
     }
 
-    if (fullDebugEnabled) {
+    if (parser.isSet("test-spatial-hash")) {
+        UnitTest* t = new UnitTest();
+        t->testSpatialHash();
+        delete t;
+
+        exit(0);
+    }
+
+    if (parser.isSet("debug-full")) {
         Settings::instance()->setStartupFlag(Settings::StartupFlags::FullDebugStartupFlag);
     }
-    */
 
     //TODO: may wanna run without gui for dedicated server...have the option to, at least
 
