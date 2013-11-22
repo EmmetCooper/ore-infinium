@@ -29,7 +29,7 @@ Settings* Settings::instance()
 }
 
 Settings::Settings()
-    : debugAreas(Debug::Area::ImportantArea | Debug::Area::ShadersArea),
+    : debugAreas(Debug::Area::ImportantArea | Debug::Area::ShadersArea | Debug::Area::StartupArea),
       debugRendererFlags(
           //turn some useful shit on by default. and some important shit.
           Debug::RenderingDebug::TileRenderingPassDebug |
