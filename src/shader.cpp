@@ -29,7 +29,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include <vector>
+#include <memory>
 #include <sys/stat.h>
 
 
@@ -153,10 +153,10 @@ bool Shader::checkShaderCompileStatus(GLuint obj)
 
         glGetShaderiv(obj, GL_INFO_LOG_LENGTH, &length);
 
-        std::vector<char> log(length);
-        glGetShaderInfoLog(obj, length, &length, &log[0]);
+        std::unique_ptr<char[]> log(new char[length]);
+        glGetShaderInfoLog(obj, length, &length, log.get());
 
-        Debug::log(Debug::Area::ShadersArea) << &log[0];
+        Debug::log(Debug::Area::ShadersArea) << log.get();
         return false;
     }
     return true;
@@ -172,11 +172,11 @@ bool Shader::checkProgramLinkStatus(GLuint obj)
 
         glGetProgramiv(obj, GL_INFO_LOG_LENGTH, &length);
 
-        std::vector<char> log(length);
+        std::unique_ptr<char[]> log(new char[length]);
 
-        glGetProgramInfoLog(obj, length, &length, &log[0]);
+        glGetProgramInfoLog(obj, length, &length, log.get());
 
-        Debug::log(Debug::Area::ShadersArea) << &log[0];
+        Debug::log(Debug::Area::ShadersArea) << log.get();
         return false;
     }
     return true;
@@ -186,19 +186,16 @@ void Shader::printShaderInfoLog(GLuint shader)
 {
     int infoLogLen = 0;
     int charsWritten = 0;
-    GLchar *infoLog;
 
     glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLen);
 
     // should additionally check for OpenGL errors here
 
     if (infoLogLen > 0) {
-        infoLog = new GLchar[infoLogLen];
-        glGetShaderInfoLog(shader, infoLogLen, &charsWritten, infoLog);
+        std::unique_ptr<char[]> infoLog(new GLchar[infoLogLen]);
+        glGetShaderInfoLog(shader, infoLogLen, &charsWritten, infoLog.get());
 
-        Debug::log(Debug::Area::ShadersArea) << "Shader info log: " << infoLog;
-
-        delete [] infoLog;
+        Debug::log(Debug::Area::ShadersArea) << "Shader info log: " << infoLog.get();
     }
 
     // should additionally check for OpenGL errors here
