@@ -137,8 +137,8 @@ void TileRenderer::render()
     glm::vec4 tileSize = glm::vec4(blockSizePixels, 0.0f, 0.0f, 0.0f);
     const float transformedTileSize = glm::vec4(m_camera->view() * tileSize).x;
 
-    float halfScreenMetersHeight = (Settings::instance()->screenResolutionHeight * 0.5) / static_cast<float>(PIXELS_PER_METER);
-    float halfScreenMetersWidth = (Settings::instance()->screenResolutionWidth * 0.5) / static_cast<float>(PIXELS_PER_METER);
+    float halfScreenMetersHeight = (Settings::instance()->windowHeight * 0.5) / static_cast<float>(PIXELS_PER_METER);
+    float halfScreenMetersWidth = (Settings::instance()->windowWidth * 0.5) / static_cast<float>(PIXELS_PER_METER);
 
     // -1 so that we render an additional row and column..to smoothly scroll
     const int startRow = std::max(static_cast<int>(tilesBeforeY - (halfScreenMetersHeight / transformedTileSize)) - 2, 0);
@@ -346,7 +346,7 @@ void TileRenderer::initGL()
 
     glGenRenderbuffers(1, &m_rb);
     glBindRenderbuffer(GL_RENDERBUFFER, m_rb);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, Settings::instance()->windowWidth, Settings::instance()->windowHeight);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, Settings::instance()->screenResolutionWidth, Settings::instance()->screenResolutionHeight);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_rb);
 
 

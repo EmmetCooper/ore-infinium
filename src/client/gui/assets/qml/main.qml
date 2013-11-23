@@ -320,9 +320,6 @@ Item {
     }
 
     //FIXME: gynormous hack, strip win size out into C++
-    width: 1600
-    height: 900
-
     ChatModel {
         id: chatModel
     }

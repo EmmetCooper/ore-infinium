@@ -43,138 +43,124 @@
 #include <QtQuick/QQuickView>
 #include <QOpenGLFunctions>
 #include <QOpenGLContext>
+#include <QtCore/QCommandLineParser>
 
 int main(int argc, char* argv[])
 {
 //    QOpenGLFunctions funcs(QOpenGLContext::currentContext());
 //    bool npot = funcs.hasOpenGLFeature(QOpenGLFunctions::NPOTTextures);
 
-    bool startupDebugEnabled = false;
-    bool fullDebugEnabled = false;
-    bool worldViewer = false;
-    bool noTimeout = false;
-    bool playNow = false;
-    bool noSkyRenderer = false;
+    const QString version = QString::number(ore_infinium_VERSION_MAJOR) + "." + QString::number(ore_infinium_VERSION_MINOR);
 
-    if (argc > 1) {
-        //NOTE: we start at 1 because the first element(0) is app name.
-        QStringList params;
-        for (int i = 1; i < argc; ++i) {
-            QString string(argv[i]);
+    QCommandLineParser parser;
+    parser.addHelpOption();
+    parser.addVersionOption();
+    parser.setApplicationDescription(
+        "\n"
+        "Ore Infinium - An Open Source 2D Block Exploration, Survival, Science Fiction Open World Game\n"
+        "\n"
+        "Use F11 for toggling performance graphs (client, server frametime, packet count)\n"
+        "\n"
+        "Authors:\n"
+        "       Lead Developer - Shaun Reich <sreich@kde.org>\n"
+    );
 
-            if (string.trimmed() != "") {
-                params.append(string);
-            }
+    //FIXME: unused..we're loud by default. We'll prolly change that later on, but for now i'm fine with it.
+    QCommandLineOption startupDebug(QStringList() << "d" << "startupDebug", QCoreApplication::translate("main",
+        "Start the game with core debug areas enabled."
+        "This applies to initial logging as it starts up. "
+        "After it finishes starting, you can always use the ingame UI to enable logging areas (regardless of this switch)."));
+    parser.addOption(startupDebug);
 
-        }
+    QCommandLineOption testSpatialHash(QStringList() << "test-spatial-hash", QCoreApplication::translate("main",
+        "Runs various performance and functionality unit tests on the spatial hash to verify there are no regressions, report and exit."));
+    parser.addOption(testSpatialHash);
 
-        if (params.contains("--help") || params.contains("-h")) {
-            std::cout << "Ore Infinium - An Open Source 2D Block Exploration, Survival, Science Fiction and Open World Game" << '\n' << '\n';
+    // aka noclip
+    QCommandLineOption worldViewer(QStringList() << "world-viewer", QCoreApplication::translate("main",
+        "Enables special client modes to make the game world easier to troubleshoot (only applicable to client-hosted server mode)."
+        "Doesn't attach the player to a physics object and reroutes it"
+        "Effectively it is no-clip."));
+    parser.addOption(worldViewer);
 
-            std::cout << "Options:" << '\n' << '\n';
-            std::cout << "-h --help Show this message" << '\n';
-            std::cout << "-v --version Show version information" << '\n';
-            std::cout << "--authors Show author information" << '\n';
-            std::cout << "-d --debug Start the game with core debug areas enabled. This applies to initial logging as it starts up. After it finishes starting, you can use an ingame UI to enable logging areas." << '\n';
+    QCommandLineOption noTimeout(QStringList() << "no-timeout", QCoreApplication::translate("main",
+        "Configures connection timeouts and other things to allow for debugging, especially via e.g. valgrind."));
+    parser.addOption(noTimeout);
 
-            std::cout << '\n' << '\n' << '\n' << "----------------------------------------- debug methods -----------------------------------------" << '\n';
-            std::cout << "--test-spatial-hash Runs various unit tests on the spatial hash to verify there are no regressions, report and exit." << '\n';
-            std::cout << "--world-viewer Enables special client modes to make the game world easier to troubleshoot (only applicable to client-hosted server mode)." << '\n';
-            std::cout << "--no-timeout Configures connection timeouts and other things to allow for debugging, especially via e.g. valgrind." << '\n';
-            std::cout << "--no-sky-renderer Disables sky renderer (for tricky/slow systems, for debugging. More optimal approaches and settings will exist later)" << '\n';
-            std::cout << "--play-now Hosts and joins a local session immediately on startup (for fast debugging)." << '\n';
-            std::cout << "--debug-full Enable all debugging flags (cout)" << '\n';
-            std::cout << "F11 for toggling performance graphs (client, server frametime)" << '\n';
+    QCommandLineOption noSkyRenderer(QStringList() << "no-sky-renderer", QCoreApplication::translate("main",
+        "Disables sky renderer (for tricky/slow systems, for debugging. More optimal approaches and settings will exist later)"));
+    parser.addOption(noSkyRenderer);
 
-            exit(0);
-        } else if (params.contains("--authors")) {
-            std::cout << "Lead Developer - Shaun Reich <sreich@kde.org>\n";
-            exit(0);
-        }
+    QCommandLineOption playNow(QStringList() << "play-now", QCoreApplication::translate("main",
+        "Hosts and joins a local session immediately (multiplayer) on startup (for fast debugging)."));
+    parser.addOption(playNow);
 
-        if (params.contains("-d") || params.contains("--debug")) {
-            startupDebugEnabled = true;
-            params.removeOne("-d");
-            params.removeOne("--debug");
-        }
+    QCommandLineOption debugFull(QStringList() << "debug-full", QCoreApplication::translate("main",
+        "--debug-full Enable all terminal output debugging flags"));
+    parser.addOption(debugFull);
 
-        if (params.contains("--test-spatial-hash")) {
-           UnitTest* t = new UnitTest();
-            t->testSpatialHash();
-            delete t;
-            exit(0);
-        }
-
-        if (params.contains("--world-viewer")) {
-            worldViewer = true;
-            params.removeOne("--world-viewer");
-        }
-
-        if (params.contains("--no-timeout")) {
-            noTimeout = true;
-            params.removeOne("--no-timeout");
-        }
-
-        if (params.contains("--play-now")) {
-            playNow = true;
-            params.removeOne("--play-now");
-        }
-
-        if (params.contains("--no-sky-renderer")) {
-            noSkyRenderer = true;
-            params.removeOne("--no-sky-renderer");
-        }
-
-        if (params.contains("--debug-full")) {
-            fullDebugEnabled = true;
-            params.removeOne("--debug-full");
-        }
-
-        if (params.contains("--version") || params.contains("-v")) {
-            std::cout << "Ore Infinium Version " << ore_infinium_VERSION_MAJOR << "." << ore_infinium_VERSION_MINOR << "\n";
-            exit(0);
-        }
-
-        ////// END OF PARAMS, verify no extraneous ones (aka non-existent params)
-
-        if (params.count() > 0) {
-            qDebug() << params << '\n';
-            std:: cout << "Parameter not recognized! Bailing out!" << '\n';
-            exit(1);
-        }
-    }
-
-    std::cout << "Ore Infinium Version " << ore_infinium_VERSION_MAJOR << "." << ore_infinium_VERSION_MINOR << "\n";
-
-    if (startupDebugEnabled) {
-        Settings::instance()->setStartupFlag(Settings::StartupFlags::DebugLoggingStartupFlag);
-    }
-
-    if (worldViewer) {
-        Settings::instance()->setStartupFlag(Settings::StartupFlags::WorldViewerStartupFlag);
-    }
-
-    if (noTimeout) {
-        Settings::instance()->setStartupFlag(Settings::StartupFlags::NoTimeoutStartupFlag);
-    }
-
-    if (playNow) {
-        Settings::instance()->setStartupFlag(Settings::StartupFlags::PlayNowStartupFlag);
-    }
-
-    if (noSkyRenderer) {
-        Settings::instance()->setStartupFlag(Settings::StartupFlags::NoSkyRendererStartupFlag);
-    }
-
-    if (fullDebugEnabled) {
-        Settings::instance()->setStartupFlag(Settings::StartupFlags::FullDebugStartupFlag);
-    }
 
     //TODO: may wanna run without gui for dedicated server...have the option to, at least
 
+    QCommandLineOption height(QStringList() << "height",
+        QCoreApplication::translate("main", "Set height of the window"),
+        QCoreApplication::translate("main", "height in pixels"));
+    parser.addOption(height);
+
+    QCommandLineOption width(QStringList() << "width",
+        QCoreApplication::translate("main", "Set width of the window"),
+        QCoreApplication::translate("main", "width in pixels"));
+    parser.addOption(width);
 
     if (1) {
         QGuiApplication app(argc, argv);
+        QCoreApplication::setApplicationName("ore-infinium");
+        QCoreApplication::setApplicationVersion(version);
+
+        parser.process(app);
+
+        //TODO: option is pointless right now
+        if (parser.isSet("startupDebug")) {
+            Settings::instance()->setStartupFlag(Settings::StartupFlags::DebugLoggingStartupFlag);
+        }
+
+        if (parser.isSet("world-viewer")) {
+            Settings::instance()->setStartupFlag(Settings::StartupFlags::WorldViewerStartupFlag);
+        }
+
+        if (parser.isSet("no-timeout")) {
+            Settings::instance()->setStartupFlag(Settings::StartupFlags::NoTimeoutStartupFlag);
+        }
+
+        if (parser.isSet("play-now")) {
+            Settings::instance()->setStartupFlag(Settings::StartupFlags::PlayNowStartupFlag);
+        }
+
+        if (parser.isSet("no-sky-renderer")) {
+            Settings::instance()->setStartupFlag(Settings::StartupFlags::NoSkyRendererStartupFlag);
+        }
+
+        if (parser.isSet("test-spatial-hash")) {
+            UnitTest* t = new UnitTest();
+            t->testSpatialHash();
+            delete t;
+
+            exit(0);
+        }
+
+        if (parser.isSet("debug-full")) {
+            Settings::instance()->setStartupFlag(Settings::StartupFlags::FullDebugStartupFlag);
+        }
+
+        int height;
+        int width;
+        if (parser.isSet("height") && parser.isSet("width")) {
+            int height = parser.value("height").toInt();
+            int width = parser.value("width").toInt();
+
+            Settings::instance()->windowHeight = height;
+            Settings::instance()->windowWidth = width;
+        }
 
         Game game;
         game.init();
