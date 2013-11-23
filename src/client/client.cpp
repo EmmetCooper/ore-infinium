@@ -232,6 +232,8 @@ void Client::paint()
 
         tick(frameTime);
 
+        enet_host_flush(m_client);
+
         render(frameTime);
 
         m_frameCount++;
@@ -591,8 +593,11 @@ bool Client::connectTo(const char* address, uint16_t port)
     m_client = enet_host_create(nullptr /* create a client host */,
                                 1 /* only allow 1 outgoing connection */,
                                 2 /* allow up 2 channels to be used, 0 and 1 */,
-                                57600 / 8 /* 56K modem with 56 Kbps downstream bandwidth */,
-                                14400 / 8 /* 56K modem with 14 Kbps upstream bandwidth */);
+//                                57600 / 8 /* 56K modem with 56 Kbps downstream bandwidth */,
+                                0,
+                                0
+               );
+//                                14400 / 8 /* 56K modem with 14 Kbps upstream bandwidth */);
 
     Debug::assertf(m_client, "failed to create ENet client host");
     enet_host_compress_with_range_coder(m_client);

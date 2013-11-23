@@ -111,10 +111,13 @@ void Server::tick()
         const double alpha = accumulator / dt;
 
         poll();
+
+        enet_host_flush(m_server);
+
         // do network shit
         // sleep so we don't burn cpu
-        std::chrono::milliseconds timeUntilNextFrame(int(dt - accumulator));
-        QThread::msleep(timeUntilNextFrame.count());
+//        std::chrono::milliseconds timeUntilNextFrame(int(dt - accumulator));
+//        QThread::msleep(timeUntilNextFrame.count());
     }
 }
 
