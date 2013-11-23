@@ -48,7 +48,6 @@
 
 Server::Server()
 {
-    m_frameTime.store(0.0);
 
 }
 
@@ -103,7 +102,7 @@ void Server::tick()
             m_world->update(dt);
 
             //printf("Server ms/frame is %f ms\n", dt);
-            m_frameTime.store(dt);
+            m_frameTime = dt;
 
             t += dt;
             accumulator -= dt;
@@ -190,8 +189,7 @@ void Server::processMessage(ENetEvent& event)
     //std::cout << "(Server) Message from client, our client->server round trip latency is: " << event.peer->roundTripTime  << "\n";
     //std::cout << "(Server) latency is: " << event.peer->lowestRoundTripTime  << "\n";
 
-    int receivedPackets = m_packetReceivedCount.load();
-    m_packetReceivedCount.store(receivedPackets + 1);
+    ++m_packetReceivedCount;
 
     std::string packetContents = std::string(reinterpret_cast<char*>(event.packet->data), event.packet->dataLength);
 

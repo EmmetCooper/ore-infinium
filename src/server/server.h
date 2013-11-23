@@ -26,8 +26,6 @@
 #include <map>
 
 #include <QString>
-#include <atomic>
-
 
 class Item;
 class World;
@@ -53,12 +51,12 @@ public:
     void processMessage(ENetEvent& event);
 
     double frameTime() {
-        return m_frameTime.load();
+        return m_frameTime;
     }
 
     int packetReceivedCount() {
-        int ret = m_packetReceivedCount.load();
-        m_packetReceivedCount.store(0);
+        int ret = m_packetReceivedCount;
+        m_packetReceivedCount = 0;
 
         return ret;
     }
@@ -151,8 +149,8 @@ private:
 
     Client* m_client = nullptr;
 
-    std::atomic<double> m_frameTime;
-    std::atomic<int> m_packetReceivedCount;
+    double m_frameTime = 0.0;
+    int m_packetReceivedCount = 0;
 
     /**
      * For debug scenarios, see settings debug flag
