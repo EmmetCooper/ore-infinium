@@ -86,7 +86,7 @@ void Camera::addShader(Shader* shader)
 
 void Camera::pushMatrix()
 {
-    Debug::assertf(m_shaders.size() > 0, "no shader to push the camera matrix too. This is INVALID");
+    Debug::assertf(m_shaders.size() > 0, "no shader to push the camera matrix to. This is INVALID");
 
     for (auto * shader : m_shaders) {
         shader->bindProgram();
