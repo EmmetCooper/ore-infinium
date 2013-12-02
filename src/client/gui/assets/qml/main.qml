@@ -45,6 +45,7 @@ Item {
     }
 
     MouseArea {
+        hoverEnabled: true
         anchors.fill: parent
         onPressed: {
             ClientBackend.mouseAreaPressed(mouse.buttons);
