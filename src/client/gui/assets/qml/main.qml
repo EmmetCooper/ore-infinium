@@ -333,6 +333,12 @@ Item {
     ChatView {
         id: chatView
         text: chatModel.chatText
+
+        anchors {
+            left: parent.left
+            bottom: parent.bottom
+        }
+
     }
 
     //text: "timeStamp: " + timeStamp + "PLAYERNAME: " + playerName + "CHAT TEXT: " + chatText

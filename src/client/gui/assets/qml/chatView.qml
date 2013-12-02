@@ -6,17 +6,19 @@ import QtQuick.Layouts 1.0
 Item {
     property alias text: chatViewText.text
 
+    height: 300
+    width: 500
+
     Rectangle {
         color: "black"
 
         anchors {
             left: parent.left
-            top: parent.top
-//            bottom: parent.bottom
-        }
+            right: parent.right
 
-        height: 300
-        width: 500
+            top: parent.top
+            bottom: parent.bottom
+        }
 
         TextEdit {
             anchors {
