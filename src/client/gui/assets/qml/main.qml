@@ -24,12 +24,13 @@ Item {
         }
 
         onFrameTimeChanged: {
-            //print("FRAMETIME" + frameTime);
-            clientFrameTimeGraph.addSample(frameTime);
-            //rint("SERVER, qml, FRAMETIME" + ClientBackend.serverFrameTime);
-            serverFrameTimeGraph.addSample(ClientBackend.serverFrameTime);
-            clientPacketReceivedCountGraph.addSample(ClientBackend.clientPacketReceivedCount);
-            serverPacketReceivedCountGraph.addSample(ClientBackend.serverPacketReceivedCount);
+            if (graphs.visible) {
+                clientFrameTimeGraph.addSample(frameTime);
+                serverFrameTimeGraph.addSample(ClientBackend.serverFrameTime);
+
+                clientPacketReceivedCountGraph.addSample(ClientBackend.clientPacketReceivedCount);
+                serverPacketReceivedCountGraph.addSample(ClientBackend.serverPacketReceivedCount);
+            }
         }
     }
 
@@ -69,7 +70,12 @@ Item {
         anchors {
             left: parent.left
             bottom: parent.bottom
+            right: parent.right
         }
+
+        visible: false
+
+        height: 50
 
         color: "black"
 

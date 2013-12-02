@@ -70,7 +70,7 @@ private:
 
     QPointF m_tooltipPoint;
 
-    QVector<Sample> m_points;
+    QList<Sample> m_points;
 };
 
 #endif

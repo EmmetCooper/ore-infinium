@@ -9,11 +9,11 @@
 
 Graph::Graph(): QQuickPaintedItem()
 {
-    setAntialiasing(true);
+    setAntialiasing(false);
     setRenderTarget(FramebufferObject);
     setOpaquePainting(true);
 
-    m_points.reserve(1000);
+    m_points.reserve(600);
     setAcceptHoverEvents(true);
 }
 
@@ -37,13 +37,10 @@ void Graph::updateScalar()
 void Graph::paint(QPainter* painter)
 {
     QRectF rect = boundingRect();
-    painter->fillRect(0, 0, rect.width(), rect.height(), Qt::black);
 
     if (m_points.size() == 0) {
         return;
     }
-
-    painter->setPen(Qt::blue);
 
     QBrush b;
     b.setStyle(Qt::SolidPattern);
@@ -143,7 +140,7 @@ void Graph::shiftLeft()
         m_points[i].x -= m_leftMovement;
 
         if (m_points[i].x < 0.0) {
-            m_points.remove(i);
+            m_points.removeAt(i);
         }
     }
 }
