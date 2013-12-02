@@ -65,9 +65,6 @@ void Client::init()
 {
     qCDebug(ORE_IMPORTANT) << "CLIENT INIT START!";
 
-    // FIXME:
-    // glViewport(0, 0, Settings::instance()->windowWidth, Settings::instance()->windowHeight);
-
     // m_debugMenu = new DebugMenu(this);
     // m_debugMenu->show();
 
@@ -127,17 +124,14 @@ void Client::initGL()
 
     qCDebug(ORE_STARTUP) << "glewInit return code:" << retGLEW;
 
+    //HACK: because fuck glew in all its wisdom
     for(int i = 0; i < 100; ++i) {
       Debug::checkGLErrorSafe();
     }
 
     Debug::checkGLError();
 
-
     Debug::assertf(retGLEW == GLEW_OK, "glewInit returned !GLEW_OK. No GL context can be formed..bailing out");
-
-    Debug::checkGLError();
-
 
     //FIXME: MOVE INTO INITGL
     Debug::checkGLError();
@@ -155,7 +149,6 @@ void Client::initGL()
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, &textureSize);
 
     qCDebug(ORE_STARTUP) << "Maximum OpenGL texture size allowed:" << textureSize;
-
 
 #ifdef GLEW_KHR_debug
     if (GLEW_KHR_debug) {

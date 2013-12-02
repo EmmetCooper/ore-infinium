@@ -371,7 +371,7 @@ void World::render()
 
 //FIXME unused    m_quadTreeRenderer->render();
 
-//    renderCrosshair();
+    renderCrosshair();
 }
 
 void World::renderCrosshair()
