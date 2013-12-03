@@ -91,7 +91,7 @@ public:
     /**
      * Should be called ONLY by the server thread, iterates over the space and finds what it has to draw, switches a mutex, adds it to a list
      * of objects the client has to draw.
-     * NOTE: this function is indeed threadsafe, but only should be called from the server thread after cpStepSpace is called.
+     * NOTE: this function is indeed threadsafe, but only should be called from the server thread after cpSpaceStep is called.
      *
      * Client will trigger a mutex as well when it comes to iterating over said list and drawing it.
      */

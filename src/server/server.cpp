@@ -325,7 +325,8 @@ void Server::receivePlayerMove(const std::string& packetContents, Entities::Play
         kickPlayer(player, reason, Packet::ConnectionEventType::DisconnectedMaliciousIntent);
     }
 
-    player->move(message.directionx(), message.directiony());
+    player->move(x, y);
+
     if (message.jump()) {
         player->jump();
     }
