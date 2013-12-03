@@ -30,18 +30,14 @@ Settings* Settings::instance()
 
 Settings::Settings()
     : debugAreas(Debug::Area::ImportantArea | Debug::Area::ShadersArea | Debug::Area::StartupArea),
-      debugRendererFlags(
-          //turn some useful shit on by default. and some important shit.
-          Debug::RenderingDebug::TileRenderingPassDebug |
-          Debug::RenderingDebug::LightRenderingPassDebug |
-          Debug::RenderingDebug::SkyRenderingPassDebug
-//    Debug::RenderingDebug::Box2DAABBRenderingDebug |
-//    Debug::RenderingDebug::Box2DJointRenderingDebug |
-//          |    Debug::RenderingDebug::Box2DShapeRenderingDebug
-      ),
+
       m_startupFlags(0)
 {
-
+    //turn some useful shit on by default. and some important shit.
+    debugRendererFlags |=
+        Debug::RenderingDebug::TileRenderingPassDebug |
+        Debug::RenderingDebug::LightRenderingPassDebug |
+        Debug::RenderingDebug::SkyRenderingPassDebug;
 }
 
 Settings::~Settings()

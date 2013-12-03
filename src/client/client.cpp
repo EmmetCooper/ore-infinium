@@ -21,8 +21,8 @@
 #include "src/packet.pb.h"
 #include "src/server/server.h"
 
-// not used at the moment
-//#include "src/physicsdebugrenderer.h"
+#include "src/physicsdebugrenderer.h"
+//unused? TODO
 //#include "gui/optionsdialogbackend.h"
 
 #include "src/settings/settings.h"
@@ -371,66 +371,51 @@ void Client::render(double frameTime)
         //Debug::log(Debug::ImportantArea) << "NOT RENDERING, player/world invalid";
     }
 
-//
-//    // only a client-hosted server has a chance of seeing any debug shit
-//    if (m_server) {
-//        if (!m_physicsDebugRenderer && m_world && m_world->spriteSheetRenderer()) {
-////FIXME:HACK:            m_physicsDebugRenderer = new PhysicsDebugRenderer(m_world->spriteSheetRenderer()->camera());
-//            // physics debug renderer first init...
-////            m_box2DWorld->SetDebugDraw(m_physicsDebugRenderer);
-//        }
-//
-//        if (m_physicsDebugRenderer) {
-//
-//            int rendererFlags = 0;
-//            int settingsFlags = Settings::instance()->debugRendererFlags;
-//            bool drawingRequired = false;
-//
-//            if (settingsFlags & Debug::RenderingDebug::ChipmunkAABBRenderingDebug) {
-//                // rendererFlags |= b2Draw::e_aabbBit;
-//                drawingRequired = true;
-//            }
-//
-//            if (settingsFlags & Debug::RenderingDebug::ChipmunkShapeRenderingDebug) {
-//                //  rendererFlags |= b2Draw::e_shapeBit;
-//                drawingRequired = true;
-//            }
-//
-//            if (settingsFlags & Debug::RenderingDebug::ChipmunkCenterOfMassRenderingDebug) {
-//                //   rendererFlags |= b2Draw::e_centerOfMassBit;
-//                drawingRequired = true;
-//            }
-//
-//            if (settingsFlags & Debug::RenderingDebug::ChipmunkJointRenderingDebug) {
-//                //    rendererFlags |= b2Draw::e_jointBit;
-//                drawingRequired = true;
-//            }
-//
-//            if (drawingRequired) {
-//                m_physicsDebugRenderer->render();
-//            }
-//        }
-//    }
-//
-//    if (m_renderGUI) {
-//  //      drawDebugText(frameTime);
-// //       m_gui->render();
-//    } else {
-//        static int limiter = 0;
-//        ++limiter;
-//
-//        if (limiter > 10) {
-//            limiter = 0;
-//            Debug::log(Debug::ImportantArea) << "FPS: " << (1000.0 / frameTime) << " FrameTime: " << frameTime << " ms";
-//        }
-//    }
-//
+    // only a client-hosted server has a chance of seeing any debug shit
+    if (m_server) {
+        if (!m_physicsDebugRenderer && m_world && m_world->spriteSheetRenderer()) {
+            // physics debug renderer first init...
+            m_physicsDebugRenderer = new PhysicsDebugRenderer(m_world->spriteSheetRenderer()->camera());
+        }
+
+        if (m_physicsDebugRenderer) {
+
+            int rendererFlags = 0;
+            int settingsFlags = Settings::instance()->debugRendererFlags;
+            bool drawingRequired = false;
+
+            //FIXME: physics debug renderer flags are not taken into account..it's just on/off atm
+            if (settingsFlags & Debug::RenderingDebug::ChipmunkAABBRenderingDebug) {
+                // rendererFlags |= b2Draw::e_aabbBit;
+                drawingRequired = true;
+            }
+
+            if (settingsFlags & Debug::RenderingDebug::ChipmunkShapeRenderingDebug) {
+                //  rendererFlags |= b2Draw::e_shapeBit;
+                drawingRequired = true;
+            }
+
+            if (settingsFlags & Debug::RenderingDebug::ChipmunkCenterOfMassRenderingDebug) {
+                //   rendererFlags |= b2Draw::e_centerOfMassBit;
+                drawingRequired = true;
+            }
+
+            if (settingsFlags & Debug::RenderingDebug::ChipmunkJointRenderingDebug) {
+                //    rendererFlags |= b2Draw::e_jointBit;
+                drawingRequired = true;
+            }
+
+            if (drawingRequired) {
+                m_physicsDebugRenderer->render();
+            }
+        }
+    }
+
+    //Debug::log(Debug::ImportantArea) << "FPS: " << (1000.0 / frameTime) << " FrameTime: " << frameTime << " ms";
 }
 
 void Client::tick(double frameTime)
 {
-//    handleInputEvents();
-
     if (m_peer) {
         poll();
     }
@@ -552,7 +537,6 @@ void Client::viewKeyPressed(QKeyEvent* event)
         }
 
         case Qt::Key_F10: {
-            //FIXME:               m_renderGUI = !m_renderGUI;
         }
 
         case Qt::Key_F11: {

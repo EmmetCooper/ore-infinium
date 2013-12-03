@@ -87,7 +87,7 @@ public:
      * The Box2D ones debug renderings are only available for when the client is hosting the server.
      * Otherwise it won't do anything.
      */
-    //WARNING: UPDATE THE DEBUG SETTINGS GUI (RML AND CPP) WHEN YOU ADD A FLAG
+    //WARNING: UPDATE THE DEBUG SETTINGS GUI (QML AND CPP) WHEN YOU ADD A FLAG
     enum RenderingDebug {
         GUIRenderingDebug = 1 << 0,
         LightRenderingPassDebug = 1 << 1,

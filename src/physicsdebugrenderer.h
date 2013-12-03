@@ -21,7 +21,6 @@
 #include "src/camera.h"
 #include "src/shader.h"
 
-
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 

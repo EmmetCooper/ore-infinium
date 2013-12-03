@@ -274,7 +274,6 @@ private:
     cpSpace* m_cpSpace = nullptr;
     PhysicsDebugRenderer* m_physicsDebugRenderer = nullptr;
 
-    bool m_renderGUI = true;
     bool m_initialPlayersReceivedFinished = false;
 
     bool m_worldViewingEnabled = false;

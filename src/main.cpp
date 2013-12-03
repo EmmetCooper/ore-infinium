@@ -32,6 +32,7 @@
 
 #include "src/unittest.h"
 #include "settings/settings.h"
+#include "debug.h"
 
 #include <iostream>
 
@@ -150,6 +151,14 @@ int main(int argc, char* argv[])
 
         if (parser.isSet("debug-full")) {
             Settings::instance()->setStartupFlag(Settings::StartupFlags::FullDebugStartupFlag);
+        }
+
+        if (1) {
+            Settings::instance()->debugRendererFlags |=
+                Debug::RenderingDebug::ChipmunkShapeRenderingDebug |
+                Debug::RenderingDebug::ChipmunkCenterOfMassRenderingDebug |
+                Debug::RenderingDebug::ChipmunkJointRenderingDebug |
+                Debug::RenderingDebug::ChipmunkAABBRenderingDebug;
         }
 
         int height;
