@@ -495,7 +495,7 @@ void Client::viewKeyPressed(QKeyEvent* event)
             //fall through
         case Qt::Key_Equal:
             if (m_world) {
-                //m_world->zoomIn();
+                m_world->zoomIn();
             }
             break;
 
@@ -503,7 +503,7 @@ void Client::viewKeyPressed(QKeyEvent* event)
             //fall through
         case Qt::Key_Minus:
             if (m_world) {
-                //m_world->zoomOut();
+                m_world->zoomOut();
             }
             break;
 
@@ -536,23 +536,6 @@ void Client::viewKeyPressed(QKeyEvent* event)
             */
         }
 
-        case Qt::Key_F10: {
-        }
-
-        case Qt::Key_F11: {
-            //f11
-            //if (m_debugSettings == nullptr) {
-            //    m_debugSettings = new DebugSettings(this);
-            //    m_debugSettings->show();
-            //} else {
-            //    if (m_debugSettings->visible()) {
-            //        m_debugSettings->hide();
-            //    } else {
-            //        m_debugSettings->show();
-            //    }
-            //}
-        }
-
         default:
             break;
     }
@@ -560,11 +543,6 @@ void Client::viewKeyPressed(QKeyEvent* event)
 
 void Client::viewKeyReleased(QKeyEvent* event)
 {
-//        if (m_mainPlayer && m_peer && m_connected && m_gui->inputDemanded() == false) {
-//            handlePlayerInput(event);
-//            m_quickBarMenu->handleEvent(event);
-//        }
-
     assert(event);
 
     QMutexLocker lock(&m_playerInputLock);
@@ -772,11 +750,6 @@ void Client::sendPlayerMovement()
     message.set_directionx(m_playerInputDirectionX);
     message.set_directiony(m_playerInputDirectionY);
     message.set_jump(m_playerJumpRequested);
-
-    //reset values back to initial state. that way no need to buggily handle keypress up events..
-//    m_playerInputDirectionX = 0;
-//    m_playerInputDirectionY = 0;
-//    m_playerJumpRequested = false;
 
     m_playerInputLock.unlock();
 
