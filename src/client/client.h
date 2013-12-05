@@ -152,6 +152,7 @@ public:
     void render(double frameTime);
 
     void viewKeyPressed(QKeyEvent* event);
+    void viewKeyReleased(QKeyEvent* event);
 
     void enableWorldViewing() {
        m_worldViewingEnabled = true;
@@ -260,12 +261,21 @@ private:
     /////////////////////////
     QMutex m_playerInputLock;
     QMutex m_playerMouseInputLock;
+
+    bool m_playerKeyboardWHeld = false;
+    bool m_playerKeyboardSHeld = false;
+    bool m_playerKeyboardAHeld = false;
+    bool m_playerKeyboardDHeld = false;
+
     bool m_playerMouseLeftHeld = false;
     bool m_playerMouseRightHeld = false;
     int m_playerMouseX = 0;
     int m_playerMouseY = 0;
 
+    //-1 left, 1 right
     int m_playerInputDirectionX = 0;
+
+    // -1 up, 1 down
     int m_playerInputDirectionY = 0;
 
     bool m_playerJumpRequested = false;

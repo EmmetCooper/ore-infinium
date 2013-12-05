@@ -466,25 +466,25 @@ void Client::viewKeyPressed(QKeyEvent* event)
         case Qt::Key_Left:
             //fall through
         case Qt::Key_A:
-            m_playerInputDirectionX = -1;
+            m_playerKeyboardAHeld = true;
             break;
 
         case Qt::Key_Right:
             //fall through
         case Qt::Key_D:
-            m_playerInputDirectionX = 1;
+            m_playerKeyboardDHeld = true;
             break;
 
         case Qt::Key_Up:
             //fall through
         case Qt::Key_W:
-            m_playerInputDirectionY = -1;
+            m_playerKeyboardWHeld = true;
             break;
 
         case Qt::Key_Down:
             //fall through
         case Qt::Key_S:
-            m_playerInputDirectionY = 1;
+            m_playerKeyboardSHeld = true;
             break;
 
         case Qt::Key_Space:
@@ -557,6 +557,49 @@ void Client::viewKeyPressed(QKeyEvent* event)
             break;
     }
 }
+
+void Client::viewKeyReleased(QKeyEvent* event)
+{
+//        if (m_mainPlayer && m_peer && m_connected && m_gui->inputDemanded() == false) {
+//            handlePlayerInput(event);
+//            m_quickBarMenu->handleEvent(event);
+//        }
+
+    assert(event);
+
+    QMutexLocker lock(&m_playerInputLock);
+
+    switch (event->key()) {
+        case Qt::Key_Left:
+            //fall through
+        case Qt::Key_A:
+            m_playerKeyboardAHeld = false;
+            break;
+
+        case Qt::Key_Right:
+            //fall through
+        case Qt::Key_D:
+            m_playerKeyboardDHeld = false;
+            break;
+
+        case Qt::Key_Up:
+            //fall through
+        case Qt::Key_W:
+            m_playerKeyboardWHeld = false;
+            break;
+
+        case Qt::Key_Down:
+            //fall through
+        case Qt::Key_S:
+            m_playerKeyboardSHeld = false;
+            break;
+
+        case Qt::Key_Space:
+        m_playerJumpRequested = false;
+            break;
+    }
+}
+
 
 void Client::shutdown()
 {
@@ -705,6 +748,21 @@ void Client::sendPlayerMovement()
 {
     m_playerInputLock.lock();
 
+    m_playerInputDirectionX = 0;
+    m_playerInputDirectionY = 0;
+
+    if (m_playerKeyboardAHeld) {
+        m_playerInputDirectionX = -1;
+    } else if (m_playerKeyboardDHeld) {
+        m_playerInputDirectionX = 1;
+    }
+
+    if (m_playerKeyboardWHeld) {
+        m_playerInputDirectionY = 1;
+    } else if (m_playerKeyboardSHeld) {
+        m_playerInputDirectionY = -1;
+    }
+
     // ensure it's only between -1 and 1. The server has protections to prevent this, as this
     // would be used maliciously, but this is to ensure there are no regressions client-side
     assert(m_playerInputDirectionX >= -1 && m_playerInputDirectionX <= 1);
@@ -716,9 +774,9 @@ void Client::sendPlayerMovement()
     message.set_jump(m_playerJumpRequested);
 
     //reset values back to initial state. that way no need to buggily handle keypress up events..
-    m_playerInputDirectionX = 0;
-    m_playerInputDirectionY = 0;
-    m_playerJumpRequested = false;
+//    m_playerInputDirectionX = 0;
+//    m_playerInputDirectionY = 0;
+//    m_playerJumpRequested = false;
 
     m_playerInputLock.unlock();
 

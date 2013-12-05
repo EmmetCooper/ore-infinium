@@ -62,3 +62,10 @@ void QuickView::keyPressEvent(QKeyEvent* event)
 
     QQuickView::keyPressEvent(event);
 }
+
+void QuickView::keyReleaseEvent(QKeyEvent* event)
+{
+    m_client->viewKeyReleased(event);
+
+    QQuickView::keyReleaseEvent(event);
+}
