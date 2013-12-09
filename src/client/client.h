@@ -62,6 +62,9 @@ class Client : public QQuickItem
     Q_PROPERTY(int serverPacketReceivedCount READ serverPacketReceivedCount);
     Q_PROPERTY(bool gameConnected READ gameConnected NOTIFY gameConnectedChanged);
 
+    Q_PROPERTY(QVector2D playerPosition READ playerPosition NOTIFY playerPositionChanged);
+
+
 public:
 
     bool gameConnected() {
@@ -99,6 +102,7 @@ signals:
     void gameConnectedChanged();
 
     void frameTimeChanged(double frameTime);
+    void playerPositionChanged();
 
 public slots:
     void cleanup();
@@ -137,6 +141,7 @@ public:
     ~Client();
 
     void startSinglePlayer(const std::string& playername);
+
     /**
      * Starts a mutliplayer client only connection, aka connecting to a server, not hosting.
      * @p address the server address/IP to connect to
@@ -180,6 +185,16 @@ public:
 
     Entities::Player* mainPlayer() {
         return m_mainPlayer;
+    }
+
+    /// basically just for debugMenu only
+    QVector2D playerPosition() {
+        if (m_mainPlayer) {
+            const glm::vec2& vect = m_mainPlayer->position();
+            return QVector2D(vect.x, vect.y);
+        } else {
+            return QVector2D(0.0, 0.0);
+        }
     }
 
     World* world() {

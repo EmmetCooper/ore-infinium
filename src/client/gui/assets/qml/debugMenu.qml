@@ -4,18 +4,29 @@ import QtQuick.Controls.Styles 1.0
 
 import QtQuick.Layouts 1.0
 
-Item {
+Rectangle {
     id: main
+
+    color: "red"
+    opacity: 0.5
 
     Component.onCompleted: {
     }
 
-    OreLabel {
+    ColumnLayout {
+
         anchors {
+            left: parent.left
+            top: parent.top
+            bottom: parent.top
         }
 
-//       text: "Player position: " + playerPosition.x
-text: "BLAAAAAAH"
-       font.pixelSize: 40
+        OreLabel {
+            text: "playerPosition: " + ClientBackend.playerPosition
+        }
+
+            OreLabel {
+            text: "-" //"playerPosition: " + ClientBackend.playerPosition
+        }
     }
 }

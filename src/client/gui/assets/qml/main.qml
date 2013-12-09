@@ -64,6 +64,18 @@ Item {
         if (event.key == Qt.Key_F11) {
             graphs.visible = !graphs.visible
         }
+
+        if (event.key == Qt.Key_F2) {
+            debugMenu.visible = !debugMenu.visible
+        }
+    }
+
+    DebugMenu {
+        id: debugMenu
+
+        anchors.fill: parent
+
+        visible: false
     }
 
     Rectangle {

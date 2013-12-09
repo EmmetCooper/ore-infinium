@@ -578,7 +578,6 @@ void Client::viewKeyReleased(QKeyEvent* event)
     }
 }
 
-
 void Client::shutdown()
 {
     if (m_connected) {
@@ -754,6 +753,8 @@ void Client::sendPlayerMovement()
     m_playerInputLock.unlock();
 
     Packet::sendPacket(m_peer, &message, Packet::FromClientPacketContents::PlayerMoveFromClientPacket, ENET_PACKET_FLAG_RELIABLE);
+
+    emit playerPositionChanged();
 }
 
 glm::vec2 Client::mousePositionToWorldCoords(int x, int y)
