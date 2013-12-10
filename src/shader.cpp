@@ -126,9 +126,9 @@ void Shader::loadShaders(const char* vertexShader, const char* fragmentShader)
 
     m_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-    const QString fragSource = loadFile(fragmentShader);
+    const QByteArray fragSource = loadFile(fragmentShader);
 
-    const char* fragSourceArray = vertSource;
+    const char* fragSourceArray = fragSource;
     glShaderSource(m_fragmentShader, 1, &fragSourceArray, nullptr);
     glCompileShader(m_fragmentShader);
 
