@@ -21,7 +21,7 @@
 #include "spritesheetrenderer.h"
 #include "game.h"
 
-Sprite::Sprite(const std::string& frameName, SpriteSheetRenderer::SpriteSheetType spriteSheetType) :
+Sprite::Sprite(const QString& frameName, SpriteSheetRenderer::SpriteSheetType spriteSheetType) :
     m_spriteSheetType(spriteSheetType)
 {
     setFrameName(frameName);
@@ -32,12 +32,12 @@ Sprite::Sprite(const std::string& frameName, SpriteSheetRenderer::SpriteSheetTyp
     */
 }
 
-Sprite::Sprite(const Sprite& entity)
-    : m_sizeMeters(entity.m_sizeMeters),
-      m_spriteSheetType(entity.spriteSheetType()),
-      m_frameName(entity.frameName()),
-      m_position(entity.position()),
-      m_origin(entity.m_origin)
+Sprite::Sprite(const Sprite& other)
+    : m_sizeMeters(other.m_sizeMeters),
+      m_spriteSheetType(other.spriteSheetType()),
+      m_frameName(other.frameName()),
+      m_position(other.position()),
+      m_origin(other.m_origin)
 {
 }
 

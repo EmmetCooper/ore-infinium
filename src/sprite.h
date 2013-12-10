@@ -23,7 +23,7 @@
 
 #include "glm/glm.hpp"
 
-#include <string>
+#include <QString>
 
 class SpatialHash;
 class Item;
@@ -36,7 +36,7 @@ public:
      * and with the category (also required)
      * @see setOrigin origin
      */
-    explicit Sprite(const std::string& frameName, SpriteSheetRenderer::SpriteSheetType spriteSheetType);
+    explicit Sprite(const QString& frameName, SpriteSheetRenderer::SpriteSheetType spriteSheetType);
 
     Sprite(const Sprite& sprite);
 
@@ -46,10 +46,10 @@ public:
      * Sets the name of the sprite's frame to use.
      * Used for animation.
      */
-    void setFrameName(const std::string& frameName) {
+    void setFrameName(const QString& frameName) {
         m_frameName = frameName;
     }
-    std::string frameName() const {
+    QString frameName() const {
         return m_frameName;
     }
 
@@ -113,7 +113,7 @@ private:
 
     SpatialHash* m_spatialHash = nullptr;
 
-    std::string m_frameName;
+    QString m_frameName;
 
     // position is in meters as is everything else the game deals with. size is in meters as well, converted from pixels.
     glm::vec2 m_position;

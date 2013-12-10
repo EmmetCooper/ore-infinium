@@ -22,7 +22,7 @@
 
 #include "debug.h"
 
-Item::Item(const std::string& frameName) : Entity(frameName, SpriteSheetRenderer::SpriteSheetType::Entity)
+Item::Item(const QString& frameName) : Entity(frameName, SpriteSheetRenderer::SpriteSheetType::Entity)
 {
 
 }

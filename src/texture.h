@@ -18,17 +18,18 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include <cstdint>
-#include <string>
-
 #include "glew.h"
+
+#include <cstdint>
+
+#include <QString>
 
 class Image;
 
 class Texture
 {
 public:
-    explicit Texture(const std::string& fileName);
+    explicit Texture(const QString& fileName);
     ~Texture();
 
     uint32_t width() const;
@@ -46,7 +47,7 @@ public:
     GLuint textureHandle() const;
 
 private:
-    void loadImage(const std::string& fileName);
+    void loadImage(const QString& fileName);
 
 private:
     Image* m_image = nullptr;

@@ -18,7 +18,8 @@
 #include "vegetation.h"
 #include "debug.h"
 
-Vegetation::Vegetation(const std::string& frameName, SpriteSheetRenderer::SpriteSheetType spriteSheetType): Entity(frameName, spriteSheetType)
+Vegetation::Vegetation(const QString& frameName, SpriteSheetRenderer::SpriteSheetType spriteSheetType)
+: Entity(frameName, spriteSheetType)
 {
     m_sizeMeters = glm::vec2(1.0, 2.0);
 }

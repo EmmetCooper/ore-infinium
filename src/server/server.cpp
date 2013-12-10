@@ -492,8 +492,8 @@ void Server::sendItemSpawned(Item* item)
     message.set_x(item->position().x);
     message.set_y(item->position().y);
     message.set_itemtype(item->type());
-    message.set_itemdetails(item->details());
-    message.set_itemname(item->name());
+    message.set_itemdetails(item->details().toStdString());
+    message.set_itemname(item->name().toStdString());
     message.set_itemstate(item->state());
     message.set_stacksize(item->stackSize());
     //NOTE: index is not set, as it is not in a container of any kidn.
@@ -612,8 +612,8 @@ void Server::sendPlayerQuickBarInventory(Entities::Player* player, uint8_t index
     PacketBuf::Item message;
     //NOTE: position and such are not sent, as client doesn't need to know that for inventories.
     message.set_itemtype(item->type());
-    message.set_itemdetails(item->details());
-    message.set_itemname(item->name());
+    message.set_itemdetails(item->details().toStdString());
+    message.set_itemname(item->name().toStdString());
     message.set_itemstate(item->state());
     message.set_stacksize(item->stackSize());
     message.set_index(index);

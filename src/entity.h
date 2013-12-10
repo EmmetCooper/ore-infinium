@@ -34,7 +34,7 @@ public:
      * Create an entity with the given texture @p texture
      * texture loading is handled automatically via textureManager.
      */
-    Entity(const std::string& frameName, SpriteSheetRenderer::SpriteSheetType spriteSheetType);
+    Entity(const QString& frameName, SpriteSheetRenderer::SpriteSheetType spriteSheetType);
     Entity(const Entity& entity);
 
     ~Entity();
@@ -71,18 +71,19 @@ public:
     void setVelocity(const glm::vec2& velocity);
     void setVelocity(float x, float y);
 
-    void setName(const std::string& name) {
+    void setName(const QString& name) {
         m_name = name;
     }
-    std::string name() const {
+
+    QString name() const {
         return m_name;
     }
 
-    void setDetails(const std::string& details) {
+    void setDetails(const QString& details) {
         m_details = details;
     }
 
-    std::string details() const {
+    QString details() const {
         return m_details;
     }
 
@@ -93,8 +94,8 @@ private:
     glm::vec2 m_velocity = glm::vec2(0, 0);
     uint32_t m_dirtyFlags = 0;
 
-    std::string m_name;
-    std::string m_details;
+    QString m_name;
+    QString m_details;
 };
 
 #endif

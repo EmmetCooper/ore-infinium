@@ -26,12 +26,13 @@
 #include "settings/settings.h"
 #include "globals.h"
 
+#include <QtCore/QFile>
+
 #include <yaml-cpp/yaml.h>
 
 #include <fstream>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/stat.h>
 
 SpriteSheetRenderer::SpriteSheetRenderer(Camera* camera)
 {
@@ -82,7 +83,7 @@ void SpriteSheetRenderer::loadAllSpriteSheets()
     loadSpriteSheet("../textures/entities.png", SpriteSheetType::Entity);
 }
 
-void SpriteSheetRenderer::loadSpriteSheet(const std::string& fileName, SpriteSheetRenderer::SpriteSheetType type)
+void SpriteSheetRenderer::loadSpriteSheet(const QString& fileName, SpriteSheetRenderer::SpriteSheetType type)
 {
     auto& wrapper = m_spriteSheetTextures[type];
     wrapper.texture = new Texture(fileName);
@@ -122,7 +123,7 @@ glm::vec2 SpriteSheetRenderer::spriteSheetSize(SpriteSheetRenderer::SpriteSheetT
     return imageSize;
 }
 
-SpriteSheetRenderer::SpriteFrameIdentifier SpriteSheetRenderer::spriteFrame(const std::string& frameName)
+SpriteSheetRenderer::SpriteFrameIdentifier SpriteSheetRenderer::spriteFrame(const QString& frameName)
 {
     return m_spriteSheetEntitiesDescription.find(frameName).value();
 }
@@ -164,24 +165,26 @@ void SpriteSheetRenderer::parseAllSpriteSheets()
 
 void operator >> (const YAML::Node& node, SpriteSheetRenderer::SpriteFrameIdentifier& frame)
 {
-    node["frameName"] >> frame.frameName;
+    std::string str; //FIXME: HACK for QSTRING AND YAML. get rid of yaml and use something in qt, less deps == more win
+    node["frameName"] >> str;
+    frame.frameName = QString::fromStdString(str);
+
     node["x"] >> frame.x;
     node["y"] >> frame.y;
     node["width"] >> frame.width;
     node["height"] >> frame.height;
 }
 
-QMap<std::string, SpriteSheetRenderer::SpriteFrameIdentifier> SpriteSheetRenderer::parseSpriteSheet(const std::string& filename)
+QMap<QString, SpriteSheetRenderer::SpriteFrameIdentifier> SpriteSheetRenderer::parseSpriteSheet(const QString& filename)
 {
-    QMap<std::string, SpriteFrameIdentifier> descriptionMap;
+    QMap<QString, SpriteFrameIdentifier> descriptionMap;
 
-    struct stat fileAttribute;
-    bool fileExists = stat(filename.c_str(), &fileAttribute) == 0;
+    bool fileExists = QFile::exists(filename);
 
-    Debug::log(Debug::Area::SpriteSheetRendererArea) << "parsing: '" << filename << "' spreadsheet description...";
-    Debug::fatal(fileExists, Debug::Area::SpriteSheetRendererArea, "sprite sheet description file failed to load, filename: " + filename);
+    //Debug::log(Debug::Area::SpriteSheetRendererArea) << "parsing: '" << filename.toStdString() << "' spreadsheet description...";
+    //Debug::fatal(fileExists, Debug::Area::SpriteSheetRendererArea, "sprite sheet description file failed to load, filename: " + filename);
 
-    std::ifstream fin(filename);
+    std::ifstream fin(filename.toStdString());
     YAML::Parser parser(fin);
 
     YAML::Node doc;
@@ -191,7 +194,7 @@ QMap<std::string, SpriteSheetRenderer::SpriteFrameIdentifier> SpriteSheetRendere
         SpriteFrameIdentifier frame;
         doc[i] >> frame;
 
-        Debug::log(Debug::Area::SpriteSheetRendererArea) << "frameName: " << frame.frameName;
+        //Debug::log(Debug::Area::SpriteSheetRendererArea) << "frameName: " << frame.frameName;
         Debug::log(Debug::Area::SpriteSheetRendererArea) << "x: " << frame.x;
         Debug::log(Debug::Area::SpriteSheetRendererArea) << "y: " << frame.y;
         Debug::log(Debug::Area::SpriteSheetRendererArea) << "width: " << frame.width;
@@ -215,7 +218,7 @@ void SpriteSheetRenderer::renderCharacters()
 
     for (Sprite * sprite : m_characterSprites) {
         auto frameIdentifier = m_spriteSheetCharactersDescription.find(sprite->frameName());
-        Debug::fatal(frameIdentifier != m_spriteSheetCharactersDescription.end(), Debug::Area::SpriteSheetRendererArea, "sprite sheet character frame description could not be located, name: " + sprite->frameName());
+        //Debug::fatal(frameIdentifier != m_spriteSheetCharactersDescription.end(), Debug::Area::SpriteSheetRendererArea, "sprite sheet character frame description could not be located, name: " + sprite->frameName());
 
         SpriteFrameIdentifier& frame = frameIdentifier.value();
 
@@ -332,7 +335,7 @@ void SpriteSheetRenderer::renderEntities()
     int index = 0;
     for (Sprite * sprite : m_entitySprites) {
         auto frameIdentifier = m_spriteSheetEntitiesDescription.find(sprite->frameName());
-        Debug::fatal(frameIdentifier != m_spriteSheetEntitiesDescription.end(), Debug::Area::SpriteSheetRendererArea, "sprite sheet entity frame description could not be located framename: " + sprite->frameName());
+        //Debug::fatal(frameIdentifier != m_spriteSheetEntitiesDescription.end(), Debug::Area::SpriteSheetRendererArea, "sprite sheet entity frame description could not be located framename: " + sprite->frameName());
 
         SpriteFrameIdentifier& frame = frameIdentifier.value();
 

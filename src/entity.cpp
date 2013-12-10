@@ -24,8 +24,7 @@
 
 #include <chipmunk/chipmunk.h>
 
-
-Entity::Entity(const std::string& frameName, SpriteSheetRenderer::SpriteSheetType spriteSheetType)
+Entity::Entity(const QString& frameName, SpriteSheetRenderer::SpriteSheetType spriteSheetType)
     : Sprite(frameName, spriteSheetType)
 {
 }

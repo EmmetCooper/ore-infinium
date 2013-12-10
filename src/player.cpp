@@ -32,7 +32,7 @@
 namespace Entities
 {
 
-Player::Player(const std::string& frameName)
+Player::Player(const QString& frameName)
     : Entity(frameName, SpriteSheetRenderer::SpriteSheetType::Character)
 {
     m_placeableDelayTimer = new Timer();

@@ -20,7 +20,7 @@
 
 #include "debug.h"
 
-Texture::Texture(const std::string& fileName)
+Texture::Texture(const QString& fileName)
 {
     loadImage(fileName);
 }
@@ -31,7 +31,7 @@ Texture::~Texture()
     delete m_image;
 }
 
-void Texture::loadImage(const std::string& filename)
+void Texture::loadImage(const QString& filename)
 {
     m_image = new Image(filename);
 }

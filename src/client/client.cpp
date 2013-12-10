@@ -366,8 +366,6 @@ void Client::render(double frameTime)
 
     if (m_world && m_mainPlayer) {
         m_world->render();
-    } else {
-        //Debug::log(Debug::ImportantArea) << "NOT RENDERING, player/world invalid";
     }
 
     // only a client-hosted server has a chance of seeing any debug shit
@@ -387,8 +385,6 @@ void Client::render(double frameTime)
         //    }
         //}
     }
-
-    //Debug::log(Debug::ImportantArea) << "FPS: " << (1000.0 / frameTime) << " FrameTime: " << frameTime << " ms";
 }
 
 void Client::tick(double frameTime)
@@ -421,11 +417,6 @@ void Client::tick(double frameTime)
 void Client::setActiveChunkCount(uint32_t count)
 {
 //    m_debugMenu->setActiveChunkCount(count);
-}
-
-void Client::drawDebugText(double frameTime)
-{
- //   m_debugMenu->update(frameTime);
 }
 
 void Client::viewKeyPressed(QKeyEvent* event)
@@ -998,8 +989,8 @@ void Client::receiveQuickBarInventoryItem(const std::string& packetContents)
     //NOTE: we don't give a shit about position and such, the server doesn't even send that
     //in inventory scenarios, since it doesn't matter.
     baseItem->setStackSize(message.stacksize());
-    baseItem->setName(message.itemname());
-    baseItem->setDetails(message.itemdetails());
+    baseItem->setName(QString::fromStdString(message.itemname()));
+    baseItem->setDetails(QString::fromStdString(message.itemdetails()));
     baseItem->setState(message.itemstate());
 
     uint32_t index = message.index();
@@ -1033,8 +1024,8 @@ void Client::receiveItemSpawned(const std::string& packetContents)
     }
 
     baseItem->setStackSize(message.stacksize());
-    baseItem->setName(message.itemname());
-    baseItem->setDetails(message.itemdetails());
+    baseItem->setName(QString::fromStdString(message.itemname()));
+    baseItem->setDetails(QString::fromStdString(message.itemdetails()));
     baseItem->setState(message.itemstate());
 
     m_world->spawnItem(baseItem);

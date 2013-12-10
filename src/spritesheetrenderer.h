@@ -24,8 +24,8 @@
 #include "glew.h"
 
 #include <cstdint>
-#include <string>
 
+#include <QString>
 #include <QVector>
 #include <QMap>
 
@@ -84,14 +84,14 @@ public:
      * So we know the position within the frame (x,y) and size of it.
      */
     struct SpriteFrameIdentifier {
-        std::string frameName;
+        QString frameName;
         unsigned int x;
         unsigned int y;
         unsigned int width;
         unsigned int height;
     };
 
-    SpriteSheetRenderer::SpriteFrameIdentifier spriteFrame(const std::string& frameName);
+    SpriteSheetRenderer::SpriteFrameIdentifier spriteFrame(const QString& frameName);
 
 private:
     struct SpriteSheet {
@@ -114,10 +114,10 @@ private:
 
     void parseAllSpriteSheets();
 
-    QMap<std::string, SpriteFrameIdentifier> parseSpriteSheet(const std::string& filename);
+    QMap<QString, SpriteFrameIdentifier> parseSpriteSheet(const QString& filename);
 
     void loadAllSpriteSheets();
-    void loadSpriteSheet(const std::string& fileName, SpriteSheetType type);
+    void loadSpriteSheet(const QString& fileName, SpriteSheetType type);
 
     /**
      * free the memory for a texture
@@ -148,8 +148,8 @@ private:
      * Map containing all the sprite frame names and their properties for this
      * particular spritesheet. e.g. x, y, width, height.
      */
-    QMap<std::string, SpriteFrameIdentifier> m_spriteSheetCharactersDescription;
-    QMap<std::string, SpriteFrameIdentifier> m_spriteSheetEntitiesDescription;
+    QMap<QString, SpriteFrameIdentifier> m_spriteSheetCharactersDescription;
+    QMap<QString, SpriteFrameIdentifier> m_spriteSheetEntitiesDescription;
 
     QVector<Sprite*> m_characterSprites;
     QVector<Sprite*> m_entitySprites;

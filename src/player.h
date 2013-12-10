@@ -41,7 +41,7 @@ public:
     /**
      * Create a player with the starting frame texture
      */
-    Player(const std::string& frameName);
+    Player(const QString& frameName);
     ~Player();
 
     void enableNoClip() {

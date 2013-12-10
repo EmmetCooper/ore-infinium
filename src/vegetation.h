@@ -20,14 +20,14 @@
 
 #include "item.h"
 
-#include <string>
+#include <QString>
 
 /**
  */
 class Vegetation : public Entity
 {
 public:
-    Vegetation(const std::string& frameName, SpriteSheetRenderer::SpriteSheetType spriteSheetType);
+    Vegetation(const QString& frameName, SpriteSheetRenderer::SpriteSheetType spriteSheetType);
 
 private:
 };

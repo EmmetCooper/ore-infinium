@@ -20,7 +20,7 @@
 
 #include "entity.h"
 
-#include <string>
+#include <QString>
 
 class Player;
 class Item;
@@ -35,7 +35,7 @@ class World;
 class Item : public Entity
 {
 public:
-    Item(const std::string& frameName);
+    Item(const QString& frameName);
     Item(const Item& item);
 
     ~Item();

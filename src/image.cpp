@@ -19,9 +19,9 @@
 
 #include "debug.h"
 
-#include <sys/stat.h>
+#include <QtCore/QFile>
 
-Image::Image(const std::string& fileName)
+Image::Image(const QString& fileName)
 {
     loadImage(fileName);
     flipVertically();
@@ -41,18 +41,15 @@ uint32_t Image::height() const
     return m_image.height();
 }
 
-void Image::loadImage(const std::string& filename)
+void Image::loadImage(const QString& filename)
 {
     qCDebug(ORE_IMAGE_LOADER) << "Loading image:" << filename << "... ";
 
-    struct stat fileAttribute;
-    bool fileExists = stat(filename.c_str(), &fileAttribute) == 0;
-
-    if (!fileExists) {
+    if (!QFile::exists(filename)) {
         qFatal("image file failed to load, file does not exist");
     }
 
-    m_image.load(QString::fromStdString(filename));
+    m_image.load(filename);
 
     if (m_image.isNull()) {
         qFatal("failure to load image");
@@ -67,12 +64,10 @@ void Image::loadImage(const std::string& filename)
 
 void Image::flipVertically()
 {
-    Q_ASSERT(!m_image.isNull());
     m_image = m_image.mirrored(false, true);
 }
 
 void* Image::bytes()
 {
-    Q_ASSERT(!m_image.isNull());
     return m_image.bits();
 }

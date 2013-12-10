@@ -245,8 +245,6 @@ private:
 
     glm::vec2 mousePositionToWorldCoords(int x, int y);
 
-    void drawDebugText(double frameTime);
-
 private:
     Server* m_server = nullptr;
     World* m_world = nullptr;
@@ -266,6 +264,7 @@ private:
 
     std::thread* m_serverThread = nullptr;
     std::thread* m_clientTickLogicThread = nullptr;
+
     bool m_connected = false;
 
     /////////////////////////
