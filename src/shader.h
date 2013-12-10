@@ -21,6 +21,7 @@
 #include "glew.h"
 
 class QString;
+class QByteArray;
 
 /**
 * Represents the vertex, fragment shader handles,
@@ -41,7 +42,7 @@ public:
     void bindProgram() const;
     void unbindProgram() const;
 
-    static QString loadFile(const char* fileName);
+    static QByteArray loadFile(const char* fileName);
 private:
 
     void loadShaders(const char* vertexShader, const char* fragmentShader);

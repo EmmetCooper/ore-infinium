@@ -31,6 +31,7 @@
 #include <memory>
 
 #include <QtCore/QString>
+#include <QtCore/QByteArray>
 #include <QtCore/QFile>
 
 Shader::Shader(const char* vertexShader, const char* fragmentShader)
@@ -77,7 +78,7 @@ GLuint Shader::fragmentShader() const
     return m_fragmentShader;
 }
 
-QString Shader::loadFile(const char* fileName)
+QByteArray Shader::loadFile(const char* fileName)
 {
     qCDebug(ORE_SHADERS) << "loading shader:" << fileName;
 
@@ -89,24 +90,31 @@ QString Shader::loadFile(const char* fileName)
 
     qCDebug(ORE_SHADERS) << "shader:" << fileName << "loaded successfully";
 
-    std::ifstream in(fileName);
+//    std::ifstream in(fileName);
+//
+//    std::stringstream buffer;
+//    buffer << in.rdbuf();
+//
+    QString file = fileName;
+QFile f(file);
+f.open(QIODevice::ReadOnly);
+const QByteArray array = f.readAll();
+f.close();
 
-    std::stringstream buffer;
-    buffer << in.rdbuf();
+//    std::string str(buffer.str());
 
-    QString contents(QString::fromStdString(std::string(buffer.str())));
-    qCDebug(ORE_SHADERS) << "SHADER: " << contents;
+    qCDebug(ORE_SHADERS) << "SHADER: " << array;
 
-    return contents;
+    return array;
 }
 
 void Shader::loadShaders(const char* vertexShader, const char* fragmentShader)
 {
     m_vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
-    const QString vertSource = loadFile(vertexShader);
+    const QByteArray vertSource = loadFile(vertexShader);
 
-    const char* vertSourceArray = vertSource.toLatin1();
+    const char* vertSourceArray = vertSource;
     glShaderSource(m_vertexShader, 1, &vertSourceArray, nullptr);
     glCompileShader(m_vertexShader);
 
@@ -118,9 +126,9 @@ void Shader::loadShaders(const char* vertexShader, const char* fragmentShader)
 
     m_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-    QString fragSource = loadFile(fragmentShader);
+    const QString fragSource = loadFile(fragmentShader);
 
-    const char* fragSourceArray = fragSource.toLatin1();
+    const char* fragSourceArray = vertSource;
     glShaderSource(m_fragmentShader, 1, &fragSourceArray, nullptr);
     glCompileShader(m_fragmentShader);
 
@@ -146,7 +154,6 @@ void Shader::loadShaders(const char* vertexShader, const char* fragmentShader)
     } else {
         qFatal("shader program link FAILURE");
     }
-
 }
 
 bool Shader::checkShaderCompileStatus(GLuint obj)
