@@ -130,6 +130,7 @@ private slots:
     void handleWindowChanged(QQuickWindow *win);
 
 private:
+    /// frametime counter
     QTime m_time;
     int m_frameCount = 0;
 
@@ -212,7 +213,6 @@ public:
     void sendQuickBarInventorySlotSelectRequest(uint8_t index);
 
 private:
-
     void tickLogicThread();
 
     /**
