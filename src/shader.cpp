@@ -28,10 +28,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-
 #include <memory>
-#include <sys/stat.h>
 
+#include <QtCore/QString>
+#include <QtCore/QFile>
 
 Shader::Shader(const char* vertexShader, const char* fragmentShader)
 {
@@ -77,11 +77,15 @@ GLuint Shader::fragmentShader() const
     return m_fragmentShader;
 }
 
-std::string Shader::loadFile(const char* fileName)
+QString Shader::loadFile(const char* fileName)
 {
-    struct stat fileAttribute;
-    bool fileExists = stat(fileName, &fileAttribute) == 0;
-    Debug::fatal(fileExists, Debug::Area::ImageLoaderArea, "shader file failed to load, file does not exist. Filename: " + std::string(fileName));
+    qCDebug(ORE_SHADERS) << "loading shader:" << fileName;
+
+    bool fileExists = QFile::exists(fileName);
+
+    if (!fileExists) {
+        qFatal("shader does not exist!");
+    }
 
     qCDebug(ORE_SHADERS) << "shader:" << fileName << "loaded successfully";
 
@@ -90,7 +94,7 @@ std::string Shader::loadFile(const char* fileName)
     std::stringstream buffer;
     buffer << in.rdbuf();
 
-    std::string contents(buffer.str());
+    QString contents(QString::fromStdString(std::string(buffer.str())));
 
     return contents;
 }
@@ -99,9 +103,9 @@ void Shader::loadShaders(const char* vertexShader, const char* fragmentShader)
 {
     m_vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
-    std::string vertSource = loadFile(vertexShader);
+    QString vertSource = loadFile(vertexShader);
 
-    const char* vertSourceArray = vertSource.c_str();
+    const char* vertSourceArray = vertSource.toLocal8Bit().constData();
     glShaderSource(m_vertexShader, 1, &vertSourceArray, nullptr);
     glCompileShader(m_vertexShader);
 
@@ -113,8 +117,9 @@ void Shader::loadShaders(const char* vertexShader, const char* fragmentShader)
 
     m_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-    std::string fragSource = loadFile(fragmentShader);
-    const char* fragSourceArray = fragSource.c_str();
+    QString fragSource = loadFile(fragmentShader);
+
+    const char* fragSourceArray = fragSource.toLocal8Bit().constData();
     glShaderSource(m_fragmentShader, 1, &fragSourceArray, nullptr);
     glCompileShader(m_fragmentShader);
 

@@ -18,9 +18,9 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include <string>
-
 #include "glew.h"
+
+class QString;
 
 /**
 * Represents the vertex, fragment shader handles,
@@ -41,7 +41,7 @@ public:
     void bindProgram() const;
     void unbindProgram() const;
 
-    static std::string loadFile(const char* fileName);
+    static QString loadFile(const char* fileName);
 private:
 
     void loadShaders(const char* vertexShader, const char* fragmentShader);

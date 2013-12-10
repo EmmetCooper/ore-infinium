@@ -66,7 +66,7 @@ static float randFloat()
 void ParticleRenderer::initGL()
 {
     // shader source code
-
+/*
     std::string vertex_source = Shader::loadFile("particlerenderer_smoke.vert");
 
     std::string fragment_source = Shader::loadFile("particlerenderer_smoke.frag");
@@ -141,6 +141,7 @@ void ParticleRenderer::initGL()
 //
 //    const char * outputNames[] = { "Position", "Velocity", "StartTime" };
 //    glTransformFeedbackVaryings(m_shaderProgramSmoke, 3, outputNames, GL_INTERLEAVED_ATTRIBS);
+*/
 }
 
 void ParticleRenderer::render()
