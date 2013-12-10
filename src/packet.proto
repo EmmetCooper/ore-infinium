@@ -12,7 +12,7 @@ message ClientInitialConnection {
 }
 
 message ChatMessageFromClient {
-    optional string message = 1;
+    optional string message = 2;
 }
 
 message WorldTimeChangedFromServer {
@@ -22,8 +22,9 @@ message WorldTimeChangedFromServer {
 }
 
 message ChatMessageFromServer {
-    optional string playerName = 1;
-    optional string message = 2;
+    optional string timestamp = 1;
+    optional string playerName = 2;
+    optional string message = 3;
 }
 
 message InitialPlayerDataFinishedFromServer {

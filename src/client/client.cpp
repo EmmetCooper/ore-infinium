@@ -595,10 +595,6 @@ bool Client::connectTo(const char* address, uint16_t port)
     if (enet_host_service(m_client, &event, 5000) > 0 && event.type == ENET_EVENT_TYPE_CONNECT) {
         Debug::log(Debug::Area::NetworkClientInitialArea) << "Client connection to server succeeded!";
 
-    //        m_mainMenu->hideMainMenu();
-    //        m_chat = new ChatDialog(this, m_mainMenu);
-    //        m_chat->show();
-
         //HACK
         Q_ASSERT(m_chatModel);
         m_chatModel->addChatLine("08:24", "player1", "some chat text!");
@@ -846,9 +842,12 @@ void Client::processMessage(ENetEvent& event)
 
 void Client::receiveChatMessage(const std::string& packetContents)
 {
+    Q_ASSERT(m_chatModel);
+
     PacketBuf::ChatMessageFromServer chatMessage;
     Packet::deserialize(packetContents, &chatMessage);
-//    m_chat->addChatLine(chatMessage.playername(), chatMessage.message());
+
+    m_chatModel->addChatLine(QString::fromStdString(chatMessage.timestamp()), QString::fromStdString(chatMessage.playername()), QString::fromStdString(chatMessage.message()));
 }
 
 void Client::receiveInitialPlayerData(const std::string& packetContents)
