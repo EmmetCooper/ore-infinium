@@ -292,7 +292,7 @@ void Client::mouseAreaMoved(double mouseX, double mouseY)
     QMutexLocker lock (&m_playerMouseInputLock);
 
     m_playerMouseX = mouseX;
-    m_playerMouseY = 768 - mouseY;
+    m_playerMouseY = Settings::instance()->screenResolutionHeight - mouseY;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
