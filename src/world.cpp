@@ -33,7 +33,6 @@
 
 #include "tilerenderer.h"
 #include "lightrenderer.h"
-#include "physicsdebugrenderer.h"
 #include "particlerenderer.h"
 #include "fluidrenderer.h"
 #include "skyrenderer.h"
@@ -127,7 +126,6 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
 
     //client doesn't actually load/generate any world
     if (m_server) {
-        m_physicsRendererFlushTimer = new Timer();
         float x = BLOCK_SIZE * WORLD_COLUMNCOUNT;
         float y = BLOCK_SIZE * WORLD_ROWCOUNT;
 
@@ -186,7 +184,6 @@ World::~World()
 
     delete m_camera;
     delete m_time;
-    delete m_physicsRendererFlushTimer;
 }
 
 void World::addPlayer(Entities::Player* player)
@@ -409,17 +406,6 @@ void World::update(double elapsedTime)
         updateTilePhysicsObjects();
 
         cpSpaceStep(m_cpSpace, FIXED_TIMESTEP);
-
-        if (m_server->client() && m_server->client()->physicsDebugRenderer()) {
-            static bool physicsRenderingFlushNeeded = true;
-
-            /// so that we don't flood the renderer with mutex/sync issues..since that's the slowest part
-            /// obviously only applicable to physics debug rendering, when client is hosting the server.
-            if (m_physicsRendererFlushTimer->milliseconds() >= 500) {
-                m_server->client()->physicsDebugRenderer()->iterateShapesInSpace(m_cpSpace);
-                m_physicsRendererFlushTimer->reset();
-            }
-        }
     }
 
     //NOTE: players are not exactly considered entities. they are, but they aren't

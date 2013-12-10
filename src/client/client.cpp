@@ -21,7 +21,6 @@
 #include "src/packet.pb.h"
 #include "src/server/server.h"
 
-#include "src/physicsdebugrenderer.h"
 //unused? TODO
 //#include "gui/optionsdialogbackend.h"
 
@@ -373,42 +372,20 @@ void Client::render(double frameTime)
 
     // only a client-hosted server has a chance of seeing any debug shit
     if (m_server) {
-        if (!m_physicsDebugRenderer && m_world && m_world->spriteSheetRenderer()) {
-            // physics debug renderer first init...
-            m_physicsDebugRenderer = new PhysicsDebugRenderer(m_world->spriteSheetRenderer()->camera());
-        }
-
-        if (m_physicsDebugRenderer) {
-
-            int rendererFlags = 0;
-            int settingsFlags = Settings::instance()->debugRendererFlags;
-            bool drawingRequired = false;
-
-            //FIXME: physics debug renderer flags are not taken into account..it's just on/off atm
-            if (settingsFlags & Debug::RenderingDebug::ChipmunkAABBRenderingDebug) {
-                // rendererFlags |= b2Draw::e_aabbBit;
-                drawingRequired = true;
-            }
-
-            if (settingsFlags & Debug::RenderingDebug::ChipmunkShapeRenderingDebug) {
-                //  rendererFlags |= b2Draw::e_shapeBit;
-                drawingRequired = true;
-            }
-
-            if (settingsFlags & Debug::RenderingDebug::ChipmunkCenterOfMassRenderingDebug) {
-                //   rendererFlags |= b2Draw::e_centerOfMassBit;
-                drawingRequired = true;
-            }
-
-            if (settingsFlags & Debug::RenderingDebug::ChipmunkJointRenderingDebug) {
-                //    rendererFlags |= b2Draw::e_jointBit;
-                drawingRequired = true;
-            }
-
-            if (drawingRequired) {
-                m_physicsDebugRenderer->render();
-            }
-        }
+        //if (m_physicsDebugRenderer) {
+        //
+        //    int rendererFlags = 0;
+        //    int settingsFlags = Settings::instance()->debugRendererFlags;
+        //    bool drawingRequired = false;
+        //   if (settingsFlags & Debug::RenderingDebug::ChipmunkJointRenderingDebug) {
+        //        //    rendererFlags |= b2Draw::e_jointBit;
+        //        drawingRequired = true;
+        //    }
+        //
+        //    if (drawingRequired) {
+        //        m_physicsDebugRenderer->render();
+        //    }
+        //}
     }
 
     //Debug::log(Debug::ImportantArea) << "FPS: " << (1000.0 / frameTime) << " FrameTime: " << frameTime << " ms";
@@ -434,9 +411,9 @@ void Client::tick(double frameTime)
        }
 
        if (m_server) {
-           if (m_physicsDebugRenderer) {
-//               m_debugMenu->setPhysicsWorldShapeCount(m_physicsDebugRenderer->shapeCount());
-           }
+           //if (m_physicsDebugRenderer) {
+            //m_debugMenu->setPhysicsWorldShapeCount(m_physicsDebugRenderer->shapeCount());
+           //}
        }
    }
 }

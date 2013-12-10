@@ -47,7 +47,6 @@ class SpriteSheetRenderer;
 class CollisionMap;
 class Torch;
 class Item;
-class PhysicsDebugRenderer;
 class ParticleRenderer;
 class Timer;
 
@@ -285,9 +284,6 @@ private:
     Entities::Player* m_mainPlayer = nullptr;
 
     Server* m_server = nullptr;
-
-    /// server only
-    Timer* m_physicsRendererFlushTimer = nullptr;
 
     /** WARNING: only valid when m_server is not. Existence is indicative of this world instance being the clients
      *  (which happens for both client-hosting a server and a client-joining)

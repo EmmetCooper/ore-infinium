@@ -40,7 +40,6 @@ class QuickView;
 class FboInSGRenderer;
 
 class DebugSettings;
-class PhysicsDebugRenderer;
 class QuickBarMenu;
 class Player;
 class GUI;
@@ -164,10 +163,6 @@ public:
     }
 
     const float FPS = 60.0;
-
-    PhysicsDebugRenderer* physicsDebugRenderer() {
-        return m_physicsDebugRenderer;
-    }
 
     void setActiveChunkCount(uint32_t count);
 
@@ -297,7 +292,6 @@ private:
     /////////////////////////
 
     cpSpace* m_cpSpace = nullptr;
-    PhysicsDebugRenderer* m_physicsDebugRenderer = nullptr;
 
     bool m_initialPlayersReceivedFinished = false;
 
