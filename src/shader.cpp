@@ -95,6 +95,7 @@ QString Shader::loadFile(const char* fileName)
     buffer << in.rdbuf();
 
     QString contents(QString::fromStdString(std::string(buffer.str())));
+    qCDebug(ORE_SHADERS) << "SHADER: " << contents;
 
     return contents;
 }
@@ -103,9 +104,9 @@ void Shader::loadShaders(const char* vertexShader, const char* fragmentShader)
 {
     m_vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
-    QString vertSource = loadFile(vertexShader);
+    const QString vertSource = loadFile(vertexShader);
 
-    const char* vertSourceArray = vertSource.toLocal8Bit().constData();
+    const char* vertSourceArray = vertSource.toLatin1();
     glShaderSource(m_vertexShader, 1, &vertSourceArray, nullptr);
     glCompileShader(m_vertexShader);
 
@@ -119,7 +120,7 @@ void Shader::loadShaders(const char* vertexShader, const char* fragmentShader)
 
     QString fragSource = loadFile(fragmentShader);
 
-    const char* fragSourceArray = fragSource.toLocal8Bit().constData();
+    const char* fragSourceArray = fragSource.toLatin1();
     glShaderSource(m_fragmentShader, 1, &fragSourceArray, nullptr);
     glCompileShader(m_fragmentShader);
 
