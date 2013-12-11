@@ -299,7 +299,7 @@ void Server::receiveInitialClientData(const std::string& packetContents, ENetPee
 void Server::kickPlayer(Entities::Player* player, const QString& reason, uint32_t disconnectFlag)
 {
     const QString line = "kicking player, reason: " + reason + " Player: " + QString::fromStdString(player->name());
-    sendChatMessage(line.toStdString(), "SERVER");
+    sendServerChatMessage(line.toStdString());
 
     ENetPeer* peer = peerForPlayer(player);
     m_clients.erase(peer);
@@ -371,6 +371,37 @@ void Server::receiveQuickBarInventorySelectSlotRequest(const std::string& packet
 
     player->quickBarInventory()->selectSlot(index);
 }
+
+void Server::sendServerChatMessage(const std::string& message)
+{
+    const QDate date = QDate::currentDate();
+    const QString dateString = date.toString();
+    const QString name = "SERVER";
+    m_chatModel->addChatLine(dateString, name, QString::fromStdString(message));
+
+    PacketBuf::ChatMessageFromServer sendMessage;
+    sendMessage.set_playername(name.toStdString());
+    sendMessage.set_message(message);
+    sendMessage.set_timestamp(dateString.toLatin1());
+
+    Packet::sendPacketBroadcast(m_server, &sendMessage, Packet::FromServerPacketContents::ChatMessageFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
+}
+
+void Server::sendAdminChatMessage(const std::string& message)
+{
+    const QDate date = QDate::currentDate();
+    const QString dateString = date.toString();
+    const QString name = "admin";
+    m_chatModel->addChatLine(dateString, name, QString::fromStdString(message));
+
+    PacketBuf::ChatMessageFromServer sendMessage;
+    sendMessage.set_playername(name.toStdString());
+    sendMessage.set_message(message);
+    sendMessage.set_timestamp(dateString.toLatin1());
+
+    Packet::sendPacketBroadcast(m_server, &sendMessage, Packet::FromServerPacketContents::ChatMessageFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
+}
+
 
 void Server::sendChatMessage(const std::string& message, const std::string& playerName)
 {

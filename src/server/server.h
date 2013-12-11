@@ -124,6 +124,15 @@ private:
     void receivePlayerMouseState(const std::string& packetContents, Entities::Player* player);
     void receiveQuickBarInventorySelectSlotRequest(const std::string& packetContents, Entities::Player* player);
 
+
+    /**
+     * Sends a chat message that is marked as being from the server's internal administration.
+     * Similar to @sa sendAdminChatMessage
+     * Not the best of names..
+     */
+    void sendServerChatMessage(const std::string& message);
+    void sendAdminChatMessage(const std::string& message);
+
     void sendChatMessage(const std::string& message, const std::string& playerName);
     void sendInitialPlayerData(ENetPeer* peer, Entities::Player* player);
     void sendInitialPlayerDataFinished(ENetPeer* peer);
