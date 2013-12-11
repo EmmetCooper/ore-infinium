@@ -22,6 +22,7 @@ TextField {
                 anchors.fill: parent
 
                 antialiasing: true
+                asynchronous: true
 
                 border.bottom: 8
                 border.top: 8

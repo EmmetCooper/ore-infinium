@@ -12,9 +12,10 @@ ComboBoxStyle {
         BorderImage {
             id: bg
             width: parent.width
-            source: "../button-normal.png"
+            source: "../../button-normal.png"
             border.left: 5; border.top: 5
             border.right: 32; border.bottom: 5
+            asynchronous: true
             Text {
                 id: txt
                 anchors.verticalCenter: parent.verticalCenter
