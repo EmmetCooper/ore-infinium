@@ -207,23 +207,28 @@ void Server::processMessage(ENetEvent& event)
     case Packet::FromClientPacketContents::InitialConnectionDataFromClientPacket: {
         //checking for version mismatch, can't let him connect or else we'll have assloads of problems, among other things
         receiveInitialClientData(packetContents, event.peer);
+        break;
     }
 
-    case Packet::FromClientPacketContents::ChatMessageFromClientPacket:
+    case Packet::FromClientPacketContents::ChatMessageFromClientPacket: {
         receiveChatMessage(packetContents, m_clients[event.peer]);
         break;
+    }
 
-    case Packet::FromClientPacketContents::PlayerMoveFromClientPacket:
+    case Packet::FromClientPacketContents::PlayerMoveFromClientPacket: {
         receivePlayerMove(packetContents, m_clients[event.peer]);
         break;
+    }
 
-    case Packet::FromClientPacketContents::PlayerMouseStateFromClient:
+    case Packet::FromClientPacketContents::PlayerMouseStateFromClient: {
         receivePlayerMouseState(packetContents, m_clients[event.peer]);
         break;
+    }
 
-    case Packet::FromClientPacketContents::QuickBarInventorySelectSlotRequestFromClient:
+    case Packet::FromClientPacketContents::QuickBarInventorySelectSlotRequestFromClient: {
         receiveQuickBarInventorySelectSlotRequest(packetContents, m_clients[event.peer]);
         break;
+    }
     }
 
     enet_packet_destroy(event.packet);
