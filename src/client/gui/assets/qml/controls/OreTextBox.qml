@@ -35,9 +35,9 @@ TextField {
 
                 source: {
                     if (control.hovered) {
-                        "../textbox-focused.png"
+                        "../../textbox-focused.png"
                     } else {
-                        "../textbox-normal.png"
+                        "../../textbox-normal.png"
                     }
                 }
         }

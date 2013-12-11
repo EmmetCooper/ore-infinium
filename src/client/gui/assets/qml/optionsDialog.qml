@@ -8,6 +8,8 @@ import QtQuick.Controls.Styles 1.0
 
 import OptionsDialogBackend 1.0
 
+import "controls"
+
 Window {
     id: win
     x: 100

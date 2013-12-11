@@ -8,6 +8,8 @@ import Graph 1.0
 
 import ChatModel 1.0
 
+import "controls"
+
 //property alias label: text.text
 
 Item {

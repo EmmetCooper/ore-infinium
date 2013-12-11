@@ -30,11 +30,12 @@ Button {
 
                 source: {
                     if (control.pressed) {
-                        "../button-pressed.png"
+                        "../../button-pressed.png"
+                        "../../button-pressed.png"
                     } else if (control.hovered) {
-                        "../button-hovered.png"
+                        "../../button-hovered.png"
                     } else {
-                        "../button-normal.png"
+                        "../../button-normal.png"
                     }
                 }
 

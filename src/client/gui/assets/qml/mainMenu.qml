@@ -4,6 +4,8 @@ import QtQuick.Controls.Styles 1.0
 
 import QtQuick.Layouts 1.0
 
+import "controls"
+
 //property alias label: text.text
 
 Item {

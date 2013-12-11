@@ -102,6 +102,7 @@ void Game::init()
 
     QQmlEngine* engine = m_view->engine();
 
+    engine->addImportPath("/home/sreich/ore-infinium/install/client/gui/assets");
 
     m_view->setSource(QUrl("../client/gui/assets/qml/main.qml"));
 
