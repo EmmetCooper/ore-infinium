@@ -33,6 +33,7 @@ class Player;
 class Chunk;
 class Client;
 class Time;
+class ChatModel;
 
 class Server
 {
@@ -130,7 +131,6 @@ private:
     void sendLargeWorldChunk(ENetPeer* peer);
     void sendWorldTime(ENetPeer* peer);
 
-
     /**
      * Small helper function to iterate through the list of peers and players, if all you have is a player, then find the peer.
      */
@@ -148,6 +148,8 @@ private:
     World* m_world = nullptr;
 
     Client* m_client = nullptr;
+
+    ChatModel* m_chatModel = nullptr;
 
     double m_frameTime = 0.0;
     int m_packetReceivedCount = 0;

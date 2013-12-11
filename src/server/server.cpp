@@ -24,6 +24,7 @@
 
 #include "src/client/client.h"
 
+#include "src/client/gui/chatmodel.h"
 #include "src/debug.h"
 #include "src/camera.h"
 #include "src/world.h"
@@ -54,6 +55,8 @@ Server::Server()
 Server::~Server()
 {
     enet_host_destroy(m_server);
+    delete m_chatModel;
+    delete m_world;
 }
 
 void Server::init(uint8_t maxClients, uint16_t port, Client* client)
@@ -76,6 +79,8 @@ void Server::init(uint8_t maxClients, uint16_t port, Client* client)
     enet_host_compress_with_range_coder(m_server);
 
     m_world = new World(nullptr, nullptr, this);
+
+    m_chatModel = new ChatModel();
 }
 
 void Server::tick()
@@ -288,6 +293,9 @@ void Server::receiveInitialClientData(const std::string& packetContents, ENetPee
 
 void Server::kickPlayer(Entities::Player* player, const QString& reason, uint32_t disconnectFlag)
 {
+    const QString line = "kicking player, reason: " + reason + " Player: " + QString::fromStdString(player->name());
+    sendChatMessage(line.toStdString(), "SERVER");
+
     ENetPeer* peer = peerForPlayer(player);
     m_clients.erase(peer);
     m_world->removePlayer(player);
@@ -299,6 +307,8 @@ void Server::kickPlayer(Entities::Player* player, const QString& reason, uint32_
 void Server::kickClient(ENetPeer* peer, const QString& reason, uint32_t disconnectFlag)
 {
     Debug::log(Debug::NetworkServerContinuousArea) << "kicking client, reason: " << reason.toStdString();
+    //FIXME: add player name that is getting kicked
+
     enet_peer_disconnect_now(peer, disconnectFlag);
 }
 
@@ -359,9 +369,14 @@ void Server::receiveQuickBarInventorySelectSlotRequest(const std::string& packet
 
 void Server::sendChatMessage(const std::string& message, const std::string& playerName)
 {
+    const QDate date = QDate::currentDate();
+    const QString dateString = date.toString();
+    m_chatModel->addChatLine(dateString, QString::fromStdString(playerName), QString::fromStdString(message));
+
     PacketBuf::ChatMessageFromServer sendMessage;
     sendMessage.set_playername(playerName);
     sendMessage.set_message(message);
+    sendMessage.set_timestamp(dateString.toLatin1());
 
     Packet::sendPacketBroadcast(m_server, &sendMessage, Packet::FromServerPacketContents::ChatMessageFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
 }
