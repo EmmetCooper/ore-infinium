@@ -33,13 +33,6 @@
 
 #include "settings/settings.h"
 
-//#include <iostream>
-//#include <sstream>
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <string>
-//#include <fstream>
-//
 #include <QQmlContext>
 #include <QQuickView>
 #include <QQmlEngine>
@@ -64,7 +57,6 @@ Game::~Game()
     m_view->close();
     delete m_view;
 
-//    delete m_world;
     enet_deinitialize();
     // Optional:  Delete all global objects allocated by libprotobuf.
     google::protobuf::ShutdownProtobufLibrary();
@@ -176,9 +168,6 @@ void Game::init()
     m_client->init();
 
     connect(m_sceneFBOItem, SIGNAL(renderCalled()), this, SLOT(render()), Qt::ConnectionType::DirectConnection);
-
-//    connect(node, SIGNAL(renderCalled()), this, SIGNAL(renderCalled()));
-//    assert(0);
 }
 
 void Game::shutdown()

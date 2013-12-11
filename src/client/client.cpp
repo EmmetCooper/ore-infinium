@@ -21,9 +21,6 @@
 #include "src/packet.pb.h"
 #include "src/server/server.h"
 
-//unused? TODO
-//#include "gui/optionsdialogbackend.h"
-
 #include "src/settings/settings.h"
 
 #include "src/quickbarinventory.h"
@@ -63,11 +60,6 @@ Client::~Client()
 void Client::init()
 {
     qCDebug(ORE_IMPORTANT) << "CLIENT INIT START!";
-
-    // m_debugMenu = new DebugMenu(this);
-    // m_debugMenu->show();
-
-    qCDebug(ORE_IMPORTANT) << "CLIENT INIT END!";
 }
 
 void Client::tickLogicThread()
@@ -135,10 +127,10 @@ void Client::initGL()
     //FIXME: MOVE INTO INITGL
     Debug::checkGLError();
 
-    qCDebug(ORE_STARTUP) << "Platform: Driver Vendor:" << glGetString(GL_VENDOR);
-    qCDebug(ORE_STARTUP) << "Platform: Renderer:" << glGetString(GL_RENDERER);
-    qCDebug(ORE_STARTUP) << "OpenGL Version:" << glGetString(GL_VERSION);
-    qCDebug(ORE_STARTUP) << "GLSL Version:" << glGetString(GL_SHADING_LANGUAGE_VERSION);
+    qCDebug(ORE_STARTUP) << "Platform: Driver Vendor:" << reinterpret_cast<const char*>(glGetString(GL_VENDOR));
+    qCDebug(ORE_STARTUP) << "Platform: Renderer:" << reinterpret_cast<const char*>(glGetString(GL_RENDERER));
+    qCDebug(ORE_STARTUP) << "OpenGL Version:" << reinterpret_cast<const char*>(glGetString(GL_VERSION));
+    qCDebug(ORE_STARTUP) << "GLSL Version:" << reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
     qCDebug(ORE_STARTUP) << "Built against Qt version:" << QT_VERSION_STR;
     qCDebug(ORE_STARTUP) << "Running against Qt version:" << qVersion();
 
