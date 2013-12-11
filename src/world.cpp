@@ -207,8 +207,8 @@ void World::addPlayer(Entities::Player* player)
         const int endY = startY + (30);
         int index = 0;
 
-        for (int row = startY; row < endY; ++row) {
-            for (int column = startX; column < endX; ++column) {
+        for (int column = startX; column < endX; ++column) {
+            for (int row = startY; row < endY; ++row) {
                 index = column * WORLD_ROWCOUNT + row;
                 assert(index < WORLD_ROWCOUNT * WORLD_COLUMNCOUNT);
                 Block& block = m_blocks[index];
@@ -264,8 +264,8 @@ void World::updateTilePhysicsObjects()
         glm::ivec2 end = glm::ivec2(glm::min(centerTile + tilesInViewport, glm::ivec2(WORLD_COLUMNCOUNT - ACTIVECHUNK_SIZE, WORLD_ROWCOUNT - ACTIVECHUNK_SIZE)));
 
         //TODO: switch to uint..obviously cannot be negative, as with all things blocks.
-        for (int currentRow = start.y; currentRow < end.y; currentRow += ACTIVECHUNK_SIZE) {
-            for (int currentColumn = start.x; currentColumn < end.x; currentColumn += ACTIVECHUNK_SIZE) {
+        for (int currentColumn = start.x; currentColumn < end.x; currentColumn += ACTIVECHUNK_SIZE) {
+            for (int currentRow = start.y; currentRow < end.y; currentRow += ACTIVECHUNK_SIZE) {
 
                 DesiredChunk desiredChunk(currentRow / ACTIVECHUNK_SIZE, currentColumn / ACTIVECHUNK_SIZE);
                 m_desiredChunks.append(desiredChunk);
@@ -592,8 +592,8 @@ void World::generateNoise()
     std::mt19937 rand(device());
     std::uniform_int_distribution<> distribution(0, INT_MAX);
 
-    for (int row = 15; row < WORLD_ROWCOUNT; ++row) {
         for (int column = 0; column < WORLD_COLUMNCOUNT; ++column) {
+            for (int row = 15; row < WORLD_ROWCOUNT; ++row) {
 //            const int value = add.GetValue(column, row, 2.0) * 0.5 + 1;
 
             int index = column * WORLD_ROWCOUNT + row;
@@ -616,8 +616,9 @@ void World::generateOres()
     std::random_device device;
     std::mt19937 rand(device());
     std::uniform_int_distribution<> distribution(0, INT_MAX);
-    for (int row = WORLD_SEA_LEVEL; row < WORLD_ROWCOUNT; ++row) {
-        for (int column = 0; column < WORLD_COLUMNCOUNT; ++column) {
+
+    for (int column = 0; column < WORLD_COLUMNCOUNT; ++column) {
+        for (int row = WORLD_SEA_LEVEL; row < WORLD_ROWCOUNT; ++row) {
 
             int index = column * WORLD_ROWCOUNT + row;
             Block& block = m_blocks[index];
