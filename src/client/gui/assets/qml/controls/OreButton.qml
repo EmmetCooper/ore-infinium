@@ -22,7 +22,7 @@ Button {
 
                 anchors.fill: parent
 
-                antialiasing: true
+                antialiasing: false
                 asynchronous: true
 
                 border.bottom: 8

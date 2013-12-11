@@ -104,10 +104,10 @@ void Game::init()
 
     engine->addImportPath("/home/sreich/ore-infinium/install/client/gui/assets");
 
-    m_view->setSource(QUrl("../client/gui/assets/qml/main.qml"));
-
     QQmlContext* root = m_view->engine()->rootContext();
     root->setContextProperty("ClientBackend", m_client);
+
+    m_view->setSource(QUrl("../client/gui/assets/qml/main.qml"));
 
     m_view->show();
 
