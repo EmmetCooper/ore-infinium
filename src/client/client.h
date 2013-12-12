@@ -116,6 +116,8 @@ public slots:
     Q_INVOKABLE void disconnectClicked();
     Q_INVOKABLE void exitClicked();
 
+    Q_INVOKABLE void chatSendClicked(const QString& message);
+
     Q_INVOKABLE double serverFrameTime() {
         return m_serverFrameTime;
     }
@@ -196,7 +198,7 @@ public:
 
 ///////////////// Network Communication ////////////////////
 public:
-    void sendChatMessage(const std::string& message);
+    void sendChatMessage(const QString& message);
 
     /**
      * Called each tick, informs server of the player mouse position and button state,

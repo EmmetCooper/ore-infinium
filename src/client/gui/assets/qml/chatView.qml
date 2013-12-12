@@ -53,6 +53,8 @@ Item {
         }
 
         OreButton {
+            id: send
+
             anchors {
                 left: chatTextBox.right
                 right: parent.right
@@ -61,6 +63,10 @@ Item {
 
                 leftMargin: 10
                 rightMargin: 10
+            }
+
+            onClicked: {
+                ClientBackend.chatSendClicked(chatTextBox.text)
             }
 
             text: "Send"

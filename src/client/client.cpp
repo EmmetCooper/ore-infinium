@@ -247,6 +247,11 @@ void Client::startMultiplayerJoinSlot(const QString& playerName, const QString& 
     qCDebug(ORE_IMPORTANT) << "MP join slot, playername, addr, port: " << qPrintable(playerName) << " : " << qPrintable(address) << " : " << port;
 }
 
+void Client::chatSendClicked(const QString& message)
+{
+    sendChatMessage(message);
+}
+
 void Client::mouseAreaPressed(int buttons)
 {
     QMutexLocker lock (&m_playerMouseInputLock);
@@ -645,10 +650,10 @@ void Client::sendInitialConnectionData()
     Packet::sendPacket(m_peer, &message, Packet::FromClientPacketContents::InitialConnectionDataFromClientPacket, ENET_PACKET_FLAG_RELIABLE);
 }
 
-void Client::sendChatMessage(const std::string& message)
+void Client::sendChatMessage(const QString& message)
 {
     PacketBuf::ChatMessageFromClient messagestruct;
-    messagestruct.set_message(message);
+    messagestruct.set_message(message.toStdString());
 
     Packet::sendPacket(m_peer, &messagestruct, Packet::FromClientPacketContents::ChatMessageFromClientPacket, ENET_PACKET_FLAG_RELIABLE);
 }
