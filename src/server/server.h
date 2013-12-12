@@ -130,10 +130,10 @@ private:
      * Similar to @sa sendAdminChatMessage
      * Not the best of names..
      */
-    void sendServerChatMessage(const std::string& message);
-    void sendAdminChatMessage(const std::string& message);
+    void sendServerChatMessage(const QString& message);
+    void sendAdminChatMessage(const QString& message);
+    void sendChatMessage(const QString& message, const QString& playerName);
 
-    void sendChatMessage(const std::string& message, const std::string& playerName);
     void sendInitialPlayerData(ENetPeer* peer, Entities::Player* player);
     void sendInitialPlayerDataFinished(ENetPeer* peer);
     void sendInitialVegetationSpawn(ENetPeer* peer);
