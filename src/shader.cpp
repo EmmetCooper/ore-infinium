@@ -90,20 +90,11 @@ QByteArray Shader::loadFile(const char* fileName)
 
     qCDebug(ORE_SHADERS) << "shader:" << fileName << "loaded successfully";
 
-//    std::ifstream in(fileName);
-//
-//    std::stringstream buffer;
-//    buffer << in.rdbuf();
-//
-    QString file = fileName;
-QFile f(file);
-f.open(QIODevice::ReadOnly);
-const QByteArray array = f.readAll();
-f.close();
-
-//    std::string str(buffer.str());
-
-    qCDebug(ORE_SHADERS) << "SHADER: " << array;
+    const QString file = fileName;
+    QFile f(file);
+    f.open(QIODevice::ReadOnly);
+    const QByteArray array = f.readAll();
+    f.close();
 
     return array;
 }
