@@ -126,9 +126,6 @@ public slots:
 
     //-------------------
 
-private slots:
-    void handleWindowChanged(QQuickWindow *win);
-
 private:
     /// frametime counter
     QTime m_time;

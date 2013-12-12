@@ -159,22 +159,6 @@ void Client::initGL()
     qDebug() << "\n--------------------------------------------------------------------------------------";
 }
 
-void Client::handleWindowChanged(QQuickWindow *win)
-{
-    if (win) {
-        qCDebug(ORE_IMPORTANT) << "windowChanged slot hit";
-        // Connect the beforeRendering signal to our paint function.
-        // Since this call is executed on the rendering thread it must be
-        // a Qt::DirectConnection
-//        connect(win, SIGNAL(beforeRendering()), this, SLOT(paintUnder()), Qt::DirectConnection);
- //       connect(win, SIGNAL(beforeSynchronizing()), this, SLOT(sync()), Qt::DirectConnection);
-
-        // If we allow QML to do the clearing, they would clear what we paint
-        // and nothing would show.
-//        win->setClearBeforeRendering(false);
-    }
-}
-
 void Client::paint()
 {
     if (!m_firstGLInit) {
