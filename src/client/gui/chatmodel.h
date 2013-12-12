@@ -18,6 +18,8 @@
 #ifndef CHATMODEL_H
 #define CHATMODEL_H
 
+#include <cstdint>
+
 #include <QObject>
 
 #include <QList>
@@ -32,7 +34,16 @@ public:
     ChatModel(QObject* parent = 0);
     ~ChatModel();
 
-    void addChatLine(const QString& timeStamp,const QString& playerName, const QString& line);
+    enum class ChatSender : uint16_t {
+       Player = 0,
+       Admin = 1,
+       Server = 2
+    };
+
+    /**
+     * @p chatSender the enum which denotes the source (e.g. user, admin, or server), only for displaying reasons really
+     */
+    void addChatLine(const QString& timeStamp,const QString& playerName, const QString& line, ChatSender chatSender);
 
     QString chatText() {
         return m_chatText;
@@ -43,13 +54,16 @@ signals:
 
 private:
     struct ChatLine {
-        ChatLine(const QString& _timeStamp, const QString& _playerName, const QString& _chatText)
+        ChatLine(const QString& _timeStamp, const QString& _playerName, const QString& _chatText, ChatSender _chatSender)
         : timeStamp(_timeStamp),
           playerName(_playerName),
-          chatText(_chatText)
+          chatText(_chatText),
+          chatSender(_chatSender)
         {
 
         }
+
+        ChatSender chatSender;
 
         QString timeStamp;
 

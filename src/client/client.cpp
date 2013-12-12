@@ -811,7 +811,8 @@ void Client::receiveChatMessage(const std::string& packetContents)
     PacketBuf::ChatMessageFromServer chatMessage;
     Packet::deserialize(packetContents, &chatMessage);
 
-    m_chatModel->addChatLine(QString::fromStdString(chatMessage.timestamp()), QString::fromStdString(chatMessage.playername()), QString::fromStdString(chatMessage.message()));
+    //FIXME: add the proper chat line here, decode from msg
+    m_chatModel->addChatLine(QString::fromStdString(chatMessage.timestamp()), QString::fromStdString(chatMessage.playername()), QString::fromStdString(chatMessage.message()), static_cast<ChatModel::ChatSender>(chatMessage.sender()));
 }
 
 void Client::receiveInitialPlayerData(const std::string& packetContents)
@@ -821,7 +822,6 @@ void Client::receiveInitialPlayerData(const std::string& packetContents)
     Debug::log(Debug::Area::NetworkClientInitialArea) << "initial player data received";
 
     Entities::Player* player = new Entities::Player("player1Standing1");
-    std::stringstream chatMessage;
     if (!m_mainPlayer) {
         //this is must be *our* player, so create it
         m_mainPlayer = player;
@@ -834,11 +834,9 @@ void Client::receiveInitialPlayerData(const std::string& packetContents)
         QuickBarInventory* quickBarInventory = new QuickBarInventory();
         m_mainPlayer->setQuickBarInventory(quickBarInventory);
 
-        chatMessage << m_mainPlayer->name() << " has joined";
-//        m_chat->addChatLine("", chatMessage.str());
-
         // this is us, the first player so this means the world creation is up to us
-    Debug::log(Debug::Area::ImportantArea) << "CREATING WORLD< RECEIVED PLAYER DATA!";
+        Debug::log(Debug::Area::ImportantArea) << "CREATING WORLD, RECEIVED PLAYER DATA!";
+
         m_world = new World(m_mainPlayer, this, nullptr);
 
 //        m_quickBarMenu = new QuickBarMenu(this, quickBarInventory, m_world->spriteSheetRenderer());
@@ -849,12 +847,8 @@ void Client::receiveInitialPlayerData(const std::string& packetContents)
         player->setPlayerID(message.playerid());
         player->setPosition(message.x(), message.y());
 
-        chatMessage << player->name() << " has joined";
-
         if (m_initialPlayersReceivedFinished) {
-//            m_chat->addChatLine("", chatMessage.str());
-        } else {
-            Debug::log(Debug::Area::NetworkClientInitialArea) << "Player name: " << player->name() << " we're not adding the chat line because we haven't finished receiving initial client data";
+            //FIXME: sure there's nothing to do here anymore?
         }
     }
 

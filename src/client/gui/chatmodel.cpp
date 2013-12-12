@@ -37,11 +37,11 @@ ChatModel::~ChatModel()
 {
 }
 
-void ChatModel::addChatLine(const QString& timestamp, const QString& playerName, const QString& line)
+void ChatModel::addChatLine(const QString& timestamp, const QString& playerName, const QString& line, ChatModel::ChatSender chatSender)
 {
     int row = m_chatLines.size();
 
-    ChatLine chat(timestamp, playerName, line);
+    ChatLine chat(timestamp, playerName, line, chatSender);
 
     m_chatLines.append(chat);
 

@@ -378,7 +378,7 @@ void Server::sendServerChatMessage(const QString& message)
     const QString dateString = date.toString();
     const QString name = "SERVER";
 
-    m_chatModel->addChatLine(dateString, name, message);
+    m_chatModel->addChatLine(dateString, name, message, ChatModel::ChatSender::Server);
 
     PacketBuf::ChatMessageFromServer sendMessage;
     sendMessage.set_playername(name.toStdString());
@@ -394,7 +394,7 @@ void Server::sendAdminChatMessage(const QString& message)
     const QString dateString = date.toString();
     const QString name = "admin";
 
-    m_chatModel->addChatLine(dateString, name, message);
+    m_chatModel->addChatLine(dateString, name, message, ChatModel::ChatSender::Admin);
 
     PacketBuf::ChatMessageFromServer sendMessage;
     sendMessage.set_playername(name.toStdString());
@@ -408,7 +408,7 @@ void Server::sendChatMessage(const QString& message, const QString& playerName)
 {
     const QDate date = QDate::currentDate();
     const QString dateString = date.toString();
-    m_chatModel->addChatLine(dateString, playerName, message);
+    m_chatModel->addChatLine(dateString, playerName, message, ChatModel::ChatSender::Player);
 
     PacketBuf::ChatMessageFromServer sendMessage;
     sendMessage.set_playername(playerName.toStdString());

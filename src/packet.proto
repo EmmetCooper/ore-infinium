@@ -25,6 +25,7 @@ message ChatMessageFromServer {
     optional string timestamp = 1;
     optional string playerName = 2;
     optional string message = 3;
+    optional uint32 sender = 4;
 }
 
 message InitialPlayerDataFinishedFromServer {
