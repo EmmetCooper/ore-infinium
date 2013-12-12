@@ -441,7 +441,8 @@ LogStream::~LogStream()
     postFormatter.append(" |========\n");
     postFormatter.append("\e[34;40m\e[0m");
 
-    std::cout << preFormatter << areaString << " | " << str() << postFormatter;
+   // std::cout << preFormatter << areaString << " | " << str() << postFormatter;
+
 }
 
 LogStream::LogStream(const LogStream& stream): std::stringstream(stream.str())
