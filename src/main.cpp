@@ -35,6 +35,7 @@
 #include "debug.h"
 
 #include <iostream>
+#include <qt/QtCore/qlogging.h>
 
 #include <QtCore/QStringList>
 
@@ -45,37 +46,52 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLContext>
 #include <QtCore/QCommandLineParser>
-#include <QtCore/qlogging.h>
 
 void debugOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
-    QByteArray localMsg = msg.toLocal8Bit();
     switch (type) {
-        case QtDebugMsg:
+        case QtDebugMsg: {
             if (msg.startsWith('\n') || msg.startsWith("--")) {
                 //don't do func, file, line for separater messages
+                QByteArray localMsg = msg.toLocal8Bit();
                 fprintf(stderr, "%s \t\t\t\t\t\n\n", localMsg.constData());
             } else {
-                fprintf(stderr, "%s \t\t\t\t\t(%s, %s:%u)\n\n", localMsg.constData(), context.function, context.file, context.line);
+
+#ifdef QT_OS_WIN
+                //no color for you, shitty platform
+                fprintf(stderr, "%s: %s \t\t\t\t\t(%s, %s:%u)\n\n", context.category, localMsg.constData(), context.function, context.file, context.line);
+#else
+                const QString category = "\e[37;40m" + QString(context.category) + "\e[0m";
+                const QString message = "\e[31;40m" + msg + "\e[0m";
+                const QString stack = "\e[32;40m" + QString(context.function) + QString(context.file) + ':' + QString::number(context.line) + "\e[0m";
+
+                fprintf(stderr, "%s: %s \t\t\t\t\t(%s)\n\n", category.toLatin1().constData(), message.toLatin1().constData(), stack.toLatin1().constData());
+#endif
             }
             break;
+        }
 
         case QtWarningMsg: {
             if (msg.contains("Qt Warning")) {
                 //unused, silent qt warnings. but continue to receive our warnings
             } else {
-                fprintf(stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+            QByteArray localMsg = msg.toLocal8Bit();
+                fprintf(stderr, "%s: Warning: %s (%s:%u, %s)\n", context.category, localMsg.constData(), context.file, context.line, context.function);
             }
             break;
         }
 
-        case QtCriticalMsg:
+        case QtCriticalMsg: {
+            QByteArray localMsg = msg.toLocal8Bit();
             fprintf(stderr, "Critical: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
             break;
+        }
 
-        case QtFatalMsg:
+        case QtFatalMsg: {
+            QByteArray localMsg = msg.toLocal8Bit();
             fprintf(stderr, "Fatal: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
             abort();
+        }
     }
 }
 
