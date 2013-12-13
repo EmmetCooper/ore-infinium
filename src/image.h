@@ -34,8 +34,6 @@ public:
     uint32_t width() const;
     uint32_t height() const;
 
-    void flipVertically();
-
     void* bytes();
 
     int format() const {

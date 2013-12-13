@@ -24,7 +24,6 @@
 Image::Image(const QString& fileName)
 {
     loadImage(fileName);
-    flipVertically();
 }
 
 Image::~Image()
@@ -60,11 +59,6 @@ void Image::loadImage(const QString& filename)
     } else {
         qFatal("image format is different than what we're used to. format is NOT RGBA");
     }
-}
-
-void Image::flipVertically()
-{
-    m_image = m_image.mirrored(false, true);
 }
 
 void* Image::bytes()
