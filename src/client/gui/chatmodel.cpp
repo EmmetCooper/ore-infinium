@@ -21,8 +21,6 @@
 
 #include "src/debug.h"
 
-#include <QVariant>
-
 ChatModel::ChatModel(QObject* parent)
 : QObject(parent)
 {
