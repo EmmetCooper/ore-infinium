@@ -377,48 +377,51 @@ void Server::receiveQuickBarInventorySelectSlotRequest(const std::string& packet
 
 void Server::sendServerChatMessage(const QString& message)
 {
-    const QDate date = QDate::currentDate();
-    const QString dateString = date.toString();
     const QString name = "SERVER";
+    const QString& timestamp = chatTimeStamp();
 
-    m_chatModel->addChatLine(dateString, name, message, ChatModel::ChatSender::Server);
+    m_chatModel->addChatLine(timestamp, name, message, ChatModel::ChatSender::Server);
 
     PacketBuf::ChatMessageFromServer sendMessage;
     sendMessage.set_playername(name.toStdString());
     sendMessage.set_message(message.toStdString());
-    sendMessage.set_timestamp(dateString.toLatin1());
+    sendMessage.set_timestamp(timestamp.toStdString());
 
     Packet::sendPacketBroadcast(m_server, &sendMessage, Packet::FromServerPacketContents::ChatMessageFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
 }
 
 void Server::sendAdminChatMessage(const QString& message)
 {
-    const QDate date = QDate::currentDate();
-    const QString dateString = date.toString();
     const QString name = "admin";
+    const QString& timestamp = chatTimeStamp();
 
-    m_chatModel->addChatLine(dateString, name, message, ChatModel::ChatSender::Admin);
+    m_chatModel->addChatLine(timestamp, name, message, ChatModel::ChatSender::Admin);
 
     PacketBuf::ChatMessageFromServer sendMessage;
     sendMessage.set_playername(name.toStdString());
     sendMessage.set_message(message.toStdString());
-    sendMessage.set_timestamp(dateString.toLatin1());
+    sendMessage.set_timestamp(timestamp.toStdString());
 
     Packet::sendPacketBroadcast(m_server, &sendMessage, Packet::FromServerPacketContents::ChatMessageFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
 }
 
 void Server::sendChatMessage(const QString& message, const QString& playerName)
 {
-    const QDate date = QDate::currentDate();
-    const QString dateString = date.toString();
-    m_chatModel->addChatLine(dateString, playerName, message, ChatModel::ChatSender::Player);
+    const QString& timestamp = chatTimeStamp();
+    m_chatModel->addChatLine(timestamp, playerName, message, ChatModel::ChatSender::Player);
 
     PacketBuf::ChatMessageFromServer sendMessage;
     sendMessage.set_playername(playerName.toStdString());
     sendMessage.set_message(message.toStdString());
-    sendMessage.set_timestamp(dateString.toStdString());
+    sendMessage.set_timestamp(timestamp.toStdString());
 
     Packet::sendPacketBroadcast(m_server, &sendMessage, Packet::FromServerPacketContents::ChatMessageFromServerPacket, ENET_PACKET_FLAG_RELIABLE);
+}
+
+inline QString Server::chatTimeStamp()
+{
+    const QTime time = QTime::currentTime();
+    return time.toString();
 }
 
 void Server::sendInitialPlayerData(ENetPeer* peer, Entities::Player* player)

@@ -134,6 +134,11 @@ private:
     void sendAdminChatMessage(const QString& message);
     void sendChatMessage(const QString& message, const QString& playerName);
 
+    /**
+     * @returns current timestamp used for chat purposes
+     */
+    QString chatTimeStamp();
+
     void sendInitialPlayerData(ENetPeer* peer, Entities::Player* player);
     void sendInitialPlayerDataFinished(ENetPeer* peer);
     void sendInitialVegetationSpawn(ENetPeer* peer);
