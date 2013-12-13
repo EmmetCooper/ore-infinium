@@ -747,7 +747,9 @@ void World::attemptItemPlacement(Entities::Player* player)
         return;
     }
 
-    Debug::fatal(item->stackSize() != 0, Debug::Area::ServerEntityLogicArea, "server: well that's odd, was told that we should place an item, but the item is valid/hanging around, but has no stack size..so it's a count of 0...shouldn't happen.");
+    if (item->stackSize() != 0) {
+        qFatal("server: well that's odd, was told that we should place an item, but the item is valid/hanging around, but has no stack size..so it's a count of 0...shouldn't happen.");
+    }
 
     if (player->canPlaceItem() == false) {
         // FIXME: has an arbitrary delay between item placement timings, i'm not sure if this is even needed..maybe.

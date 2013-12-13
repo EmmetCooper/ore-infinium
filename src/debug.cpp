@@ -114,15 +114,6 @@ void Debug::setAreaEnabled(Debug::Area area, bool enable)
     categoryMap.value(area)->setEnabled(QtWarningMsg, enable);
 }
 
-void Debug::fatal(bool value, Debug::Area area, const std::string& message)
-{
-    if (!value) {
-        //HACK so that it actually outputs something regardless.
-        qCDebug(ORE_IMPORTANT) << "FATAL: " << message;
-        assert(0);
-    }
-}
-
 void Debug::checkGLError()
 {
     GLenum error = glGetError();
