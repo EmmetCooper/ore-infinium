@@ -294,6 +294,9 @@ void Server::receiveInitialClientData(const std::string& packetContents, ENetPee
 
     sendWorldTime(peer);
     sendInitialVegetationSpawn(peer);
+
+    const QString connectedMessage = "Player " + playerName + " has joined the open source fun";
+    sendServerChatMessage(connectedMessage);
 }
 
 void Server::kickPlayer(Entities::Player* player, const QString& reason, uint32_t disconnectFlag)
