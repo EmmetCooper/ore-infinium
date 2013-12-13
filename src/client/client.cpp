@@ -296,23 +296,23 @@ void Client::poll()
             break;
 
         case ENET_EVENT_TYPE_DISCONNECT: {
-            Debug::log(Debug::Area::NetworkClientContinuousArea) << "Peer disconnected (that's us!)";
+            qCDebug(ORE_NETWORK_CLIENT_CONTINUOUS()) << "Peer disconnected (that's us!)";
             m_connected = false;
             emit gameConnected();
 
             switch (event.data) {
             case Packet::ConnectionEventType::DisconnectedVersionMismatch:
-                Debug::log(Debug::Area::NetworkClientContinuousArea) << "Server booted us, client version does not match server version.";
+                qCDebug(ORE_NETWORK_CLIENT_CONTINUOUS()) << "Server booted us, client version does not match server version.";
                 //FIXME: gracefully handle a version mismatch, obviously
                 assert(0);
                 break;
             case Packet::ConnectionEventType::DisconnectedInvalidPlayerName:
-                Debug::log(Debug::Area::NetworkClientContinuousArea) << "Server booted us, invalid player name";
+                qCDebug(ORE_NETWORK_CLIENT_CONTINUOUS()) << "Server booted us, invalid player name";
                 assert(0);
                 break;
 
             case Packet::ConnectionEventType::DisconnectedMaliciousIntent:
-                Debug::log(Debug::Area::NetworkClientContinuousArea) << "Server booted us, suspected malicious intent. You totally aren't trying to hack the server, are you?"
+            qCDebug(ORE_NETWORK_CLIENT_CONTINUOUS()) << "Server booted us, suspected malicious intent. You totally aren't trying to hack the server, are you?"
                 << " if so, please stop mkay? If not, there was a communication issue..either your client is broken, the connection between it,"
                 << "or the server has regressed somehow, somewhere.";
 
