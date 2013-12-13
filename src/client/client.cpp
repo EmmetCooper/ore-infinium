@@ -291,7 +291,7 @@ void Client::poll()
         break;
 
         case ENET_EVENT_TYPE_RECEIVE:
-            //Debug::log(Debug::Area::NetworkClient) << "Message from server, our client->server round trip latency is: " << event.peer->lastRoundTripTime;
+            //event.peer->lastRoundTripTime;
             processMessage(event);;
             break;
 
@@ -322,7 +322,7 @@ void Client::poll()
 
             char hostname[32];
             enet_address_get_host_ip(&event.peer->address, hostname, static_cast<size_t>(32));
-            Debug::log(Debug::Area::NetworkClientContinuousArea) << "disconnected from server host IP: " << hostname;
+            qCDebug(ORE_NETWORK_CLIENT_CONTINUOUS) << "disconnected from server host IP: " << hostname;
             enet_peer_reset(m_peer);
 
             // Reset client's information
@@ -467,7 +467,7 @@ void Client::viewKeyPressed(QKeyEvent* event)
 
         case Qt::Key_F8: {
             /* FIXME: move to main thread
-            Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! accepting event, f8";
+            qCDebug(ORE_IMPORTANT) << "KEYPRESS EVENT! accepting event, f8";
             event->accept();
             //f8
             std::stringstream ss;
@@ -477,11 +477,11 @@ void Client::viewKeyPressed(QKeyEvent* event)
             std::uniform_int_distribution<> distribution(0, INT_MAX);
 
             ss << distribution(rand);
-            Debug::log(Debug::ImportantArea) << "keypressevent THREAD ID: " << QThread::currentThreadId();
+            qCDebug(ORE_IMPORTANT) << "keypressevent THREAD ID: " << QThread::currentThreadId();
 
-            Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! starting mp host";
+            qCDebug(ORE_IMPORTANT) << "KEYPRESS EVENT! starting mp host";
             startMultiplayerHost(ss.str());
-            Debug::log(Debug::ImportantArea) << "KEYPRESS EVENT! returned to keypressevent";
+            qCDebug(ORE_IMPORTANT) << "KEYPRESS EVENT! returned to keypressevent";
             */
         }
 
@@ -559,13 +559,13 @@ bool Client::connectTo(const char* address, uint16_t port)
     }
 
     if (m_peer == nullptr) {
-        Debug::log(Debug::Area::NetworkClientInitialArea) << "Client failed to connect to server";
+        qCDebug(ORE_NETWORK_CLIENT_INITIAL) << "Client failed to connect to server";
         exit(EXIT_FAILURE);
     }
 
     ENetEvent event;
     if (enet_host_service(m_client, &event, 5000) > 0 && event.type == ENET_EVENT_TYPE_CONNECT) {
-        Debug::log(Debug::Area::NetworkClientInitialArea) << "Client connection to server succeeded!";
+        qCDebug(ORE_NETWORK_CLIENT_INITIAL) << "Client connection to server succeeded!";
 
         //NOTE: no world is created yet. we now wait for the server to receive our initial connection data, and give us back a
         //player id, which we then create as the main player and finally, create the world.
@@ -574,8 +574,8 @@ bool Client::connectTo(const char* address, uint16_t port)
         sendInitialConnectionData();
         return true;
     } else {
-        Debug::log(Debug::Area::NetworkClientInitialArea) << "Client connection to server failed!";
-        Debug::log(Debug::Area::NetworkClientInitialArea) << "Client failed to connect to server within timeout";
+        qCDebug(ORE_NETWORK_CLIENT_INITIAL) << "Client connection to server failed!";
+        qCDebug(ORE_NETWORK_CLIENT_INITIAL) << "Client failed to connect to server within timeout";
         enet_peer_reset(m_peer);
         return false;
     }
@@ -583,14 +583,14 @@ bool Client::connectTo(const char* address, uint16_t port)
 
 void Client::disconnect()
 {
-    Debug::log(Debug::Area::NetworkClientInitialArea) << "attempting disconnect from server";
+    qCDebug(ORE_NETWORK_CLIENT_INITIAL) << "attempting disconnect from server";
     //TODO:send the right 2nd param, disconnect value..so the client knows it was voluntary.
     enet_peer_disconnect(m_peer, 0);
 }
 
 void Client::startSinglePlayer(const std::string& playername)
 {
-    Debug::log(Debug::Area::NetworkClientInitialArea) << "starting singleplayer! Entities::Playername: " << playername;
+    qCDebug(ORE_NETWORK_CLIENT_INITIAL) << "starting singleplayer! Entities::Playername: " << playername;
     m_playerName = playername;
 
     emit gameStarted();
@@ -604,23 +604,23 @@ void Client::startSinglePlayer(const std::string& playername)
 
 bool Client::startMultiplayerClientConnection(const std::string& playername, const char* address, uint16_t port)
 {
-    Debug::log(Debug::Area::NetworkClientInitialArea) << "starting multiplayer joining address: " << address << "! Entities::Playername: " << playername;
+    qCDebug(ORE_NETWORK_CLIENT_INITIAL) << "starting multiplayer joining address: " << address << "! Entities::Playername: " << playername;
     m_playerName = playername;
 
     emit gameStarted();
 
     if (connectTo(address, port)) {
-        Debug::log(Debug::Area::NetworkClientInitialArea) << "connection success!";
+        qCDebug(ORE_NETWORK_CLIENT_INITIAL) << "connection success!";
         return true;
     } else {
-        Debug::log(Debug::Area::NetworkClientInitialArea) << "connection failure!";
+        qCDebug(ORE_NETWORK_CLIENT_INITIAL) << "connection failure!";
         return false;
     }
 }
 
 void Client::startMultiplayerHost(const std::string& playername, uint16_t port)
 {
-    Debug::log(Debug::Area::NetworkClientInitialArea) << "starting multiplayer, hosting! Entities::Playername: " << playername << " port: " << port;
+    qCDebug(ORE_NETWORK_CLIENT_INITIAL) << "starting multiplayer, hosting! Entities::Playername: " << playername << " port: " << port;
     if (!m_server) {
         m_playerName = playername;
 
@@ -636,7 +636,7 @@ void Client::startMultiplayerHost(const std::string& playername, uint16_t port)
         m_serverThread = new std::thread(&Server::tick, m_server);
         connectTo();
     } else {
-        Debug::log(Debug::Area::NetworkClientInitialArea) << "error, attempted to create player-hosted a server but we're still connected to this one";
+        qCDebug(ORE_NETWORK_CLIENT_INITIAL) << "error, attempted to create player-hosted a server but we're still connected to this one";
     }
 }
 
@@ -819,7 +819,7 @@ void Client::receiveInitialPlayerData(const std::string& packetContents)
 {
     PacketBuf::InitialPlayerDataFromServer message;
     Packet::deserialize(packetContents, &message);
-    Debug::log(Debug::Area::NetworkClientInitialArea) << "initial player data received";
+    qCDebug(ORE_NETWORK_CLIENT_INITIAL) << "initial player data received";
 
     Entities::Player* player = new Entities::Player("player1Standing1");
     if (!m_mainPlayer) {
@@ -829,13 +829,13 @@ void Client::receiveInitialPlayerData(const std::string& packetContents)
         m_mainPlayer->setPlayerID(message.playerid());
         m_mainPlayer->setPosition(message.x(), message.y());
 
-        Debug::log(Debug::Area::NetworkClientInitialArea) << "initial player data received, pos: x: " << m_mainPlayer->position().x << " Y: " << m_mainPlayer->position().y;
+        qCDebug(ORE_NETWORK_CLIENT_INITIAL) << "initial player data received, pos: x: " << m_mainPlayer->position().x << " Y: " << m_mainPlayer->position().y;
 
         QuickBarInventory* quickBarInventory = new QuickBarInventory();
         m_mainPlayer->setQuickBarInventory(quickBarInventory);
 
         // this is us, the first player so this means the world creation is up to us
-        Debug::log(Debug::Area::ImportantArea) << "CREATING WORLD, RECEIVED PLAYER DATA!";
+        qCDebug(ORE_IMPORTANT) << "CREATING WORLD, RECEIVED PLAYER DATA!";
 
         m_world = new World(m_mainPlayer, this, nullptr);
 
@@ -871,7 +871,7 @@ void Client::receivePlayerMove(const std::string& packetContents)
 
     Entities::Player* player = m_world->playerForID(message.playerid());
     player->setPosition(message.x(), message.y());
-    Debug::log(Debug::Area::NetworkClientContinuousArea) << "Setting player position to: " << player->position().x << " Y: " << player->position().y;
+    qCDebug(ORE_NETWORK_CLIENT_CONTINUOUS) << "Setting player position to: " << player->position().x << " Y: " << player->position().y;
 }
 
 void Client::receiveChunk(const std::string& packetContents)

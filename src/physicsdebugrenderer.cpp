@@ -738,7 +738,7 @@ void PhysicsDebugRenderer::iterateShapesInSpace(cpSpace *space)
 
     cpSpaceEachShape(space, staticDrawShape, NULL);
 
-//    Debug::log(Debug::StartupArea) << "ITERATING SHAPES IN SPACE COUNT: " << m_shapes.size();
+//    qCDebug(ORE_STARTUP) << "ITERATING SHAPES IN SPACE COUNT: " << m_shapes.size();
 
     m_mutex.unlock();
 }

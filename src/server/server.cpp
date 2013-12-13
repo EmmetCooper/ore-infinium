@@ -63,7 +63,7 @@ void Server::init(uint8_t maxClients, uint16_t port, Client* client)
 {
     m_client = client;
 
-    Debug::log(Debug::Area::NetworkServerInitialArea) << "creating server at port: " << port;
+    qCDebug(ORE_NETWORK_SERVER_INITIAL) << "creating server at port: " << port;
 
     m_address.host = ENET_HOST_ANY;
     m_address.port = port;
@@ -135,15 +135,15 @@ void Server::poll()
 
         switch (event.type) {
         case ENET_EVENT_TYPE_CONNECT:
-            Debug::log(Debug::Area::NetworkServerContinuousArea) << "Received a new peer, adding to client list, connection from host:  " << event.peer->address.host << " at port: " << event.peer->address.port << " client has not yet been validated.";
-            Debug::log(Debug::Area::NetworkServerContinuousArea) << "client count, before adding: " << m_clients.size();
+            qCDebug(ORE_NETWORK_SERVER_CONTINUOUS) << "Received a new peer, adding to client list, connection from host:  " << event.peer->address.host << " at port: " << event.peer->address.port << " client has not yet been validated.";
+            qCDebug(ORE_NETWORK_SERVER_CONTINUOUS) << "client count, before adding: " << m_clients.size();
 
             //NOTE: we don't actually act on it, first we wait for them to send us a packet then we validate it and if so we add it to our client list
            //FIXME: probably should timeout if they're not validated within n seconds, that way they can't just keep piling on top of us, which would be a trivial malicious thing to do..
 
             // in debug mode, so set an insane timeout value
             if (Settings::instance()->startupFlags() & Settings::NoTimeoutStartupFlag) {
-                Debug::log(Debug::ImportantArea) << "server reports an initial peer connection; setting timeout to absurdity as --no-timeout is set.";
+                qCDebug(ORE_IMPORTANT) << "server reports an initial peer connection; setting timeout to absurdity as --no-timeout is set.";
                 enet_peer_timeout(event.peer, 0, 3600 * 1000, 3600 * 1000);
             }
 
@@ -159,7 +159,7 @@ void Server::poll()
             break;
 
         case ENET_EVENT_TYPE_DISCONNECT: {
-            Debug::log(Debug::Area::NetworkServerContinuousArea) << "Peer has disconnected:  " << event.peer->address.host << " at port: " << event.peer->address.port;
+            qCDebug(ORE_NETWORK_SERVER_CONTINUOUS) << "Peer has disconnected:  " << event.peer->address.host << " at port: " << event.peer->address.port;
             printf("%s disconnected.\n", event.peer->data);
 
             bool found = false;
@@ -167,18 +167,18 @@ void Server::poll()
                 assert(client.first);
                 assert(client.second);
                 if (client.first == event.peer) {
-                    Debug::log(Debug::Area::NetworkServerContinuousArea) << "Found peer for disconnect, deleting it";
+                    qCDebug(ORE_NETWORK_SERVER_CONTINUOUS) << "Found peer for disconnect, deleting it";
                     m_clients.erase(client.first);
                     found = true;
                 }
             }
 
             if (!found) {
-                    Debug::log(Debug::Area::NetworkServerContinuousArea) << "Did not find peer for disconnect, something must have deleted it sooner. Should be safe to ignore."
+                    qCDebug(ORE_NETWORK_SERVER_CONTINUOUS) << "Did not find peer for disconnect, something must have deleted it sooner. Should be safe to ignore."
                     << " likely scenario was that the player was kicked during pre-join";
             }
 
-            Debug::log(Debug::Area::NetworkServerContinuousArea) << "m_clients size is now at: " << m_clients.size();
+            qCDebug(ORE_NETWORK_SERVER_CONTINUOUS) << "m_clients size is now at: " << m_clients.size();
 
             // Reset client's information
             event.peer->data = NULL;
@@ -244,7 +244,7 @@ void Server::receiveInitialClientData(const std::string& packetContents, ENetPee
 
     const QString playerName = QString::fromStdString(message.playername());
 
-    Debug::log(Debug::Area::NetworkServerInitialArea) << "receiving client's player name and version data. Name: " << message.playername()
+    qCDebug(ORE_NETWORK_SERVER_INITIAL) << "receiving client's player name and version data. Name: " << message.playername()
     << " version major: " << major << " minor: " << minor << " note our server version is: major: " << ore_infinium_VERSION_MAJOR << " minor: " << ore_infinium_VERSION_MINOR;
 
     if (major != ore_infinium_VERSION_MAJOR || minor != ore_infinium_VERSION_MINOR) {
@@ -311,7 +311,7 @@ void Server::kickPlayer(Entities::Player* player, const QString& reason, uint32_
 
 void Server::kickClient(ENetPeer* peer, const QString& reason, uint32_t disconnectFlag)
 {
-    Debug::log(Debug::NetworkServerContinuousArea) << "kicking client, reason: " << reason.toStdString();
+    qCDebug(ORE_NETWORK_SERVER_CONTINUOUS) << "kicking client, reason: " << reason.toStdString();
     //FIXME: add player name that is getting kicked
 
     enet_peer_disconnect_now(peer, disconnectFlag);
@@ -365,7 +365,7 @@ void Server::receiveQuickBarInventorySelectSlotRequest(const std::string& packet
     const uint32_t index = message.index();
 
     if (index > player->quickBarInventory()->maxEquippedSlots()) {
-        Debug::log(Debug::Area::ServerInventoryArea) << "server told to equip a quickbar inventory slot, but index was greater than maxEquippedSlots. this is likely a sync failure(or malicious intent).";
+        qCDebug(ORE_SERVER_INVENTORY) << "server told to equip a quickbar inventory slot, but index was greater than maxEquippedSlots. this is likely a sync failure(or malicious intent).";
         return;
     }
 
@@ -445,7 +445,7 @@ void Server::sendLargeWorldChunk(ENetPeer* peer)
 {
     PacketBuf::Chunk message;
 
-    Debug::log(Debug::NetworkServerInitialArea) << "Server::sendLargeWorldChunk..";
+    qCDebug(ORE_NETWORK_SERVER_INITIAL) << "Server::sendLargeWorldChunk..";
 
     Entities::Player* player = m_clients[peer];
 
@@ -456,8 +456,8 @@ void Server::sendLargeWorldChunk(ENetPeer* peer)
     int32_t centerY = static_cast<int32_t>(player->position().y / BLOCK_SIZE);
 
 
-    Debug::log(Debug::NetworkServerInitialArea) << "centerX: " << centerX << " Y: " << centerY;
-    Debug::log(Debug::NetworkServerInitialArea) << "player position x: " << player->position().x << " y: " << player->position().y;
+    qCDebug(ORE_NETWORK_SERVER_INITIAL) << "centerX: " << centerX << " Y: " << centerY;
+    qCDebug(ORE_NETWORK_SERVER_INITIAL) << "player position x: " << player->position().x << " y: " << player->position().y;
 
     int32_t maxWidth = static_cast<int32_t>(MAX_VIEWPORT_WIDTH * 0.5);
     int32_t maxHeight = static_cast<int32_t>(MAX_VIEWPORT_HEIGHT * 0.5);
@@ -471,7 +471,7 @@ void Server::sendLargeWorldChunk(ENetPeer* peer)
 
     player->lastLoadedChunk = glm::ivec2(centerX, centerY);
 
-    Debug::log(Debug::NetworkServerInitialArea) << " INITIAL CHUNK: startx: " << startX << " endX: " << endX << " starty: " << startY << " endY: " << endY;
+    qCDebug(ORE_NETWORK_SERVER_INITIAL) << " INITIAL CHUNK: startx: " << startX << " endX: " << endX << " starty: " << startY << " endY: " << endY;
 
     message.set_startx(startX);
     message.set_endx(endX);
@@ -583,14 +583,14 @@ Entities::Player* Server::createPlayer(const std::string& playerName)
     //TODO: (much later) make it try to load the player position from previous world data, if any.
     float posX = 2600.0f / PIXELS_PER_METER;
     float posY = 14 * BLOCK_SIZE; //start at the overground
-    Debug::log(Debug::Area::NetworkServerInitialArea) << "CREATING PLAYER, SETTING PLAYER POS X : " << posX << " Y : " << posY;
+    qCDebug(ORE_NETWORK_SERVER_INITIAL) << "CREATING PLAYER, SETTING PLAYER POS X : " << posX << " Y : " << posY;
 
     //HACK FIXME: HOLY FUCK BACKMAN this is fucked horribly until physics integration is 100% complete. both of these have to be at the same position, and that simpyl shouldn't be needed..
     // if you don't set oen of them, BAD SHIT HAPPENS
     player->setPosition(posX, posY);
     player->createPhysicsBody(m_world, glm::vec2(posX, posY));
 
-    Debug::log(Debug::Area::NetworkServerInitialArea) << " POS IS: " << player->position().x << " Y: " << player->position().y;
+    qCDebug(ORE_NETWORK_SERVER_INITIAL) << " POS IS: " << player->position().x << " Y: " << player->position().y;
 
     QuickBarInventory* quickBarInventory = new QuickBarInventory();
     player->setQuickBarInventory(quickBarInventory);
@@ -623,7 +623,7 @@ void Server::sendPlayerMove(Entities::Player* player)
     message.set_x(player->position().x);
     message.set_y(player->position().y);
 
-    Debug::log(Debug::NetworkServerContinuousArea) << "Sending player move, position x: " << player->position().x << " y: " << player->position().y;
+    qCDebug(ORE_NETWORK_SERVER_CONTINUOUS) << "Sending player move, position x: " << player->position().x << " y: " << player->position().y;
 
     Packet::sendPacketBroadcast(m_server, &message, Packet::FromServerPacketContents::PlayerMoveFromServerPacket, ENET_PACKET_FLAG_UNSEQUENCED);
 }
@@ -657,7 +657,7 @@ void Server::sendPlayerQuickBarInventory(Entities::Player* player, uint8_t index
     Item* item = player->quickBarInventory()->item(index);
 
     if (item == nullptr) {
-        Debug::log(Debug::Area::ServerInventoryArea) << "warning, BAD SHIT HAPPENED, server tried sending a player's quickbar inventory but an element was nullptr, which means we didn't send as much as we should have, so the client is empty for this element index..VERY BAD SHIT";
+        qCDebug(ORE_SERVER_INVENTORY) << "warning, BAD SHIT HAPPENED, server tried sending a player's quickbar inventory but an element was nullptr, which means we didn't send as much as we should have, so the client is empty for this element index..VERY BAD SHIT";
         return;
     }
 

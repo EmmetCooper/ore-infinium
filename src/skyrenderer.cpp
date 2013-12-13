@@ -34,7 +34,7 @@ SkyRenderer::SkyRenderer(World* world, Camera* camera, Time* time) :
     m_camera(camera),
     m_time(time)
 {
-    Debug::log(Debug::Area::ClientRendererArea) << "sky renderer init, screen at width: " << Settings::instance()->screenResolutionWidth << " height: " << Settings::instance()->screenResolutionHeight;
+    qCDebug(ORE_CLIENT_RENDERER) << "sky renderer init, screen at width: " << Settings::instance()->screenResolutionWidth << " height: " << Settings::instance()->screenResolutionHeight;
 
     m_celestialBodiesShader = new Shader("skyrenderer.vert", "skyrenderer.frag");
     m_skyBackgroundDayShader = new Shader("skyrendererday.vert", "skyrendererday.frag");
@@ -808,7 +808,7 @@ void SkyRenderer::update(const float elapsedTime)
     float newX = viewportCenter.x + cos(angle) * 400.0f;
     float newY = viewportCenter.y + sin(angle) * 400.0f;
 
-//    Debug::log(Debug::StartupArea) << "m_time: " << m_time->toString();
+//    qCDebug(ORE_STARTUP) << "m_time: " << m_time->toString();
     // sun position
     m_celestialBodiesSprites.at(0).position = glm::vec2(newX, newY);
     ////////////

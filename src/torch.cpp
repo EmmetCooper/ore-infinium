@@ -41,7 +41,7 @@ Torch::~Torch()
 Item* Torch::duplicate()
 {
     Torch* torch = new Torch(*this);
-    Debug::log(Debug::ServerEntityCreationArea) << "duplicating torch, position: " << torch->position().x << " y: " << torch->position().y;
+    qCDebug(ORE_SERVER_ENTITY_CREATION) << "duplicating torch, position: " << torch->position().x << " y: " << torch->position().y;
 
     return torch;
 }

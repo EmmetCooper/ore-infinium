@@ -50,8 +50,6 @@ Q_DECLARE_LOGGING_CATEGORY(ORE_STARTUP)
 Q_DECLARE_LOGGING_CATEGORY(ORE_IMPORTANT)
 
 
-class LogStream;
-
 class Debug
 {
 public:
@@ -101,8 +99,6 @@ public:
 
     static void setAreaEnabled(Area area, bool enable);
 
-    static LogStream log(Area area);
-
     static void assertf(bool value, const std::string& message);
 
     /**
@@ -120,17 +116,5 @@ inline QDebug& operator<<(QDebug debug, const std::string& str)
 {
     return debug << QString::fromStdString(str);
 }
-
-class LogStream : public std::stringstream
-{
-public:
-    LogStream(Debug::Area area);
-    ~LogStream();
-
-    LogStream(const LogStream& stream);
-
-private:
-    Debug::Area m_area;
-};
 
 #endif

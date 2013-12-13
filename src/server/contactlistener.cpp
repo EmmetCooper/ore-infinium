@@ -69,7 +69,6 @@ int ContactListener::begin(cpArbiter* arbiter, cpSpace* space, void* data)
 
 void ContactListener::checkBeginContact(ContactListener::BodyUserData* userData)
 {
-//    Debug::log(Debug::ServerEntityLogicArea) << "BOX2D BEGINN CONTACT";
     switch (userData->type) {
     case BodyType::PlayerFootSensorBodyType: {
         Entities::Player* player = static_cast<Entities::Player*>(userData->data);
@@ -126,7 +125,6 @@ void ContactListener::checkEndContact(ContactListener::BodyUserData* userData)
 // FIXME: dead code from b2 port
 // FIXME: dead code from b2 port bool QueryCallback::ReportFixture(b2Fixture* fixture)
 // FIXME: dead code from b2 port {
-// FIXME: dead code from b2 port     Debug::log(Debug::ServerEntityLogicArea) << "FIXTURE REPORTING";
 // FIXME: dead code from b2 port
 // FIXME: dead code from b2 port     if (fixture->GetUserData() == nullptr) {
 // FIXME: dead code from b2 port         return true;

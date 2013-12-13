@@ -112,7 +112,6 @@ void SpriteSheetRenderer::unloadAllSpriteSheets()
 void SpriteSheetRenderer::bindSpriteSheet(SpriteSheetRenderer::SpriteSheetType type)
 {
     m_spriteSheetTextures[type].texture->bind();
-    //Debug::log() << "binding spritesehet, width: " <<(int) m_spriteSheetTextures[type].texture->width() << "height:"  << (int) m_spriteSheetTextures[type].texture->height();
 }
 
 glm::vec2 SpriteSheetRenderer::spriteSheetSize(SpriteSheetRenderer::SpriteSheetType type)
@@ -140,7 +139,7 @@ void SpriteSheetRenderer::registerSprite(Sprite* sprite)
         sprite->m_sizeMeters = glm::vec2(frame.width / PIXELS_PER_METER, frame.height / PIXELS_PER_METER);
 
         //NOTE: terraria's player size is (blocksize*2, blocksize*3), and that's a great default. sprite->m_size = glm::vec2(Block::blockSize * 2, Block::blockSize * 3);
-        Debug::log(Debug::Area::SpriteSheetRendererArea) << "character sprite registered, setting default size, which is that of source texture: width: " << frame.width << " height: " << frame.height << " new sprite count: " << m_entitySprites.size();
+        qCDebug(ORE_SPRITE_SHEET_RENDERER) << "character sprite registered, setting default size, which is that of source texture: width: " << frame.width << " height: " << frame.height << " new sprite count: " << m_entitySprites.size();
         break;
     }
 
@@ -151,7 +150,7 @@ void SpriteSheetRenderer::registerSprite(Sprite* sprite)
         SpriteFrameIdentifier& frame = frameIdentifier.value();
         sprite->m_sizeMeters = glm::vec2(frame.width / PIXELS_PER_METER, frame.height / PIXELS_PER_METER);
 
-        Debug::log(Debug::Area::SpriteSheetRendererArea) << "entity sprite registered, setting default size, which is that of source texture: width: " << frame.width << " height: " << frame.height << " new sprite count: " << m_entitySprites.size();
+        qCDebug(ORE_SPRITE_SHEET_RENDERER) << "entity sprite registered, setting default size, which is that of source texture: width: " << frame.width << " height: " << frame.height << " new sprite count: " << m_entitySprites.size();
         break;
     }
     }
@@ -181,7 +180,7 @@ QMap<QString, SpriteSheetRenderer::SpriteFrameIdentifier> SpriteSheetRenderer::p
 
     bool fileExists = QFile::exists(filename);
 
-    //Debug::log(Debug::Area::SpriteSheetRendererArea) << "parsing: '" << filename.toStdString() << "' spreadsheet description...";
+    //qCDebug(ORE_SPRITE_SHEET_RENDERER) << "parsing: '" << filename.toStdString() << "' spreadsheet description...";
     //Debug::fatal(fileExists, Debug::Area::SpriteSheetRendererArea, "sprite sheet description file failed to load, filename: " + filename);
 
     std::ifstream fin(filename.toStdString());
@@ -194,11 +193,11 @@ QMap<QString, SpriteSheetRenderer::SpriteFrameIdentifier> SpriteSheetRenderer::p
         SpriteFrameIdentifier frame;
         doc[i] >> frame;
 
-        //Debug::log(Debug::Area::SpriteSheetRendererArea) << "frameName: " << frame.frameName;
-        Debug::log(Debug::Area::SpriteSheetRendererArea) << "x: " << frame.x;
-        Debug::log(Debug::Area::SpriteSheetRendererArea) << "y: " << frame.y;
-        Debug::log(Debug::Area::SpriteSheetRendererArea) << "width: " << frame.width;
-        Debug::log(Debug::Area::SpriteSheetRendererArea) << "height: " << frame.height;
+        //qCDebug(ORE_SPRITE_SHEET_RENDERER) << "frameName: " << frame.frameName;
+        qCDebug(ORE_SPRITE_SHEET_RENDERER) << "x: " << frame.x;
+        qCDebug(ORE_SPRITE_SHEET_RENDERER) << "y: " << frame.y;
+        qCDebug(ORE_SPRITE_SHEET_RENDERER) << "width: " << frame.width;
+        qCDebug(ORE_SPRITE_SHEET_RENDERER) << "height: " << frame.height;
 
         descriptionMap[frame.frameName] = frame;
     }

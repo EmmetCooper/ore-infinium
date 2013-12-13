@@ -60,7 +60,7 @@ void Entity::update(double elapsedTime, World* world)
 {
     //server, physics enabled
     if (m_body) {
-        //Debug::log(Debug::Area::ServerEntityLogicArea) << "Sprites present position is: x: " << position().x << " y: " << position().y << " SETTING SPRITE POSITION TO X: " << m_body->GetPosition().x << " Y : " << m_body->GetPosition().y;
+        //qCDebug(ORE_NETWORK_SERVER_ENTITY_LOGIC) << "Sprites present position is: x: " << position().x << " y: " << position().y << " SETTING SPRITE POSITION TO X: " << m_body->GetPosition().x << " Y : " << m_body->GetPosition().y;
 
         const cpVect& pos = cpBodyGetPos(m_body);
 

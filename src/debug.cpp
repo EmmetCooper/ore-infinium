@@ -94,11 +94,6 @@ static QMap<Debug::Area, QLoggingCategory*> makeCategoryMap() {
 
 static const QMap<Debug::Area, QLoggingCategory*> categoryMap = makeCategoryMap();
 
-LogStream Debug::log(Debug::Area area)
-{
-    return LogStream(area);
-}
-
 void Debug::assertf(bool value, const std::string& message)
 {
     if (!value) {
@@ -123,7 +118,7 @@ void Debug::fatal(bool value, Debug::Area area, const std::string& message)
 {
     if (!value) {
         //HACK so that it actually outputs something regardless.
-        Debug::log(Debug::Area::ImportantArea) << "FATAL: " << message;
+        qCDebug(ORE_IMPORTANT) << "FATAL: " << message;
         assert(0);
     }
 }
@@ -133,7 +128,7 @@ void Debug::checkGLError()
     GLenum error = glGetError();
 
     if (error != GL_NO_ERROR) {
-	Debug::log(Debug::Area::ClientRendererArea) << "GL error code: " << error << " STRING:" << gluErrorString(error);
+	qCDebug(ORE_CLIENT_RENDERER) << "GL error code: " << error << " STRING:" << gluErrorString(error);
         assert(0);
     }
 }
@@ -143,7 +138,7 @@ void Debug::checkGLErrorSafe()
     GLenum error = glGetError();
 
     if (error != GL_NO_ERROR) {
-	Debug::log(Debug::Area::ClientRendererArea) << "GL error code: " << error << " STRING:" << gluErrorString(error);
+	qCDebug(ORE_CLIENT_RENDERER) << "GL error code: " << error << " STRING:" << gluErrorString(error);
     }
 }
 
@@ -308,144 +303,6 @@ void CALLBACK oreGLDebugCallback(unsigned int source, unsigned int type, unsigne
     idString.append("\nError ID: ");
     idString.append("\e[32;40m\e[0m");
 
-    Debug::log(Debug::Area::ClientRendererArea) << "\nOpenGL Error Report: " << sourceString << typeString << idString << severityString << messageString << "\n";
+    qCDebug(ORE_CLIENT_RENDERER) << "\nOpenGL Error Report: " << sourceString << typeString << idString << severityString << messageString << "\n";
 }
 #endif
-
-////////////////////////////////////////////////////////////////// LogStream class ///////////////////////////////////////////////////////////////////////////
-
-LogStream::LogStream(Debug::Area area) : m_area(area)
-{
-}
-
-LogStream::~LogStream()
-{
-    std::string areaString;
-
-    areaString.append("\e[36;40m");
-
-    if (!Settings::instance()->isDebugAreaEnabled(m_area)) {
-        return;
-    }
-
-    switch (m_area) {
-    case Debug::Area::ClientRendererArea:
-        areaString.append("[ClientRendererArea]");
-        break;
-
-    case Debug::Area::TileRendererArea:
-        areaString.append("[TileRendererArea]");
-        break;
-
-    case Debug::Area::SpriteSheetRendererArea:
-        areaString.append("[SpriteSheetRendererArea]");
-        break;
-
-    case Debug::Area::LightingRendererArea:
-        areaString.append("[LightingRendererArea]");
-        break;
-
-    case Debug::Area::PhysicsArea:
-        areaString.append("[PhysicsArea]");
-        break;
-
-    case Debug::Area::AudioArea:
-        areaString.append("[AudioArea]");
-        break;
-
-    case Debug::Area::AudioLoaderArea:
-        areaString.append("[AudioLoaderArea]");
-        break;
-
-    case Debug::Area::GUILoggerArea:
-        areaString.append("[GUILoggerArea]");
-        break;
-
-    case Debug::Area::ShadersArea:
-        areaString.append("[ShadersArea]");
-        break;
-
-    case Debug::Area::NetworkClientInitialArea:
-        areaString.append("[NetworkClientInitialArea]");
-        break;
-
-    case Debug::Area::NetworkServerInitialArea:
-        areaString.append("[NetworkServerInitialArea]");
-        break;
-
-    case Debug::Area::NetworkClientContinuousArea:
-        areaString.append("[NetworkClientContinuousArea]");
-        break;
-
-    case Debug::Area::NetworkServerContinuousArea:
-        areaString.append("[NetworkServerContinuousArea]");
-        break;
-
-    case Debug::Area::ClientInventoryArea:
-        areaString.append("[ClientInventoryArea]");
-        break;
-
-    case Debug::Area::ServerInventoryArea:
-        areaString.append("[ServerInventoryArea]");
-        break;
-
-    case Debug::Area::ServerEntityLogicArea:
-        areaString.append("[ServerEntityLogicArea]");
-        break;
-
-    case Debug::Area::ImageLoaderArea:
-        areaString.append("[ImageLoaderArea]");
-        break;
-
-    case Debug::Area::WorldGeneratorArea:
-        areaString.append("[WorldGeneratorArea]");
-        break;
-
-    case Debug::Area::WorldLoaderArea:
-        areaString.append("[WorldLoaderArea]");
-        break;
-
-    case Debug::Area::ClientEntityCreationArea:
-        areaString.append("[ClientEntityCreationArea]");
-        break;
-
-    case Debug::Area::ServerEntityCreationArea:
-        areaString.append("[ServerEntityCreationArea]");
-        break;
-
-    case Debug::Area::SettingsArea:
-        areaString.append("[SettingsArea]");
-        break;
-
-    case Debug::Area::StartupArea:
-        areaString.append("[StartupArea]");
-        break;
-
-    case Debug::Area::ImportantArea:
-        areaString.append("[ImportantArea]");
-        break;
-    }
-
-    areaString.append("\e[36;40m\e[0m");
-
-    std::string msg = str();
-
-    std::string preFormatter;
-
-    preFormatter.append("\e[34;40m");
-    preFormatter.append("\n====== ");
-    preFormatter.append("\e[34;40m\e[0m");
-
-    std::string postFormatter;
-    postFormatter.append("\e[34;40m");
-    postFormatter.append(" |========\n");
-    postFormatter.append("\e[34;40m\e[0m");
-
-   // std::cout << preFormatter << areaString << " | " << str() << postFormatter;
-
-}
-
-LogStream::LogStream(const LogStream& stream): std::stringstream(stream.str())
-{
-    m_area = stream.m_area;
-}

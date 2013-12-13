@@ -69,7 +69,7 @@ uint32_t Item::dropStack(uint32_t amount)
     uint32_t newItemAmount = 0;
 
     if (amount > m_stackSize) {
-        Debug::log(Debug::Area::ServerEntityLogicArea) << "item was told to drop a stack amount greater than m_stackSize, ignoring and dropping as much as we can.";
+        qCDebug(ORE_SERVER_ENTITY_LOGIC) << "item was told to drop a stack amount greater than m_stackSize, ignoring and dropping as much as we can.";
 
         newItemAmount = m_stackSize;
         m_stackSize = 0;

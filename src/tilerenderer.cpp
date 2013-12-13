@@ -125,7 +125,6 @@ void TileRenderer::render()
         return;
     }
 
-    //Debug::log() << "OFFSET: " << offset.x << " Y : " << offset.y;
     Debug::checkGLError();
     glm::vec2 playerPosition = m_mainPlayer->position();
 
@@ -155,10 +154,10 @@ void TileRenderer::render()
     //Debug:: log(Debug::TileRendererArea) << "starRow: " << startRow << "endrow: " << endRow << "startcol: " << startColumn << " endcol: " << endColumn;
 
     if (std::abs(startColumn) != startColumn) {
-        Debug::log(Debug::TileRendererArea) << "FIXME, WENT INTO NEGATIVE COLUMN!!";
+        qCDebug(ORE_TILE_RENDERER) << "FIXME, WENT INTO NEGATIVE COLUMN!!";
         assert(0);
     } else if (std::abs(startRow) != startRow) {
-        Debug::log(Debug::TileRendererArea) << "FIXME, WENT INTO NEGATIVE ROW!!";
+        qCDebug(ORE_TILE_RENDERER) << "FIXME, WENT INTO NEGATIVE ROW!!";
         assert(0);
     }
 
@@ -169,7 +168,7 @@ void TileRenderer::render()
 
     const uint32_t totalTiles = (endRow - startRow) * (endColumn - startColumn);
     if (totalTiles > m_highestTileCount || m_firstRun) {
-        Debug::log(Debug::TileRendererArea) << "reallocating buffer!";
+        qCDebug(ORE_TILE_RENDERER) << "reallocating buffer!";
 
         m_firstRun = false;
         m_highestTileCount = totalTiles * 2;
@@ -318,7 +317,6 @@ void TileRenderer::render()
     m_shader->bindProgram();
 
     Debug::checkGLError();
-    //Debug::log() << "RENDERING TILECOUNT: " << m_tileCount;
 
     glDrawElements(
         GL_TRIANGLES,

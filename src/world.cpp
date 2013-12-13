@@ -146,7 +146,7 @@ World::World(Entities::Player* mainPlayer, Client* client, Server* server)
         //HACK, as if that wasn't obvious.
         saveWorld();
 
-        Debug::log(Debug::WorldLoaderArea) << "World is x: " << (WORLD_COLUMNCOUNT * BLOCK_SIZE) << " y: " << (WORLD_ROWCOUNT * BLOCK_SIZE) << " meters big";
+        qCDebug(ORE_WORLD_LOADER) << "World is x: " << (WORLD_COLUMNCOUNT * BLOCK_SIZE) << " y: " << (WORLD_ROWCOUNT * BLOCK_SIZE) << " meters big";
     }
 
     //FIXME: saveMap();
@@ -191,7 +191,7 @@ void World::addPlayer(Entities::Player* player)
     m_players.append(player);
 
     if (m_server) {
-        Debug::log(Debug::Area::ServerEntityCreationArea) << "Adding player to world. Position X :"  << player->position().x << " Y : " << player->position().y;
+        qCDebug(ORE_SERVER_ENTITY_CREATION) << "Adding player to world. Position X :"  << player->position().x << " Y : " << player->position().y;
 
         const glm::vec2& playerPosition = player->position();
 
@@ -243,7 +243,7 @@ void World::removePlayer(Entities::Player* player)
 
 void World::updateTilePhysicsObjects()
 {
-    //Debug::log(Debug::ImportantArea) << "Updating tile physics objects...";
+    //qCDebug(ORE_IMPORTANT) << "Updating tile physics objects...";
 
     QTime time;
     time.start();
@@ -273,8 +273,8 @@ void World::updateTilePhysicsObjects()
         }
     }
 
-    //Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE pre-removal: " << m_desiredChunks.size();
-    // Debug::log(Debug::StartupArea) << "DESIRED CHUNKS SIZE post-removal: " << desiredChunks.size();
+    //qCDebug(ORE_STARTUP) << "DESIRED CHUNKS SIZE pre-removal: " << m_desiredChunks.size();
+    // qCDebug(ORE_STARTUP) << "DESIRED CHUNKS SIZE post-removal: " << desiredChunks.size();
 
 
     // set all refcounts to 0 so that we start from scratch asking if anyone wants any of the chunks
@@ -302,7 +302,7 @@ void World::updateTilePhysicsObjects()
         }
     }
 
-    //Debug::log(Debug::StartupArea) << "Active CHUNKS SIZE pre-removal: " << m_activeChunks.size();
+    //qCDebug(ORE_STARTUP) << "Active CHUNKS SIZE pre-removal: " << m_activeChunks.size();
 
     // delete all active chunks with a refcount of 0
     QMap<DesiredChunk, ActiveChunk*>::iterator it = m_activeChunks.begin();
@@ -317,7 +317,7 @@ void World::updateTilePhysicsObjects()
 
     m_desiredChunks.clear();
 
-    //Debug::log(Debug::ImportantArea) << "Updating tile physics objects...time took:" << time.elapsed();
+    //qCDebug(ORE_IMPORTANT) << "Updating tile physics objects...time took:" << time.elapsed();
 }
 
 Entities::Player* World::playerForID(uint32_t playerID)
@@ -437,7 +437,7 @@ void World::update(double elapsedTime)
                 // would cause more issues
                 const glm::vec2& lastChunk = glm::vec2(player->lastLoadedChunk);
                 if (glm::distance(currentChunkPosition, lastChunk) > 20.0) {
-                    //Debug::log(Debug::ImportantArea) << " server sending large world chunk..: ";
+                    //qCDebug(ORE_IMPORTANT) << " server sending large world chunk..: ";
                     m_server->sendLargeWorldChunkForPlayer(player);
                 }
             }
@@ -660,7 +660,7 @@ void World::loadChunk(Chunk* chunk)
 {
     uint32_t sourceIndex = 0;
 
-    Debug::log(Debug::NetworkClientContinuousArea) << "Loading Chunk START Y: " << chunk->startY() << " ENDY: " << chunk->endY() << " STARTX: " <<  chunk->startX() << " ENDX: " << chunk->endX();
+    qCDebug(ORE_NETWORK_CLIENT_CONTINUOUS) << "Loading Chunk START Y: " << chunk->startY() << " ENDY: " << chunk->endY() << " STARTX: " <<  chunk->startX() << " ENDX: " << chunk->endX();
 
     for (uint32_t row = chunk->startY(); row < chunk->endY(); ++row) {
         for (uint32_t column = chunk->startX(); column < chunk->endX(); ++column) {
@@ -761,8 +761,8 @@ void World::attemptItemPlacement(Entities::Player* player)
 
     //FIXME:    m_torchesQuadTree->queryRange(list, QuadTree::AABB(QuadTree::XY(x / 2.0, y / 2.0), QuadTree::XY(500, 500)));
 
-    Debug::log(Debug::ImportantArea) << "server torch count: " << m_torches.size();
-    // Debug::log(Debug::ImportantArea) << "server torch quadtree query: " << list.size();
+    qCDebug(ORE_IMPORTANT) << "server torch count: " << m_torches.size();
+    // qCDebug(ORE_IMPORTANT) << "server torch quadtree query: " << list.size();
 
     //use player's placement timing and such.
     player->placeItem();

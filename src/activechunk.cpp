@@ -127,7 +127,7 @@ ActiveChunk::ActiveChunk(uint32_t row, uint32_t column, std::vector<Block>* bloc
             m_tileShapes.append(tileShape);
         }
     }
-    //Debug::log(Debug::StartupArea) << "ACTIVE CHUNK CTOR, tile object count: " << m_tileFixtures.size();
+    //qCDebug(ORE_STARTUP) << "ACTIVE CHUNK CTOR, tile object count: " << m_tileFixtures.size();
 }
 
 ActiveChunk::~ActiveChunk()
@@ -145,7 +145,7 @@ ActiveChunk::~ActiveChunk()
 
     m_tileShapes.clear();
 
-    //Debug::log(Debug::StartupArea) << "ACTIVE CHUNK DTOR, tile object count: " << m_tileFixtures.size();
+    //qCDebug(ORE_STARTUP) << "ACTIVE CHUNK DTOR, tile object count: " << m_tileFixtures.size();
 }
 
 void ActiveChunk::shapeRemoved(cpShape* shape)
