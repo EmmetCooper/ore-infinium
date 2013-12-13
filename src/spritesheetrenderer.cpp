@@ -273,8 +273,8 @@ void SpriteSheetRenderer::renderCharacters()
 
         const float spriteLeft = textureX;
         const float spriteRight = spriteLeft + textureWidth;
-        const float spriteTop = 1.0f;
-        const float spriteBottom = 1.0f - (textureHeight + textureY);
+        const float spriteTop = 1.0f - (textureY);
+        const float spriteBottom = spriteTop - textureHeight;
 
         // copy texcoords to the buffer
         vertices[0].uv.x = vertices[1].uv.x = spriteLeft;
@@ -410,8 +410,8 @@ void SpriteSheetRenderer::renderEntities()
 
         const float spriteLeft = textureX;
         const float spriteRight = spriteLeft + textureWidth;
-        const float spriteTop = 1.0f;
-        const float spriteBottom = (textureHeight + textureY);
+        const float spriteTop = 1.0f - (textureY);
+        const float spriteBottom = spriteTop - textureHeight;
 
         // copy texcoords to the buffer
         vertices[0].uv.x = vertices[1].uv.x = spriteLeft;

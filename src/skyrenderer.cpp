@@ -494,8 +494,8 @@ void SkyRenderer::renderSkyBackgroundDay()
 
     const float spriteLeft = 0.0f;
     const float spriteRight = 1.0f;
-    const float spriteTop = 1.0f;
-    const float spriteBottom = 0.0f;
+    const float spriteTop = 0.0f;
+    const float spriteBottom = 1.0f;
 
     // copy texcoords to the buffer
     vertices[0].u = vertices[1].u = spriteLeft;
@@ -623,8 +623,8 @@ void SkyRenderer::renderSkyBackgroundNight()
 
     const float spriteLeft = 0.0f;
     const float spriteRight = 1.0f;
-    const float spriteTop = 1.0f;
-    const float spriteBottom = 0.0f;
+    const float spriteTop = 0.0f;
+    const float spriteBottom = 1.0f;
 
     // copy texcoords to the buffer
     vertices[0].u = vertices[1].u = spriteLeft;
@@ -747,8 +747,8 @@ void SkyRenderer::renderCelestialBodies()
 
         const float spriteLeft = textureX;
         const float spriteRight = spriteLeft + textureWidth;
-        const float spriteTop = 1.0f;
-        const float spriteBottom = 1.0f - (textureHeight + textureY);
+        const float spriteTop = 1.0f - (textureY);
+        const float spriteBottom = spriteTop - textureHeight;
 
         // copy texcoords to the buffer
         vertices[0].u = vertices[1].u = spriteLeft;

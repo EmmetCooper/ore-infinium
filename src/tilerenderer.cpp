@@ -253,8 +253,8 @@ void TileRenderer::render()
 
             const float tileLeft = 0.0f;
             const float tileRight = 1.0f;
-            const float tileTop = 0.0f;
-            const float tileBottom = 1.0f;
+            const float tileTop = 1.0f;
+            const float tileBottom = 0.0f;
 
             // copy texcoords to the buffer
             quad.vertices[0].u = quad.vertices[1].u = tileLeft;
