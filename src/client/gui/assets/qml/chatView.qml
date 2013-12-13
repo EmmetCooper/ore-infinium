@@ -48,8 +48,6 @@ Item {
             }
 
             id: chatTextBox
-
-            text: "EDITABLE!"
         }
 
         OreButton {

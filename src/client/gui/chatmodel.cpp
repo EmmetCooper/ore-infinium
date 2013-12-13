@@ -45,6 +45,6 @@ void ChatModel::addChatLine(const QString& timestamp, const QString& playerName,
 
     m_chatLines.append(chat);
 
-    m_chatText += "timestamp: " + chat.timeStamp + " name: " + chat.playerName + " line: " + chat.chatText + '\n';
+    m_chatText += "(" + chat.timeStamp + ") [" + chat.playerName + "]: " + chat.chatText + '\n';
     emit chatTextChanged();
 }
