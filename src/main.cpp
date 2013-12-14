@@ -35,7 +35,6 @@
 #include "debug.h"
 
 #include <iostream>
-#include <qt/QtCore/qlogging.h>
 
 #include <QtCore/QStringList>
 
